@@ -1,0 +1,29 @@
+.searchForm{
+    background-color: white;
+    border-radius: 25px;
+    padding-left: .5rem ;
+    width: 100%;
+    @extend .flex-row-space-between;
+
+    @media #{$md}{
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    input[type=search]{
+        border: none;
+       outline: none;
+       width: 100%;
+       background: none;
+       font-size: 16px;
+    }
+
+    button{
+        border: 1px solid rgb(196, 196, 196);
+        padding: 0.6rem 1.2rem;
+        
+        @media #{$xss}{
+            padding: 0.7rem 2.6rem;
+        }
+    }
+}

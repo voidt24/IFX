@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+:root {
+  --primary: #00a87e;
+}
+*,
+*::before,
+::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #434343;
+    border-radius: 12px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #dedede97;
+    border-radius: 12px;
+  }
+}
+body {
+  // background: #000;
+  background: #ca2828;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  text-shadow: 3px 3px 10px black;
+}
+a {
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+}
+button,
+i {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+  color: white;
+
+  background-color: #121212e5;
+  border: 1px solid white;
+  &:hover {
+    background-color: #2b2b2bca;
+  }
+}
+
+.spinner {
+  @extend .horizontal-center;
+  height: 300px;
+}
+
+.on-trailer {
+  padding-block-end: 17rem;
+}

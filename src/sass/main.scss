@@ -1,0 +1,20 @@
+@import "./base/extends";
+@import "./base/variables";
+@import "./base/globals";
+@import "./base/mixins";
+
+@import "./components/navbar";
+@import "./components/searchForm";
+@import "./components/searchSection";
+@import "./components/hero";
+@import "./components/mediaDetails";
+@import "./components/slider";
+@import "./components/sliderCard";
+@import "./components/trailer";
+@import "./components/profile";
+@import "./components/notFound";
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

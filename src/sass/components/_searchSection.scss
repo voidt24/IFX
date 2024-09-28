@@ -1,0 +1,50 @@
+.search-section {
+  @extend .flex-col-center;
+  gap: 1rem;
+  text-align: center;
+  padding-inline: 1.5rem;
+  padding-block-end: 5rem;
+
+  @media #{$sm} {
+    padding-top: 5rem;
+  }
+
+  .form-bg {
+    background-color: #000000;
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    @media #{$sm} {
+      top: 3rem;
+    }
+    .bi-arrow-left {
+      font-size: 135%;
+      align-self: flex-start;
+    }
+  }
+  form {
+  }
+  .results {
+    padding: 0.5rem;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    @media #{$xss} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media #{$sm} {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media #{$md} {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+}

@@ -1,0 +1,52 @@
+.slider {
+  padding-inline: 0.5rem;
+  padding-block: 1rem 5rem;
+
+  &__header {
+    @extend .flex-row-space-between;
+    padding: 0.3rem;
+    color: #ffffffd8;
+    .controls {
+      @extend .flex-row-space-between;
+      gap: 0.5rem;
+      i {
+        cursor: pointer;
+        font-size: 170%;
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    span {
+      font-weight: 300;
+      color: var(--primary);
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 45%;
+    gap: .5rem;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    @media #{$xss} {
+      grid-auto-columns: 35%;
+    }
+    @media #{$sm} {
+      grid-auto-columns: 25%;
+    }
+    @media #{$md} {
+      grid-auto-columns: 20%;
+    }
+    @media #{$lg} {
+      grid-auto-columns: 15%;
+    }
+    @media #{$xxl} {
+      grid-auto-columns: 14%;
+    }
+    &::-webkit-scrollbar {
+      height: 0;
+    }    
+  }
+}

@@ -1,0 +1,128 @@
+.profile {
+  padding: 60px;
+  height: 100%;
+
+  @extend .flex-col-center;
+  gap: 1rem;
+  text-align: center;
+  padding-top: 5rem;
+  padding-inline: 1.5rem;
+
+  #user-in-profile {
+    color: var(--primary);
+  }
+
+  .results {
+    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    @media #{$xss} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media #{$sm} {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media #{$md} {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    @media #{$xxl} {
+      grid-template-columns: repeat(7, 1fr);
+    }
+    @media #{$fourK} {
+      grid-template-columns: repeat(8, 1fr);
+    }
+  }
+
+  .tabs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    .tablist-container {
+      background-color: #000000;
+      width: 100%;
+
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 4;
+      padding-block: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @media #{$sm} {
+        top: 3rem;
+      }
+
+      .bi-arrow-left{
+        justify-self: flex-start;
+      }
+    }
+    .tablist {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .tab {
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      background-color: rgba(18, 18, 18, 0.8980392157);
+      width: 100%;
+      padding: 7px 15px;
+      margin: 1px;
+      display: flex;
+      justify-content: center;
+      transition: all 0.5s;
+    }
+    //selected tab
+    .base--selected {
+      background-color: #00a87e;
+      color: #fff;
+    }
+
+    .tabpanel {
+      width: 90%;
+      font-size: 0.875rem;
+      padding: 20px 12px;
+      margin-top: 5px;
+
+      .tabpanel-options {
+        display: flex;
+        justify-content: right;
+        gap: 1rem;
+
+        button {
+          border: none;
+          background: none;
+          padding: 0;
+          font-size: 100%;
+        }
+      }
+    }
+  }
+}
+.confirm-dialog {
+  #responsive-dialog-title {
+    text-shadow: none;
+  }
+  .dialogcontent {
+    text-shadow: none;
+  }
+  button {
+    border: 1px solid #00a87e;
+    padding: 3px 7px;
+    color: #00a87e;
+    border-radius: 25px;
+
+    &:last-of-type {
+      background-color: #00a87e;
+      color: white;
+    }
+  }
+}

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
+import "../sass/main.scss";
+import Navbar from '../app/components/Navbar'
+import ContextWrapper  from "../context/Context";
 
 export const metadata: Metadata = {
   title: "New productions",
@@ -13,10 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={``}
-      >
+      <body>
+        <ContextWrapper>
+        <Navbar/>
         {children}
+        </ContextWrapper>
       </body>
     </html>
   );

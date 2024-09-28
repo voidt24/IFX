@@ -1,0 +1,138 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  padding-inline: 1rem;
+  z-index: 10;
+  background: #0007;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  bottom: 0;
+  padding-block: 0.6rem;
+  font-size: 90%;
+
+  @media #{$sm} {
+    padding-block: 0.8rem;
+    font-size: 100%;
+    top: 0;
+    bottom: unset;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  a {
+    color: white;
+  }
+
+  #logo {
+    font-size: 180%;
+    display: none;
+    @media #{$sm} {
+      display: block;
+    }
+  }
+
+  .links {
+    @extend .flex-row-center;
+    gap: 2rem;
+    padding-inline: 0.7rem;
+    z-index: 10;
+
+    @media #{$xss} {
+      padding-inline: 1.5rem;
+    }
+
+    li a {
+      cursor: pointer;
+      border: 2px solid #ffffff00;
+      transition: all 0.4s;
+
+      &:hover {
+        color: #00d8a2;
+      }
+    }
+  }
+
+  #menu-icon {
+    cursor: pointer;
+    font-size: 150%;
+    font-weight: 600;
+    @media #{$md} {
+      display: none;
+    }
+  }
+
+  #user {
+    font-size: 111%;
+  }
+  .to-hide-on-desk {
+    @media #{$sm} {
+      display: none;
+    }
+  }
+
+  .active {
+    color: #00d8a2;
+  }
+}
+
+.user-options {
+  @extend .flex-col-center;
+  gap: 1.5rem;
+  text-align: center;
+  padding: 2rem 2.5rem;
+  
+  a{
+    color: rgb(255, 255, 255);
+    &:hover{
+      color: var(--primary);
+    }
+  }
+
+  form {
+    @extend .flex-col-center;
+    gap: 0.7rem;
+    label {
+      align-self: start;
+    }
+
+    input {
+      border: 1px solid #00000072;
+      border-radius: 12px;
+      padding: 0.2rem 0.5rem;
+    }
+    button {
+      margin-top: 10px;
+      padding-block: 0.4rem;
+    }
+  }
+
+  p {
+    font-size: 85%;
+    .opt {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+  }
+
+  #error {
+    text-align: center;
+    font-size: 80%;
+    color: rgb(245, 77, 77);
+  }
+}
+.nav-item-box {
+  @extend .flex-col-center;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.MuiDialog-root{
+  z-index: 99999;
+  position: relative;
+}
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  width: 100%;
+}
