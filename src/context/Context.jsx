@@ -1,10 +1,11 @@
 "use client"
-import { useState,createContext } from "react";
-
+import { usePathname } from "next/navigation";
+import { useState,createContext, useEffect } from "react";
 
 export const Context = createContext([]);
 
 export default function ContextWrapper({ children }) {
+  const path = usePathname();
   const [currentId, setCurrentId] = useState();
   const [openTrailer, setOpenTrailer] = useState("");
   const [trailerKey, setTrailerKey] = useState("");
@@ -62,6 +63,11 @@ export default function ContextWrapper({ children }) {
     openDialog,
     setOpenDialog,
   };
+useEffect(() => {
+  if(path.slice(1).includes('/')){
+    setCurrentMediaType(path.slice(1, path.lastIndexOf("/")));
+  }
+}, [path])
 
   return <Context.Provider value={contextValues}>{children}</Context.Provider>;
 }
