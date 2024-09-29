@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
 import "../sass/main.scss";
-import Navbar from "../app/components/Navbar";
+import Navbar from '../components/Navbar'
 import ContextWrapper from "../context/Context";
-import AuthModal from "./components/AuthModal";
+import  AuthModal  from "@/components/AuthModal";
+
+import MediaData from '../components/MediaData'
 
 export const metadata: Metadata = {
   title: "New productions",
@@ -15,6 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <ContextWrapper>
+          <MediaData/>
           <Navbar />
           {children}
           {<AuthModal />}
