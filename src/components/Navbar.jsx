@@ -5,7 +5,7 @@ import { Context } from "@/context/Context";
 
 export default function Navbar() {
   const navRef = useRef();
-  const { setCurrentMediaType, userClicked, setUserClicked } = useContext(Context);
+  const { currentMediaType, setCurrentMediaType, userClicked, setUserClicked } = useContext(Context);
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
 
   useEffect(() => {
@@ -41,8 +41,8 @@ export default function Navbar() {
               setCurrentMediaType("movies");
             }}
           >
-            <i className="bi bi-camera-reels to-hide-on-desk"></i>
-            <p>Movies</p>
+            <i className={` ${currentMediaType == "movies" && "text-[#00d8a2]"} bi bi-camera-reels to-hide-on-desk`}></i>
+            <p className={`${currentMediaType == "movies" && "text-[#00d8a2]"} `}>Movies</p>
           </Link>
         </li>
         <li>
@@ -53,8 +53,8 @@ export default function Navbar() {
               setCurrentMediaType("tvshows");
             }}
           >
-            <i className="bi bi-tv to-hide-on-desk"></i>
-            <p>TV Shows</p>
+            <i className={` ${currentMediaType == "tvshows" && "text-[#00d8a2]"} bi bi-tv to-hide-on-desk`}></i>
+            <p className={`${currentMediaType == "tvshows" && "text-[#00d8a2]"} `}>TV Shows</p>
           </Link>
         </li>
       </ul>
