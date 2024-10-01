@@ -1,10 +1,9 @@
-
-
-import { doc, getDoc } from 'firebase/firestore';
-import { database } from './firebase.config';
+import { doc, getDoc } from "firebase/firestore";
+import { database } from "./firebase.config";
 
 export const getFromDB = (documentName, fieldName, callbackToUpdateUIComponent, callbackToStopLoader, currentId) => {
-    const document = doc(database, 'users', documentName);
+  if (database && documentName) {
+    const document = doc(database, "users", documentName);
 
     getDoc(document)
       .then((documentResult) => {
@@ -22,6 +21,8 @@ export const getFromDB = (documentName, fieldName, callbackToUpdateUIComponent, 
         callbackToStopLoader(false);
       })
       .catch((err) => {
-        return; //todo: set error message un screen
+        callbackToStopLoader(false);
+        return err;
       });
-  };
+  }
+};
