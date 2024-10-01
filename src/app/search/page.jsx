@@ -5,7 +5,7 @@ import { Context } from "../../context/Context";
 import { search } from "../../helpers/search";
 import { useRouter } from "next/navigation";
 
-export const SearchSection = () => {
+ function SearchSection() {
   const { openTrailer, searchResults, setSearchResults } = useContext(Context);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchStarted, setSearchStarted] = useState(false);

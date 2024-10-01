@@ -40,17 +40,11 @@
       border-radius: 25px;
       border: 1px solid white;
       padding: 0.5rem 1.8rem;
+      font-size: 85%;
       &:hover {
         background-color: #2b2b2bca;
       }
     }
-    .provider {
-      font-weight: 300;
-      display: block;
-      font-size: 80%;
-      color: var(--primary);
-    }
-    
   }
 
   .info :not(:first-child) {
@@ -70,8 +64,6 @@
       bottom: 200px;
     }
 
-   
-
     .movie {
       position: relative;
       width: 25%;
@@ -85,10 +77,10 @@
         filter: grayscale(1);
         opacity: 0.6;
 
-          &:hover{
-      filter: grayscale(0.7);
-      border: 1px solid #ffffffb0;
-    }
+        &:hover {
+          filter: grayscale(0.7);
+          border: 1px solid #ffffffb0;
+        }
       }
 
       @media #{$xss} {
@@ -108,7 +100,7 @@
       }
     }
 
-     .isActive {
+    .isActive {
       transform: translateY(-10px);
       opacity: 1;
       border: 1px solid var(--primary);
@@ -116,12 +108,13 @@
   }
 
   .vote {
-    background-color: #0c0c0cbb;    border-radius: 15px;
-    padding: .1rem .5rem;
+    background-color: #0c0c0cbb;
+    border-radius: 15px;
+    padding: 0.1rem 0.5rem;
     position: absolute;
     left: 5px;
     top: 5px;
     font-size: 65%;
-    border: 1px solid #daa520bc;    
+    border: 1px solid #daa520bc;
   }
 }

@@ -7,15 +7,10 @@
   overflow: hidden;
   position: relative;
   padding-bottom: 5rem;
-  
 
   @media #{$sm} {
     padding-inline: 1rem;
     height: auto;
-  }
-
-  @media #{$md} {
-    padding-inline: 1rem;
   }
 
   @media #{$xxl} {
@@ -59,7 +54,7 @@
       width: 100%;
       padding-inline: 0.5rem;
       margin-top: 65px;
-      
+
       @media #{$sm} {
         margin-top: 95px;
         gap: 1rem;
@@ -74,20 +69,18 @@
         height: 100%;
         border-radius: 15px;
         object-fit: cover;
+        border: 1.5px solid goldenrod;
 
         @media #{$sm} {
           max-width: 30%;
-          border: 1.5px solid goldenrod;
         }
         @media #{$md} {
           max-width: 24%;
         }
         @media #{$lg} {
-          max-width: 19%;
+          max-width: 13%;
         }
-        @media #{$xxl} {
-          max-width: 16%;
-        }
+
         @media #{$fourK} {
           max-width: 12%;
         }
@@ -101,15 +94,6 @@
         text-align: left;
         font-size: 70%;
 
-        h1 {
-          @media #{$xl} {
-            font-size: 55px;
-          }
-          @media #{$xxl} {
-            font-size: 65px;
-          }
-        }
-
         @media #{$sm} {
           text-align: center;
         }
@@ -121,8 +105,17 @@
           gap: 1rem;
         }
 
-        @media #{$xxl} {
-          font-size: 110%;
+        h1 {
+          font-size: 150%;
+          @media #{$sm} {
+            font-size: 25px;
+          }
+          @media #{$md} {
+            font-size: 30px;
+          }
+          @media #{$xxl} {
+            font-size: 40px;
+          }
         }
 
         button {
@@ -136,13 +129,13 @@
           @media #{$sm} {
             justify-content: center;
           }
-          
+
           span {
             background-color: #86868658;
             padding: 0.1rem 0.4rem;
             @media #{$sm} {
               justify-content: center;
-              padding-inline:  1rem;
+              padding-inline: 1rem;
             }
             border-radius: 25px;
           }
@@ -156,6 +149,9 @@
           @media #{$sm} {
             gap: 1rem;
             justify-content: center;
+          }
+          @media #{$xl} {
+            font-size: 85%;
           }
         }
 
@@ -202,8 +198,8 @@
     max-width: 65%;
   }
   h3 {
-    @media #{$lg} {
-      font-size: 170%;
+    @media #{$xl} {
+      font-size: 150%;
     }
   }
   .cast {
@@ -256,7 +252,7 @@
       padding: 1rem;
     }
     @media #{$lg} {
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 1rem;
     }
     @media #{$xxl} {
@@ -269,7 +265,7 @@
     .card {
       overflow: visible;
 
-      img{
+      img {
         border-radius: 15px;
       }
     }
