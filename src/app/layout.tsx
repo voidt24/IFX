@@ -4,6 +4,7 @@ import "../sass/main.scss";
 import Navbar from '../components/Navbar'
 import ContextWrapper from "../context/Context";
 import  AuthModal  from "@/components/AuthModal";
+import  Trailer  from "@/components/Trailer";
 
 import MediaData from '../components/MediaData'
 
@@ -17,10 +18,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <ContextWrapper>
-          <MediaData/>
+          <MediaData />
           <Navbar />
           {children}
-          {<AuthModal />}
+          <AuthModal />
+          <Trailer />
         </ContextWrapper>
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client"
 import { usePathname } from "next/navigation";
 import { useState,createContext, useEffect } from "react";
+import { auth } from "../firebase/firebase.config";
 
 export const Context = createContext([]);
 
@@ -23,8 +24,9 @@ export default function ContextWrapper({ children }) {
   const [checkedMedia, setCheckedMedia] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
-  const [isMember] = useState(false);
+  const [isMember, setIsMember] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
 
   const contextValues = {
     currentId,
@@ -68,6 +70,25 @@ useEffect(() => {
     setCurrentMediaType(path.slice(1, path.lastIndexOf("/")));
   }
 }, [path])
+
+ useEffect(() => {
+   auth.onAuthStateChanged((user) => {
+     if (user) {
+       setUserLogged(true);
+       setFirebaseActiveUser({ email: user.email, uid: user.uid });
+
+       setIsMember(true);
+       setOpenDialog(false);
+     } else {
+       setTimeout(() => {
+         if (!user && !localStorage.getItem("auth")) {
+           setIsMember(false);
+           setOpenDialog(true);
+         }
+       }, 4000);
+     }
+   });
+ }, []);
 
   return <Context.Provider value={contextValues}>{children}</Context.Provider>;
 }

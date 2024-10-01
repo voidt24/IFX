@@ -41,8 +41,8 @@ export default function Navbar() {
               setCurrentMediaType("movies");
             }}
           >
-            <i className={` ${currentMediaType == "movies" && "text-[#00d8a2]"} bi bi-camera-reels to-hide-on-desk`}></i>
-            <p className={`${currentMediaType == "movies" && "text-[#00d8a2]"} `}>Movies</p>
+            <i className={` ${currentMediaType == "movies" && "text-[gold]"} bi bi-camera-reels to-hide-on-desk`}></i>
+            <p className={`${currentMediaType == "movies" && "text-[gold]"} `}>Movies</p>
           </Link>
         </li>
         <li>
@@ -53,8 +53,8 @@ export default function Navbar() {
               setCurrentMediaType("tvshows");
             }}
           >
-            <i className={` ${currentMediaType == "tvshows" && "text-[#00d8a2]"} bi bi-tv to-hide-on-desk`}></i>
-            <p className={`${currentMediaType == "tvshows" && "text-[#00d8a2]"} `}>TV Shows</p>
+            <i className={` ${currentMediaType == "tvshows" && "text-[gold]"} bi bi-tv to-hide-on-desk`}></i>
+            <p className={`${currentMediaType == "tvshows" && "text-[gold]"} `}>TV Shows</p>
           </Link>
         </li>
       </ul>
