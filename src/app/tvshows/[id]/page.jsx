@@ -1,4 +1,4 @@
-import MediaDetails from "@/components/MediaDetails";
+import MediaDetails from "@/components/mediaDetails";
 const Media = () => {
   return <MediaDetails />;
 };

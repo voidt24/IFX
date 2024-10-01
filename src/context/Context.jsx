@@ -11,7 +11,7 @@ export default function ContextWrapper({ children }) {
   const [openTrailer, setOpenTrailer] = useState("");
   const [trailerKey, setTrailerKey] = useState("");
   const [cast, setCast] = useState("");
-  const [currentMediaType, setCurrentMediaType] = useState(window.location.pathname.slice(1));
+  const [currentMediaType, setCurrentMediaType] = useState("movies");
   const [apiData, setApiData] = useState([]);
   const [userClicked, setUserClicked] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
