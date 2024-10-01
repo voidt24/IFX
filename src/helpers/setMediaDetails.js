@@ -4,7 +4,7 @@ import { getCast } from './getCast';
 import { getReviews } from './getReviews';
 import { getSimilar } from './getSimilar';
 import { mediaD_Actions } from './reducerSelectedMedia';
-// import { getFromDB } from '../firebase/getFromDB';
+import { getFromDB } from '../firebase/getFromDB';
 
 export const setMediaDetails = (currentId, dispatch, setCastMaximized, currentMediaType, setCast, setLoadingCast, setSimilar, setReviews, setRouteKey, setSimilarMaximized) => {
   dispatch({ type: mediaD_Actions.set_All_DataLoader, payload: { loadingAllData: true } });
@@ -70,8 +70,8 @@ export const setMediaDetails = (currentId, dispatch, setCastMaximized, currentMe
 
 export const setListsState = (userLogged, firebaseActiveUser, setAddedToFavs, setLoadingFavs, setAddedtoWatchList, setLoadingWatchlist, currentId) => {
   if (userLogged) {
-    // getFromDB(firebaseActiveUser.uid, 'favorites', setAddedToFavs, setLoadingFavs, currentId);
-    // getFromDB(firebaseActiveUser.uid, 'watchlist', setAddedtoWatchList, setLoadingWatchlist, currentId);
+    getFromDB(firebaseActiveUser.uid, 'favorites', setAddedToFavs, setLoadingFavs, currentId);
+    getFromDB(firebaseActiveUser.uid, 'watchlist', setAddedtoWatchList, setLoadingWatchlist, currentId);
   } else {
     setLoadingFavs(false);
     setLoadingWatchlist(false);
