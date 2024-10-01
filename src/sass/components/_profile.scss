@@ -82,8 +82,9 @@
     }
     //selected tab
     .base--selected {
-      background-color: #00a87e;
+      background-color: var(--primary);
       color: #fff;
+      border-radius: 25px;
     }
 
     .tabpanel {
@@ -115,13 +116,13 @@
     text-shadow: none;
   }
   button {
-    border: 1px solid #00a87e;
+    border: 1px solid var(--primary);
     padding: 3px 7px;
-    color: #00a87e;
+    color: var(--primary);
     border-radius: 25px;
 
     &:last-of-type {
-      background-color: #00a87e;
+      background-color: var(--primary);
       color: white;
     }
   }

@@ -1,41 +1,51 @@
-.card{
+.card {
   position: relative;
   border-radius: 15px;
   border: 3px solid transparent;
   transition: all 0.2s;
   overflow: hidden;
 
-  #checkbox{
+   &:hover{
+      filter: grayscale(0.7);
+      border: 1px solid #ffffffb0;
+    }
+  #checkbox {
     position: absolute;
     top: 2px;
     right: 2px;
   }
 
-  .vote,.mediatype {
+  .vote,
+  .mediatype,.year {
     border-radius: 15px;
-    padding: .1rem .5rem;
+    padding: 0.1rem 0.5rem;
     position: absolute;
     font-size: 65%;
     z-index: 2;
-    border: 1px solid #00a48190;    
-  }
-  .vote{
+    border: 1px solid #daa520bc;
     background-color: #0c0c0cbb;
-    top: 5px;
-    left:  5px;  
   }
-  .mediatype{
-    background-color: #0c0c0cbb;
+  .vote {
+    top: 6px;
+    left: 5px;
+    padding-inline: 0.8rem;
+  }
+  .year {
+    bottom: 12px;
+    right: 5px;
+  }
+  .mediatype {
     left: 5px;
     bottom: 12px;
   }
 }
 .content {
   position: relative;
+
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+   
   }
 }
-

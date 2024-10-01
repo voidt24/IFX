@@ -70,11 +70,7 @@
       bottom: 200px;
     }
 
-    .isActive {
-      transform: translateY(-10px);
-      border: 1px solid #b3b3b3;
-      opacity: 1;
-    }
+   
 
     .movie {
       position: relative;
@@ -88,6 +84,11 @@
         cursor: pointer;
         filter: grayscale(1);
         opacity: 0.6;
+
+          &:hover{
+      filter: grayscale(0.7);
+      border: 1px solid #ffffffb0;
+    }
       }
 
       @media #{$xss} {
@@ -106,6 +107,12 @@
         display: block;
       }
     }
+
+     .isActive {
+      transform: translateY(-10px);
+      opacity: 1;
+      border: 1px solid var(--primary);
+    }
   }
 
   .vote {
@@ -115,6 +122,6 @@
     left: 5px;
     top: 5px;
     font-size: 65%;
-    border: 1px solid #00a48190;    
+    border: 1px solid #daa520bc;    
   }
 }

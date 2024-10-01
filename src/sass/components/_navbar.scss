@@ -50,7 +50,7 @@
       transition: all 0.4s;
 
       &:hover {
-        color: #00d8a2;
+        color: gold;
       }
     }
   }
@@ -72,10 +72,6 @@
       display: none;
     }
   }
-
-  .active {
-    color: #00d8a2;
-  }
 }
 
 .user-options {
@@ -83,6 +79,7 @@
   gap: 1.5rem;
   text-align: center;
   padding: 2rem 2.5rem;
+  border-radius: 15px;
   
   a{
     color: rgb(255, 255, 255);
@@ -101,11 +98,11 @@
     input {
       border: 1px solid #00000072;
       border-radius: 12px;
-      padding: 0.2rem 0.5rem;
     }
     button {
       margin-top: 10px;
       padding-block: 0.4rem;
+      font-size: 90%;
     }
   }
 
