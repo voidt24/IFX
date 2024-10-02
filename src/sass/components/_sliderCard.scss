@@ -18,21 +18,52 @@
   .vote,
   .mediatype,
   .year {
-    border-radius: 15px;
-    padding: 0.1rem 0.5rem;
     position: absolute;
-    font-size: 65%;
     z-index: 2;
-    border: 1px solid #daa520bc;
-    background-color: #0c0c0cbb;
+    color: white;
   }
   .vote {
     top: 6px;
     left: 5px;
-    padding-inline: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 28px;
+    width: 28px;
+    font-size: 60%;
+
+    @media #{$md} {
+      height: 30px;
+      width: 30px;
+      font-size: 65%;
+    }
+    @media #{$xxl} {
+      height: 35px;
+      width: 35px;
+      font-size: 70%;
+    }
+
+    padding-inline: 0.6rem;
+    font-weight: bolder;
+    border-radius: 100%;
+    text-shadow: none;
+    background-color: #0c0c0cbb;
   }
+  .year,
+  .mediatype {
+    font-size: 65%;
+    padding-inline: 0.3rem;
+    border-radius: 10px;
+    background-color: #0c0c0cbb;
+
+    @media #{$xl} {
+      font-size: 80%;
+    }
+  }
+
   .year {
-    top: 6px;
+    top: 13px;
     right: 5px;
   }
   .mediatype {

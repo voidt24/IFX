@@ -9,6 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 
 const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => {
   const [poster, setPoster] = useState(null);
+  const [vote, setVote] = useState();
   const { setCurrentId, setCurrentMediaType, currentMediaType, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
 
   const l = `/${changeMediaType === "movie" ? "movies" : "tvshows"}`;
@@ -20,7 +21,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
     if (event.target.checked) {
       card.style.border = "4px solid rgb(255 166 0)";
 
-      card.classList.add("selected")
+      card.classList.add("selected");
 
       card.querySelector("img").style.filter = "contrast(0.6)";
       card.querySelector("img").style.transform = "scale(0.93)";
@@ -52,12 +53,32 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
     if (result.poster_path != null) {
       setPoster(`${imageWithSize("780")}${result.poster_path}`);
     }
+
+    setVote(result.vote_average.toString().slice(0, 3) * 10);
   }, [result]);
   return (
     poster && (
       <div className="card" data-id={result.id}>
-        <span className="vote">{result.vote_average.toString().slice(0, 3)}</span>
-        <span className="year">{result.release_date && result.release_date.slice(0, 4) || result.first_air_date && result.first_air_date.slice(0,4)}</span>
+        <div
+          className={`${
+            vote == 0
+              ? " border-2 border-gray-700 text-white"
+              :  vote < 50
+              ? " border-2 border-red-800"
+              : vote < 65
+              ? " border-2 border-yellow-500"
+              : vote < 75
+              ? " border-2 border-lime-300"
+              : " border-2 border-green-500"
+          } vote text-black`}
+        >
+          <p>
+          {vote + "%"}
+          </p>
+        </div>
+        <span className="year">
+          {(result.release_date && result.release_date.slice(0, 4)) || (result.first_air_date && result.first_air_date.slice(0, 4)) || (result.releaseDate && result.releaseDate)}
+        </span>
         {changeMediaType ? <span className="mediatype">{result.mediatype || result.media_type}</span> : null}
         <Link
           href={changeMediaType != null ? `${l}/${result.id}` : `${currentMediaType}/${result.id}`}

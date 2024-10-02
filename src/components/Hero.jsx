@@ -77,6 +77,7 @@ const Hero = () => {
 
       <div className="hero-media-thumbnails">
         {results.slice(0, 4).map((result) => {
+          const vote = result.vote_average.toString().slice(0, 3)*10 
           return (
             <div
               className={"movie " + (currentId === result.id ? "isActive" : "")}
@@ -85,7 +86,21 @@ const Hero = () => {
               }}
               key={result.id}
             >
-              <span className="vote">{result.vote_average.toString().slice(0, 3)}</span>
+              <div
+                className={`${
+                  vote == 0
+                    ? " border-2 border-gray-700 text-white"
+                    : vote < 50
+                    ? " border-2 border-red-800"
+                    : vote < 65
+                    ? " border-2 border-yellow-500"
+                    : vote < 75
+                    ? " border-2 border-lime-300"
+                    : " border-2 border-green-500"
+                } vote text-black`}
+              >
+                <p>{vote + "%"}</p>
+              </div>
 
               <img src={`${imageWithSize("500")}${result.poster_path}`} key={result.id} data-id={result.id} data-media-type={result.media_type} alt="media-image" />
             </div>
