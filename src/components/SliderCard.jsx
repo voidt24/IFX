@@ -62,19 +62,17 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
         <div
           className={`${
             vote == 0
-              ? " border-2 border-gray-700 text-white"
-              :  vote < 50
-              ? " border-2 border-red-800"
+              ? " border-[1.5px] xl:border-2 border-gray-700 text-white"
+              : vote < 50
+              ? " border-[1.5px] xl:border-2 border-red-800"
               : vote < 65
-              ? " border-2 border-yellow-500"
+              ? " border-[1.5px] xl:border-2 border-yellow-500"
               : vote < 75
-              ? " border-2 border-lime-300"
-              : " border-2 border-green-500"
+              ? " border-[1.5px] xl:border-2 border-lime-300"
+              : " border-[1.5px] xl:border-2 border-green-500"
           } vote text-black`}
         >
-          <p>
-          {vote + "%"}
-          </p>
+          <p>{vote + "%"}</p>
         </div>
         <span className="year">
           {(result.release_date && result.release_date.slice(0, 4)) || (result.first_air_date && result.first_air_date.slice(0, 4)) || (result.releaseDate && result.releaseDate)}
