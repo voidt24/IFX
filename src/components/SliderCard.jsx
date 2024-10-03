@@ -19,17 +19,15 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
     const card = event.target.parentElement.parentElement.parentElement;
 
     if (event.target.checked) {
-      card.style.border = "4px solid rgb(255 166 0)";
+      card.style.border = "3px solid rgb(255 166 0)";
 
       card.classList.add("selected");
 
-      card.querySelector("img").style.filter = "contrast(0.6)";
-      card.querySelector("img").style.transform = "scale(0.93)";
+      card.querySelector("img").style.filter = "grayscale(1)";
       card.querySelector("a").style.pointerEvents = "none";
     } else {
       card.style.border = "3px solid transparent";
       card.querySelector("img").style.filter = "none";
-      card.querySelector("img").style.transform = "scale(1)";
       card.querySelector("a").style.pointerEvents = "all";
     }
 
@@ -92,17 +90,20 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
           </div>
         </Link>
         {canBeEdited && edit && (
-          <span id="checkbox">
+          <span id="checkbox" className="relative w-full h-full z-20">
             <Checkbox
               onChange={handleChange}
               inputProps={{ "aria-label": "controlled" }}
               id={result.id.toString()}
               sx={{
-                "&:hover": { bgcolor: "black" },
-                bgcolor: "#0008",
+                height: "100%",
+                width: "100%",
+                bgcolor: "#00000060",
+                borderRadius: "8px",
                 color: "white",
+                "&:hover": { border: "1px solid white" },
                 "&.Mui-checked": {
-                  bgcolor: "#000",
+                  color: "goldenrod",
                 },
               }}
             />

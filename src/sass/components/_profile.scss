@@ -16,7 +16,7 @@
     padding: 0.5rem;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.3rem;
     @media #{$xss} {
       grid-template-columns: repeat(3, 1fr);
     }
@@ -28,6 +28,7 @@
     }
     @media #{$xxl} {
       grid-template-columns: repeat(7, 1fr);
+      gap: 0.6rem;
     }
     @media #{$fourK} {
       grid-template-columns: repeat(8, 1fr);
@@ -47,7 +48,6 @@
       position: sticky;
       top: 0;
       left: 0;
-      z-index: 4;
       padding-block: 1.5rem;
       display: flex;
       align-items: center;
@@ -56,7 +56,7 @@
         top: 3rem;
       }
 
-      .bi-arrow-left{
+      .bi-arrow-left {
         justify-self: flex-start;
       }
     }

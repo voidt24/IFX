@@ -69,7 +69,7 @@
       position: relative;
       width: 25%;
       border: 1px solid #b4b4b463;
-      border-radius: 12px;
+      border-radius: 8px;
       overflow: hidden;
       transition: all 0.3s;
 
@@ -119,21 +119,26 @@
     text-align: center;
     height: 28px;
     width: 28px;
-    font-size: 60%;
+    font-size: 45%;
     padding-inline: 0.6rem;
     font-weight: bolder;
     border-radius: 100%;
     text-shadow: none;
     background-color: #0c0c0cbb;
     @media #{$md} {
+      height: 28px;
+      width: 28px;
+      font-size: 55%;
+    }
+    @media #{$xl} {
       height: 30px;
       width: 30px;
-      font-size: 65%;
+      font-size: 60%;
     }
     @media #{$xxl} {
-      height: 35px;
-      width: 35px;
-      font-size: 70%;
+      height: 32px;
+      width: 32px;
+      font-size: 66%;
     }
   }
 }

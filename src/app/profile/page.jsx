@@ -62,7 +62,7 @@ const Profile = () => {
             <CircularProgress color="inherit" size={100} />
           ) : (
             <Tabs className="tabs" value={activeTab} onChange={(event, newValue) => setActiveTab(newValue)}>
-              <div className="tablist-container">
+              <div className="tablist-container z-50">
                 <i
                   className="bi bi-arrow-left"
                   onClick={() => {
