@@ -101,7 +101,6 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
                 bgcolor: "#00000060",
                 borderRadius: "8px",
                 color: "white",
-                "&:hover": { border: "1px solid white" },
                 "&.Mui-checked": {
                   color: "goldenrod",
                 },

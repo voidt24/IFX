@@ -5,9 +5,11 @@
   transition: all 0.2s;
   overflow: hidden;
 
-  &:hover {
-    filter: grayscale(0.7);
-    border: 1px solid #ffffffb0;
+  @media #{$lg} {
+    &:hover {
+      filter: grayscale(0.7);
+      border: 1px solid #ffffffb0;
+    }
   }
   #checkbox {
     position: absolute;

@@ -4,7 +4,7 @@
   position: fixed;
   width: 100%;
   padding-inline: 1rem;
-  z-index: 10;
+  z-index: 99;
   background: #0007;
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -80,10 +80,10 @@
   text-align: center;
   padding: 2rem 2.5rem;
   border-radius: 15px;
-  
-  a{
+
+  a {
     color: rgb(255, 255, 255);
-    &:hover{
+    &:hover {
       color: var(--primary);
     }
   }
@@ -126,7 +126,7 @@
   gap: 0.2rem;
 }
 
-.MuiDialog-root{
+.MuiDialog-root {
   z-index: 99999;
   position: relative;
 }
