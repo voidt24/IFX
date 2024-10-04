@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { usePathname } from "next/navigation";
-import { useState,createContext, useEffect } from "react";
+import { useState, createContext, useEffect } from "react";
 import { auth } from "../firebase/firebase.config";
 
 export const Context = createContext([]);
@@ -26,7 +26,6 @@ export default function ContextWrapper({ children }) {
 
   const [isMember, setIsMember] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
 
   const contextValues = {
     currentId,
@@ -65,31 +64,47 @@ export default function ContextWrapper({ children }) {
     openDialog,
     setOpenDialog,
   };
-useEffect(() => {
-  if(path.slice(1).includes('/')){
-    setCurrentMediaType(path.slice(1, path.lastIndexOf("/")));
-  }
-}, [path])
 
- useEffect(() => {
-   auth.onAuthStateChanged((user) => {
-     if (user) {
-       setUserLogged(true);
-       setFirebaseActiveUser({ email: user.email, uid: user.uid });
+  useEffect(() => {
+    function setMedia(pathContainsValidMedia, pathName) {
+      if (pathContainsValidMedia) {
+        setCurrentMediaType(pathName);
+      } else {
+        setCurrentMediaType("movies");
+      }
+    }
 
-       setIsMember(true);
-       setOpenDialog(false);
-     } else {
-       setTimeout(() => {
-         if (!user && !localStorage.getItem("auth")) {
-           setIsMember(false);
-           setOpenDialog(true);
-         }
-       }, 4000);
-     }
-   });
- }, []);
+    let pathName;
+    let pathContainsValidMedia;
+    if (path.slice(1).includes("/")) {
+      pathName = path.slice(1, path.lastIndexOf("/"));
+      pathContainsValidMedia = pathName == "movies" || pathName == "tvshows";
+      setMedia(pathContainsValidMedia, pathName);
+    } else {
+      pathName = path.slice(1);
+      pathContainsValidMedia = pathName == "movies" || pathName == "tvshows";
+      setMedia(pathContainsValidMedia, pathName);
+    }
+  }, [path]);
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserLogged(true);
+        setFirebaseActiveUser({ email: user.email, uid: user.uid });
+
+        setIsMember(true);
+        setOpenDialog(false);
+      } else {
+        setTimeout(() => {
+          if (!user && !localStorage.getItem("auth")) {
+            setIsMember(false);
+            setOpenDialog(true);
+          }
+        }, 4000);
+      }
+    });
+  }, []);
 
   return <Context.Provider value={contextValues}>{children}</Context.Provider>;
 }
-
