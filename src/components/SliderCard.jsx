@@ -12,7 +12,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
   const [vote, setVote] = useState();
   const { setCurrentId, setCurrentMediaType, currentMediaType, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
 
-  const l = `/${changeMediaType === "movie" ? "movies" : "tvshows"}`;
+  const mediaTypeOfSpecificCard = `/${changeMediaType === "movie" ? "movies" : "tvshows"}`;
   const handleChange = (event) => {
     setCheckedMedia(event.target.checked);
 
@@ -77,7 +77,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
         </span>
         {changeMediaType ? <span className="mediatype">{result.mediatype || result.media_type}</span> : null}
         <Link
-          href={changeMediaType != null ? `${l}/${result.id}` : `${currentMediaType}/${result.id}`}
+          href={changeMediaType != null ? `${mediaTypeOfSpecificCard}/${result.id}` : `${currentMediaType}/${result.id}`}
           onClick={() => {
             setCurrentId(result.id);
             if (changeMediaType) {
