@@ -19,10 +19,8 @@ const Hero = () => {
 
   function renderInitialContent() {
     try {
-      let mediaData;
       if (apiData.length > 0) {
-        mediaData = currentMediaType === "movies" ? apiData[0] : apiData[1];
-        const [trendingResults] = mediaData;
+        const [trendingResults] = apiData[0];
 
         setResults(trendingResults);
 

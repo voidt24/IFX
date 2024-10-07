@@ -1,39 +1,41 @@
-"use client"
-import { useContext, useEffect } from 'react';
-import { Context } from '../context/Context';
-import { fetchData } from '../helpers/fetchData';
+"use client";
+import { useContext, useEffect } from "react";
+import { Context } from "../context/Context";
+import { fetchData } from "../helpers/fetchData";
 
-const category = ['trending', 'popular'];
+const category = ["trending", "popular"];
 const limit = [4, 15, 20];
 
 export const mediaProperties = {
   movie: {
-    mediaType: 'movie',
+    mediaType: "movie",
     category,
     limit,
   },
   tv: {
-    mediaType: 'tv',
+    mediaType: "tv",
     category,
     limit,
   },
 };
 
 export const MediaData = () => {
-  const { currentMediaType, setCurrentMediaType, setApiData, setLoadingAllData } = useContext(Context);
-
+  const { currentMediaType, setApiData, setLoadingAllData } = useContext(Context);
   useEffect(() => {
-    
-    if (currentMediaType !== 'movies' && currentMediaType !== 'tvshows') {
-      setCurrentMediaType('movies');
-    }
     async function callFetch() {
       try {
-        const movieData = await fetchData(mediaProperties.movie);
-        const tvData = await fetchData(mediaProperties.tv);
-        if (movieData && tvData) {
+        let movieData = null;
+        let tvData = null;
+        if (currentMediaType == "movies") {
+          movieData = await fetchData(mediaProperties.movie);
+                // console.log(movieData);
+
+        } else {
+          tvData = await fetchData(mediaProperties.tv);
+        }
+        if (movieData !== null || tvData !== null) {
           const tempApiData = [];
-          tempApiData.push(movieData, tvData);
+          tempApiData.push(movieData === null ? tvData : movieData);
           return tempApiData;
         } else {
           throw new Error();
@@ -44,12 +46,14 @@ export const MediaData = () => {
     }
 
     callFetch()
-    .then((data) => {
-      setApiData(data);
-      setLoadingAllData(false)
-    })
-    .catch(()=>{setLoadingAllData(false)}) //todo: display error to user
-  }, []);
+      .then((data) => {
+        setApiData(data);
+        setLoadingAllData(false);
+      })
+      .catch(() => {
+        setLoadingAllData(false);
+      }); //todo: display error to user\
+  }, [currentMediaType]);
 
   return null;
 };
