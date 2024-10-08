@@ -1,7 +1,6 @@
 import SliderCard from "./SliderCard";
 
 import { TabPanel } from "@mui/base";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { database, usersCollectionName } from "../firebase/firebase.config";
@@ -76,38 +75,43 @@ export const Panel = ({ value, panelName, savedElementResults, setLoading, setMe
             </button>
           )}
 
-          <Dialog
-            className="confirm-dialog"
-            open={confirmDialog}
-            onClose={() => {
-              setConfirmDialog(false);
-            }}
-            aria-labelledby="responsive-dialog-title"
-          >
-            <DialogTitle id="responsive-dialog-title ">{"Confirm the action"}</DialogTitle>
-            <DialogContent className="dialogcontent ">
-              <DialogContentText className="dialog-content-text">Do you really you want to delete this data from {panelName}?</DialogContentText>
-            </DialogContent>
-            <DialogActions className="dialog-actions ">
-              <Button
-                onClick={() => {
-                  setConfirmDialog(false);
-                }}
-                autoFocus
-              >
-                Cancel
-              </Button>
-              <Button
-                autoFocus
-                onClick={() => {
-                  deleteFromFireStore(panelName);
-                  setConfirmDialog(false);
-                }}
-              >
-                Confirm
-              </Button>
-            </DialogActions>
-          </Dialog>
+          {confirmDialog && (
+            <div className="overlay z-50 flex p-4 items-center justify-center text-white">
+              <div className="  bg-black relative flex flex-col gap-6 rounded-lg items-center justify-center  z-30 border border-gray-600 py-4 px-6 w-full  sm:w-3/4 lg:w-3/6 xl:w-[700px]">
+                <button
+                  onClick={() => {
+                    setConfirmDialog(false);
+                  }}
+                  type="button"
+                  className="border-none  rounded-lg  hover:text-[var(--primary)] self-end"
+                >
+                  <i className="bi bi-x-circle "></i>
+                </button>
+                <p className="dialog-content-text xl:text-lg">Do you really you want to delete this data from {panelName}?</p>
+
+                <div className="delete-options flex gap-4">
+                  <button
+                    onClick={() => {
+                      setConfirmDialog(false);
+                    }}
+                    autoFocus
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      deleteFromFireStore(panelName);
+                      setConfirmDialog(false);
+                    }}
+                    autoFocus
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
       <div className="results">
