@@ -1,17 +1,17 @@
-import SliderCard from './SliderCard';
+import SliderCard from "./SliderCard";
 
-import { TabPanel } from '@mui/base';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { Context } from '../context/Context';
-import { database, usersCollectionName } from '../firebase/firebase.config';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { TabPanel } from "@mui/base";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { Context } from "../context/Context";
+import { database, usersCollectionName } from "../firebase/firebase.config";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 export const Panel = ({ value, panelName, savedElementResults, setLoading, setMessage }) => {
   const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
 
-  const deleteFromFireStore = (fieldName, customMessage = 'List updated!') => {
+  const deleteFromFireStore = (fieldName, customMessage = "List updated!") => {
     const document = doc(database, usersCollectionName, firebaseActiveUser.uid);
 
     getDoc(document)
@@ -28,10 +28,10 @@ export const Panel = ({ value, panelName, savedElementResults, setLoading, setMe
         updateDoc(document, updateData).then(() => {
           setLoading(false);
         });
-        setMessage({ message: customMessage, severity: 'success', open: true });
+        setMessage({ message: customMessage, severity: "success", open: true });
       })
       .catch((err) => {
-        setMessage({ message: 'Error deleting data, try again later', severity: 'error', open: true });
+        setMessage({ message: "Error deleting data, try again later", severity: "error", open: true });
 
         setLoading(false);
         return; //todo: set error message un screen
@@ -45,11 +45,7 @@ export const Panel = ({ value, panelName, savedElementResults, setLoading, setMe
   }, []);
 
   return (
-    <TabPanel
-      
-      className="tabpanel"
-      value={value}
-    >
+    <TabPanel className="tabpanel" value={value}>
       {savedElementResults && savedElementResults.length > 0 && (
         <div className="tabpanel-options">
           <button
@@ -62,7 +58,7 @@ export const Panel = ({ value, panelName, savedElementResults, setLoading, setMe
                   card.querySelector("img").style.filter = "none";
                   card.querySelector("img").style.transform = "scale(1)";
                   card.querySelector("a").style.pointerEvents = "all";
-                });              
+                });
               }
               setCheckedMedia([]);
             }}
@@ -88,11 +84,11 @@ export const Panel = ({ value, panelName, savedElementResults, setLoading, setMe
             }}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle id="responsive-dialog-title">{"Confirm the action"}</DialogTitle>
-            <DialogContent className="dialogcontent">
-              <DialogContentText>Do you really you want to delete this data from {panelName}?</DialogContentText>
+            <DialogTitle id="responsive-dialog-title ">{"Confirm the action"}</DialogTitle>
+            <DialogContent className="dialogcontent ">
+              <DialogContentText className="dialog-content-text">Do you really you want to delete this data from {panelName}?</DialogContentText>
             </DialogContent>
-            <DialogActions>
+            <DialogActions className="dialog-actions ">
               <Button
                 onClick={() => {
                   setConfirmDialog(false);

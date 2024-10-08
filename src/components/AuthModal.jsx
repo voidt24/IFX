@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Link from "next/link";
 import { Context } from "@/context/Context";
 import Error from "../components/Error";
@@ -8,13 +8,14 @@ import { createUser } from "../firebase/createUser";
 import { loginUser } from "../firebase/loginUser";
 import { auth } from "../firebase/firebase.config";
 import { useRouter } from "next/navigation";
-
 const AuthModal = () => {
   const router = useRouter();
   const { userClicked, setUserClicked, userLogged, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
 
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
+  const pwdInputRef = useRef(null);
+  const [pwdInputType, setPwdInputType] = useState("password");
 
   function setAppForActiveUser(user) {
     setFirebaseActiveUser({ email: user.user.email, uid: user.user.uid });
@@ -77,7 +78,7 @@ const AuthModal = () => {
   };
   return userClicked ? (
     <>
-      <div className={`flex fixed z-30 h-screen w-full top-0 left-0 p-10 flex-col justify-center items-center `}>
+      <div className={`flex fixed z-50 h-screen w-full top-0 left-0 p-2 flex-col justify-center items-center `}>
         <div
           className="overlay bg-black opacity-85 absolute left-0 top-0 w-full h-full"
           onClick={() => {
@@ -85,15 +86,15 @@ const AuthModal = () => {
           }}
         ></div>
 
-        <div className="user-options bg-black text-white z-30 border border-gray-600 md:p-20">
+        <div className="user-options bg-black relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-gray-600 p-6 w-full h-2/5  sm:w-3/4 lg:w-3/6 xl:w-1/4">
           <button
             onClick={() => {
               setUserClicked(false);
             }}
             type="button"
-            className="border-none  rounded-lg  w-6 h-6 hover:text-[var(--primary)]"
+            className="border-none  rounded-lg  hover:text-[var(--primary)] absolute top-4 right-4 p-0"
           >
-            <i className="bi bi-x-circle"></i>
+            <i className="bi bi-x-circle text-xl"></i>
           </button>
           {userLogged ? (
             <>
@@ -124,14 +125,28 @@ const AuthModal = () => {
                 />
 
                 <label htmlFor="">Password</label>
-                <input
-                  className="text-black py-0 px-2"
-                  type="password"
-                  onChange={(e) => {
-                    setUserData({ ...userData, password: e.target.value });
-                  }}
-                  required
-                />
+                <span className="flex bg-white rounded-xl relative">
+                  <input
+                    className="text-black py-0 px-2 border-none w-[88.5%]"
+                    type={pwdInputType}
+                    onChange={(e) => {
+                      setUserData({ ...userData, password: e.target.value });
+                    }}
+                    ref={pwdInputRef}
+                    required
+                  />
+                  <i
+                    className={`bi bi-eye-fill text-lg ${pwdInputType == "password" ? "text-black" : "text-[var(--primary)]"}  absolute top-0 right-2`}
+                    onClick={() => {
+                      if (pwdInputRef.current.type == "text") {
+                        pwdInputRef.current.type = "password";
+                        setPwdInputType("password");
+                      } else {
+                        setPwdInputType("text");
+                      }
+                    }}
+                  ></i>
+                </span>
 
                 {errorMessage.active && <Error errorMessage={errorMessage} />}
 
@@ -139,34 +154,20 @@ const AuthModal = () => {
                   {noAccount ? "Create account" : "Login"}
                 </button>
               </form>
-              {noAccount ? (
-                <p>
-                  Already have an account?{" "}
-                  <button
-                    onClick={() => {
-                      setNoAccount(false);
-                      setErrorMessage({ active: false, text: "" });
-                    }}
-                    className="opt border-none hover:bg-black"
-                  >
-                    Login
-                  </button>
-                </p>
-              ) : (
-                <p>
-                  {" "}
-                  Dont have an account?{" "}
-                  <button
-                    onClick={() => {
-                      setNoAccount(true);
-                      setErrorMessage({ active: false, text: "" });
-                    }}
-                    className="opt border-none hover:bg-black"
-                  >
-                    Create account
-                  </button>
-                </p>
-              )}
+
+              <p>
+                {noAccount ? "Already have an account? " : "Dont have an account? "}
+                <button
+                  className=" border-none underline mt-2 p-0 text-[var(--primary)]"
+                  onClick={() => {
+                    noAccount ? setNoAccount(false) : setNoAccount(true);
+
+                    setErrorMessage({ active: false, text: "" });
+                  }}
+                >
+                  {noAccount ? "Login" : "Create account"}
+                </button>
+              </p>
             </>
           )}
         </div>

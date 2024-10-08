@@ -26,7 +26,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="nav" ref={navRef}>
+    <nav className="nav z-30" ref={navRef}>
       <Link href="/search" id="search-btn" className="nav-item-box">
         <i className="bi bi-search"></i>
         <p className="to-hide-on-desk">search</p>

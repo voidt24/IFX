@@ -108,22 +108,32 @@
     }
   }
 }
-.confirm-dialog {
-  #responsive-dialog-title {
-    text-shadow: none;
+.MuiPaper-root .MuiPaper-elevation .MuiPaper-rounded .MuiPaper-elevation24 .MuiDialog-paper .MuiDialog-paperScrollPaper .MuiDialog-paperWidthSm .css-rsks93-MuiPaper-root-MuiDialog-paper {
+  background-color: black;
+}
+.css-rsks93-MuiPaper-root-MuiDialog-paper {
+  border: 1px solid #80808091 !important;
+  div,
+  h2,
+  p {
+    background-color: black !important;
+    color: white !important;
   }
-  .dialogcontent {
-    text-shadow: none;
-  }
+}
+
+.dialog-actions {
+  padding-block: 1rem;
   button {
-    border: 1px solid var(--primary);
-    padding: 3px 7px;
+    padding: 1.5px 12px;
+    background-color: #80808045;
     color: var(--primary);
     border-radius: 25px;
+    color: white;
 
     &:last-of-type {
       background-color: var(--primary);
-      color: white;
+      color: #000000a2;
+      font-weight: bold;
     }
   }
 }
