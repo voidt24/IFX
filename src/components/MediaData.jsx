@@ -20,39 +20,32 @@ export const mediaProperties = {
 };
 
 export const MediaData = () => {
-  const { currentMediaType, setApiData, setLoadingAllData } = useContext(Context);
+  const { currentMediaType, setApiData, setinitialDataError, setInitialDataIsLoading } = useContext(Context);
+
   useEffect(() => {
-    async function callFetch() {
-      try {
-        let movieData = null;
-        let tvData = null;
-        if (currentMediaType == "movies") {
-          movieData = await fetchData(mediaProperties.movie);
-                // console.log(movieData);
-
-        } else {
-          tvData = await fetchData(mediaProperties.tv);
-        }
-        if (movieData !== null || tvData !== null) {
-          const tempApiData = [];
-          tempApiData.push(movieData === null ? tvData : movieData);
-          return tempApiData;
-        } else {
-          throw new Error();
-        }
-      } catch (e) {
-        console.log(e);
-      }
+    if (currentMediaType == "movies") {
+      fetchData(mediaProperties.movie)
+        .then((movieData) => {
+          setApiData([movieData]);
+        })
+        .catch((e) => {
+          setinitialDataError(true);
+        })
+        .finally(() => {
+          setInitialDataIsLoading(false);
+        });
+    } else {
+      fetchData(mediaProperties.tv)
+        .then((tvData) => {
+          setApiData([tvData]);
+        })
+        .catch((e) => {
+          setinitialDataError(true);
+        })
+        .finally(() => {
+          setInitialDataIsLoading(false);
+        });
     }
-
-    callFetch()
-      .then((data) => {
-        setApiData(data);
-        setLoadingAllData(false);
-      })
-      .catch(() => {
-        setLoadingAllData(false);
-      }); //todo: display error to user\
   }, [currentMediaType]);
 
   return null;

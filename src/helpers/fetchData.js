@@ -1,13 +1,14 @@
-import { apiUrl, API_KEY } from './api.config';
+import { apiUrl, API_KEY } from "./api.config";
 
 export const fetchData = async (obj) => {
-
   const { mediaType, category, limit } = obj;
 
   const trendingUrl = `${apiUrl}${category[0]}/${mediaType}/day?api_key=${API_KEY}&page=1`;
   const popularUrl = `${apiUrl}${mediaType}/${category[1]}?api_key=${API_KEY}&page=1`;
-  
-  const validTime = Date.now() + 432000000; //5 days
+
+  const validTime = Date.now() + 259200000; //3 days
+
+  const CACHENAME = "prods-cache-v2";
 
   const fetchNormal = async () => {
     try {
@@ -18,30 +19,30 @@ export const fetchData = async (obj) => {
       const jsonPopularRequest = await popularData.json();
 
       if (trendingData.ok && popularData.ok) {
-        const jsonTrendingResults = jsonTrendingRequest.results.slice(0, mediaType == 'movie' ? limit[0] : limit[2]);
+        const jsonTrendingResults = jsonTrendingRequest.results.slice(0, mediaType == "movie" ? limit[0] : limit[2]);
         const jsonPopularResults = jsonPopularRequest.results.slice(0, limit[1]);
 
         const responseClone = new Response(JSON.stringify(jsonTrendingResults), {
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         });
         const responseClone2 = new Response(JSON.stringify(jsonPopularResults), {
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         });
 
-        const cache = await caches.open('my-cache');
+        const cache = await caches.open(CACHENAME);
         await cache.put(trendingUrl, responseClone);
         await cache.put(popularUrl, responseClone2);
-        await cache.put(`${trendingUrl}-expiration`, new Response(JSON.stringify({ headers: { 'Content-Type': 'application/json' }, validTime })));
+        await cache.put(`${mediaType}-expiration`, new Response(JSON.stringify({ headers: { "Content-Type": "application/json" }, validTime })));
 
         const dataArray = [];
         dataArray.push(jsonTrendingResults, jsonPopularResults);
 
         return dataArray;
       } else {
-        return [];
+        return Promise.reject();
       }
     } catch (e) {
-      return e;
+      return Promise.reject(e);
     }
   };
 
@@ -53,10 +54,10 @@ export const fetchData = async (obj) => {
     if (response && response2) {
       const expirationDate = await expirationResponse.json();
       if (Date.now() > expirationDate.validTime) {
-        const cache = await caches.open('my-cache');
+        const cache = await caches.open(CACHENAME);
         await cache.delete(trendingUrl);
         await cache.delete(popularUrl);
-        await cache.delete(`${trendingUrl}-expiration`);
+        await cache.delete(`${mediaType}-expiration`);
         return fetchNormal();
       }
       const json = await response.json();
@@ -70,6 +71,6 @@ export const fetchData = async (obj) => {
       return fetchNormal();
     }
   } catch (e) {
-    return e;
+    return Promise.reject(e);
   }
 };

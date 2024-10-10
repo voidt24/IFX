@@ -6,17 +6,15 @@ import { Context } from "../context/Context";
 
 export const Slider = () => {
   const [results, setResults] = useState([]);
-  const { openTrailer, apiData, currentMediaType } = useContext(Context);
+  const { openTrailer, apiData, setApiData, currentMediaType } = useContext(Context);
   const sliderRef = useRef();
 
   useEffect(() => {
-    try {
-      if (apiData.length > 0) {
-        const [trendingResults, popularResults] = apiData[0];
+    if (apiData && apiData.length > 0) {
+      const [trendingResults, popularResults] = apiData[0];
 
-        setResults(currentMediaType == "movies" ? popularResults : trendingResults.slice(5, 20));
-      }
-    } catch {}
+      setResults(currentMediaType == "movies" ? popularResults : trendingResults.slice(5, 20));
+    }
   }, [apiData, currentMediaType]);
 
   return (

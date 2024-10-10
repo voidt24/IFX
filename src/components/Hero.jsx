@@ -18,19 +18,15 @@ const Hero = () => {
   }, [apiData, currentMediaType]);
 
   function renderInitialContent() {
-    try {
-      if (apiData.length > 0) {
-        const [trendingResults] = apiData[0];
+    if (apiData && apiData.length > 0) {
+      const [trendingResults] = apiData[0];
 
-        setResults(trendingResults);
+      setResults(trendingResults);
 
-        let initialBackground = window.innerWidth >= 640 ? `${image}${trendingResults[0].backdrop_path}` : `${image}${trendingResults[0].poster_path}`;
-        setHeroBackground(initialBackground);
-        setTitle(trendingResults[0].name || trendingResults[0].title);
-        setCurrentId(trendingResults[0].id);
-      }
-    } catch (e) {
-      console.log("enter error here", e);
+      let initialBackground = window.innerWidth >= 640 ? `${image}${trendingResults[0].backdrop_path}` : `${image}${trendingResults[0].poster_path}`;
+      setHeroBackground(initialBackground);
+      setTitle(trendingResults[0].name || trendingResults[0].title);
+      setCurrentId(trendingResults[0].id);
     }
   }
 

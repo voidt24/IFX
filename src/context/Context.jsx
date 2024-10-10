@@ -26,6 +26,8 @@ export default function ContextWrapper({ children }) {
 
   const [isMember, setIsMember] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [initialDataError, setinitialDataError] = useState(false);
+  const [initialDataIsLoading, setInitialDataIsLoading] = useState(true);
 
   const contextValues = {
     currentId,
@@ -63,6 +65,10 @@ export default function ContextWrapper({ children }) {
     isMember,
     openDialog,
     setOpenDialog,
+    initialDataError,
+    setinitialDataError,
+    initialDataIsLoading,
+    setInitialDataIsLoading,
   };
 
   useEffect(() => {
@@ -76,15 +82,14 @@ export default function ContextWrapper({ children }) {
 
     let pathName;
     let pathContainsValidMedia;
+
     if (path.slice(1).includes("/")) {
       pathName = path.slice(1, path.lastIndexOf("/"));
-      pathContainsValidMedia = pathName == "movies" || pathName == "tvshows";
-      setMedia(pathContainsValidMedia, pathName);
     } else {
       pathName = path.slice(1);
-      pathContainsValidMedia = pathName == "movies" || pathName == "tvshows";
-      setMedia(pathContainsValidMedia, pathName);
     }
+    pathContainsValidMedia = pathName == "movies" || pathName == "tvshows";
+    setMedia(pathContainsValidMedia, pathName);
   }, [path]);
 
   useEffect(() => {
