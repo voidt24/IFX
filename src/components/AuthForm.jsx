@@ -40,26 +40,26 @@ export default function AuthForm() {
           }
         });
     } else {
+      loginUser(userData)
+        .then((user) => {
+          setAppForActiveUser(user);
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/invalid-credential":
+              setErrorMessage({ active: true, text: "incorrect email o password, try again." });
+              break;
+            case "auth/too-many-requests":
+              setErrorMessage({ active: true, text: "Too many invalid requests, wait a couple of minutes before trying again." });
+              break;
+            default:
+              setErrorMessage({ active: true, text: "There was an unexpected error, please trying again." });
+          }
+          console.log(error);
+          setUserLogged(false);
+          setUserClicked(true);
+        });
     }
-    loginUser(userData)
-      .then((user) => {
-        setAppForActiveUser(user);
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case "auth/invalid-credential":
-            setErrorMessage({ active: true, text: "incorrect email o password, try again." });
-            break;
-          case "auth/too-many-requests":
-            setErrorMessage({ active: true, text: "Too many invalid requests, wait a couple of minutes before trying again." });
-            break;
-          default:
-            setErrorMessage({ active: true, text: "There was an unexpected error, please trying again." });
-        }
-        console.log(error);
-        setUserLogged(false);
-        setUserClicked(true);
-      });
   };
 
   return (
