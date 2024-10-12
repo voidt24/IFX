@@ -10,6 +10,8 @@ const Hero = () => {
   const [heroBackground, setHeroBackground] = useState("");
   const [results, setResults] = useState([]);
   const [title, setTitle] = useState("");
+  const [activeImage, setActiveImage] = useState("");
+  const [idToNavigate, setIdToNavigate] = useState("");
   const { currentId, setCurrentId, setOpenTrailer, setTrailerKey, apiData, currentMediaType } = useContext(Context);
 
   useEffect(() => {
@@ -26,12 +28,14 @@ const Hero = () => {
       let initialBackground = window.innerWidth >= 640 ? `${image}${trendingResults[0].backdrop_path}` : `${image}${trendingResults[0].poster_path}`;
       setHeroBackground(initialBackground);
       setTitle(trendingResults[0].name || trendingResults[0].title);
-      setCurrentId(trendingResults[0].id);
+      setActiveImage(trendingResults[0].id);
+      setIdToNavigate(trendingResults[0].id);
     }
   }
 
   function handleImageClick(event, result) {
-    setCurrentId(result.id);
+    setIdToNavigate(result.id);
+    setActiveImage(result.id);
 
     const clickedElement = event.target.dataset.id;
 
@@ -64,17 +68,17 @@ const Hero = () => {
           Play Trailer
         </button>
 
-        <Link className="details" href={`${currentMediaType}/${currentId}`}>
-          <button> Details </button>
+        <Link className="details" href={`${currentMediaType}/${idToNavigate}`}>
+          <button onClick={() => setCurrentId(idToNavigate)}> Details </button>
         </Link>
       </div>
 
       <div className="hero-media-thumbnails">
-        {results.slice(0, 4).map((result) => {
+        {results.slice(0, 4).map((result, index) => {
           const vote = result.vote_average.toString().slice(0, 3) * 10;
           return (
             <div
-              className={"movie " + (currentId === result.id ? "isActive" : "")}
+              className={"movie " + (activeImage === result.id ? "isActive" : "")}
               onClick={(event) => {
                 handleImageClick(event, result);
               }}

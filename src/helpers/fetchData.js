@@ -71,6 +71,6 @@ export const fetchData = async (obj) => {
       return fetchNormal();
     }
   } catch (e) {
-    return Promise.reject(e);
+    return fetchNormal();
   }
 };

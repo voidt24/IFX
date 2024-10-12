@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import { useState, createContext, useEffect } from "react";
 import { auth } from "../firebase/firebase.config";
+import { useParams } from "next/navigation";
 
 export const Context = createContext([]);
 
@@ -10,8 +11,7 @@ export default function ContextWrapper({ children }) {
   const [currentId, setCurrentId] = useState();
   const [openTrailer, setOpenTrailer] = useState("");
   const [trailerKey, setTrailerKey] = useState("");
-  const [cast, setCast] = useState("");
-  const [currentMediaType, setCurrentMediaType] = useState("movies");
+  const [currentMediaType, setCurrentMediaType] = useState("");
   const [apiData, setApiData] = useState([]);
   const [userClicked, setUserClicked] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
@@ -26,8 +26,18 @@ export default function ContextWrapper({ children }) {
 
   const [isMember, setIsMember] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [initialDataError, setinitialDataError] = useState(false);
+
   const [initialDataIsLoading, setInitialDataIsLoading] = useState(true);
+
+  const [initialDataError, setinitialDataError] = useState(false);
+
+  const [castError, setCastError] = useState(false);
+
+  const [reviewsError, setReviewsError] = useState(false);
+
+  const [similarError, setSimilarError] = useState(false);
+
+  const { id: idFromUrl } = useParams();
 
   const contextValues = {
     currentId,
@@ -40,8 +50,6 @@ export default function ContextWrapper({ children }) {
     setCurrentMediaType,
     apiData,
     setApiData,
-    cast,
-    setCast,
     userClicked,
     setUserClicked,
     userLogged,
@@ -65,11 +73,23 @@ export default function ContextWrapper({ children }) {
     isMember,
     openDialog,
     setOpenDialog,
-    initialDataError,
-    setinitialDataError,
     initialDataIsLoading,
     setInitialDataIsLoading,
+    initialDataError,
+    setinitialDataError,
+    castError,
+    setCastError,
+    reviewsError,
+    setReviewsError,
+    similarError,
+    setSimilarError,
   };
+
+  useEffect(() => {
+    if (idFromUrl != currentId && currentId == undefined) {
+      setCurrentId(idFromUrl);
+    }
+  }, [idFromUrl]);
 
   useEffect(() => {
     function setMedia(pathContainsValidMedia, pathName) {

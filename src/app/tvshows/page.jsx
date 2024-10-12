@@ -1,13 +1,16 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Hero from "@/components/Hero";
 import Slider from "@/components/Slider";
 import { Context } from "@/context/Context";
 import { CircularProgress } from "@mui/material";
 
 export default function Tvshows() {
-  const { initialDataError, initialDataIsLoading } = useContext(Context);
+  const { setCurrentId, initialDataError, initialDataIsLoading } = useContext(Context);
 
+  useEffect(() => {
+    setCurrentId(undefined);
+  }, []);
   if (initialDataIsLoading) {
     return (
       <span className="flex items-center justify-center h-screen">

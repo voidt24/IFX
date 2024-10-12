@@ -34,7 +34,7 @@ export const MediaData = () => {
         .finally(() => {
           setInitialDataIsLoading(false);
         });
-    } else {
+    } else if (currentMediaType == "tvshows") {
       fetchData(mediaProperties.tv)
         .then((tvData) => {
           setApiData([tvData]);
