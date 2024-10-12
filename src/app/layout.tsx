@@ -3,9 +3,9 @@ import "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
 import "../sass/main.scss";
 import Navbar from "../components/Navbar";
 import ContextWrapper from "../context/Context";
-import AuthModal from "@/components/AuthModal";
+import Modal from "@/components/Modal";
+import UserActions from "@/components/UserActions";
 import Trailer from "@/components/Trailer";
-
 import MediaData from "../components/MediaData";
 
 export const metadata: Metadata = {
@@ -21,7 +21,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <MediaData />
           <Navbar />
           {children}
-          <AuthModal />
+          <Modal>
+            <UserActions />
+          </Modal>
           <Trailer />
         </ContextWrapper>
       </body>
