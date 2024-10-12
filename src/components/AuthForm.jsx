@@ -1,17 +1,20 @@
 import { useState, useContext, useRef } from "react";
 import { Context } from "@/context/Context";
 import { createUser } from "../firebase/createUser";
+import { authHandler } from "../firebase/authHandler";
 import { loginUser } from "../firebase/loginUser";
+import { authErrors } from "../firebase/firebase.config";
 import Error from "@/components/Error";
 import { useRouter } from "next/navigation";
 
 export default function AuthForm() {
-  const { setUserClicked, setUserLogged, noAccount, setNoAccount, showLoginOptions, setShowLoginOptions, setFirebaseActiveUser, firebaseActiveUser } = useContext(Context);
+  const { setUserClicked, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const pwdInputRef = useRef(null);
   const [pwdInputType, setPwdInputType] = useState("password");
   const router = useRouter();
+
   function setAppForActiveUser(user) {
     setFirebaseActiveUser({ email: user.user.email, uid: user.user.uid });
     setUserLogged(true);
@@ -20,45 +23,17 @@ export default function AuthForm() {
     setUserData({ username: "", email: "", password: "" });
     router.push("/profile");
   }
+
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    if (noAccount) {
-      createUser(userData)
-        .then((user) => {
-          setAppForActiveUser(user);
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case "auth/email-already-in-use":
-              setErrorMessage({ active: true, text: "That email is already registered" });
-              break;
-            case "auth/weak-password":
-              setErrorMessage({ active: true, text: "password should have at least 6 characters" });
-              break;
-            default:
-              setErrorMessage({ active: true, text: "There was an unexpected error, please trying again." });
-          }
-        });
-    } else {
-      loginUser(userData)
-        .then((user) => {
-          setAppForActiveUser(user);
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case "auth/invalid-credential":
-              setErrorMessage({ active: true, text: "incorrect email o password, try again." });
-              break;
-            case "auth/too-many-requests":
-              setErrorMessage({ active: true, text: "Too many invalid requests, wait a couple of minutes before trying again." });
-              break;
-            default:
-              setErrorMessage({ active: true, text: "There was an unexpected error, please trying again." });
-          }
-          console.log(error);
-          setUserLogged(false);
-          setUserClicked(true);
-        });
+    let methodToUseForAuth = noAccount ? createUser : loginUser;
+    let resultFromAuth;
+
+    try {
+      resultFromAuth = await authHandler(methodToUseForAuth, userData);
+      setAppForActiveUser(resultFromAuth);
+    } catch (error) {
+      setErrorMessage({ active: true, text: authErrors(error) });
     }
   };
 
