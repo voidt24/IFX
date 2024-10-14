@@ -40,3 +40,8 @@ export const authErrors = (error) => {
       return "There was an unexpected error, please trying again.";
   }
 };
+
+export const DBLists = {
+  favs: "favorites",
+  watchs: "watchlist"
+}

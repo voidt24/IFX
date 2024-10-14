@@ -5,6 +5,8 @@ import { handleTrailerClick } from "../../src/helpers/getTrailer";
 import { useRouter } from "next/navigation";
 import { Tooltip, CircularProgress } from "@mui/material";
 import { handle_favs_watchlists } from "../firebase/handle_favs_watchlists";
+import { Snackbar, Alert } from "@mui/material";
+import { DBLists } from "@/firebase/firebase.config";
 
 export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
   const { currentId, setOpenTrailer, setTrailerKey, currentMediaType, userLogged, setUserClicked, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList, firebaseActiveUser } =
@@ -16,6 +18,22 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
 
+  const handleLists = async (list) => {
+    if (userLogged) {
+      const buttonToChange = list == DBLists.favs ? setAddedToFavs : setAddedtoWatchList;
+      const stateOfButtonToChange = buttonToChange == setAddedToFavs ? addedToFavs : addedtoWatchList;
+      try {
+        buttonToChange(!stateOfButtonToChange);
+        await handle_favs_watchlists(firebaseActiveUser.uid, mediaTypeRef, state, list, currentId);
+      } catch (e) {
+        buttonToChange(stateOfButtonToChange);
+
+        setMessage({ message: `Error executing action on ${list}, try later`, severity: "error", open: true });
+      }
+    } else {
+      setUserClicked(true);
+    }
+  };
   return (
     <div className="media-details" style={{ backgroundImage: `url(${state.heroBackground})` }}>
       <div className="overlay"></div>
@@ -36,9 +54,10 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
             <div className="info">
               <span>{state.releaseDate}</span>
               <span>
-                {state.genres && state.genres.slice(0, 1).join(", ", (genre) => {
-                  return <span>{genre}</span>;
-                })}
+                {state.genres &&
+                  state.genres.slice(0, 1).join(", ", (genre) => {
+                    return <span>{genre}</span>;
+                  })}
               </span>
               <span>
                 <i className="bi bi-star-fill" style={{ color: "yellow" }}></i>
@@ -65,8 +84,8 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                       data-mediatype={currentMediaType == "movies" ? "movie" : "tv"}
                       id="favs-icon"
                       className={addedToFavs ? "bi bi-check2-all" : "bi bi-check-lg"}
-                      onClick={() => {
-                        userLogged ? handle_favs_watchlists(firebaseActiveUser.uid, mediaTypeRef, state, "favorites", setAddedToFavs, currentId, setMessage) : setUserClicked(true);
+                      onClick={async () => {
+                        handleLists(DBLists.favs);
                       }}
                     ></i>
                   </Tooltip>
@@ -85,7 +104,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                       id="watchlist-icon"
                       className={addedtoWatchList ? "bi bi-eye-slash" : "bi bi-eye"}
                       onClick={() => {
-                        userLogged ? handle_favs_watchlists(firebaseActiveUser.uid, mediaTypeRef2, state, "watchlist", setAddedtoWatchList, currentId, setMessage) : setUserClicked(true);
+                        handleLists(DBLists.watchs);
                       }}
                     ></i>
                   </Tooltip>
@@ -105,6 +124,25 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
           </div>
         </div>
       </div>
+
+      <Snackbar
+        open={message.open}
+        autoHideDuration={3500}
+        onClose={() => {
+          setMessage({ ...message, open: false });
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setMessage({ ...message, open: false });
+          }}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {message.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
