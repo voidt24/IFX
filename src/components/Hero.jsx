@@ -58,7 +58,7 @@ const Hero = () => {
         <button
           data-id={currentId}
           onClick={() => {
-            handleTrailerClick(setOpenTrailer, currentId, currentMediaType, setTrailerKey);
+            handleTrailerClick(setOpenTrailer, idToNavigate, currentMediaType, setTrailerKey);
           }}
         >
           {" "}
