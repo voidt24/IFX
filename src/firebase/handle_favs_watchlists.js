@@ -6,7 +6,7 @@ export const handle_favs_watchlists = async (documentName, referenceOfClickedEle
     const document = doc(database, usersCollectionName, documentName);
     //reference of document 'documentName'(uid from activeUser) within 'users' colection
     const documentResult = await getDoc(document);
-
+    
     if (documentResult.exists()) {
       //if we found the uid within users collection
 
@@ -54,34 +54,33 @@ const isElementInObject = (dataSaved, fieldName, idToCheck) => {
   const valuesOfFieldNameFromDataSaved = Object.values(dataSaved[fieldName] || {});
 
   if (valuesOfFieldNameFromDataSaved) {
-    const objectToUse = valuesOfFieldNameFromDataSaved.find((el) => el.id == idToCheck);
+    const objectToUse = valuesOfFieldNameFromDataSaved.find((el) => el.id === idToCheck);
 
     const isIdInArray = Object.values(objectToUse || {}).includes(idToCheck);
-    console.log(isIdInArray);
     return isIdInArray;
   }
 
   return false;
 };
-const deleteElementFromDocument = (dataSaved, fieldName, currentId, document) => {
-  const newData = [...Object.values(dataSaved[fieldName]).filter((el) => el.id != currentId)];
+const deleteElementFromDocument = (dataSaved, fieldName, idToDelete, document) => {
+  const newData = [...Object.values(dataSaved[fieldName]).filter((el) => el.id != idToDelete)];
   const updatedData = {};
   updatedData[fieldName] = newData;
   updateDoc(document, updatedData);
 };
 
-const createDocumentWithNewElement = (fieldName, currentId, referenceOfClickedElement, documentName, state) => {
+const createDocumentWithNewElement = (fieldName, idToCreate, referenceOfClickedElement, documentName, state) => {
   const newDataToSave = {};
   newDataToSave[fieldName] = [
-    { id: currentId, mediatype: referenceOfClickedElement.current.dataset.mediatype, title: state.title, vote_average: state.vote, poster_path: state.poster, releaseDate: state.releaseDate },
+    { id: idToCreate, mediatype: referenceOfClickedElement.current.dataset.mediatype, title: state.title, vote_average: state.vote, poster_path: state.poster, releaseDate: state.releaseDate },
   ];
   setDoc(doc(database, usersCollectionName, documentName), newDataToSave, { merge: true }); //'merge' was necessary to save in the document without replacing previous stored data
 };
 
-const addElementToDocument = (dataSaved, fieldName, currentId, referenceOfClickedElement, document, state) => {
+const addElementToDocument = (dataSaved, fieldName, idToAdd, referenceOfClickedElement, document, state) => {
   const newData = [
     ...Object.values(dataSaved[fieldName] || {}),
-    { id: currentId, mediatype: referenceOfClickedElement.current.dataset.mediatype, title: state.title, vote_average: state.vote, poster_path: state.poster, releaseDate: state.releaseDate },
+    { id: idToAdd, mediatype: referenceOfClickedElement.current.dataset.mediatype, title: state.title, vote_average: state.vote, poster_path: state.poster, releaseDate: state.releaseDate },
   ];
 
   const updatedData = {};

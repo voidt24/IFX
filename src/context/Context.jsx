@@ -87,7 +87,7 @@ export default function ContextWrapper({ children }) {
 
   useEffect(() => {
     if (idFromUrl != currentId && currentId == undefined) {
-      setCurrentId(idFromUrl);
+      setCurrentId(Number(idFromUrl) );
     }
   }, [idFromUrl]);
 
