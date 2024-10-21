@@ -19,6 +19,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
   const [listModalActive, setListModalActive] = useState(false);
+  const [newListModalActive, setNewListModalActive] = useState(false);
 
   const handleLists = async (list) => {
     if (userLogged) {
@@ -140,7 +141,13 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
         <Modal modalActive={listModalActive} setModalActive={setListModalActive}>
           <h2 className="text-2xl">Add to</h2>
           <div className={`p-4  rounded-xl flex flex-col gap-4   bg-black ${listModalActive ? "block" : "hidden"} `}>
-            <button className="rounded-full">
+            <button
+              className="rounded-full"
+              onClick={() => {
+                setListModalActive(false);
+                setNewListModalActive(true);
+              }}
+            >
               New list <i className="bi bi-plus"></i>
             </button>
             or
@@ -155,6 +162,27 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               </select>
             </div>
           </div>
+        </Modal>
+      )}
+
+      {newListModalActive && (
+        <Modal modalActive={newListModalActive} setModalActive={setNewListModalActive}>
+          <i
+            className="bi bi-arrow-left"
+            onClick={() => {
+              setListModalActive(true);
+              setNewListModalActive(false);
+            }}
+          ></i>
+
+          <h2 className="lg:text-2xl">Add to new list </h2>
+
+          <form action="">
+            <input type="text" name="" id="" className="text-black px-2 text-sm" placeholder="List name..." />
+          </form>
+          <button type="button" className="rounded-full px-4 mt-2">
+            Add
+          </button>
         </Modal>
       )}
       <Snackbar
