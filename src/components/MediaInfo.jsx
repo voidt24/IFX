@@ -72,7 +72,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                 <p>{state.overview}</p>
               </div>
             </div>
-            <div className="options">
+            <div className="options flex-wrap">
               <>
                 {loadingFavs ? (
                   <div style={{ display: "flex", justifyContent: "center" }}>
@@ -112,26 +112,26 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                   </Tooltip>
                 )}
               </>
+
               <button
-                className="rounded-3xl"
-                id="play-trailer"
-                data-id={currentId}
+                className="rounded-full "
+                type="button "
                 onClick={() => {
-                  handleTrailerClick(setOpenTrailer, currentId, currentMediaType, setTrailerKey);
+                  setListModalActive(!listModalActive);
                 }}
               >
-                Trailer
+                Add to <i className="bi bi-arrow-right"></i>
               </button>
             </div>
-
             <button
-              className="rounded-full w-[95px] sm:self-center sm:w-[120px]"
-              type="button "
+              className="rounded-3xl w-[95px] sm:self-center sm:w-[120px]"
+              data-id={currentId}
               onClick={() => {
-                setListModalActive(!listModalActive);
+                handleTrailerClick(setOpenTrailer, currentId, currentMediaType, setTrailerKey);
               }}
             >
-              Add to
+              <i className="bi bi-play-circle-fill "></i>
+             {" "} Trailer
             </button>
           </div>
         </div>
