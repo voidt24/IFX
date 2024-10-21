@@ -1,10 +1,10 @@
 "use client";
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { Context } from "../../src/context/Context";
 import { handleTrailerClick } from "../../src/helpers/getTrailer";
 import { useRouter } from "next/navigation";
 import { Tooltip, CircularProgress } from "@mui/material";
-import { handle_new_custom_lists, handle_favs_watchlists } from "../firebase/handle_favs_watchlists";
+import { handle_new_custom_lists, handle_favs_watchlists, get_custom_lists, handle_adding_to_custom_lists } from "../firebase/handle_favs_watchlists";
 import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
 import Modal from "./Modal";
@@ -21,6 +21,8 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
   const [listModalActive, setListModalActive] = useState(false);
   const [newListModalActive, setNewListModalActive] = useState(false);
   const [customList, setCustomList] = useState();
+  const [existingLists, setExistingLists] = useState([]);
+  const [activeSelectedElement, setActiveSelectedElement] = useState("");
 
   const handleLists = async (list) => {
     if (userLogged) {
@@ -52,6 +54,20 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
       setMessage({ message: ` Error executing action on ${customList}: ${error}`, severity: "error", open: true });
     }
   };
+
+  const handleAddToCustomList = async (e) => {
+    e.preventDefault();
+
+    try {
+      await handle_adding_to_custom_lists(firebaseActiveUser.uid, mediaTypeRef, state, activeSelectedElement, currentId);
+      setMessage({ message: `Element saved in ${activeSelectedElement} list successfully!`, severity: "success", open: true });
+    } catch (error) {
+      setMessage({ message: ` Error executing action on ${activeSelectedElement} list: ${error}`, severity: "error", open: true });
+    }
+
+    setActiveSelectedElement("");
+  };
+
   return (
     <div className="media-details" style={{ backgroundImage: `url(${state.heroBackground})` }}>
       <div className="overlay"></div>
@@ -131,8 +147,10 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               <button
                 className="rounded-full "
                 type="button "
-                onClick={() => {
+                onClick={async () => {
                   setListModalActive(!listModalActive);
+                  const list = await get_custom_lists(firebaseActiveUser.uid);
+                  setExistingLists(list);
                 }}
               >
                 Add to <i className="bi bi-arrow-right"></i>
@@ -156,7 +174,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
           <h2 className="text-2xl">Add to</h2>
           <div className={`p-4  rounded-xl flex flex-col gap-4   bg-black ${listModalActive ? "block" : "hidden"} `}>
             <button
-              className="rounded-full"
+              className="rounded-full bg-gray-800 hover:bg-gray-700 "
               onClick={() => {
                 setListModalActive(false);
                 setNewListModalActive(true);
@@ -165,16 +183,45 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               New list <i className="bi bi-plus"></i>
             </button>
             or
-            <div class="relative flex flex-col items-center gap-2">
-              <label class=" text-sm  text-white">From existings lists</label>
-              <select className="cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-3 transition-all text-white invalid:text-[white]/70  rounded-xl  text-sm  border border-gray-400 valid:bg-gray-800 ">
-                <option value="" disabled selected>
+            <label class=" text-sm  text-white">To existing lists</label>
+            <form
+              class="relative flex flex-col items-center gap-2 m-auto flex-wrap w-full"
+              onSubmit={(e) => {
+                handleAddToCustomList(e);
+              }}
+            >
+              <select
+                className=" m-auto cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-3 transition-all text-white invalid:text-[white]/70  rounded-xl  text-sm  border border-gray-400 valid:bg-black "
+                onClick={async () => {
+                  const list = await get_custom_lists(firebaseActiveUser.uid);
+                  setExistingLists(list);
+                }}
+                onChange={(e) => {
+                  setActiveSelectedElement(e.target.value);
+                }}
+                value={activeSelectedElement}
+              >
+                <option value={""} className="text-gray-500" selected>
                   Select...
                 </option>
-                <option value="element1">element1</option>
-                <option value="element">element2</option>
+
+                {existingLists &&
+                  existingLists.length > 0 &&
+                  existingLists.map((element, index) => {
+                    return (
+                      <option value={element} key={index}>
+                        {element}
+                      </option>
+                    );
+                  })}
               </select>
-            </div>
+
+              {activeSelectedElement != "" && (
+                <button type="submit" className="px-6 rounded-full mt-2 text-sm bg-gray-800 hover:bg-gray-700">
+                  Add
+                </button>
+              )}
+            </form>
           </div>
         </Modal>
       )}
@@ -195,6 +242,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
             onSubmit={(e) => {
               handleCustomLists(e);
             }}
+            className="flex flex-col gap-4"
           >
             <input
               type="text"
@@ -202,11 +250,11 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               onChange={(evt) => {
                 setCustomList(evt.target.value);
               }}
-              className="text-black px-2 text-sm"
+              className="text-black px-2 text-sm rounded-full"
               placeholder="List name..."
               required
             />
-            <button type="submit" className="rounded-full px-4 mt-2">
+            <button type="submit" className="rounded-full bg-gray-800 hover:bg-gray-700">
               Add
             </button>
           </form>

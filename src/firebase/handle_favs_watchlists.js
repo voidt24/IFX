@@ -48,6 +48,53 @@ export const handle_new_custom_lists = async (documentName, referenceOfClickedEl
     throw err;
   }
 };
+export const handle_adding_to_custom_lists = async (documentName, referenceOfClickedElement, state, fieldName, currentId) => {
+  try {
+    const document = doc(database, usersCollectionName, documentName);
+    //reference of document 'documentName'(uid from activeUser) within 'users' colection
+    const documentResult = await getDoc(document);
+
+    if (documentResult.exists()) {
+      //if we found the uid within users collection
+
+      const dataSaved = documentResult.data();
+      const IdWasAlreadySaved = IsValid(isElementInObject(dataSaved, fieldName, currentId));
+
+      if (IdWasAlreadySaved) {
+        throw "This element already exists";
+      } else {
+        addElementToDocument(dataSaved, fieldName, currentId, referenceOfClickedElement, document, state);
+      }
+    }
+    return;
+  } catch (err) {
+    throw err;
+  }
+};
+export const get_custom_lists = async (documentName) => {
+  try {
+    const document = doc(database, usersCollectionName, documentName);
+    //reference of document 'documentName'(uid from activeUser) within 'users' colection
+    const documentResult = await getDoc(document);
+
+    if (documentResult.exists()) {
+      //if we found the uid within users collection
+
+      const dataSaved = documentResult.data();
+
+      const customLists = [];
+      Object.keys(dataSaved)
+        .sort()
+        .forEach((element) => {
+          customLists.push(element);
+        });
+
+      return customLists;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
 
 const IsValid = (field) => {
   if (field !== null && field !== undefined && field !== false) {
