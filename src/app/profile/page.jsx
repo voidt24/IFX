@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Profile = () => {
-  const { setUserLogged, setFirebaseActiveUser, firebaseActiveUser, checkedMedia, setCheckedMedia, setUserClicked } = useContext(Context);
+  const { setUserLogged, setFirebaseActiveUser, firebaseActiveUser, checkedMedia, setCheckedMedia, setAuthModalActive } = useContext(Context);
 
   const [savedFavoritesResults, setSavedFavoritesResults] = useState([]);
   const [savedWatchlistResults, setSavedWatchlistResults] = useState([]);
@@ -152,7 +152,7 @@ const Profile = () => {
         <Link
           href=""
           onClick={() => {
-            setUserClicked(true);
+            setAuthModalActive(true);
           }}
           className=" text-lg underline"
         >

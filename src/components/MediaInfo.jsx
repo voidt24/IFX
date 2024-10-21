@@ -9,8 +9,19 @@ import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
 
 export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
-  const { currentId, setOpenTrailer, setTrailerKey, currentMediaType, userLogged, setUserClicked, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList, firebaseActiveUser } =
-    useContext(Context);
+  const {
+    currentId,
+    setOpenTrailer,
+    setTrailerKey,
+    currentMediaType,
+    setAuthModalActive,
+    userLogged,
+    addedToFavs,
+    setAddedToFavs,
+    addedtoWatchList,
+    setAddedtoWatchList,
+    firebaseActiveUser,
+  } = useContext(Context);
 
   const router = useRouter();
   const mediaTypeRef = useRef(null);
@@ -31,7 +42,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
         setMessage({ message: `Error executing action on ${list}, try later`, severity: "error", open: true });
       }
     } else {
-      setUserClicked(true);
+      setAuthModalActive(true);
     }
   };
   return (
@@ -48,7 +59,6 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
       <div className="media-details__initial-content">
         <div className="media-details__info-container">
           <img src={state.poster} alt="" id="poster" />
-
           <div className="info-container-text">
             <h1 className="title">{state.title}</h1>
             <div className="info">

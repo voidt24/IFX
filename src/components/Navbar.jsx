@@ -2,10 +2,12 @@
 import { useRef, useEffect, useContext, useState } from "react";
 import Link from "next/link";
 import { Context } from "@/context/Context";
+import Modal from "./Modal";
+import UserActions from "./UserActions";
 
 export default function Navbar() {
   const navRef = useRef();
-  const { currentMediaType, setCurrentMediaType, userClicked, setUserClicked } = useContext(Context);
+  const { currentMediaType, setCurrentMediaType, authModalActive, setAuthModalActive } = useContext(Context);
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function Navbar() {
         className="nav-item-box"
         onClick={() => {
           localStorage.setItem("auth", JSON.stringify("auth clicked"));
-          setUserClicked(!userClicked);
+          setAuthModalActive(!authModalActive);
           if (errorMessage.active) {
             setErrorMessage({ active: false, text: "" });
           }
@@ -71,6 +73,10 @@ export default function Navbar() {
         <i className="bi bi-person-circle" id="user"></i>
         <p className="to-hide-on-desk">Me</p>
       </span>
+
+      <Modal modalActive={authModalActive} setModalActive={setAuthModalActive}>
+        <UserActions />
+      </Modal>
     </nav>
   );
 }
