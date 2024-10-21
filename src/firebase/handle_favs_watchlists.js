@@ -6,7 +6,7 @@ export const handle_favs_watchlists = async (documentName, referenceOfClickedEle
     const document = doc(database, usersCollectionName, documentName);
     //reference of document 'documentName'(uid from activeUser) within 'users' colection
     const documentResult = await getDoc(document);
-    
+
     if (documentResult.exists()) {
       //if we found the uid within users collection
 
@@ -19,6 +19,29 @@ export const handle_favs_watchlists = async (documentName, referenceOfClickedEle
         addElementToDocument(dataSaved, fieldName, currentId, referenceOfClickedElement, document, state);
       }
       return;
+    }
+    createDocumentWithNewElement(fieldName, currentId, referenceOfClickedElement, documentName, state);
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const handle_new_custom_lists = async (documentName, referenceOfClickedElement, state, fieldName, currentId) => {
+  try {
+    const document = doc(database, usersCollectionName, documentName);
+    //reference of document 'documentName'(uid from activeUser) within 'users' colection
+    const documentResult = await getDoc(document);
+
+    const dataSaved = documentResult.data();
+
+    if (dataSaved) {
+      Object.keys(dataSaved).forEach((key) => {
+        let eachKey = key.split(" ").join("").toLowerCase();
+
+        if (eachKey.toLowerCase() == fieldName.split(" ").join("").toLowerCase()) {
+          throw "List already exists";
+        }
+      });
     }
     createDocumentWithNewElement(fieldName, currentId, referenceOfClickedElement, documentName, state);
   } catch (err) {

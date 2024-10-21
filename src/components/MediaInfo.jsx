@@ -4,7 +4,7 @@ import { Context } from "../../src/context/Context";
 import { handleTrailerClick } from "../../src/helpers/getTrailer";
 import { useRouter } from "next/navigation";
 import { Tooltip, CircularProgress } from "@mui/material";
-import { handle_favs_watchlists } from "../firebase/handle_favs_watchlists";
+import { handle_new_custom_lists, handle_favs_watchlists } from "../firebase/handle_favs_watchlists";
 import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
 import Modal from "./Modal";
@@ -20,6 +20,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
   const [listModalActive, setListModalActive] = useState(false);
   const [newListModalActive, setNewListModalActive] = useState(false);
+  const [customList, setCustomList] = useState();
 
   const handleLists = async (list) => {
     if (userLogged) {
@@ -35,6 +36,20 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
       }
     } else {
       setAuthModalActive(true);
+    }
+  };
+
+  const handleCustomLists = async (e) => {
+    e.preventDefault();
+    if (!customList || customList == "") {
+      return;
+    }
+
+    try {
+      await handle_new_custom_lists(firebaseActiveUser.uid, mediaTypeRef, state, customList, currentId);
+      setMessage({ message: "List created successfully!", severity: "success", open: true });
+    } catch (error) {
+      setMessage({ message: ` Error executing action on ${customList}: ${error}`, severity: "error", open: true });
     }
   };
   return (
@@ -130,8 +145,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                 handleTrailerClick(setOpenTrailer, currentId, currentMediaType, setTrailerKey);
               }}
             >
-              <i className="bi bi-play-circle-fill "></i>
-             {" "} Trailer
+              <i className="bi bi-play-circle-fill "></i> Trailer
             </button>
           </div>
         </div>
@@ -177,12 +191,25 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
           <h2 className="lg:text-2xl">Add to new list </h2>
 
-          <form action="">
-            <input type="text" name="" id="" className="text-black px-2 text-sm" placeholder="List name..." />
+          <form
+            onSubmit={(e) => {
+              handleCustomLists(e);
+            }}
+          >
+            <input
+              type="text"
+              value={customList}
+              onChange={(evt) => {
+                setCustomList(evt.target.value);
+              }}
+              className="text-black px-2 text-sm"
+              placeholder="List name..."
+              required
+            />
+            <button type="submit" className="rounded-full px-4 mt-2">
+              Add
+            </button>
           </form>
-          <button type="button" className="rounded-full px-4 mt-2">
-            Add
-          </button>
         </Modal>
       )}
       <Snackbar
@@ -196,7 +223,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
           onClose={() => {
             setMessage({ ...message, open: false });
           }}
-          severity="error"
+          severity={message.severity}
           variant="filled"
           sx={{ width: "100%" }}
         >
