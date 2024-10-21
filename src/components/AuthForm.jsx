@@ -40,10 +40,10 @@ export default function AuthForm() {
   return (
     <>
       {noAccount ? <h2 className="bold text-xl">Sign up</h2> : <h2 className="bold text-xl">Login</h2>}
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={(e) => handleSubmit(e)} className="auth-form">
         <label htmlFor="">Email</label>
         <input
-          className="text-black py-0 px-2"
+          className=" text-black py-0 px-2"
           type="Email"
           onChange={(e) => {
             setUserData({ ...userData, email: e.target.value });
