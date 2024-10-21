@@ -7,27 +7,18 @@ import { Tooltip, CircularProgress } from "@mui/material";
 import { handle_favs_watchlists } from "../firebase/handle_favs_watchlists";
 import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
+import Modal from "./Modal";
 
 export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
-  const {
-    currentId,
-    setOpenTrailer,
-    setTrailerKey,
-    currentMediaType,
-    setAuthModalActive,
-    userLogged,
-    addedToFavs,
-    setAddedToFavs,
-    addedtoWatchList,
-    setAddedtoWatchList,
-    firebaseActiveUser,
-  } = useContext(Context);
+  const { currentId, setOpenTrailer, setTrailerKey, currentMediaType, setAuthModalActive, userLogged, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList, firebaseActiveUser } =
+    useContext(Context);
 
   const router = useRouter();
   const mediaTypeRef = useRef(null);
   const mediaTypeRef2 = useRef(null);
 
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
+  const [listModalActive, setListModalActive] = useState(false);
 
   const handleLists = async (list) => {
     if (userLogged) {
@@ -131,10 +122,41 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                 Trailer
               </button>
             </div>
+
+            <button
+              className="rounded-full w-[95px] sm:self-center sm:w-[120px]"
+              type="button "
+              onClick={() => {
+                setListModalActive(!listModalActive);
+              }}
+            >
+              Add to
+            </button>
           </div>
         </div>
       </div>
 
+      {listModalActive && (
+        <Modal modalActive={listModalActive} setModalActive={setListModalActive}>
+          <h2 className="text-2xl">Add to</h2>
+          <div className={`p-4  rounded-xl flex flex-col gap-4   bg-black ${listModalActive ? "block" : "hidden"} `}>
+            <button className="rounded-full">
+              New list <i className="bi bi-plus"></i>
+            </button>
+            or
+            <div class="relative flex flex-col items-center gap-2">
+              <label class=" text-sm  text-white">From existings lists</label>
+              <select className="cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-3 transition-all text-white invalid:text-[white]/70  rounded-xl  text-sm  border border-gray-400 valid:bg-gray-800 ">
+                <option value="" disabled selected>
+                  Select...
+                </option>
+                <option value="element1">element1</option>
+                <option value="element">element2</option>
+              </select>
+            </div>
+          </div>
+        </Modal>
+      )}
       <Snackbar
         open={message.open}
         autoHideDuration={3500}
