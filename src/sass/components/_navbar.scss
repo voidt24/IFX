@@ -88,7 +88,7 @@
     }
   }
 
-  form {
+  .auth-form {
     text-shadow: none;
     @extend .flex-col-center;
     gap: 0.7rem;
@@ -97,10 +97,9 @@
     }
 
     input {
-      // border: 1px solid #00000072;
       border-radius: 12px;
 
-      &:focus{
+      &:focus {
         outline: none;
       }
     }

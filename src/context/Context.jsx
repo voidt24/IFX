@@ -13,7 +13,8 @@ export default function ContextWrapper({ children }) {
   const [trailerKey, setTrailerKey] = useState("");
   const [currentMediaType, setCurrentMediaType] = useState("");
   const [apiData, setApiData] = useState([]);
-  const [userClicked, setUserClicked] = useState(false);
+  // const [userClicked, setUserClicked] = useState(false);
+  const [authModalActive, setAuthModalActive] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
   const [noAccount, setNoAccount] = useState(true);
   const [addedToFavs, setAddedToFavs] = useState(false);
@@ -50,8 +51,8 @@ export default function ContextWrapper({ children }) {
     setCurrentMediaType,
     apiData,
     setApiData,
-    userClicked,
-    setUserClicked,
+    authModalActive,
+    setAuthModalActive,
     userLogged,
     setUserLogged,
     noAccount,
@@ -87,7 +88,7 @@ export default function ContextWrapper({ children }) {
 
   useEffect(() => {
     if (idFromUrl != currentId && currentId == undefined) {
-      setCurrentId(Number(idFromUrl) );
+      setCurrentId(Number(idFromUrl));
     }
   }, [idFromUrl]);
 

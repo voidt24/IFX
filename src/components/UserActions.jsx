@@ -6,7 +6,7 @@ import AuthForm from "@/components/AuthForm";
 import { auth } from "../firebase/firebase.config";
 
 export default function UserActions() {
-  const { setUserClicked, userLogged, setUserLogged, setFirebaseActiveUser } = useContext(Context);
+  const { setAuthModalActive, userLogged, setUserLogged, setFirebaseActiveUser } = useContext(Context);
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
 
@@ -16,7 +16,7 @@ export default function UserActions() {
       setUserData({ username: "", email: "", password: "" });
       setFirebaseActiveUser({ email: null, uid: null });
       setErrorMessage({ active: false, text: "" });
-      setUserClicked(false);
+      setAuthModalActive(false);
     });
   };
   return userLogged ? (
@@ -24,7 +24,7 @@ export default function UserActions() {
       <Link
         href={"/profile"}
         onClick={() => {
-          setUserClicked(false);
+          setAuthModalActive(false);
         }}
       >
         <i className="bi bi-person"></i> Profile{" "}

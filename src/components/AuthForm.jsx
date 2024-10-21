@@ -8,7 +8,7 @@ import Error from "@/components/Error";
 import { useRouter } from "next/navigation";
 
 export default function AuthForm() {
-  const { setUserClicked, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
+  const { setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const pwdInputRef = useRef(null);
@@ -18,7 +18,7 @@ export default function AuthForm() {
   function setAppForActiveUser(user) {
     setFirebaseActiveUser({ email: user.user.email, uid: user.user.uid });
     setUserLogged(true);
-    setUserClicked(false);
+    setAuthModalActive(false);
     setErrorMessage({ active: false, text: "" });
     setUserData({ username: "", email: "", password: "" });
     router.push("/profile");
@@ -40,10 +40,10 @@ export default function AuthForm() {
   return (
     <>
       {noAccount ? <h2 className="bold text-xl">Sign up</h2> : <h2 className="bold text-xl">Login</h2>}
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={(e) => handleSubmit(e)} className="auth-form">
         <label htmlFor="">Email</label>
         <input
-          className="text-black py-0 px-2"
+          className=" text-black py-0 px-2"
           type="Email"
           onChange={(e) => {
             setUserData({ ...userData, email: e.target.value });
