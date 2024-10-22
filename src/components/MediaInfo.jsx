@@ -104,18 +104,17 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
           <div className="info-container-text flex justify-center items-center flex-col gap-2 ">
             <h1 className="title">{state.title}</h1>
-            <div className="info flex gap-2 md:text-[70%] lg:text-[80%]">
+            <div className="info flex items-center justify-center flex-wrap gap-1 md:text-[70%] lg:text-[80%]">
               <span>{state.releaseDate}</span>
               {currentMediaType == mediaProperties.movie.route && <span>{state.runtime}</span>}
 
-              {currentMediaType == mediaProperties.tv.route && (
-                <span>
-                  {state.genres &&
-                    state.genres.slice(0, 1).join(", ", (genre) => {
-                      return <span>{genre}</span>;
-                    })}
-                </span>
-              )}
+              {currentMediaType == mediaProperties.tv.route && <span>{state.seasons}</span>}
+              <span>
+                {state.genres &&
+                  state.genres.slice(0, 1).join(", ", (genre) => {
+                    return <span>{genre}</span>;
+                  })}
+              </span>
               <span>
                 <i className="bi bi-star-fill" style={{ color: "goldenrod" }}></i>
                 {` ${state.vote}`}
