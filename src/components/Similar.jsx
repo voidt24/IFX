@@ -43,7 +43,9 @@ export const Similar = ({ similar, similarMaximized, setSimilarMaximized }) => {
           </span>
         </div>
       ) : (
-        <p style={{ textAlign: "center" }}>No similar results available</p>
+        <p style={{ textAlign: "center" }} className="text-gray-500">
+          No similar results available
+        </p>
       )}
     </>
   );

@@ -5,7 +5,7 @@ import { Context } from "../../context/Context";
 import { search } from "../../helpers/search";
 import { useRouter } from "next/navigation";
 
- function SearchSection() {
+function SearchSection() {
   const { openTrailer, searchResults, setSearchResults } = useContext(Context);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchStarted, setSearchStarted] = useState(false);
@@ -52,7 +52,7 @@ import { useRouter } from "next/navigation";
               setInputValue(event.target.value);
             }}
           />
-          <button type="submit">
+          <button type="submit" className="bg-gray-800 ">
             <i className="bi bi-search"></i>
           </button>
         </form>
@@ -81,6 +81,6 @@ import { useRouter } from "next/navigation";
       )}
     </section>
   );
-};
+}
 
 export default SearchSection;

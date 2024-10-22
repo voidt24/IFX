@@ -44,65 +44,25 @@
   .media-details__initial-content {
     position: relative;
     height: 100%;
-    width: 100%;
     z-index: 4;
 
     .media-details__info-container {
-      display: flex;
-      justify-content: start;
-      gap: 0.6rem;
       width: 100%;
       padding-inline: 0.5rem;
-      margin-top: 65px;
-
-      @media #{$sm} {
-        margin-top: 95px;
-        gap: 1rem;
-        padding-inline: 1rem;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
 
       img {
         max-width: 34%;
-        height: 100%;
         border-radius: 8px;
         object-fit: cover;
-        border: 1.5px solid goldenrod;
-
-        @media #{$sm} {
-          max-width: 30%;
-        }
-        @media #{$md} {
-          max-width: 24%;
-        }
-        @media #{$lg} {
-          max-width: 13%;
-        }
-
-        @media #{$fourK} {
-          max-width: 12%;
-        }
+        border: 1px solid goldenrod;
       }
 
       .info-container-text {
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        gap: 0.8rem;
-        text-align: left;
         font-size: 70%;
 
-        @media #{$sm} {
-          text-align: center;
-        }
         @media #{$md} {
           gap: 1rem;
           font-size: 90%;
-        }
-        @media #{$lg} {
-          gap: 1rem;
         }
 
         h1 {
@@ -124,19 +84,9 @@
           }
         }
         .info {
-          display: flex;
-          gap: 0.3rem;
-          @media #{$sm} {
-            justify-content: center;
-          }
-
           span {
             background-color: #86868658;
-            padding: 0.1rem 0.4rem;
-            @media #{$sm} {
-              justify-content: center;
-              padding-inline: 1rem;
-            }
+            padding: 0.1rem 1.3rem;
             border-radius: 25px;
           }
         }
@@ -152,29 +102,6 @@
           }
           @media #{$xl} {
             font-size: 85%;
-          }
-        }
-
-        .overview {
-          overflow: auto;
-          max-width: 600px;
-          max-height: 90px;
-          @media #{$xl} {
-            max-width: 900px;
-            max-height: 120px;
-          }
-          @media #{$xxl} {
-            max-width: 1200px;
-            max-height: 150px;
-          }
-        }
-
-        button {
-          background-color: #121212e5;
-          border: 1px solid white;
-          padding: 0.3rem 1.5rem;
-          &:hover {
-            background-color: #2b2b2bca;
           }
         }
       }
@@ -345,32 +272,22 @@
 
 #favs-icon,
 #watchlist-icon {
-  border-radius: 50px;
   padding-inline: 0.8rem;
   @media #{$sm} {
     padding-inline: 1.5rem;
   }
-}
-#watchlist-icon {
-  font-size: 145%;
-}
-
-#favs-icon {
   font-size: 145%;
 }
 
 .bi-check-lg,
 .bi-eye {
   transition: all 0.2s;
-  border: 1px solid #cbcbcb;
 }
 
 .bi-check2-all,
 .bi-eye-slash {
   transition: all 0.2s;
   color: var(--primary);
-  background-color: rgba(104, 75, 0, 0.521);
-  border: 1px solid var(--primary);
 }
 
 #play-trailer {

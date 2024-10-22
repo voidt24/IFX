@@ -24,15 +24,15 @@ export const Slider = () => {
           | {"POPULAR"} <span> {currentMediaType.toUpperCase()}</span>
         </h2>
 
-        <div className="controls">
+        <div className="controls text-gray-500">
           <i
-            className="bi bi-chevron-left left"
+            className="bi bi-chevron-left left hover:text-gray-200"
             onClick={(event) => {
               moveSlider(event, sliderRef);
             }}
           ></i>
           <i
-            className="bi bi-chevron-right right"
+            className="bi bi-chevron-right right hover:text-gray-200"
             onClick={(event) => {
               moveSlider(event, sliderRef);
             }}

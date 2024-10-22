@@ -56,6 +56,7 @@ const Hero = () => {
         <h1 className="title">{title}</h1>
 
         <button
+          className="bg-gray-800"
           data-id={currentId}
           onClick={() => {
             handleTrailerClick(setOpenTrailer, idToNavigate, currentMediaType, setTrailerKey);
@@ -63,13 +64,17 @@ const Hero = () => {
         >
           {" "}
           <span>
-            <i className="bi bi-play-circle-fill "></i>
+            <i className="bi bi-play-fill "></i>
           </span>{" "}
           Play Trailer
         </button>
 
-        <Link className="details" href={`${currentMediaType}/${idToNavigate}`}>
-          <button onClick={() => setCurrentId(idToNavigate)}> Details </button>
+        <Link
+          className="details bg-gray-800 hover:bg-gray-700 rounded-full  border border-[#ffffff4b] text-[85%] py-[8px] px-[28.8px] w-full"
+          href={`${currentMediaType}/${idToNavigate}`}
+          onClick={() => setCurrentId(idToNavigate)}
+        >
+          Details
         </Link>
       </div>
 
