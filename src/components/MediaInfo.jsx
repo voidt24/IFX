@@ -8,6 +8,7 @@ import { handle_new_custom_lists, handle_favs_watchlists, get_custom_lists, hand
 import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
 import Modal from "./Modal";
+import { mediaProperties } from "@/helpers/mediaProperties.config";
 
 export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
   const { currentId, setOpenTrailer, setTrailerKey, currentMediaType, setAuthModalActive, userLogged, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList, firebaseActiveUser } =
@@ -105,12 +106,16 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
             <h1 className="title">{state.title}</h1>
             <div className="info flex gap-2 md:text-[70%] lg:text-[80%]">
               <span>{state.releaseDate}</span>
-              <span>
-                {state.genres &&
-                  state.genres.slice(0, 1).join(", ", (genre) => {
-                    return <span>{genre}</span>;
-                  })}
-              </span>
+              {currentMediaType == mediaProperties.movie.route && <span>{state.runtime}</span>}
+
+              {currentMediaType == mediaProperties.tv.route && (
+                <span>
+                  {state.genres &&
+                    state.genres.slice(0, 1).join(", ", (genre) => {
+                      return <span>{genre}</span>;
+                    })}
+                </span>
+              )}
               <span>
                 <i className="bi bi-star-fill" style={{ color: "goldenrod" }}></i>
                 {` ${state.vote}`}

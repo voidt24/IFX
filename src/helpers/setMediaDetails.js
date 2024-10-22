@@ -2,8 +2,30 @@ import { image, imageWithSize } from "./api.config";
 import { mediaD_Actions } from "./reducerSelectedMedia";
 import { getFromDB } from "../firebase/getFromDB";
 
+const getRunTime = (runtimeParam) => {
+  let time;
+
+  if (runtimeParam < 60) {
+    time = runtimeParam + "m";
+  } else {
+    const hrs = Math.floor(runtimeParam / 60);
+    let remainingMins = runtimeParam % 60;
+    let strHrs = "h";
+    let strMin = "m";
+
+    if (remainingMins == 0) {
+      strMin = "";
+      remainingMins = "";
+    }
+
+    time = hrs + strHrs + " " + remainingMins + strMin;
+  }
+
+  return time;
+};
+
 export const setMediaDetails = (data, dispatch) => {
-  const { title, original_name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path } = data[0];
+  const { title, original_name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime } = data[0];
   dispatch({
     type: mediaD_Actions.set_Media_Values,
     payload: {
@@ -16,6 +38,7 @@ export const setMediaDetails = (data, dispatch) => {
       vote: String(vote_average).slice(0, 3),
       genres: (genres && genres.map((genre) => genre.name)) || "",
       loadingAllData: false,
+      runtime: runtime? getRunTime(runtime) : "",
     },
   });
 };

@@ -1,15 +1,16 @@
 export const mediaDetails_InitialState = {
-  results:[],
-  heroBackground:'',
-  title:'',
-  poster:'',
-  overview:'',
-  releaseDate:'',
-  vote:'',
-  genres:[],
-  loadingAllData:true,
-  loadingCast:true
-}
+  results: [],
+  heroBackground: "",
+  title: "",
+  poster: "",
+  overview: "",
+  releaseDate: "",
+  vote: "",
+  genres: [],
+  loadingAllData: true,
+  loadingCast: true,
+  runtime:""
+};
 
 export const mediaD_Actions = {
   set_Media_Values: 'set_Media_Values',
@@ -30,7 +31,8 @@ export const reducerFunction = (state, action) => {
         releaseDate:action.payload.releaseDate,
         vote:action.payload.vote,
         genres:action.payload.genres,
-        loadingAllData: action.payload.loadingAllData
+        loadingAllData: action.payload.loadingAllData,
+        runtime: action.payload.runtime
       }
 
     case mediaD_Actions.set_All_DataLoader:
