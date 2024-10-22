@@ -2,8 +2,6 @@
 import { useRef, useEffect, useContext, useState } from "react";
 import Link from "next/link";
 import { Context } from "@/context/Context";
-import Modal from "./Modal";
-import UserActions from "./UserActions";
 
 export default function Navbar() {
   const navRef = useRef();
@@ -73,10 +71,6 @@ export default function Navbar() {
         <i className="bi bi-person-circle" id="user"></i>
         <p className="to-hide-on-desk">Me</p>
       </span>
-
-      <Modal modalActive={authModalActive} setModalActive={setAuthModalActive}>
-        <UserActions />
-      </Modal>
     </nav>
   );
 }

@@ -3,7 +3,9 @@ import { usePathname } from "next/navigation";
 import { useState, createContext, useEffect } from "react";
 import { auth } from "../firebase/firebase.config";
 import { useParams } from "next/navigation";
+import Modal from "@/components/Modal";
 
+import UserActions from "@/components/UserActions";
 export const Context = createContext([]);
 
 export default function ContextWrapper({ children }) {
@@ -132,5 +134,12 @@ export default function ContextWrapper({ children }) {
     });
   }, []);
 
-  return <Context.Provider value={contextValues}>{children}</Context.Provider>;
+  return (
+    <Context.Provider value={contextValues}>
+      {children}
+      <Modal modalActive={authModalActive} setModalActive={setAuthModalActive}>
+        <UserActions />
+      </Modal>
+    </Context.Provider>
+  );
 }
