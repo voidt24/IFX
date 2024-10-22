@@ -58,7 +58,9 @@ export const Cast = ({ cast }) => {
             </span>
           </div>
         ) : (
-          <p style={{ textAlign: "center" }}>No cast available</p>
+          <p style={{ textAlign: "center" }} className="text-gray-500">
+            No cast available
+          </p>
         )}
       </>
     )

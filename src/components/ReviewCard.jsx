@@ -10,7 +10,7 @@ const truncatedTextStyle = {
 
 const ReviewCard = ({ result }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showReadMoreButton, setShowReadMoreButton] = useState(false);
+  const [showReadMoreButton, setShowReadMoreButton] = useState(true);
 
   useEffect(() => {
     setShowReadMoreButton(ref.current.scrollHeight !== ref.current.clientHeight);

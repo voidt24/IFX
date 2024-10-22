@@ -20,7 +20,7 @@ export const Reviews = ({ reviews }) => {
             })}
           </div>
         ) : (
-          <p style={{ textAlign: "center" }}>No reviews available</p>
+          <p style={{ textAlign: "center" }} className="text-gray-500">No reviews available</p>
         )}
       </>
     )

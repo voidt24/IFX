@@ -17,9 +17,9 @@ const Modal = ({ modalActive, setModalActive,children }) => {
               setModalActive(false);
             }}
             type="button"
-            className="border-none  rounded-lg  hover:text-[var(--primary)] absolute top-4 right-4 p-0"
+            className="border-none  rounded-lg  hover:text-[var(--primary)] hover:bg-gray-700/20 absolute top-2 right-2 p-0"
           >
-            <i className="bi bi-x-circle text-xl"></i>
+            <i className="bi bi-x text-xl"></i>
           </button>
           {children}
         </div>

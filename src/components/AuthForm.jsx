@@ -43,7 +43,7 @@ export default function AuthForm() {
       <form onSubmit={(e) => handleSubmit(e)} className="auth-form">
         <label htmlFor="">Email</label>
         <input
-          className=" text-black py-0 px-2"
+          className=" text-black  px-2"
           type="Email"
           onChange={(e) => {
             setUserData({ ...userData, email: e.target.value });
@@ -52,9 +52,9 @@ export default function AuthForm() {
         />
 
         <label htmlFor="">Password</label>
-        <span className="flex bg-white rounded-xl relative">
+        <span className="flex items-center justify-center bg-white rounded-xl relative">
           <input
-            className="text-black py-0 px-2 border-none w-[88.5%]"
+            className="text-black  border-none w-[88.5%] px-2"
             type={pwdInputType}
             onChange={(e) => {
               setUserData({ ...userData, password: e.target.value });
@@ -62,8 +62,9 @@ export default function AuthForm() {
             ref={pwdInputRef}
             required
           />
-          <i
-            className={`bi bi-eye-fill text-lg ${pwdInputType == "password" ? "text-black" : "text-[var(--primary)]"}  absolute top-0 right-2`}
+          <button
+            type="button"
+            className={"bg-none absolute top-0 right-2 p-0 hover:bg-transparent bg-transparent"}
             onClick={() => {
               if (pwdInputRef.current.type == "text") {
                 pwdInputRef.current.type = "password";
@@ -72,12 +73,14 @@ export default function AuthForm() {
                 setPwdInputType("text");
               }
             }}
-          ></i>
+          >
+            <i className={`bi bi-eye-fill  cursor-pointer ${pwdInputType == "password" ? "text-black" : "text-[var(--primary)]"} `}></i>
+          </button>
         </span>
 
         {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-        <button className="rounded-3xl w-full" type="submit">
+        <button className="rounded-3xl w-full bg-gray-800" type="submit">
           {noAccount ? "Create account" : "Login"}
         </button>
       </form>
@@ -85,7 +88,7 @@ export default function AuthForm() {
       <p>
         {noAccount ? "Already have an account? " : "Dont have an account? "}
         <button
-          className=" border-none underline mt-2 p-0 text-[var(--primary)]"
+          className=" border-none  mt-2 p-0 text-[var(--primary)] hover:bg-transparent hover:underline"
           onClick={() => {
             noAccount ? setNoAccount(false) : setNoAccount(true);
 
