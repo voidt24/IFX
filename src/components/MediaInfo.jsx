@@ -99,7 +99,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
       ></i>
 
       <div className="media-details__initial-content  sm:px-10 sm:w-[80%] lg:w-[60%] xl:w-[45%] m-auto">
-        <div className="media-details__info-container flex flex-col items-center justify-center gap-4 mt-5 sm:mt-20">
+        <div className="media-details__info-container flex flex-col items-center justify-center gap-4 mt-12 sm:mt-20">
           <img src={state.poster} alt="" id="poster" />
 
           <div className="info-container-text flex justify-center items-center flex-col gap-2 ">

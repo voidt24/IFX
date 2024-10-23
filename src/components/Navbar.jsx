@@ -12,24 +12,19 @@ export default function Navbar() {
     window.addEventListener("scroll", () => {
       if (window.innerWidth >= 640) {
         if (window.scrollY > 0) {
-          navRef.current.style.backgroundColor = "#0007";
-          navRef.current.style.backdropFilter = "blur(8px)";
+          navRef.current.style.backgroundColor = "#000";
         } else {
           navRef.current.style.background = "none";
-          navRef.current.style.backdropFilter = "none";
         }
-      } else {
-        navRef.current.style.backgroundColor = "#0007";
-        navRef.current.style.backdropFilter = "blur(8px)";
       }
     });
   }, []);
 
   return (
-    <nav className="nav z-30" ref={navRef}>
+    <nav className="nav z-30 " ref={navRef}>
       <Link href="/search" id="search-btn" className="nav-item-box">
-        <i className="bi bi-search"></i>
-        <p className="to-hide-on-desk">search</p>
+        <i className="bi bi-search max-sm:text-[125%]"></i>
+        <p className="to-hide-on-desk max-sm:text-[65%]">search</p>
       </Link>
 
       <ul className={` links`}>
@@ -41,8 +36,8 @@ export default function Navbar() {
               setCurrentMediaType("movies");
             }}
           >
-            <i className={` ${currentMediaType == "movies" && "text-[#e5b334]"} bi bi-camera-reels to-hide-on-desk`}></i>
-            <p className={`${currentMediaType == "movies" && "text-[#e5b334]"} `}>Movies</p>
+            <i className={` ${currentMediaType == "movies" && "text-[#e5b334]"} bi bi-camera-reels to-hide-on-desk max-sm:text-[125%]`}></i>
+            <p className={`${currentMediaType == "movies" && "text-[#e5b334]"}  max-sm:text-[65%]`}>Movies</p>
           </Link>
         </li>
         <li>
@@ -53,8 +48,8 @@ export default function Navbar() {
               setCurrentMediaType("tvshows");
             }}
           >
-            <i className={` ${currentMediaType == "tvshows" && "text-[#e5b334]"} bi bi-tv to-hide-on-desk`}></i>
-            <p className={`${currentMediaType == "tvshows" && "text-[#e5b334]"} `}>TV Shows</p>
+            <i className={` ${currentMediaType == "tvshows" && "text-[#e5b334]"} bi bi-tv to-hide-on-desk max-sm:text-[125%]`}></i>
+            <p className={`${currentMediaType == "tvshows" && "text-[#e5b334]"}  max-sm:text-[65%]`}>TV Shows</p>
           </Link>
         </li>
       </ul>
@@ -68,8 +63,8 @@ export default function Navbar() {
           }
         }}
       >
-        <i className="bi bi-person-circle" id="user"></i>
-        <p className="to-hide-on-desk">Me</p>
+        <i className="bi bi-person-circle max-sm:text-[125%]" id="user"></i>
+        <p className="to-hide-on-desk max-sm:text-[65%]">Me</p>
       </span>
     </nav>
   );

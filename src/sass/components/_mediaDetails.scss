@@ -6,7 +6,7 @@
   background-repeat: no-repeat;
   overflow: hidden;
   position: relative;
-  padding-bottom: 5rem;
+  padding-bottom: 2rem;
 
   @media #{$sm} {
     padding-inline: 1rem;
@@ -210,7 +210,7 @@
       position: relative;
       border-radius: 12px;
 
-      background-color: #0c0c0c;
+      // background-color: #0c0c0c;
 
       @media #{$md} {
         width: 80%;
@@ -228,12 +228,12 @@
 
       .fixed {
         position: sticky;
-        background-color: #0c0c0c;
+        // background-color: #0c0c0c;
         padding-block: 0.8rem;
         left: 0;
         top: 0;
         z-index: 2;
-        border-bottom: 1px solid #ffffff30;
+        // border-bottom: 1px solid #ffffff30;
         padding-inline: 1.4rem;
       }
     }
@@ -255,16 +255,11 @@
     }
     .review-text {
       color: #dfdfdf;
-      font-size: 90%;
       margin-top: 0.7rem;
       line-height: 22px;
       padding-inline: 1.4rem;
       @media #{$lg} {
         line-height: 26px;
-        font-size: 100%;
-      }
-      @media #{$xxl} {
-        font-size: 100%;
       }
     }
   }
