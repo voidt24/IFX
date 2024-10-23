@@ -1,16 +1,26 @@
 "use client";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Hero from "@/components/Hero";
 import Slider from "@/components/Slider";
+import SliderCard from "@/components/SliderCard";
 import { Context } from "@/context/Context";
 import { CircularProgress } from "@mui/material";
 
 export default function Movies() {
-  const { setCurrentId, initialDataError, initialDataIsLoading } = useContext(Context);
+  const { apiData, setApiData, setCurrentId, initialDataError, initialDataIsLoading, currentMediaType } = useContext(Context);
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     setCurrentId(undefined);
   }, []);
+
+  useEffect(() => {
+    if (apiData && apiData.length > 0) {
+      const [trendingResults, popularResults] = apiData[0];
+
+      setResults(currentMediaType == "movies" ? popularResults : trendingResults.slice(5, 20));
+    }
+  }, [apiData, currentMediaType]);
 
   if (initialDataIsLoading) {
     return (
@@ -34,7 +44,19 @@ export default function Movies() {
   return (
     <>
       <Hero />
-      <Slider />
+      <Slider
+        header={
+          <>
+            | POPULAR <span>{currentMediaType.toUpperCase()}</span>
+          </>
+        }
+        controls
+        expectingCards
+      >
+        {results.map((result) => {
+          return <SliderCard result={result} key={result.id} />;
+        })}
+      </Slider>
     </>
   );
 }
