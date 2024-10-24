@@ -20,7 +20,7 @@ const ReviewCard = ({ result }) => {
   return (
     <div>
       <div className="review-content bg-neutral-900">
-        <span className="fixed" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span className="fixed flex justify-between items-center bg-neutral-900" >
           <span id="author">
             {result.author_details.username}
             <p className="text-[85%] text-white/50 font-normal">{result.created_at.slice(0, 10)}</p>
