@@ -32,7 +32,7 @@ export const setMediaDetails = (data, dispatch) => {
       results: [data[0]],
       heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
       title: title || original_name,
-      poster: `${imageWithSize("500")}${poster_path} || ""`,
+      poster: `${imageWithSize("500")}${poster_path}` || "",
       overview,
       releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
       vote: String(vote_average).slice(0, 3),
