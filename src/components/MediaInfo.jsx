@@ -104,17 +104,16 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
           <div className="info-container-text flex justify-center items-center flex-col gap-2 ">
             <h1 className="title">{state.title}</h1>
-            <div className="info flex items-center justify-center flex-wrap gap-1 md:text-[70%] lg:text-[80%]">
-              <span>{state.releaseDate}</span>
-              {currentMediaType == mediaProperties.movie.route && <span>{state.runtime}</span>}
-
-              {currentMediaType == mediaProperties.tv.route && <span>{state.seasons}</span>}
+            <div className="info flex items-center justify-center flex-wrap  md:text-[70%] lg:text-[80%] gap-2 text-gray-300">
+              <span>{state.releaseDate}</span>•{currentMediaType == mediaProperties.movie.route && <span>{state.runtime}</span>}
+              {currentMediaType == mediaProperties.tv.route && <span>{state.seasons}</span>}•
               <span>
                 {state.genres &&
                   state.genres.slice(0, 1).join(", ", (genre) => {
                     return <span>{genre}</span>;
                   })}
               </span>
+              •
               <span>
                 <i className="bi bi-star-fill" style={{ color: "goldenrod" }}></i>
                 {` ${state.vote}`}
@@ -155,7 +154,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
             </p>
             {showReadMoreButton && (
               <p
-                className="show-more-btn text-[goldenrod]/70 cursor-pointer underline"
+                className="show-more-btn text-[var(--primary)] cursor-pointer underline"
                 onClick={() => {
                   setIsOpen(!isOpen);
                 }}
@@ -227,7 +226,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
             <div className="flex w-full items-center justify-center gap-6">
               <button
                 className={`rounded-full bg-gray-800 hover:bg-gray-700 px-4 bg-transparent border-0 ${
-                  newListModalActive ? "text-[var(--primary)]" : "text-gray-600"
+                  newListModalActive ? "text-[var(--primary)]" : "text-gray-400"
                 } hover:text-[var(--primary)] hover:bg-transparent `}
                 onClick={() => {
                   setNewListModalActive(true);
@@ -239,7 +238,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               <p className="">|</p>
               <button
                 className={`rounded-full bg-gray-800 hover:bg-gray-700 px-4 bg-transparent border-0 ${
-                  addToListModalActive ? "text-[var(--primary)]" : "text-gray-600"
+                  addToListModalActive ? "text-[var(--primary)]" : "text-gray-400"
                 } hover:text-[var(--primary)] hover:bg-transparent`}
                 onClick={() => {
                   setAddToListModalActive(true);
@@ -270,7 +269,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                     required
                   />
                 </label>
-                <button type="submit" className="w-full rounded-full bg-gray-800 hover:bg-gray-700">
+                <button type="submit" className="w-full rounded-full py-1.5 bg-white/40 hover:bg-gray-600">
                   Add
                 </button>
               </form>
@@ -286,7 +285,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                 <label className="w-full text-sm text-white flex flex-col gap-4">
                   Select your list
                   <select
-                    className="w-full   cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-2 py-1 transition-all text-white invalid:text-[white]/70  rounded-full   border border-gray-400 valid:bg-black "
+                    className="w-full   cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-2 py-1 transition-all text-white invalid:text-[white]/70  rounded-full   border border-gray-400 valid:bg-gray-900 "
                     onClick={async () => {
                       const list = await get_custom_lists(firebaseActiveUser.uid);
                       setExistingLists(list);
@@ -312,7 +311,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                   </select>
                 </label>
                 {activeSelectedElement != "" && (
-                  <button type="submit" className="w-full rounded-full  bg-gray-800 hover:bg-gray-700">
+                  <button type="submit" className="w-full rounded-full py-1.5 bg-white/40 hover:bg-gray-600">
                     Add
                   </button>
                 )}

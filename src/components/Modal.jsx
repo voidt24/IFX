@@ -11,7 +11,7 @@ const Modal = ({ modalActive, setModalActive,children }) => {
           }}
         ></div>
 
-        <div className="user-options bg-black relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-gray-600 px-6 py-8 w-full  sm:w-3/4 lg:w-3/6 xl:w-1/4">
+        <div className="user-options bg-gray-800/90 relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-gray-600 px-6 py-8 w-full  sm:w-3/4 lg:w-3/6 xl:w-1/4">
           <button
             onClick={() => {
               setModalActive(false);

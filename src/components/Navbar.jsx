@@ -36,8 +36,8 @@ export default function Navbar() {
               setCurrentMediaType("movies");
             }}
           >
-            <i className={` ${currentMediaType == "movies" && "text-[#e5b334]"} bi bi-camera-reels to-hide-on-desk max-sm:text-[125%]`}></i>
-            <p className={`${currentMediaType == "movies" && "text-[#e5b334]"}  max-sm:text-[65%]`}>Movies</p>
+            <i className={` ${currentMediaType == "movies" && "text-[var(--primary)]"} bi bi-camera-reels to-hide-on-desk max-sm:text-[125%]`}></i>
+            <p className={`${currentMediaType == "movies" && "text-[var(--primary)]"}  max-sm:text-[65%]`}>Movies</p>
           </Link>
         </li>
         <li>
@@ -48,8 +48,8 @@ export default function Navbar() {
               setCurrentMediaType("tvshows");
             }}
           >
-            <i className={` ${currentMediaType == "tvshows" && "text-[#e5b334]"} bi bi-tv to-hide-on-desk max-sm:text-[125%]`}></i>
-            <p className={`${currentMediaType == "tvshows" && "text-[#e5b334]"}  max-sm:text-[65%]`}>TV Shows</p>
+            <i className={` ${currentMediaType == "tvshows" && "text-[var(--primary)]"} bi bi-tv to-hide-on-desk max-sm:text-[125%]`}></i>
+            <p className={`${currentMediaType == "tvshows" && "text-[var(--primary)]"}  max-sm:text-[65%]`}>TV Shows</p>
           </Link>
         </li>
       </ul>

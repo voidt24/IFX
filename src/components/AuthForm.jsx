@@ -5,7 +5,6 @@ import { authHandler } from "../firebase/authHandler";
 import { loginUser } from "../firebase/loginUser";
 import { authErrors } from "../firebase/firebase.config";
 import Error from "@/components/Error";
-import { useRouter } from "next/navigation";
 
 export default function AuthForm() {
   const { setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
@@ -13,7 +12,6 @@ export default function AuthForm() {
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const pwdInputRef = useRef(null);
   const [pwdInputType, setPwdInputType] = useState("password");
-  const router = useRouter();
 
   function setAppForActiveUser(user) {
     setFirebaseActiveUser({ email: user.user.email, uid: user.user.uid });
@@ -21,7 +19,6 @@ export default function AuthForm() {
     setAuthModalActive(false);
     setErrorMessage({ active: false, text: "" });
     setUserData({ username: "", email: "", password: "" });
-    router.push("/profile");
   }
 
   const handleSubmit = async (evt) => {
@@ -64,7 +61,7 @@ export default function AuthForm() {
           />
           <button
             type="button"
-            className={"bg-none absolute top-0 right-2 p-0 hover:bg-transparent bg-transparent"}
+            className={"bg-none absolute top-0 right-2 p-0 hover:bg-transparent bg-transparent border-0"}
             onClick={() => {
               if (pwdInputRef.current.type == "text") {
                 pwdInputRef.current.type = "password";
@@ -80,7 +77,7 @@ export default function AuthForm() {
 
         {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-        <button className="rounded-3xl w-full bg-gray-800" type="submit">
+        <button className="rounded-3xl w-full bg-white/40 hover:bg-gray-600" type="submit">
           {noAccount ? "Create account" : "Login"}
         </button>
       </form>
