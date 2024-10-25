@@ -1,8 +1,8 @@
 import { apiUrl, API_KEY } from "./api.config";
 const CACHENAME = "prods-cache-v2";
 
-export const search = async (query) => {
-  const url = `${apiUrl}search/multi?api_key=${API_KEY}&query=${query}`;
+export const search = async (query, page) => {
+  const url = `${apiUrl}search/multi?api_key=${API_KEY}&query=${query}&page=${page}`;
   const cache = await caches.open(CACHENAME);
   const validTime = Date.now() + 432000000; //5 days
 
@@ -15,7 +15,7 @@ export const search = async (query) => {
         headers: { "Content-Type": "application/json" },
       });
 
-      await cache.put(url, responseClone);
+      await cache.put(`search/${query}`, responseClone);
       await cache.put(`${query}-search-expiration`, new Response(JSON.stringify({ headers: { "Content-Type": "application/json" }, validTime })));
 
       return json;
@@ -25,14 +25,14 @@ export const search = async (query) => {
   };
 
   try {
-    const response = await caches.match(url);
+    const response = await caches.match(`search/${query}`);
     const expirationResponse = await caches.match(`${query}-search-expiration`);
 
     if (response) {
       const expirationDate = await expirationResponse.json();
       if (Date.now() > expirationDate.validTime) {
         const cache = await caches.open(CACHENAME);
-        await cache.delete(url);
+        await cache.delete(`search/${query}`);
         await cache.delete(`${query}-search-expiration`);
         return fetchNormal();
       }

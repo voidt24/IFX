@@ -1,9 +1,10 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SliderCard from "../../components/SliderCard";
 import { Context } from "../../context/Context";
 import { search } from "../../helpers/search";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function SearchSection() {
   const { openTrailer, searchResults, setSearchResults } = useContext(Context);
@@ -11,9 +12,10 @@ function SearchSection() {
   const [searchStarted, setSearchStarted] = useState(false);
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
+  const [numberOfPages, setNumberOfPages] = useState(0);
+  const [pageActive, setPageActive] = useState(1);
 
-  function handleSearch(event) {
-    event.preventDefault();
+  function handleSearch() {
     if (inputValue.trim().length === 0) {
       return;
     }
@@ -22,11 +24,19 @@ function SearchSection() {
 
     setLoadingSearch(true);
 
-    search(inputValue).then((data) => {
+    search(inputValue, pageActive).then((data) => {
+      setSearchResults([]);
+
       setSearchResults(data.results);
       setLoadingSearch(false);
+
+      data.total_pages >= 5 ? setNumberOfPages(5) : setNumberOfPages(data.total_pages);
     });
   }
+
+  useEffect(() => {
+    handleSearch();
+  }, [pageActive]);
 
   return (
     <section className={`search-section ${openTrailer && "on-trailer"}`}>
@@ -41,7 +51,8 @@ function SearchSection() {
         <form
           className="searchForm"
           onSubmit={(event) => {
-            handleSearch(event);
+            event.preventDefault();
+            handleSearch();
           }}
         >
           <input
@@ -68,14 +79,82 @@ function SearchSection() {
         </span>
       ) : (
         <>
-          <div className="results">
-            {searchResults.length > 0
-              ? searchResults.map((result) => {
+          <div className="results relative pb-30">
+            {searchResults.length > 0 ? (
+              <>
+                {searchResults.map((result) => {
                   if (result.media_type !== "person" && result.media_type) {
-                    return <SliderCard result={result} changeMediaType={result.media_type} key={result.id} />;
+                    return (
+                      <>
+                        <SliderCard result={result} changeMediaType={result.media_type} key={result.id} />
+                      </>
+                    );
                   }
-                })
-              : searchStarted && <p style={{ gridColumn: "1/-1" }}>no results</p>}
+                })}
+
+                {numberOfPages && numberOfPages > 1 && (
+                  <>
+                    <nav className="flex absolute bottom-0 items-center justify-center w-full shadow-none">
+                      <ul class="flex text-sm self-center">
+                        <li>
+                          <button
+                            href="#"
+                            className="flex items-center justify-center px-5 h-10 ms-0 leading-tight text-gray-500 bg-gray-200 border  border-gray-400 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 "
+                            onClick={() => {
+                              if (pageActive > 1) {
+                                setPageActive(pageActive - 1);
+                                setSearchResults([]);
+                                handleSearch();
+                              }
+                            }}
+                          >
+                            Prev
+                          </button>
+                        </li>
+
+                        {Array.from({ length: numberOfPages }).map((_, index) => {
+                          return (
+                            <li key={index}>
+                              <button
+                                href="#"
+                                className={`flex items-center justify-center px-5 h-10 leading-tight text-gray-500 bg-gray-200 border border-gray-400 hover:bg-gray-100 hover:text-gray-700 ${
+                                  Number(index + 1) === pageActive ? "bg-gray-700 text-white hover:bg-gray-500 hover:text-white" : ""
+                                }`}
+                                onClick={() => {
+                                  setPageActive(Number(index + 1));
+                                  if (Number(index + 1) !== pageActive) {
+                                    setSearchResults([]);
+                                    handleSearch();
+                                  }
+                                }}
+                              >
+                                {index + 1}
+                              </button>
+                            </li>
+                          );
+                        })}
+
+                        <li>
+                          <button
+                            href="#"
+                            className="flex items-center justify-center px-5 h-10 leading-tight text-gray-500 bg-gray-200 border border-gray-400 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 "
+                            onClick={() => {
+                              if (pageActive < 5) {
+                                setPageActive(pageActive + 1);
+                              }
+                            }}
+                          >
+                            Next
+                          </button>
+                        </li>
+                      </ul>
+                    </nav>
+                  </>
+                )}
+              </>
+            ) : (
+              searchStarted && <p style={{ gridColumn: "1/-1" }}>no results</p>
+            )}
           </div>
         </>
       )}

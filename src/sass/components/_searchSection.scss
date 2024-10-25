@@ -4,8 +4,8 @@
   text-align: center;
   padding-inline: 1.5rem;
   padding-block-end: 5rem;
-  margin:  0 auto;
-   @media #{$lg} {
+  margin: 0 auto;
+  @media #{$lg} {
     max-width: 85%;
   }
   @media #{$xxl} {
@@ -39,7 +39,7 @@
     }
   }
   .results {
-    padding: 0.5rem;
+    padding-bottom: 4rem;
     overflow: hidden;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -52,6 +52,10 @@
     }
     @media #{$lg} {
       grid-template-columns: repeat(5, 1fr);
+    }
+
+    nav {
+      text-shadow: none;
     }
   }
 }
