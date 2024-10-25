@@ -1,5 +1,4 @@
-import { apiUrl, API_KEY } from "./api.config";
-const CACHENAME = "prods-cache-v2";
+import { apiUrl, API_KEY, CACHENAME } from "./api.config";
 
 export const search = async (query, page) => {
   const url = `${apiUrl}search/multi?api_key=${API_KEY}&query=${query}&page=${page}`;

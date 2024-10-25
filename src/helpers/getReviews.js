@@ -1,10 +1,9 @@
-import { apiUrl, API_KEY } from "./api.config";
+import { apiUrl, API_KEY, CACHENAME } from "./api.config";
 
 export const getReviews = async (mediaType, id) => {
   if (!id) throw new Error("id undefined");
   const url = `${apiUrl}${mediaType}/${id}/reviews?api_key=${API_KEY}`;
   const validTime = Date.now() + 2629800000; //1month
-  const CACHENAME = "prods-cache-v2";
 
   const fetchNormal = async () => {
     try {
@@ -16,8 +15,8 @@ export const getReviews = async (mediaType, id) => {
       });
 
       const cache = await caches.open(CACHENAME);
-      await cache.put(url, responseClone);
-      await cache.put(`${url}-expiration`, new Response(JSON.stringify({ headers: { "Content-Type": "application/json" }, validTime })));
+      await cache.put(`reviews-${id}`, responseClone);
+      await cache.put(`reviews-${id}-expiration`, new Response(JSON.stringify({ headers: { "Content-Type": "application/json" }, validTime })));
 
       return json;
     } catch (e) {
@@ -26,8 +25,8 @@ export const getReviews = async (mediaType, id) => {
   };
 
   try {
-    const response = await caches.match(url);
-    const expirationResponse = await caches.match(`${url}-expiration`);
+    const response = await caches.match(`reviews-${id}`);
+    const expirationResponse = await caches.match(`reviews-${id}-expiration`);
 
     if (response) {
       const json = await response.json();
@@ -35,10 +34,12 @@ export const getReviews = async (mediaType, id) => {
 
       if (Date.now() > expirationDate.validTime) {
         const cache = await caches.open(CACHENAME);
-        await cache.delete(url);
-        await cache.delete(`${url}-expiration`);
+        await cache.delete(`reviews-${id}`);
+        await cache.delete(`reviews-${id}-expiration`);
         return fetchNormal();
       }
+            console.log("desde cache reviews: ", json);
+
       return json;
     } else {
       return fetchNormal();
