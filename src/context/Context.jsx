@@ -15,7 +15,6 @@ export default function ContextWrapper({ children }) {
   const [trailerKey, setTrailerKey] = useState("");
   const [currentMediaType, setCurrentMediaType] = useState("");
   const [apiData, setApiData] = useState([]);
-  // const [userClicked, setUserClicked] = useState(false);
   const [authModalActive, setAuthModalActive] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
   const [noAccount, setNoAccount] = useState(true);
@@ -39,6 +38,10 @@ export default function ContextWrapper({ children }) {
   const [reviewsError, setReviewsError] = useState(false);
 
   const [similarError, setSimilarError] = useState(false);
+
+  const [listActiveAux, setListActiveAux] = useState();
+
+  const [message, setMessage] = useState({ message: null, severity: null, open: false });
 
   const { id: idFromUrl } = useParams();
 
@@ -86,6 +89,10 @@ export default function ContextWrapper({ children }) {
     setReviewsError,
     similarError,
     setSimilarError,
+    listActiveAux,
+    setListActiveAux,
+    message,
+    setMessage,
   };
 
   useEffect(() => {
