@@ -21,14 +21,10 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
     if (event.target.checked) {
       card.style.border = "3px solid rgb(255 166 0)";
 
-      card.classList.add("selected");
-
       card.querySelector("img").style.filter = "grayscale(1)";
-      card.querySelector("a").style.pointerEvents = "none";
     } else {
       card.style.border = "3px solid transparent";
       card.querySelector("img").style.filter = "none";
-      card.querySelector("a").style.pointerEvents = "all";
     }
 
     if (event.target.checked) {
@@ -92,7 +88,9 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false }) => 
         {canBeEdited && edit && (
           <span id="checkbox" className="relative w-full h-full z-20">
             <Checkbox
-              onChange={handleChange}
+              onChange={(evt) => {
+                handleChange(evt);
+              }}
               inputProps={{ "aria-label": "controlled" }}
               id={result.id.toString()}
               sx={{
