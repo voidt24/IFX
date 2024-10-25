@@ -1,0 +1,38 @@
+.lists {
+  height: 100%;
+  @extend .flex-col-center;
+  gap: 1rem;
+  text-align: center;
+
+  #user-in-profile {
+    color: var(--primary);
+  }
+
+  .results {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.3rem;
+    @media #{$xss} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media #{$sm} {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media #{$lg} {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    @media #{$xl} {
+      grid-template-columns: repeat(6, 1fr);
+      // gap: 0.6rem;
+    }
+    @media #{$fourK} {
+      // grid-template-columns: repeat(8, 1fr);
+    }
+  }
+  .results-container {
+    width: 90%;
+    padding:32px 12px;
+
+ 
+  }
+}

@@ -2,7 +2,7 @@
   padding-inline: 0.5rem;
   margin: 0 auto;
   min-width: auto; //al inicio en pantallas mas pequeñas el width del slider va a ser definido por su contenido (botones, ya que si le asignamos un width y los botones no llenan ese width, no apareceran centrados)
-  max-width: 100%;
+  max-width: 95%;
 
   @media #{$sm} {
     min-width: 40%;

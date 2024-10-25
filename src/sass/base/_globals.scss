@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
 :root {
+  --primary: #ef6820;
   --primary: goldenrod;
+  --base: #182230;
+  --base: #000000;
 }
 *,
 *::before,
@@ -24,7 +27,7 @@
   }
 }
 body {
-   background: #000;
+   background: var(--base);
   color: #ffffff;
   font-family: 'DM Sans', sans-serif;
   text-shadow: 3px 3px 10px black;
