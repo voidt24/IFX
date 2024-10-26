@@ -24,7 +24,6 @@ export default function ContextWrapper({ children }) {
   const [loadingAllData, setLoadingAllData] = useState(true);
   const [edit, setEdit] = useState(false);
   const [checkedMedia, setCheckedMedia] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
 
   const [isMember, setIsMember] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -74,8 +73,6 @@ export default function ContextWrapper({ children }) {
     setEdit,
     checkedMedia,
     setCheckedMedia,
-    searchResults,
-    setSearchResults,
     isMember,
     openDialog,
     setOpenDialog,
