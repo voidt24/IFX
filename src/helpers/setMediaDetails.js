@@ -25,7 +25,7 @@ const getRunTime = (runtimeParam) => {
 };
 
 export const setMediaDetails = (data, dispatch) => {
-  const { title, original_name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons } = data[0];
+  const { title, original_name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons } = data;
   dispatch({
     type: mediaD_Actions.set_Media_Values,
     payload: {

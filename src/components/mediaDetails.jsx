@@ -9,10 +9,7 @@ import { Reviews } from "@/components/Reviews";
 import MediaInfo from "@/components/MediaInfo";
 import { setListsState, setMediaDetails } from "../helpers/setMediaDetails";
 import { CircularProgress, Snackbar, Alert } from "@mui/material";
-import { getCast } from "@/helpers/getCast";
-import { getSimilar } from "@/helpers/getSimilar";
-import { getReviews } from "@/helpers/getReviews";
-import { getById } from "@/helpers/getById";
+import { getDetailsHelper } from "@/helpers/getDetailsHelper";
 
 export const MediaDetails = () => {
   const { currentId, currentMediaType, userLogged, firebaseActiveUser, initialDataError, setinitialDataError, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, setSimilarError } =
@@ -33,14 +30,18 @@ export const MediaDetails = () => {
     const mediaType = currentMediaType == "movies" ? "movie" : "tv";
 
     if (currentId != undefined) {
-      Promise.allSettled([getById(mediaType, currentId), getSimilar(mediaType, currentId), getCast(mediaType, currentId), getReviews(mediaType, currentId)]).then((result) => {
+      Promise.allSettled([
+        getDetailsHelper("byId", mediaType, currentId),
+        getDetailsHelper("similar", mediaType, currentId),
+        getDetailsHelper("cast", mediaType, currentId),
+        getDetailsHelper("reviews", mediaType, currentId),
+      ]).then((result) => {
         const [byIdPromise, similarPromise, castPromise, reviewsPromise] = result;
 
         byIdPromise.status == "fulfilled" ? setMediaDetails(byIdPromise.value, dispatch) : setinitialDataError(true);
         similarPromise.status == "fulfilled" ? setSimilar(similarPromise.value.results) : setSimilarError(true);
-        castPromise.status == "fulfilled" ? setCast(castPromise.value) : setCastError(true);
+        castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
         reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
-
         setSimilarMaximized(false);
         dispatch({ type: mediaD_Actions.set_All_DataLoader, payload: { loadingAllData: false } });
       });

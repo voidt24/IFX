@@ -1,13 +1,13 @@
 "use client";
 import { useContext, useEffect } from "react";
 import { Context } from "../context/Context";
-import { fetchData } from "../helpers/fetchData";
+import { fetchInitialData } from "../helpers/fetchInitialData";
 import { mediaProperties } from "../helpers/mediaProperties.config.js";
 
 export const MediaData = () => {
   const { currentMediaType, setApiData, setinitialDataError, setInitialDataIsLoading } = useContext(Context);
   const fetchAndSetData = (mediaType) => {
-    fetchData(mediaType)
+    fetchInitialData(mediaType)
       .then((data) => {
         setApiData([data]);
       })
