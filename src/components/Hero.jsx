@@ -83,7 +83,7 @@ const Hero = () => {
           const vote = result.vote_average.toString().slice(0, 3) * 10;
           return (
             <div
-              className={"movie " + (activeImage === result.id ? "isActive" : "")}
+              className={"movie " + (activeImage === result.id ? "isActive fallback-isActive" : "")}
               onClick={(event) => {
                 handleImageClick(event, result);
               }}
