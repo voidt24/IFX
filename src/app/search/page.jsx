@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
 
 function SearchSection() {
-  const { openTrailer} = useContext(Context);
+  const { openTrailer } = useContext(Context);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchStarted, setSearchStarted] = useState(false);
   const router = useRouter();
@@ -39,16 +39,6 @@ function SearchSection() {
   useEffect(() => {
     handleSearch(searchQuery);
   }, [pageActive]);
-
-  if (loadingSearch) {
-    return (
-      <span className="flex items-center justify-center h-screen">
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <CircularProgress color="inherit" size={100} />
-        </div>
-      </span>
-    );
-  }
 
   return (
     <section className={`search-section ${openTrailer && "on-trailer"} px-4 sm:px-10 flex items-center justify-center`}>
@@ -83,7 +73,6 @@ function SearchSection() {
             <i className="bi bi-search"></i>
           </button>
         </form>
-
         {numberOfPages > 1 && (
           <>
             <nav className="flex items-center justify-center w-full">
@@ -140,80 +129,87 @@ function SearchSection() {
             </p>
           </>
         )}
-      </div>
+        {loadingSearch ? (
+          <span className="flex items-center justify-center border">
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress color="inherit" size={100} />
+            </div>
+          </span>
+        ) : (
+          <div className="results relative">
+            {searchResults.length > 0 ? (
+              <>
+                {searchResults.map((result) => {
+                  if (result.media_type !== "person" && result.media_type) {
+                    return (
+                      <>
+                        <SliderCard result={result} changeMediaType={result.media_type} key={result.id} />
+                      </>
+                    );
+                  }
+                })}
 
-      <div className="results relative">
-        {searchResults.length > 0 ? (
-          <>
-            {searchResults.map((result) => {
-              if (result.media_type !== "person" && result.media_type) {
-                return (
-                  <>
-                    <SliderCard result={result} changeMediaType={result.media_type} key={result.id} />
-                  </>
-                );
-              }
-            })}
-
-            {/* {numberOfPages && numberOfPages > 1 && (
-                  <>
-                    <p className="absolute top-10 md:text-xl">
-                      Results for "{searchQuery}" page: {pageActive}
-                    </p>
-                    <nav className="flex absolute top-0 items-center justify-center w-full">
-                      <ul className="flex text-[70%] self-center">
-                        <li>
-                          <button
-                            href="#"
-                            className="flex items-center justify-center max-md:px-3 px-4 h-8 ms-0  leading-tight text-gray-200 bg-gray-800 border  border-gray-600 rounded-s-full hover:bg-gray-500 hover:text-white"
-                            onClick={() => {
-                              if (pageActive > 1) {
-                                setPageActive(pageActive - 1);
-                              }
-                            }}
-                          >
-                            Prev
-                          </button>
-                        </li>
-
-                        {Array.from({ length: numberOfPages }).map((_, index) => {
-                          return (
-                            <li key={index}>
+                {/* {numberOfPages && numberOfPages > 1 && (
+                      <>
+                        <p className="absolute top-10 md:text-xl">
+                          Results for "{searchQuery}" page: {pageActive}
+                        </p>
+                        <nav className="flex absolute top-0 items-center justify-center w-full">
+                          <ul className="flex text-[70%] self-center">
+                            <li>
                               <button
                                 href="#"
-                                className={`flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight  border border-gray-600 ${
-                                  Number(index + 1) === pageActive ? "bg-[goldenrod]  hover:bg-[goldenrod] text-white" : "bg-gray-800 hover:bg-gray-500  text-gray-300"
-                                }`}
+                                className="flex items-center justify-center max-md:px-3 px-4 h-8 ms-0  leading-tight text-gray-200 bg-gray-800 border  border-gray-600 rounded-s-full hover:bg-gray-500 hover:text-white"
                                 onClick={() => {
-                                  setPageActive(Number(index + 1));
+                                  if (pageActive > 1) {
+                                    setPageActive(pageActive - 1);
+                                  }
                                 }}
                               >
-                                {index + 1}
+                                Prev
                               </button>
                             </li>
-                          );
-                        })}
 
-                        <li>
-                          <button
-                            href="#"
-                            className="flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight text-gray-200 bg-gray-800 border border-gray-600 rounded-e-full hover:bg-gray-500 hover:text-white"
-                            onClick={() => {
-                              if (pageActive < 5) {
-                                setPageActive(pageActive + 1);
-                              }
-                            }}
-                          >
-                            Next
-                          </button>
-                        </li>
-                      </ul>
-                    </nav>
-                  </>
-                )} */}
-          </>
-        ) : (
-          searchStarted && <p style={{ gridColumn: "1/-1" }}>no results</p>
+                            {Array.from({ length: numberOfPages }).map((_, index) => {
+                              return (
+                                <li key={index}>
+                                  <button
+                                    href="#"
+                                    className={`flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight  border border-gray-600 ${
+                                      Number(index + 1) === pageActive ? "bg-[goldenrod]  hover:bg-[goldenrod] text-white" : "bg-gray-800 hover:bg-gray-500  text-gray-300"
+                                    }`}
+                                    onClick={() => {
+                                      setPageActive(Number(index + 1));
+                                    }}
+                                  >
+                                    {index + 1}
+                                  </button>
+                                </li>
+                              );
+                            })}
+
+                            <li>
+                              <button
+                                href="#"
+                                className="flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight text-gray-200 bg-gray-800 border border-gray-600 rounded-e-full hover:bg-gray-500 hover:text-white"
+                                onClick={() => {
+                                  if (pageActive < 5) {
+                                    setPageActive(pageActive + 1);
+                                  }
+                                }}
+                              >
+                                Next
+                              </button>
+                            </li>
+                          </ul>
+                        </nav>
+                      </>
+                    )} */}
+              </>
+            ) : (
+              searchStarted && <p style={{ gridColumn: "1/-1" }}>no results</p>
+            )}
+          </div>
         )}
       </div>
     </section>
