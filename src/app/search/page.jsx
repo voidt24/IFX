@@ -23,7 +23,6 @@ function SearchSection() {
     }
     setSearchResults([]);
     setSearchStarted(true);
-
     setLoadingSearch(true);
 
     search(value, pageActive).then((data) => {
@@ -55,6 +54,7 @@ function SearchSection() {
           onSubmit={(event) => {
             event.preventDefault();
             handleSearch(inputValue);
+            setPageActive(1);
 
             if (inputValue.trim().length !== 0) {
               setSearchQuery(inputValue);
@@ -130,7 +130,7 @@ function SearchSection() {
           </>
         )}
         {loadingSearch ? (
-          <span className="flex items-center justify-center border">
+          <span className="flex items-center justify-center">
             <div style={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress color="inherit" size={100} />
             </div>

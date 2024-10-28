@@ -92,8 +92,6 @@ export default function MainContent() {
       >
         {sliderData.map((sliderData) => {
           return <SliderCard result={sliderData} key={sliderData.id} />;
-        {sliderData.map((sliderData) => {
-          return <SliderCard result={sliderData} key={sliderData.id} />;
         })}
       </Slider>
     </>
