@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { useContext, useEffect, useState } from "react";
 
 import { Context } from "@/context/Context";
+import { mediaProperties } from "@/helpers/mediaProperties.config";
+import { fetchInitialData } from "@/helpers/fetchInitialData";
 const Slider = dynamic(() => import("@/components/Slider"), {
   loading: () => (
     <div className={`slider-with-cards relative lg:px-4 animate-pulse`}>
@@ -52,13 +54,33 @@ const Hero = dynamic(() => import("@/components/Hero"), {
 });
 
 export default function MainContent() {
-  const { apiData, setCurrentId, initialDataError, currentMediaType } = useContext(Context);
+  const { apiData, setApiData, setCurrentId, setinitialDataError, setInitialDataIsLoading, initialDataError, currentMediaType } = useContext(Context);
   const [sliderData, setSliderData] = useState([]);
   const [sliderTitle, setSliderTitle] = useState("");
 
+  const fetchAndSetData = (mediaType) => {
+    fetchInitialData(mediaType)
+      .then((data) => {
+        setApiData([data]);
+      })
+      .catch(() => {
+        setinitialDataError(true);
+      })
+      .finally(() => {
+        setInitialDataIsLoading(false);
+      });
+  };
   useEffect(() => {
     setCurrentId(undefined);
   }, []);
+
+  useEffect(() => {
+    if (currentMediaType == mediaProperties.movie.route) {
+      fetchAndSetData(mediaProperties.movie);
+    } else if (currentMediaType == mediaProperties.tv.route) {
+      fetchAndSetData(mediaProperties.tv);
+    }
+  }, [currentMediaType]);
 
   useEffect(() => {
     if (apiData && apiData.length > 0) {
