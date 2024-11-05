@@ -1,10 +1,16 @@
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import ReviewCard from "./ReviewCard";
 import { Context } from "@/context/Context";
-
+import CollapsibleElement from "@/components/common/CollapsibleElement";
 export const Reviews = ({ reviews }) => {
-  const reviewsContainerRef = useRef(null);
   const { reviewsError } = useContext(Context);
+
+  const truncatedTextStyle = {
+    WebkitLineClamp: "4",
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    display: "-webkit-box",
+  };
 
   if (reviewsError) {
     return <p className="p-2">Error loading reviews </p>;
@@ -14,13 +20,19 @@ export const Reviews = ({ reviews }) => {
       <>
         <h3 style={{ marginTop: "40px" }}>Reviews</h3>
         {reviews.length > 0 ? (
-          <div className="reviews" ref={reviewsContainerRef}>
+          <div className="reviews">
             {reviews.map((result) => {
-              return <ReviewCard result={result} key={result.id} />;
+              return (
+                <CollapsibleElement key={result.id} customClassesForParent={"review-content bg-neutral-900"} truncatedTextStyle={truncatedTextStyle}>
+                  <ReviewCard result={result} />
+                </CollapsibleElement>
+              );
             })}
           </div>
         ) : (
-          <p style={{ textAlign: "center" }} className="text-gray-500">No reviews available</p>
+          <p className="text-gray-500 text-center">
+            No reviews available
+          </p>
         )}
       </>
     )

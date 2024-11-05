@@ -129,6 +129,16 @@
       font-size: 150%;
     }
   }
+  .show-more-btn {
+      cursor: pointer;
+      text-decoration: underline;
+      text-align: center;
+      padding-block: 0.5rem;
+      color: #dfdfdfc4;
+      &:hover {
+        color: white;
+      }
+    }
   .cast {
     display: grid;
     grid-gap: 0.5rem;
@@ -209,6 +219,7 @@
     .review-content {
       position: relative;
       border-radius: 12px;
+      // height: 700px;
 
       // background-color: #0c0c0c;
 
@@ -238,16 +249,7 @@
       }
     }
 
-    .show-more-btn {
-      cursor: pointer;
-      text-decoration: underline;
-      text-align: center;
-      padding-block: 0.5rem;
-      color: #dfdfdfc4;
-      &:hover {
-        color: white;
-      }
-    }
+    
 
     #author {
       font-weight: bolder;
