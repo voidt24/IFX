@@ -1,4 +1,5 @@
 import { apiUrl, API_KEY } from "./api.config";
+import { ONE_MONTH, THREE_DAYS } from "./constants";
 import { fetchDetailsData } from "./fetchDetailsData";
 
 export const getDetailsHelper = async (typeOfSearch, mediaType, id) => {
@@ -6,7 +7,7 @@ export const getDetailsHelper = async (typeOfSearch, mediaType, id) => {
 
   const CACHEURL = `${mediaType}-${typeOfSearch}-${id}`;
   let url;
-  let validTime = Date.now() + 2629800000; //1month
+  let validTime = ONE_MONTH;
 
   switch (typeOfSearch) {
     case "byId":
@@ -20,6 +21,7 @@ export const getDetailsHelper = async (typeOfSearch, mediaType, id) => {
       break;
     case "reviews":
       url = `${apiUrl}${mediaType}/${id}/reviews?api_key=${API_KEY}`;
+      validTime = THREE_DAYS
       break;
     default:
       break;

@@ -1,8 +1,8 @@
 import { apiUrl, API_KEY, CACHENAME } from "./api.config";
-const validTime = Date.now() + 259200000; //3 days
+import { INITIAL_DATA_EXPIRATION_TIME } from "./constants";
+const validTime = INITIAL_DATA_EXPIRATION_TIME; //3 days
 
-export const fetchInitialData
- = async (obj) => {
+export const fetchInitialData = async (obj) => {
   const { mediaType, category, limit } = obj;
 
   const trendingUrl = `${apiUrl}${category[0]}/${mediaType}/day?api_key=${API_KEY}&page=1`;
@@ -101,5 +101,3 @@ async function saveToCache(jsonTrendingResults, jsonPopularResults, mediaType, v
     //no actions on this exception
   }
 }
-
-
