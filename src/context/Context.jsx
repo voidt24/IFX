@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import Modal from "@/components/Modal";
 
 import UserActions from "@/components/UserActions";
+import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 export const Context = createContext([]);
 
 export default function ContextWrapper({ children }) {
@@ -99,24 +100,12 @@ export default function ContextWrapper({ children }) {
   }, [idFromUrl]);
 
   useEffect(() => {
-    function setMedia(pathContainsValidMedia, pathName) {
-      if (pathContainsValidMedia) {
-        setCurrentMediaType(pathName);
-      } else {
-        setCurrentMediaType("movies");
-      }
+    const mediaTypeFromUrl = setMedia(path);
+    if (isValidMediatype(mediaTypeFromUrl)) {
+      setCurrentMediaType(mediaTypeFromUrl);
+      return;
     }
-
-    let pathName;
-    let pathContainsValidMedia;
-
-    if (path.slice(1).includes("/")) {
-      pathName = path.slice(1, path.lastIndexOf("/"));
-    } else {
-      pathName = path.slice(1);
-    }
-    pathContainsValidMedia = pathName == "movies" || pathName == "tvshows";
-    setMedia(pathContainsValidMedia, pathName);
+    setCurrentMediaType("movies");
   }, [path]);
 
   useEffect(() => {
