@@ -61,7 +61,7 @@ export default function MainContent() {
   const fetchAndSetData = (mediaType) => {
     fetchInitialData(mediaType)
       .then((data) => {
-        setApiData([data]);
+        setApiData(data);
       })
       .catch(() => {
         setinitialDataError(true);
@@ -75,18 +75,13 @@ export default function MainContent() {
   }, []);
 
   useEffect(() => {
-    if (currentMediaType == mediaProperties.movie.route) {
-      fetchAndSetData(mediaProperties.movie);
-    } else if (currentMediaType == mediaProperties.tv.route) {
-      fetchAndSetData(mediaProperties.tv);
-    }
+    fetchAndSetData(currentMediaType == mediaProperties.movie.route || currentMediaType == undefined ? mediaProperties.movie : mediaProperties.tv);
   }, [currentMediaType]);
 
   useEffect(() => {
     if (apiData && apiData.length > 0) {
-      const [trendingResults, popularResults] = apiData[0];
-
-      setSliderData(currentMediaType == "movies" ? popularResults : trendingResults.slice(5, 20)); // check fetchData.js (helper) for context on why we save diff. results based on currentMediaType
+      const [trendingResults, popularResults] = apiData;
+      setSliderData(currentMediaType == mediaProperties.movie.route || currentMediaType == undefined ? popularResults : trendingResults.slice(5, 20)); // check fetchData.js (helper) for context on why we save diff. results based on currentMediaType
       setSliderTitle("| POPULAR ");
     }
   }, [apiData, currentMediaType]);

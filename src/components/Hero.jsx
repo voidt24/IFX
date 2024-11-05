@@ -21,15 +21,16 @@ const Hero = () => {
 
   function renderInitialContent() {
     if (apiData && apiData.length > 0) {
-      const [trendingResults] = apiData[0];
+      const [trendingResults] = apiData;
+      const [firstTrendingElement] = trendingResults;
 
       setResults(trendingResults);
 
-      let initialBackground = window.innerWidth >= 640 ? `${image}${trendingResults[0].backdrop_path}` : `${image}${trendingResults[0].poster_path}`;
+      let initialBackground = window.innerWidth >= 640 ? `${image}${firstTrendingElement.backdrop_path}` : `${image}${firstTrendingElement.poster_path}`;
       setHeroBackground(initialBackground);
-      setTitle(trendingResults[0].name || trendingResults[0].title);
-      setActiveImage(trendingResults[0].id);
-      setIdToNavigate(trendingResults[0].id);
+      setTitle(firstTrendingElement.name || firstTrendingElement.title);
+      setActiveImage(firstTrendingElement.id);
+      setIdToNavigate(firstTrendingElement.id);
     }
   }
 
