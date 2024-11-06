@@ -5,6 +5,7 @@ import { handleTrailerClick } from "../helpers/getTrailer";
 
 import Link from "next/link";
 import { Context } from "@/context/Context";
+import resolveVoteStyle from "@/helpers/resolveVoteStyle";
 
 const Hero = () => {
   const [heroBackground, setHeroBackground] = useState("");
@@ -90,19 +91,7 @@ const Hero = () => {
               }}
               key={result.id}
             >
-              <div
-                className={`${
-                  vote == 0
-                    ? " border-[1.5px] xl:border-2 border-gray-700 text-white"
-                    : vote < 50
-                    ? " border-[1.5px] xl:border-2 border-red-800"
-                    : vote < 65
-                    ? " border-[1.5px] xl:border-2 border-yellow-500"
-                    : vote < 75
-                    ? " border-[1.5px] xl:border-2 border-lime-300"
-                    : " border-[1.5px] xl:border-2 border-green-500"
-                } vote text-black`}
-              >
+              <div className={`${resolveVoteStyle(vote)} border-[1.5px] xl:border-2 vote text-black`}>
                 <p>{vote + "%"}</p>
               </div>
 
