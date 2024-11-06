@@ -249,17 +249,14 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               </button>
             </div>
 
-            {newListModalActive && (
-              <form
-                className="flex flex-col gap-4 items-center  self-center sm:w-[195px] mt-6"
-                onSubmit={(e) => {
-                  handleCustomLists(e);
-                }}
-              >
-                <label htmlFor="" className="w-full text-sm text-white flex flex-col gap-4">
-                  Type the list name
+            <form className="flex flex-col gap-4 items-center  self-center sm:w-[195px] mt-6">
+              <label htmlFor="" className="w-full text-sm text-white flex flex-col gap-4">
+                {newListModalActive ? "Type the list name" : " Select your list"}
+              </label>
+              {newListModalActive ? (
+                <>
                   <input
-                    className="text-black px-2  w-full py-[2.5px] text-sm rounded-full"
+                    className="text-black px-2  w-full py-1.5 text-sm rounded-full"
                     type="text"
                     value={customList}
                     onChange={(evt) => {
@@ -268,24 +265,21 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                     placeholder="ex. Science fiction"
                     required
                   />
-                </label>
-                <button type="submit" className="w-full rounded-full py-1.5 bg-white/40 hover:bg-gray-600">
-                  Add
-                </button>
-              </form>
-            )}
-
-            {addToListModalActive && (
-              <form
-                class="flex flex-col gap-4 items-center  self-center  sm:w-[195px] mt-6"
-                onSubmit={(e) => {
-                  handleAddToCustomList(e);
-                }}
-              >
-                <label className="w-full text-sm text-white flex flex-col gap-4">
-                  Select your list
+                  <button
+                    type="submit"
+                    className="w-full rounded-full py-1.5 bg-gray-800 hover:bg-gray-700"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleCustomLists(e);
+                    }}
+                  >
+                    Add
+                  </button>
+                </>
+              ) : (
+                <>
                   <select
-                    className="w-full   cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-2 py-1 transition-all text-white invalid:text-[white]/70  rounded-full   border border-gray-400 valid:bg-gray-900 "
+                    className="min-w-full   cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-2 py-1.5 transition-all text-white invalid:text-[white]/70  rounded-full   border border-gray-400 valid:bg-gray-900 "
                     onClick={async () => {
                       const list = await get_custom_lists(firebaseActiveUser.uid);
                       setExistingLists(list);
@@ -298,7 +292,6 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                     <option value={""} className="text-gray-500" selected>
                       Select...
                     </option>
-
                     {existingLists &&
                       existingLists.length > 0 &&
                       existingLists.map((element, index) => {
@@ -309,14 +302,22 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                         );
                       })}
                   </select>
-                </label>
-                {activeSelectedElement != "" && (
-                  <button type="submit" className="w-full rounded-full py-1.5 bg-white/40 hover:bg-gray-600">
-                    Add
-                  </button>
-                )}
-              </form>
-            )}
+
+                  {activeSelectedElement != "" && (
+                    <button
+                      type="submit"
+                      className="min-w-full rounded-full py-1.5 bg-gray-800 hover:bg-gray-7000"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleAddToCustomList(e);
+                      }}
+                    >
+                      Add
+                    </button>
+                  )}
+                </>
+              )}
+            </form>
           </div>
         </Modal>
       )}
