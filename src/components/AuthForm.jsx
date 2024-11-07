@@ -77,7 +77,7 @@ export default function AuthForm() {
 
         {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-        <button className="rounded-3xl w-full bg-white/40 hover:bg-gray-600" type="submit">
+        <button className="rounded-3xl w-full bg-gray-800 hover:bg-gray-700" type="submit">
           {noAccount ? "Create account" : "Login"}
         </button>
       </form>

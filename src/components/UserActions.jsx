@@ -5,6 +5,7 @@ import { Context } from "@/context/Context";
 import AuthForm from "@/components/AuthForm";
 import { auth } from "../firebase/firebase.config";
 import { useRouter } from "next/navigation";
+import { on } from "events";
 
 export default function UserActions() {
   const { setAuthModalActive, userLogged, setUserLogged, setFirebaseActiveUser } = useContext(Context);
@@ -23,19 +24,38 @@ export default function UserActions() {
       router.push("/movies");
     });
   };
+
+  const userLoggedActions = [
+    {
+      name: "Lists",
+      href: "/lists",
+      icon: <i className="bi bi-person-lines-fill"></i>,
+      actionFunction: setAuthModalActive,
+    },
+    {
+      name: "Log out",
+      href: null,
+      icon: <i className="bi bi-box-arrow-left"></i>,
+      actionFunction: handleLogout,
+    },
+  ];
+
   return userLogged ? (
     <div className="flex flex-col items-start gap-2">
-      <Link
-        href={"/lists"}
-        onClick={() => {
-          setAuthModalActive(false);
-        }}
-      >
-        <i className="bi bi-person"></i> Lists{" "}
-      </Link>
-      <Link href={""} onClick={handleLogout}>
-        <i className="bi bi-box-arrow-right"></i> Log out
-      </Link>
+      {userLoggedActions.map((action, index) => {
+        const { name, href, icon, actionFunction } = action;
+        return (
+          <Link
+            key={index}
+            href={href || ""}
+            onClick={() => {
+              actionFunction(name == "Lists" ? false : undefined);
+            }}
+          >
+            {icon} {name}
+          </Link>
+        );
+      })}
     </div>
   ) : (
     <AuthForm />

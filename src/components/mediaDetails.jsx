@@ -23,7 +23,6 @@ export const MediaDetails = () => {
   const [loadingFavs, setLoadingFavs] = useState(true);
   const [loadingWatchlist, setLoadingWatchlist] = useState(true);
 
-  const [similarMaximized, setSimilarMaximized] = useState(false);
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
 
   useEffect(() => {
@@ -42,7 +41,7 @@ export const MediaDetails = () => {
         similarPromise.status == "fulfilled" ? setSimilar(similarPromise.value.results) : setSimilarError(true);
         castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
         reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
-        setSimilarMaximized(false);
+
         dispatch({ type: mediaD_Actions.set_All_DataLoader, payload: { loadingAllData: false } });
       });
     }
@@ -61,7 +60,7 @@ export const MediaDetails = () => {
       {initialDataError ? <p className="text-center p-20">Error loading media information </p> : <MediaInfo state={state} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />}
 
       <div className="extra-data">
-        <Similar similar={similar} similarMaximized={similarMaximized} setSimilarMaximized={setSimilarMaximized} />
+        <Similar similar={similar} />
         <Cast cast={cast} />
         <Reviews reviews={reviews} />
       </div>

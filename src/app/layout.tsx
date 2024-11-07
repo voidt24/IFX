@@ -4,7 +4,6 @@ import "../sass/main.scss";
 import Navbar from "../components/Navbar";
 import ContextWrapper from "../context/Context";
 import Trailer from "@/components/Trailer";
-import MediaData from "../components/MediaData";
 
 export const metadata: Metadata = {
   title: "New productions",
@@ -16,10 +15,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <ContextWrapper>
-          <MediaData />
           <Navbar />
           {children}
-          <Trailer />
+          {/* <Trailer /> */}
         </ContextWrapper>
       </body>
     </html>

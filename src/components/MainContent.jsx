@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { useContext, useEffect, useState } from "react";
 
 import { Context } from "@/context/Context";
+import { mediaProperties } from "@/helpers/mediaProperties.config";
+import { fetchInitialData } from "@/helpers/fetchInitialData";
 const Slider = dynamic(() => import("@/components/Slider"), {
   loading: () => (
     <div className={`slider-with-cards relative lg:px-4 animate-pulse`}>
@@ -52,19 +54,34 @@ const Hero = dynamic(() => import("@/components/Hero"), {
 });
 
 export default function MainContent() {
-  const { apiData, setCurrentId, initialDataError, currentMediaType } = useContext(Context);
+  const { apiData, setApiData, setCurrentId, setinitialDataError, setInitialDataIsLoading, initialDataError, currentMediaType } = useContext(Context);
   const [sliderData, setSliderData] = useState([]);
   const [sliderTitle, setSliderTitle] = useState("");
 
+  const fetchAndSetData = (mediaType) => {
+    fetchInitialData(mediaType)
+      .then((data) => {
+        setApiData(data);
+      })
+      .catch(() => {
+        setinitialDataError(true);
+      })
+      .finally(() => {
+        setInitialDataIsLoading(false);
+      });
+  };
   useEffect(() => {
     setCurrentId(undefined);
   }, []);
 
   useEffect(() => {
-    if (apiData && apiData.length > 0) {
-      const [trendingResults, popularResults] = apiData[0];
+    fetchAndSetData(currentMediaType == mediaProperties.movie.route || currentMediaType == undefined ? mediaProperties.movie : mediaProperties.tv);
+  }, [currentMediaType]);
 
-      setSliderData(currentMediaType == "movies" ? popularResults : trendingResults.slice(5, 20)); // check fetchData.js (helper) for context on why we save diff. results based on currentMediaType
+  useEffect(() => {
+    if (apiData && apiData.length > 0) {
+      const [trendingResults, popularResults] = apiData;
+      setSliderData(currentMediaType == mediaProperties.movie.route || currentMediaType == undefined ? popularResults : trendingResults.slice(5, 20)); // check fetchData.js (helper) for context on why we save diff. results based on currentMediaType
       setSliderTitle("| POPULAR ");
     }
   }, [apiData, currentMediaType]);

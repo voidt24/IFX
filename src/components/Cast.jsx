@@ -1,12 +1,10 @@
-import { useState, useContext, useRef } from "react";
+import { useContext } from "react";
 import { Context } from "../context/Context";
 import { imageWithSize } from "../helpers/api.config";
+import CollapsibleElement from "./common/CollapsibleElement";
 
 export const Cast = ({ cast }) => {
   const { castError } = useContext(Context);
-
-  const castContainerRef = useRef(null);
-  const [castMaximized, setCastMaximized] = useState(false);
 
   if (castError) {
     return <p className="p-2">Error loading cast </p>;
@@ -17,7 +15,7 @@ export const Cast = ({ cast }) => {
       <>
         <h3 style={{ marginTop: "40px" }}>Cast</h3>
         {cast.length > 0 ? (
-          <div className="cast" ref={castContainerRef} style={{ zIndex: "1", height: cast.length < 10 ? "100%" : "200px", position: "relative" }}>
+          <CollapsibleElement customClassesForParent={"cast"} parentStyle={{ zIndex: "1", height: cast.length < 10 ? "100%" : "200px", position: "relative" }}>
             {cast.map((cast) => {
               return (
                 <div className="cast__member" key={cast.id + 543425}>
@@ -34,31 +32,9 @@ export const Cast = ({ cast }) => {
                 </div>
               );
             })}
-            <span
-              style={{
-                cursor: "pointer",
-                display: cast.length < 10 ? "none" : "block",
-                zIndex: "2",
-                height: castMaximized ? "0" : "120px",
-                width: "100%",
-                position: "absolute",
-                bottom: "0",
-                left: "0",
-                background: cast.length >= 10 ? "linear-gradient(rgba(0, 0, 0, 0.12), rgb(0 0 0 / 89%), black)" : "none",
-              }}
-            >
-              <p
-                onClick={() => {
-                  (castContainerRef.current.style.height = "100%"), setCastMaximized(true);
-                }}
-                style={{ textDecoration: "underline", display: castMaximized ? "none" : "block", textAlign: "center", position: "absolute", bottom: "10px", left: "50%", transform: "translate(-50%)" }}
-              >
-                See all
-              </p>
-            </span>
-          </div>
+          </CollapsibleElement>
         ) : (
-          <p style={{ textAlign: "center" }} className="text-gray-500">
+          <p  className="text-gray-500 text-center">
             No cast available
           </p>
         )}
