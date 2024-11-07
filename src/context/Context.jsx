@@ -103,9 +103,9 @@ export default function ContextWrapper({ children }) {
     const mediaTypeFromUrl = setMedia(path);
     if (isValidMediatype(mediaTypeFromUrl)) {
       setCurrentMediaType(mediaTypeFromUrl);
-      return;
+    }else{
+      setCurrentMediaType("movies");
     }
-    setCurrentMediaType("movies");
   }, [path]);
 
   useEffect(() => {
