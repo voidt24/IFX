@@ -18,14 +18,14 @@ export const Slider = ({ controls = false, sideControls = false, expectingCards 
       {sideControls && (
         <>
           <i
-            className="bi bi-chevron-left left text-gray-400 hover:text-gray-200 absolute left-0  max-lg:hidden text-2xl -mx-2"
+            className="bi bi-chevron-left left text-zinc-500 hover:text-gray-400 absolute left-0  max-lg:hidden text-2xl -mx-2"
             onClick={(event) => {
               moveSlider(event, sliderRef, expectingCards);
             }}
           ></i>
 
           <i
-            className="bi bi-chevron-right right text-gray-400 hover:text-gray-200 absolute right-0 max-lg:hidden text-2xl -mx-2"
+            className="bi bi-chevron-right right text-zinc-500 hover:text-gray-400 absolute right-0 max-lg:hidden text-2xl -mx-2"
             onClick={(event) => {
               moveSlider(event, sliderRef, expectingCards);
             }}
