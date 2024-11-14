@@ -17,7 +17,6 @@ export default function SearchBar() {
       return;
     }
     setSearchStarted(true);
-    document.body.style.overflow = "hidden";
     setSearchResults([]);
     setLoadingSearch(true);
 
