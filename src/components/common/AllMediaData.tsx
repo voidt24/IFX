@@ -125,7 +125,7 @@ export default function AllMediaData({
       <div className="lists">
         <div className="results-container flex flex-col gap-4 xl:max-w-[1400px] ">
           {DataIsLoading ? (
-            <div className="results grid grid-cols-2 gap-0.3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="animate-pulse results grid grid-cols-2 gap-0.3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {Array.from({ length: 15 }).map((_, index) => (
                 <SliderCardSkeleton key={index} />
               ))}

@@ -24,22 +24,23 @@ export default function Results() {
 
           <div className={`search-section rounded-lg flex flex-col pb-2 items-center overflow-auto absolute w-full gap-4 justify-center z-50 bg-zinc-900 `}>
             <div className=" sticky top-0 w-full z-50 bg-zinc-900 p-4">
-              <div className="flex gap-6 mb-4 ">
-                <i
-                  className="bi bi-arrow-left  "
+              <div className="flex gap-2 mb-4 flex-col">
+                <button
+                  className="self-start text-center p1 rounded-full text-[120%] hover:text-[var(--primary)]"
                   onClick={() => {
-                    document.body.style.overflow = "auto";
                     setSearchStarted(false);
                   }}
-                ></i>
+                >
+                  <i className="bi bi-x"></i>
+                </button>
 
                 {numberOfPages > 1 && (
                   <>
                     <nav className="flex items-center justify-center w-full">
-                      <ul className="flex text-[70%] self-center">
+                      <ul className="flex text-[70%] self-center bg-zinc-800 rounded-full">
                         <li>
                           <button
-                            className="flex items-center justify-center max-md:px-3 px-4 h-8 ms-0  leading-tight text-gray-200 bg-zinc-600 border  border-gray-400 rounded-s-full hover:bg-gray-500 hover:text-white"
+                            className="flex items-center justify-center max-md:px-3 px-4 h-8 ms-0  leading-tight text-gray-200  border  border-zinc-500 rounded-s-full hover:bg-gray-500 hover:text-white"
                             onClick={() => {
                               if (pageActive > 1) {
                                 setPageActive(pageActive - 1);
@@ -54,8 +55,8 @@ export default function Results() {
                           return (
                             <li key={index}>
                               <button
-                                className={`flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight  border border-gray-400 ${
-                                  Number(index + 1) === pageActive ? "bg-[goldenrod]  hover:bg-[goldenrod] text-white" : "bg-zinc-600 hover:bg-gray-500  text-gray-300"
+                                className={`flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight  border border-zinc-500 ${
+                                  Number(index + 1) === pageActive ? "bg-[goldenrod]  hover:bg-[goldenrod] text-white" : " hover:bg-gray-500  text-gray-300"
                                 }`}
                                 onClick={() => {
                                   setPageActive(Number(index + 1));
@@ -69,7 +70,7 @@ export default function Results() {
 
                         <li>
                           <button
-                            className="flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight text-gray-200 bg-zinc-600 border border-gray-400 rounded-e-full hover:bg-gray-500 hover:text-white"
+                            className="flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight text-gray-200  border border-zinc-500 rounded-e-full hover:bg-gray-500 hover:text-white"
                             onClick={() => {
                               if (pageActive < 5) {
                                 setPageActive(pageActive + 1);

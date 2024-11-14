@@ -1,7 +1,5 @@
-import HeroSkeleton from "./HeroSkeleton";
 import SignUpBannerSkeleton from "./SignUpBannerSkeleton";
 import SliderCardSkeleton from "./SliderCardSkeleton";
-import SliderSkeleton from "./SliderSkeleton";
 
 export default function AllMediaDataSkeleton() {
   return (
