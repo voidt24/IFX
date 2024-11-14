@@ -11,6 +11,7 @@ import { setListsState, setMediaDetails } from "../helpers/setMediaDetails";
 import { Snackbar, Alert } from "@mui/material";
 import Loader from "./common/Loader";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
+import MediaDetailsSkeleton from "./common/Skeletons/MediaDetailsSkeleton";
 
 export const MediaDetails = ({ mediaType }) => {
   const { currentId, currentMediaType, userLogged, firebaseActiveUser, initialDataError, setinitialDataError, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, setSimilarError } =
@@ -49,7 +50,7 @@ export const MediaDetails = ({ mediaType }) => {
   }, [currentId, firebaseActiveUser]);
 
   return state.loadingAllData ? (
-    <Loader />
+    <MediaDetailsSkeleton />
   ) : state.results[0] && state.results[0].success == false ? (
     <NotFound />
   ) : (
