@@ -1,12 +1,10 @@
-import {  useContext, useRef } from "react";
+import { useContext } from "react";
 import { Context } from "../context/Context";
 import SliderCard from "./SliderCard";
-import CollapsibleElement from "./common/CollapsibleElement";
+import Slider from "./Slider";
 
 export const Similar = ({ similar }) => {
-  const { currentMediaType, similarError } = useContext(Context);
-
-  const similarContainerRef = useRef(null);
+  const { similarError } = useContext(Context);
 
   if (similarError) {
     return <p className="p-2">Error loading similar media </p>;
@@ -15,15 +13,13 @@ export const Similar = ({ similar }) => {
     <>
       <h3>Similar</h3>
       {similar && similar.length > 0 ? (
-        <CollapsibleElement customClassesForParent={"similar"} ref={similarContainerRef} parentStyle={{ height: "350px", position: "relative", zIndex: "1" }}>
+        <Slider sideControls={true} expectingCards={true}>
           {similar.map((result) => {
-            return <SliderCard result={result} changeMediaType={currentMediaType == "movies" ? "movie" : "tv"} key={result.id + 56356} />;
+            return <SliderCard result={result} key={result.id + 56356} />;
           })}
-        </CollapsibleElement>
+        </Slider>
       ) : (
-        <p className="text-gray-500 text-center">
-          No similar results available
-        </p>
+        <p className="text-gray-500 text-center">No similar results available</p>
       )}
     </>
   );

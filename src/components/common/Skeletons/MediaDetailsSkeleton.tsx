@@ -38,24 +38,30 @@ const MediaDetailsSkeleton = () => {
       </div>
 
       <div className="extra-data  animate-pulse">
-        <div className="similar !h-[300px]">
-          {[...Array(6)].map((_, index) => (
-            <div key={index} className=" card border border-gray-700 rounded-lg p-2">
-              <div className=" max-md:h-32 h-48 lg:h-72 bg-gray-700 rounded mb-2 fallback-img"></div>
-              <div className=" h-4 bg-gray-700 rounded mb-1"></div>
-            </div>
-          ))}
+        <div className={`my-10 slider-with-cards relative lg:px-4 `}>
+          <div className={`grid slider-with-cards__content`}>
+            {[...Array(10)].map((_, index) => (
+              <div key={index} className=" card border border-gray-700 rounded-lg p-2">
+                <div className=" max-md:h-32 h-48 lg:h-72 bg-gray-700 rounded mb-2 fallback-img"></div>
+                <div className=" h-4 bg-gray-700 rounded mb-1"></div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="cast mt-6">
-          {[...Array(8)].map((_, index) => (
-            <div className="cast__member" key={index}>
-              <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
-              <div className=" w-16 h-2 bg-gray-500 mt-2"> </div>
-              <div className=" w-10 h-2 bg-gray-500 mt-2"> </div>
-            </div>
-          ))}
+
+        <div className={`slider-with-cards relative lg:px-4 mb-10 `}>
+          <div className={`grid slider-with-cards__content`}>
+            {[...Array(8)].map((_, index) => (
+              <div className="cast__member" key={index}>
+                <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
+                <div className=" w-16 h-2 bg-gray-500 mt-2"> </div>
+                <div className=" w-10 h-2 bg-gray-500 mt-2"> </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="reviews mt-6">
+
+        <div className="reviews">
           {[...Array(2)].map((_, index) => (
             <div className="review-content bg-gray-700 py-4 px-2" key={index}>
               <span className="fixed flex justify-between items-center ">
