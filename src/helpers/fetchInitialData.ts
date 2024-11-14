@@ -2,21 +2,21 @@ import { apiUrl, API_KEY, CACHENAME, ISliderMovieData, ISliderTVData } from "./a
 import { INITIAL_DATA_EXPIRATION_TIME } from "./constants";
 const validTime = INITIAL_DATA_EXPIRATION_TIME; //2 days
 
-export const fetchInitialData = async (obj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string }, categoryForMovie?: string) => {
+export const fetchInitialData = async (obj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string }, categoryForMovie?: string, pageNumber?: number) => {
   const { mediaType, searchCategory } = obj;
   const TRENDING_CATEGORY = searchCategory[0];
 
   let url = "";
   let NAME_TO_SAVE_ON_CACHE = "";
   if (mediaType == "tv") {
-    url = `${apiUrl}${TRENDING_CATEGORY}/${mediaType}/day?api_key=${API_KEY}&page=1`;
-    NAME_TO_SAVE_ON_CACHE = `${mediaType}-${TRENDING_CATEGORY}-initial-search`;
+    url = `${apiUrl}${TRENDING_CATEGORY}/${mediaType}/day?api_key=${API_KEY}&page=${pageNumber || 1}`;
+    NAME_TO_SAVE_ON_CACHE = `${mediaType}-${TRENDING_CATEGORY}-initial-search-${pageNumber}`;
   } else {
-    NAME_TO_SAVE_ON_CACHE = `${mediaType}-${categoryForMovie}-initial-search`;
+    NAME_TO_SAVE_ON_CACHE = `${mediaType}-${categoryForMovie}-initial-search-${pageNumber}`;
     if (categoryForMovie == "trending") {
-      url = `${apiUrl}${categoryForMovie}/${mediaType}/day?api_key=${API_KEY}&page=1`;
+      url = `${apiUrl}${categoryForMovie}/${mediaType}/day?api_key=${API_KEY}&page=${pageNumber || 1}`;
     } else {
-      url = `${apiUrl}${mediaType}/${categoryForMovie}?api_key=${API_KEY}&page=1`;
+      url = `${apiUrl}${mediaType}/${categoryForMovie}?api_key=${API_KEY}&page=${pageNumber || 1}`;
     }
   }
 
@@ -80,7 +80,6 @@ export const fetchInitialData = async (obj: { mediaType: string; searchCategory:
 
   try {
     return await getFromCache(validTime, getFromApi, NAME_TO_SAVE_ON_CACHE);
-  
   } catch (e) {
     const dataFromApi = await getFromApi();
     saveToCache(dataFromApi, validTime, NAME_TO_SAVE_ON_CACHE);

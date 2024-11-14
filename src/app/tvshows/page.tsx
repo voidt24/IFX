@@ -1,10 +1,7 @@
 "use client";
-import DefaultLayout from "@/components/layout/DefaultLayout";
+import AllMediaData from "@/components/common/AllMediaData";
+import { mediaProperties } from "@/helpers/mediaProperties.config";
 
 export default function Tvshows() {
-  return (
-    <DefaultLayout>
-      <p>tv</p>
-    </DefaultLayout>
-  );
+  return <AllMediaData mediaTypeObj={mediaProperties.tv} searchCategory={"trending"} title="All TV Shows" />;
 }

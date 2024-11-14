@@ -1,10 +1,7 @@
 "use client";
-import DefaultLayout from "@/components/layout/DefaultLayout";
+import AllMediaData from "@/components/common/AllMediaData";
+import { mediaProperties } from "@/helpers/mediaProperties.config";
 
 export default function Movies() {
-  return (
-    <DefaultLayout>
-      <p>movie</p>
-    </DefaultLayout>
-  );
+  return <AllMediaData mediaTypeObj={mediaProperties.movie} searchCategory={"popular"} title="All Movies" />;
 }
