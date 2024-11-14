@@ -3,12 +3,13 @@ import { useState, useContext, useRef, useEffect } from "react";
 import { Context } from "../../src/context/Context";
 import { handleTrailerClick } from "../../src/helpers/getTrailer";
 import { useRouter } from "next/navigation";
-import { Tooltip, CircularProgress } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import { handle_new_custom_lists, handle_favs_watchlists, get_custom_lists, handle_adding_to_custom_lists } from "../firebase/handle_favs_watchlists";
 import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
-import Modal from "./Modal";
+import Modal from "./common/Modal";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
+import Loader from "./common/Loader";
 
 export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
   const { currentId, setOpenTrailer, setTrailerKey, currentMediaType, setAuthModalActive, userLogged, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList, firebaseActiveUser } =
@@ -94,7 +95,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
         className="bi bi-arrow-left"
         onClick={() => {
           router.back();
-          window.scrollTo(0, 0);
+          // window.scrollTo(0, 0);
         }}
       ></i>
 
@@ -123,7 +124,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
           <div className="main-btns flex flex-col justify-center items-center w-full gap-4  sm:w-[300px] md:flex-row text-[80%]">
             <button
-              className="rounded-full py-1.5 w-full bg-gray-800 hover:bg-gray-700 "
+              className="btn-primary w-full"
               data-id={currentId}
               onClick={() => {
                 handleTrailerClick(setOpenTrailer, currentId, currentMediaType, setTrailerKey);
@@ -132,7 +133,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               <i className="bi bi-play-fill "></i> Play trailer
             </button>
             <button
-              className="rounded-full py-1.5 w-full bg-gray-700/60"
+              className="rounded-full py-2 w-full bg-white/80 hover:bg-white text-black"
               type="button "
               onClick={async () => {
                 if (userLogged) {
@@ -167,9 +168,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
           <div className="main-lists-options flex gap-2">
             <>
               {loadingFavs ? (
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <CircularProgress color="inherit" size={30} />
-                </div>
+                <Loader />
               ) : (
                 <Tooltip title={addedToFavs ? "Delete from favorites" : "Add to favorites"} placement="bottom">
                   <span
@@ -191,9 +190,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               )}
 
               {loadingWatchlist ? (
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <CircularProgress color="inherit" size={30} />
-                </div>
+                <Loader />
               ) : (
                 <Tooltip title={addedtoWatchList ? "Delete from watchlist" : "Add to watchlist"} placement="bottom">
                   <span
@@ -256,7 +253,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               {newListModalActive ? (
                 <>
                   <input
-                    className="text-black px-2  w-full py-1.5 text-sm rounded-full"
+                    className="input-style  w-full py-1.5 text-sm rounded-full"
                     type="text"
                     value={customList}
                     onChange={(evt) => {
@@ -267,7 +264,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
                   />
                   <button
                     type="submit"
-                    className="w-full rounded-full py-1.5 bg-gray-800 hover:bg-gray-700"
+                    className="btn-primary text-sm !py-1.5 w-full "
                     onClick={(e) => {
                       e.preventDefault();
                       handleCustomLists(e);
@@ -279,7 +276,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               ) : (
                 <>
                   <select
-                    className="min-w-full   cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-2 py-1.5 transition-all text-white invalid:text-[white]/70  rounded-full   border border-gray-400 valid:bg-gray-900 "
+                    className="min-w-full  text-sm cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-2 py-1.5 transition-all text-white invalid:text-[white]/70  rounded-full   border border-gray-400 valid:bg-gray-900 "
                     onClick={async () => {
                       const list = await get_custom_lists(firebaseActiveUser.uid);
                       setExistingLists(list);
@@ -305,8 +302,8 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
                   {activeSelectedElement != "" && (
                     <button
+                      className="btn-primary text-sm !py-1.5 min-w-full"
                       type="submit"
-                      className="min-w-full rounded-full py-1.5 bg-gray-800 hover:bg-gray-7000"
                       onClick={(e) => {
                         e.preventDefault();
                         handleAddToCustomList(e);

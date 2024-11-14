@@ -16,8 +16,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <ContextWrapper>
           <Navbar />
+          
           {children}
-          {/* <Trailer /> */}
+          <Trailer />
         </ContextWrapper>
       </body>
     </html>

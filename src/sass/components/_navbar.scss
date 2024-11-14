@@ -1,6 +1,6 @@
 .nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   position: fixed;
   width: 100%;
   padding-inline: 1rem;
@@ -24,16 +24,10 @@
     color: white;
   }
 
- 
   .links {
     @extend .flex-row-center;
     gap: 2rem;
-    padding-inline: 0.7rem;
     z-index: 10;
-
-    @media #{$xss} {
-      padding-inline: 1.5rem;
-    }
 
     li a {
       cursor: pointer;
@@ -41,26 +35,8 @@
       transition: all 0.4s;
 
       &:hover {
-        color: gold;
+        color: goldenrod;
       }
-    }
-  }
-
-  #menu-icon {
-    cursor: pointer;
-    font-size: 150%;
-    font-weight: 600;
-    @media #{$md} {
-      display: none;
-    }
-  }
-
-  #user {
-    font-size: 111%;
-  }
-  .to-hide-on-desk {
-    @media #{$sm} {
-      display: none;
     }
   }
 }
@@ -82,11 +58,12 @@
   .auth-form {
     text-shadow: none;
     @extend .flex-col-center;
-    gap: 0.7rem;
+ 
     label {
-      align-self: start;
+      width: 100%;
+      text-align: left;
     }
-
+    
     input {
       border-radius: 12px;
 

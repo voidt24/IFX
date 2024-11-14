@@ -38,7 +38,7 @@ const CollapsibleElement = ({ children, customClassesForParent, regularChildrenC
                 onClick={() => {
                   if (isOpen) {
                   }
-                  setIsOpen(!isOpen);
+                  setIsOpen(!isOpen); 
                 }}
               >
                 {isOpen ? "Show less" : "Show more"}

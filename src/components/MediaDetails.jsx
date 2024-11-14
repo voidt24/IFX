@@ -2,16 +2,17 @@
 import { useState, useEffect, useContext, useReducer } from "react";
 import { Context } from "../context/Context";
 import { mediaD_Actions, mediaDetails_InitialState, reducerFunction } from "../helpers/reducerSelectedMedia";
-import NotFound from "@/components/NotFound";
+import NotFound from "./common/NotFound";
 import Similar from "@/components/Similar";
 import Cast from "@/components/Cast";
 import { Reviews } from "@/components/Reviews";
 import MediaInfo from "@/components/MediaInfo";
 import { setListsState, setMediaDetails } from "../helpers/setMediaDetails";
-import { CircularProgress, Snackbar, Alert } from "@mui/material";
-import { getDetailsHelper } from "@/helpers/getDetailsHelper";
+import { Snackbar, Alert } from "@mui/material";
+import Loader from "./common/Loader";
+import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 
-export const MediaDetails = () => {
+export const MediaDetails = ({ mediaType }) => {
   const { currentId, currentMediaType, userLogged, firebaseActiveUser, initialDataError, setinitialDataError, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, setSimilarError } =
     useContext(Context);
 
@@ -26,14 +27,12 @@ export const MediaDetails = () => {
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
 
   useEffect(() => {
-    const mediaType = currentMediaType == "movies" ? "movie" : "tv";
-
     if (currentId != undefined) {
       Promise.allSettled([
-        getDetailsHelper("byId", mediaType, currentId),
-        getDetailsHelper("similar", mediaType, currentId),
-        getDetailsHelper("cast", mediaType, currentId),
-        getDetailsHelper("reviews", mediaType, currentId),
+        fetchDetailsData("byId", mediaType, currentId),
+        fetchDetailsData("similar", mediaType, currentId),
+        fetchDetailsData("cast", mediaType, currentId),
+        fetchDetailsData("reviews", mediaType, currentId),
       ]).then((result) => {
         const [byIdPromise, similarPromise, castPromise, reviewsPromise] = result;
 
@@ -50,9 +49,7 @@ export const MediaDetails = () => {
   }, [currentId, firebaseActiveUser]);
 
   return state.loadingAllData ? (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <CircularProgress color="inherit" size={100} style={{ marginTop: "100px" }} />
-    </div>
+    <Loader />
   ) : state.results[0] && state.results[0].success == false ? (
     <NotFound />
   ) : (

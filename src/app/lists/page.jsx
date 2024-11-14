@@ -4,16 +4,14 @@ import Slider from "@/components/Slider";
 import { ListsResults } from "@/components/ListsResults";
 import { database, usersCollectionName } from "@/firebase/firebase.config";
 import { useContext, useEffect, useRef, useState } from "react";
-import { fetchMyData, getFieldsFromCollection } from "@/firebase/fetchMyData";
+import {  getFieldsFromCollection } from "@/firebase/fetchMyData";
 import { doc, onSnapshot } from "firebase/firestore";
-import Link from "next/link";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Snackbar, Alert } from "@mui/material";
 export default function Lists() {
-  const { firebaseActiveUser, setCheckedMedia, listActiveAux, setListActiveAux, edit, setEdit } = useContext(Context);
+  const { listActive, setListActive,firebaseActiveUser, setCheckedMedia, edit, setEdit } = useContext(Context);
 
   const [listsNames, setListsNames] = useState();
-  const [listActive, setListActive] = useState("favorites");
   const [currentListData, setCurrentListData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ active: false, text: "" });
@@ -21,7 +19,7 @@ export default function Lists() {
   const buttonRef2 = useRef();
 
   const truncatedTextStyle = {
-    WebkitLineClamp: "2",
+    WebkitLineClamp: "1",
     WebkitBoxOrient: "vertical",
     overflow: "hidden",
     display: "-webkit-box",
@@ -34,7 +32,6 @@ export default function Lists() {
         block: "nearest",
         inline: "start",
       });
-      console.log(buttonRef.current.classList);
     }
     if (buttonRef2.current && buttonRef2.current.classList.contains("active")) {
       buttonRef2.current.scrollIntoView({
@@ -46,14 +43,8 @@ export default function Lists() {
   }, [buttonRef.current, buttonRef2.current]);
 
   useEffect(() => {
-    if (listActiveAux && listActiveAux !== listActive) {
-      setListActive(listActiveAux);
-    }
-  }, []);
-
-  useEffect(() => {
     //subscription to db to get real time changes
-    if (database && usersCollectionName && firebaseActiveUser.uid) {
+    if (database && usersCollectionName && firebaseActiveUser?.uid) {
       const document = doc(database, usersCollectionName, firebaseActiveUser.uid);
 
       const unsub = onSnapshot(document, (doc) => {
@@ -66,11 +57,11 @@ export default function Lists() {
         unsub();
       };
     }
-  }, [firebaseActiveUser.uid, listActive]);
+  }, [firebaseActiveUser?.uid, listActive]);
 
   useEffect(() => {
     const getListsNames = async () => {
-      if (database && usersCollectionName && firebaseActiveUser.uid) {
+      if (database && usersCollectionName && firebaseActiveUser?.uid) {
         try {
           const listsData = await getFieldsFromCollection(firebaseActiveUser.uid);
           setListsNames(listsData);
@@ -80,13 +71,13 @@ export default function Lists() {
       }
     };
     getListsNames();
-  }, [firebaseActiveUser.uid]);
+  }, [firebaseActiveUser?.uid]);
 
   const defaultListButtons = ["favorites", "watchlist"];
   return (
     <div className="lists py-10 sm:py-20">
       <Slider sideControls>
-        {defaultListButtons &&
+        {defaultListButtons && listsNames &&
           defaultListButtons.map((name, index) => {
             return (
               <button
@@ -94,7 +85,7 @@ export default function Lists() {
                 style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
                 type="button"
                 ref={buttonRef2}
-                className={` rounded-full px-4 py-1.5 text-[75%] sm:text-[75%] lg:text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
+                className={` rounded-full px-4 py-1 text-[70%] lg:text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
                   listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600/50"
                 } `}
                 onClick={(evt) => {
@@ -108,8 +99,8 @@ export default function Lists() {
                     setCheckedMedia([]);
                   }
                   setListActive(name);
-                  setListActiveAux(name);
                   evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
+                
                 }}
               >
                 {name}
@@ -124,7 +115,7 @@ export default function Lists() {
                 style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
                 type="button"
                 ref={buttonRef}
-                className={` rounded-full px-4 py-1.5 text-[75%]  lg:text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
+                className={`rounded-full px-4 py-1 text-[70%] lg:text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
                   listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600/50"
                 } `}
                 onClick={(evt) => {
@@ -138,7 +129,6 @@ export default function Lists() {
                     setCheckedMedia([]);
                   }
                   setListActive(name);
-                  setListActiveAux(name);
                   evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
                 }}
               >
@@ -157,7 +147,7 @@ export default function Lists() {
       )}
 
       <Snackbar
-        open={message.open}
+        open={message?.open}
         autoHideDuration={3500}
         onClose={() => {
           setMessage({ ...message, open: false });

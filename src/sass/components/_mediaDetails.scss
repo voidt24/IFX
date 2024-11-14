@@ -129,16 +129,7 @@
       font-size: 150%;
     }
   }
-  .show-more-btn {
-      cursor: pointer;
-      text-decoration: underline;
-      text-align: center;
-      padding-block: 0.5rem;
-      color: #dfdfdfc4;
-      &:hover {
-        color: white;
-      }
-    }
+ 
   .cast {
     display: grid;
     grid-gap: 0.5rem;

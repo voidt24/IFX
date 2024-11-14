@@ -5,7 +5,6 @@ import { Context } from "@/context/Context";
 import AuthForm from "@/components/AuthForm";
 import { auth } from "../firebase/firebase.config";
 import { useRouter } from "next/navigation";
-import { on } from "events";
 
 export default function UserActions() {
   const { setAuthModalActive, userLogged, setUserLogged, setFirebaseActiveUser } = useContext(Context);
@@ -21,7 +20,7 @@ export default function UserActions() {
       setFirebaseActiveUser({ email: null, uid: null });
       setErrorMessage({ active: false, text: "" });
       setAuthModalActive(false);
-      router.push("/movies");
+      router.push("/");
     });
   };
 

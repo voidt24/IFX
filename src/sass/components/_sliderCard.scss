@@ -3,7 +3,6 @@
   border-radius: 8px;
   border: 3px solid transparent;
   transition: all 0.2s;
-  overflow: hidden;
 
   @media #{$lg} {
     &:hover {
@@ -17,66 +16,61 @@
     right: 0px;
   }
 
-  .vote,
-  .mediatype,
-  .year {
-    position: absolute;
-    z-index: 2;
-    color: white;
+}
+.vote,
+.mediatype,
+.year {
+  position: absolute;
+  z-index: 2;
+  color: white;
+}
+.vote {
+  top: 6px;
+  left: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 23px;
+  width: 23px;
+  font-size: 41%;
+
+  @media #{$md} {
+    height: 25px;
+    width: 25px;
+    font-size: 50%;
   }
-  .vote {
-    top: 6px;
-    left: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 28px;
-    width: 28px;
-    font-size: 45%;
-
-    @media #{$md} {
-      height: 28px;
-      width: 28px;
-      font-size: 55%;
-    }
-    @media #{$xl} {
-      height: 30px;
-      width: 30px;
-      font-size: 60%;
-    }
-    @media #{$xxl} {
-      height: 32px;
-      width: 32px;
-      font-size: 66%;
-    }
-
-    padding-inline: 0.6rem;
-    font-weight: bolder;
-    border-radius: 100%;
-    text-shadow: none;
-    background-color: #0c0c0cbb;
-  }
-  .year,
-  .mediatype {
-    font-size: 65%;
-    padding-inline: 0.3rem;
-    border-radius: 10px;
-    background-color: #0c0c0cbb;
-
-    @media #{$xl} {
-      font-size: 80%;
-    }
+  @media #{$xl} {
+    height: 28.5px;
+    width: 28.5px;
+    font-size: 53%;
   }
 
-  .year {
-    top: 13px;
-    right: 5px;
+  padding-inline: 0.6rem;
+  font-weight: bolder;
+  border-radius: 100%;
+  text-shadow: none;
+  background-color: #0c0c0cbb;
+}
+.year,
+.mediatype {
+  font-size: 57%;
+  padding-inline: 0.3rem;
+  border-radius: 10px;
+  background-color: #0c0c0cbb;
+
+  @media #{$md} {
+    font-size: 60%;
   }
-  .mediatype {
-    left: 5px;
-    bottom: 12px;
-  }
+}
+
+.year {
+  top: 13px;
+  right: 5px;
+}
+.mediatype {
+  left: 5px;
+  bottom: 12px;
 }
 .content {
   position: relative;

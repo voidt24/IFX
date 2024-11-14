@@ -4,7 +4,7 @@ import { createUser } from "../firebase/createUser";
 import { authHandler } from "../firebase/authHandler";
 import { loginUser } from "../firebase/loginUser";
 import { authErrors } from "../firebase/firebase.config";
-import Error from "@/components/Error";
+import Error from "./common/Error";
 
 export default function AuthForm() {
   const { setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
@@ -37,47 +37,67 @@ export default function AuthForm() {
   return (
     <>
       {noAccount ? <h2 className="bold text-xl">Sign up</h2> : <h2 className="bold text-xl">Login</h2>}
-      <form onSubmit={(e) => handleSubmit(e)} className="auth-form">
-        <label htmlFor="">Email</label>
-        <input
-          className=" text-black  px-2"
-          type="Email"
-          onChange={(e) => {
-            setUserData({ ...userData, email: e.target.value });
-          }}
-          required
-        />
+      <form onSubmit={(e) => handleSubmit(e)} className="auth-form gap-6 w-full sm:w-[80%] xl:w-[85%] 2xl:w-[65%] 4:w-[55%]">
+        <label htmlFor="">
+          Email
+          <span className="mt-2 flex items-center justify-center bg-zinc-900 relative rounded-full ">
+            <input
+              onFocus={(e) => {
+                e.target.parentElement.style.border = "2px solid gray";
+              }}
+              onBlur={(e) => {
+                e.target.parentElement.style.border = "none";
+              }}
+              className="text-white bg-zinc-900 border-none w-[88.5%]  pr-2 py-2.5 text-[80%] !pl-0"
+              type="Email"
+              onChange={(e) => {
+                setUserData({ ...userData, email: e.target.value });
+              }}
+              required
+              placeholder="email@example.com"
+            />
+          </span>
+        </label>
 
-        <label htmlFor="">Password</label>
-        <span className="flex items-center justify-center bg-white rounded-xl relative">
-          <input
-            className="text-black  border-none w-[88.5%] px-2"
-            type={pwdInputType}
-            onChange={(e) => {
-              setUserData({ ...userData, password: e.target.value });
-            }}
-            ref={pwdInputRef}
-            required
-          />
-          <button
-            type="button"
-            className={"bg-none absolute top-0 right-2 p-0 hover:bg-transparent bg-transparent border-0"}
-            onClick={() => {
-              if (pwdInputRef.current.type == "text") {
-                pwdInputRef.current.type = "password";
-                setPwdInputType("password");
-              } else {
-                setPwdInputType("text");
-              }
-            }}
-          >
-            <i className={`bi bi-eye-fill  cursor-pointer ${pwdInputType == "password" ? "text-black" : "text-[var(--primary)]"} `}></i>
-          </button>
-        </span>
+        <label htmlFor="">
+          Password
+          <span className="mt-2 flex items-center justify-center bg-zinc-900 relative rounded-full">
+            <input
+              onFocus={(e) => {
+                e.target.parentElement.style.border = "2px solid gray";
+              }}
+              onBlur={(e) => {
+                e.target.parentElement.style.border = "none";
+              }}
+              className="text-white bg-zinc-900 border-none w-[88.5%]  pr-2 py-2.5 text-[80%]"
+              type={pwdInputType}
+              onChange={(e) => {
+                setUserData({ ...userData, password: e.target.value });
+              }}
+              ref={pwdInputRef}
+              required
+              placeholder="Password"
+            />
+            <button
+              type="button"
+              className={"bg-none  hover:bg-transparent bg-transparent border-0"}
+              onClick={() => {
+                if (pwdInputRef.current.type == "text") {
+                  pwdInputRef.current.type = "password";
+                  setPwdInputType("password");
+                } else {
+                  setPwdInputType("text");
+                }
+              }}
+            >
+              <i className={`bi bi-eye-fill  cursor-pointer ${pwdInputType == "password" ? "text-zinc-300" : "text-[var(--primary)]"} `}></i>
+            </button>
+          </span>
+        </label>
 
         {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-        <button className="rounded-3xl w-full bg-gray-800 hover:bg-gray-700" type="submit">
+        <button className="rounded-3xl w-full bg-white/90 text-black hover:bg-white" type="submit">
           {noAccount ? "Create account" : "Login"}
         </button>
       </form>

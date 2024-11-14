@@ -5,7 +5,7 @@ import { Context } from "../context/Context";
 import { database, usersCollectionName } from "../firebase/firebase.config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Snackbar, Alert } from "@mui/material";
-import Modal from "@/components/Modal";
+import Modal from "@/components/common/Modal";
 
 export const ListsResults = ({ listName, savedElementResults }) => {
   const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia, message, setMessage } = useContext(Context);
@@ -88,7 +88,7 @@ export const ListsResults = ({ listName, savedElementResults }) => {
                 <div className="delete-options flex gap-4">
                   <button
                     type="submit"
-                    className="w-full rounded-full  hover:bg-gray-700 px-4 py-1"
+                    className="w-full rounded-full  hover:bg-zinc-800 px-4 py-1"
                     onClick={() => {
                       setConfirmDialog(false);
                     }}
@@ -99,7 +99,7 @@ export const ListsResults = ({ listName, savedElementResults }) => {
 
                   <button
                     type="submit"
-                    className="w-full rounded-full  bg-white/40 hover:bg-gray-600 px-4 py-1"
+                    className="w-full btn-primary"
                     onClick={() => {
                       deleteFromFireStore(listName);
                       setConfirmDialog(false);
@@ -129,7 +129,7 @@ export const ListsResults = ({ listName, savedElementResults }) => {
       )}
 
       <Snackbar
-        open={message.open}
+        open={message?.open}
         autoHideDuration={3500}
         onClose={() => {
           setMessage({ ...message, open: false });
@@ -139,11 +139,11 @@ export const ListsResults = ({ listName, savedElementResults }) => {
           onClose={() => {
             setMessage({ ...message, open: false });
           }}
-          severity={message.severity}
+          severity={message?.severity}
           variant="filled"
           sx={{ width: "100%" }}
         >
-          {message.message}
+          {message?.message}
         </Alert>
       </Snackbar>
     </div>
