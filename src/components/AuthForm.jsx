@@ -5,6 +5,7 @@ import { authHandler } from "../firebase/authHandler";
 import { loginUser } from "../firebase/loginUser";
 import { authErrors } from "../firebase/firebase.config";
 import Error from "./common/Error";
+import { CircularProgress } from "@mui/material";
 
 export default function AuthForm() {
   const { setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
@@ -12,6 +13,7 @@ export default function AuthForm() {
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const pwdInputRef = useRef(null);
   const [pwdInputType, setPwdInputType] = useState("password");
+  const [loadingAuth, setLoadingAuth] = useState(false);
 
   function setAppForActiveUser(user) {
     setFirebaseActiveUser({ email: user.user.email, uid: user.user.uid });
@@ -25,12 +27,15 @@ export default function AuthForm() {
     evt.preventDefault();
     let methodToUseForAuth = noAccount ? createUser : loginUser;
     let resultFromAuth;
+    setLoadingAuth(true);
 
     try {
       resultFromAuth = await authHandler(methodToUseForAuth, userData);
       setAppForActiveUser(resultFromAuth);
     } catch (error) {
       setErrorMessage({ active: true, text: authErrors(error) });
+    } finally {
+      setLoadingAuth(false);
     }
   };
 
@@ -97,8 +102,17 @@ export default function AuthForm() {
 
         {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-        <button className="rounded-3xl w-full bg-white/90 text-black hover:bg-white" type="submit">
-          {noAccount ? "Create account" : "Login"}
+        <button className={`rounded-3xl w-full    ${loadingAuth ? "bg-white/20 cursor-wait text-zinc-500" : "bg-white/90 hover:bg-white text-black cursor-pointer"}`} type="submit" onClick={() => {}}>
+          {loadingAuth ? (
+            <span className="flex gap-1 items-center justify-center">
+              <CircularProgress size={15} color="white" />
+              <p>Loading</p>
+            </span>
+          ) : noAccount ? (
+            "Create account"
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
 
