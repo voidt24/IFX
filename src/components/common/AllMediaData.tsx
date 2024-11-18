@@ -24,6 +24,7 @@ export default function AllMediaData({
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [DataIsLoading, setDataIsLoading] = useState(true);
   const [initialDataError, setInitialDataError] = useState(false);
+  const ELEMENTS_TO_SHOW = 8;
 
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
@@ -88,7 +89,7 @@ export default function AllMediaData({
                 </button>
               </li>
 
-              {Array.from({ length: 8 }).map((_, index) => {
+              {Array.from({ length: ELEMENTS_TO_SHOW }).map((_, index) => {
                 return (
                   <li key={index}>
                     <button
@@ -109,7 +110,7 @@ export default function AllMediaData({
                 <button
                   className="flex items-center justify-center max-md:px-2 px-4 h-8 leading-tight text-gray-200  border border-zinc-500 rounded-e-full hover:bg-zinc-500 hover:text-white"
                   onClick={() => {
-                    if (pageActive < 5) {
+                    if (pageActive < ELEMENTS_TO_SHOW) {
                       setPageActive(pageActive + 1);
                     }
                   }}
