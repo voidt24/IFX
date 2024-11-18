@@ -23,7 +23,6 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
 
   const mediaTypeOfSpecificCard = `/${changeMediaType === "movie" ? "movies" : "tvshows"}`;
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-
     const card = event.target.parentElement?.parentElement?.parentElement;
 
     if (event.target.checked) {
@@ -87,7 +86,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
               : " border-[1.5px] xl:border-2 border-green-500"
           } vote text-white`}
         >
-          <p>{!vote ? 0 : vote + "%"}</p>
+          {poster != "" && <p>{!vote ? 0 : vote + "%"}</p>}
         </div>
         <span className="year">
           {((result as ISliderMovieData) && (result as ISliderMovieData).release_date?.slice(0, 4)) || ((result as ISliderTVData) && (result as ISliderTVData).first_air_date?.slice(0, 4))}
