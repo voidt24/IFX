@@ -155,7 +155,7 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
             </p>
             {showReadMoreButton && (
               <p
-                className="show-more-btn text-[var(--primary)] cursor-pointer underline"
+                className="show-more-btn cursor-pointer underline"
                 onClick={() => {
                   setIsOpen(!isOpen);
                 }}
