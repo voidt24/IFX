@@ -75,10 +75,10 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
 
     try {
       await handle_adding_to_custom_lists(firebaseActiveUser.uid, mediaTypeRef, state, activeSelectedElement, currentId);
-      setMessage({ message: `Element saved in ${activeSelectedElement} list successfully!`, severity: "success", open: true });
+      setMessage({ message: `Element saved in ${activeSelectedElement}!`, severity: "success", open: true });
       setListModalActive(false);
     } catch (error) {
-      setMessage({ message: ` Error executing action on ${activeSelectedElement} list: ${error}`, severity: "error", open: true });
+      setMessage({ message: ` Error executing action on ${activeSelectedElement}: ${error}`, severity: "error", open: true });
     }
 
     setActiveSelectedElement("");
