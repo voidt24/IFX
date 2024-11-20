@@ -15,9 +15,6 @@
     font-size: 100%;
     top: 0;
     bottom: unset;
-    background: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
   }
 
   a {
@@ -25,7 +22,8 @@
   }
 
   .links {
-    @extend .flex-row-center;
+    @extend .flex-row-space-between;
+    width: 100%;
     gap: 2rem;
     z-index: 10;
 
@@ -33,16 +31,13 @@
       cursor: pointer;
       border: 2px solid #ffffff00;
       transition: all 0.4s;
-
-      &:hover {
-        color: goldenrod;
-      }
     }
   }
 }
 
 .user-options {
   @extend .flex-col-center;
+  align-items: flex-start;
   gap: 1.5rem;
   text-align: center;
   padding: 2rem 2.5rem;
@@ -58,12 +53,12 @@
   .auth-form {
     text-shadow: none;
     @extend .flex-col-center;
- 
+
     label {
       width: 100%;
       text-align: left;
     }
-    
+
     input {
       border-radius: 12px;
 
@@ -79,7 +74,7 @@
   }
 
   p {
-    font-size: 85%;
+    font-size: 90%;
     .opt {
       color: var(--primary);
       text-decoration: underline;
@@ -95,6 +90,7 @@
 .nav-item-box {
   @extend .flex-col-center;
   align-items: center;
+  gap: 0;
 }
 
 .MuiDialog-root {

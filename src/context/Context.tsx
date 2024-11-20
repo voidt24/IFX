@@ -5,9 +5,9 @@ import { auth } from "../firebase/firebase.config";
 import { useParams } from "next/navigation";
 import Modal from "@/components/common/Modal";
 
-import UserActions from "@/components/UserActions";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { Isearch } from "@/helpers/search";
+import AuthForm from "@/components/AuthForm";
 
 interface IContextValues {
   numberOfPages: number;
@@ -208,7 +208,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     <Context.Provider value={contextValues}>
       {children}
       <Modal modalActive={authModalActive} setModalActive={setAuthModalActive}>
-        <UserActions />
+        <AuthForm />
       </Modal>
     </Context.Provider>
   );
