@@ -14,7 +14,10 @@ export default function Navbar() {
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const [menuActive, setMenuActive] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
-
+  const profileData = {
+    displayName: auth.currentUser?.displayName,
+    email: auth.currentUser?.email,
+  };
   useEffect(() => {
     window.addEventListener("scroll", () => {
       if (window.innerWidth >= 640) {
@@ -80,7 +83,7 @@ export default function Navbar() {
       <ul className={`links relative`}>
         <li>
           <Link
-            className="nav-item-box"
+            className="nav-item-box sm:px-1.5 sm:py-1 sm:hover:bg-zinc-900 sm:rounded-full"
             href=""
             onClick={() => {
               setMenuActive(!menuActive);
@@ -105,7 +108,7 @@ export default function Navbar() {
         <li>
           <Link
             href=""
-            className="nav-item-box "
+            className="nav-item-box sm:px-1.5 sm:py-1 sm:hover:bg-zinc-900 sm:rounded-full"
             onClick={() => {
               if (!firebaseActiveUser?.uid) {
                 setAuthModalActive(!authModalActive);
@@ -123,7 +126,7 @@ export default function Navbar() {
             <p className=" max-sm:text-[70%] sm:hidden">Profile</p>
           </Link>
         </li>
-        <MenuDropdown activeState={userMenuActive} setActiveState={setUserMenuActive} XPosition={"right-0"} navbarActions={userActions} />
+        <MenuDropdown activeState={userMenuActive} setActiveState={setUserMenuActive} XPosition={"right-0"} navbarActions={userActions} profileData={profileData} />
       </ul>
     </nav>
   );
