@@ -34,11 +34,11 @@ export default function DefaultLayout({ children }: { children: React.ReactNode 
             </svg>
             <div className="mx-auto lg:text-left flex items-center justify-center w-full">
               <div className=" flex flex-col items-start justify-start lg:justify-start lg:w-[60%]">
-                <h2 className="text-xl  xl:text-3xl font-semibold tracking-tight text-white ">Save your favorites.</h2>
+                <h2 className="text-xl  xl:text-3xl font-semibold tracking-tight text-white ">Save what you like.</h2>
                 <p className="mt-6 text-pretty text-[75%] md:text-sm text-gray-300 md:max-w-[70%]">Sign up to save movies and tv shows to favorites, watchlists and any other custom list.</p>
 
                 <button
-                  className="mt-6 rounded-md bg-gray-800 px-3.5 py-2.5 text-[75%] md:text-sm font-semibold"
+                  className="mt-6 px-4 py-2.5 text-[75%] md:text-sm font-semibold btn-primary"
                   onClick={() => {
                     setAuthModalActive(true);
                   }}
