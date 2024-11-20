@@ -28,7 +28,7 @@ export const Cast = ({ cast }) => {
                     alt="cast-member"
                   />
                   <p className="cast__member__name">{cast.name}</p>
-                  <p className="cast__member__character">{cast.character}</p>
+                  <p className="cast__member__character text-zinc-400">{cast.character}</p>
                 </div>
               );
             })}
