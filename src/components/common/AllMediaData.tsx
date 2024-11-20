@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react
 import AllMediaDataSkeleton from "./Skeletons/AllMediaDataSkeleton";
 import SliderCardSkeleton from "./Skeletons/SliderCardSkeleton";
 import { Context } from "@/context/Context";
+import SignUpBanner from "./SignUpBanner";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -18,7 +19,7 @@ export default function AllMediaData({
   searchCategory: string;
   title: string;
 }) {
-  const { setCurrentId } = useContext(Context);
+  const { setCurrentId, firebaseActiveUser } = useContext(Context);
   const [apiData, setApiData] = useState<(ISliderMovieData | ISliderTVData)[]>([]);
   const [pageActive, setPageActive] = useState<number>(1);
   const [pageIsLoading, setPageIsLoading] = useState(true);
@@ -140,6 +141,7 @@ export default function AllMediaData({
           )}
         </div>
       </div>
+      {!firebaseActiveUser?.uid ? <SignUpBanner /> : null}
     </DefaultLayout>
   );
 }

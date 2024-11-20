@@ -11,6 +11,7 @@ import HomeSkeleton from "@/components/common/Skeletons/HomeSkeleton";
 import SliderSkeleton from "@/components/common/Skeletons/SliderSkeleton";
 import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
 import HeroSkeleton from "@/components/common/Skeletons/HeroSkeleton";
+import SignUpBanner from "@/components/common/SignUpBanner";
 
 const Slider = dynamic(() => import("@/components/Slider"), {
   loading: () => <SliderSkeleton />,
@@ -23,7 +24,7 @@ const Hero = dynamic(() => import("@/components/Hero"), {
   loading: () => <HeroSkeleton />,
 });
 export default function Home() {
-  const { initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError } = useContext(Context);
+  const { firebaseActiveUser, initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError } = useContext(Context);
   const [moviesApiData, setMoviesApiData] = useState<ISliderMovieData[]>([]);
   const [tvApiData, setTvApiData] = useState<ISliderTVData[]>([]);
   const [moviesHeroApiData, setMoviesHeroApiData] = useState<ISliderMovieData[]>([]);
@@ -90,7 +91,11 @@ export default function Home() {
           </Slider>
         </div>
 
+        {!firebaseActiveUser?.uid ? (
+         <SignUpBanner/>
+        ) : null}
         <Hero results={tvApiData} type="TV Shows" />
+
 
         <div className="w-full max-w-full lg:max-w-[95%] 2xl:max-w-[80%] 4K:max-w-[75%]">
           <span className="flex justify-between items-center w-full px-2 pb-2">
