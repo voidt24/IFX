@@ -16,7 +16,7 @@ export default function Input({ type, placeholder, value, onChange, hasPassword 
     <span className={`mt-2 flex items-center justify-center bg-zinc-900 relative rounded-full focus-within:border focus-within:border-blue-500 ${hasPassword ? "pr-2" : ""} `}>
       <input
         ref={inputRef}
-        className={`text-white bg-zinc-900 w-[88.5%] py-2.5 lg:text-[80%] ${hasPassword ? "px-2" : ""}`}
+        className={`text-white bg-zinc-900 w-[88.5%] py-2.5 lg:text-[80%] ${hasPassword ? "px-2" : ""} placeholder:text-gray-500 max-sm:placeholder:text-[85%]`}
         type={type === "password" ? passwordType : type}
         value={value}
         onChange={onChange}
