@@ -32,7 +32,7 @@ export default function AuthForm() {
   ];
 
   const handleSubmit = async () => {
-    let methodToUseForAuth = noAccount ? createUser : loginUser;
+    const methodToUseForAuth = noAccount ? createUser : loginUser;
     let resultFromAuth;
     setLoadingAuth(true);
 
