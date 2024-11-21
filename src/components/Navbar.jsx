@@ -110,7 +110,7 @@ export default function Navbar() {
             href=""
             className="nav-item-box sm:px-1.5 sm:py-1 sm:hover:bg-zinc-900 sm:rounded-full"
             onClick={() => {
-              if (!firebaseActiveUser?.uid) {
+              if (!auth.currentUser?.uid) {
                 setAuthModalActive(!authModalActive);
               } else {
                 setUserMenuActive(!userMenuActive);
