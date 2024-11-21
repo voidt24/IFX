@@ -4,7 +4,7 @@ interface inputProps {
   type: string;
   placeholder: string;
   value: string;
-  onChange: React.SetStateAction<any>;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
   hasPassword?: boolean;
 }
 
