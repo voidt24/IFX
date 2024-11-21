@@ -6,7 +6,7 @@ import ContextWrapper from "../context/Context";
 import Trailer from "@/components/Trailer";
 
 export const metadata: Metadata = {
-  title: "New productions",
+  title: "Prods",
   description: "Access and save your favorite films and series, discover new productions and save them into your watchlists or any other custom lists!",
 };
 
@@ -16,7 +16,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <ContextWrapper>
           <Navbar />
-          
           {children}
           <Trailer />
         </ContextWrapper>
