@@ -33,7 +33,7 @@ export default function SignUpBanner() {
             Sign up
           </button>
         </div>
-        <div className="flex flex-col gap-6 lg:flex-row md:gap-2 w-[40%] md:w-[25%] lg:w-[250px] pointer-events-none">
+        <div className="flex flex-col gap-6 lg:flex-row md:gap-2 w-[40%] md:w-[25%] lg:w-[200px] pointer-events-none">
           <img src="/logo-mascot.png" className="" alt="" />
         </div>
       </div>
