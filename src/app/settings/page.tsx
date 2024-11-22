@@ -250,7 +250,7 @@ export default function Settings() {
 
               <h2 className="text-2xl">Verify your email</h2>
               <p className="text-zinc-300">
-                We have just sent an email to <span className="text-[var(--primary)]">andreyhsgs@email.com</span>. <br /> Please follow the link to verify your new email.
+                We have just sent an email to <span className="text-[var(--primary)]">{email}</span>. <br /> Please follow the link to verify your new email.
               </p>
               <button
                 className="btn-primary px-8 mt-4"
