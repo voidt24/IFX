@@ -26,6 +26,7 @@ export default function Settings() {
   const router = useRouter();
   const [message, setMessage] = useState<{ message: string | undefined; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "null", severity: "info", open: false });
   const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
+  const [showAccountDeletedModal, setShowAccountDeletedModal] = useState(false);
 
   const handleChangeDisplayName = async () => {
     if (!name) {
@@ -87,8 +88,7 @@ export default function Settings() {
       await DeleteAccount(userData);
       setFirebaseActiveUser({ email: "", uid: "" });
       setDeleteModalActive(false);
-      router.push("/");
-      setMessage({ message: `Account deleted!`, severity: "success", open: true });
+      setShowAccountDeletedModal(true);
     } catch (error) {
       setErrorMessage({ active: true, text: `Error executing action: ${error}` });
     }
@@ -306,6 +306,25 @@ export default function Settings() {
               *Deleted accounts are not recoverable.
             </p>
           </UserActionModal>
+        )}
+        {showAccountDeletedModal && (
+          <Modal modalActive={showAccountDeletedModal} setModalActive={setShowAccountDeletedModal}>
+            <div className="flex items-center justify-center flex-col gap-4 max-w-full">
+              <img src="/logo.png" alt="" className="w-[40%] md:w-[25%] xl:w-[35%] 2xl:w-[40%] 4k:w-[175px]" />
+              <p className="text-zinc-300">
+                Your account has been successfully deleted. <br /> Thank you for using our app.
+              </p>
+              <button
+                className="btn-primary px-8 mt-4"
+                onClick={() => {
+                  setShowVerifyEmailModal(false);
+                  router.push("/");
+                }}
+              >
+                Got it
+              </button>
+            </div>
+          </Modal>
         )}
       </div>
 
