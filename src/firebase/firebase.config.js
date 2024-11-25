@@ -2,7 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
+export const ID_TOKEN_COOKIE_NAME = "prods_firebase_idtoken";
+export const VERIFY_TOKEN_ROUTE = `https://testprods.vercel.app/api/auth/verifyToken/`;
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,24 +25,37 @@ export const usersCollectionName = "users";
 
 export const authErrors = (error) => {
   switch (error.code) {
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+
+    case "auth/wrong-password":
+      return "Incorrect password.";
+
+    case "auth/missing-password":
+      return "Please enter a valid password.";
+
     case "auth/invalid-credential":
-      return "Invalid credentials";
+      return "The email or password you entered is incorrect. Please try again.";
 
     case "auth/email-already-in-use":
-      return "That email is already registered";
-      
+      return "The email is already associated with another account.";
+
     case "auth/weak-password":
-      return "password should have at least 6 characters";
+      return "Your password must be at least 6 characters long";
 
     case "auth/too-many-requests":
-      return "account temporarily disabled due to many failed login attempts, try again later";
+      return "Too many unsuccessful attempts. Please try again in a couple of minutes.";
+
+    case "auth/user-mismatch":
+      return "Current email should be the same you used for this login session";
 
     default:
-      return "There was an unexpected error, please trying again.";
+      return "An unexpected error occurred. Please try again later.";
+      
   }
 };
 
 export const DBLists = {
   favs: "favorites",
-  watchs: "watchlist"
-}
+  watchs: "watchlist",
+};
