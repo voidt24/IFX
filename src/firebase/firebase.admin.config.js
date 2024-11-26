@@ -23,3 +23,7 @@ export const verifyToken = async (token) => {
   const validToken = await admin.auth().verifyIdToken(token.token);
   return validToken;
 };
+export const verifyEmailExists = async (email) => {
+  const userRecord = await admin.auth().getUserByEmail(email);
+  return userRecord;
+};
