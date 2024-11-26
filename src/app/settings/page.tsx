@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import DeleteAccount from "@/firebase/importantActons/DeleteAccount";
-import { auth } from "@/firebase/firebase.config";
+import { auth, authErrors, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
 import { Alert, Snackbar } from "@mui/material";
 import changePassword from "@/firebase/importantActons/changePassword";
 import changeEmail from "@/firebase/importantActons/changeEmail";
@@ -11,12 +11,15 @@ import changeDisplayName from "@/firebase/importantActons/changeDisplayName";
 import UserActionModal from "@/components/common/UserActionModal";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/common/Modal";
+import getCookie from "@/helpers/getCookie";
+import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
   const [pwdModalActive, setPwdModalActive] = useState(false);
   const [emailModalActive, setEmailModalActive] = useState(false);
   const [nameModalActive, setNameModalActive] = useState(false);
+  const [loader, setLoader] = useState(true);
   const { firebaseActiveUser, setFirebaseActiveUser } = useContext(Context);
   const [password, setPassword] = useState<string | null>("");
   const [email, setEmail] = useState<string | null>("");
@@ -28,14 +31,40 @@ export default function Settings() {
   const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
   const [showAccountDeletedModal, setShowAccountDeletedModal] = useState(false);
 
+  useEffect(() => {
+    async function verifyToken() {
+      const authCookie = getCookie(ID_TOKEN_COOKIE_NAME);
+
+      if (!authCookie) {
+        router.push("/");
+        return;
+      }
+
+      const verify = await fetch(VERIFY_TOKEN_ROUTE, {
+        method: "POST",
+        body: JSON.stringify({ token: authCookie }),
+      });
+
+      if (!verify.ok) {
+        router.push("/");
+      }
+    }
+    try {
+      verifyToken();
+    } catch (e) {
+      router.push("/");
+    } finally {
+      setLoader(false);
+    }
+  }, []);
+
   const handleChangeDisplayName = async () => {
     if (!name) {
       setErrorMessage({ active: true, text: "Type your name" });
       return;
     }
-
     if (name.length > 20) {
-      setErrorMessage({ active: true, text: "Please type less than 21 characters." });
+      setErrorMessage({ active: true, text: "Please type 20 or less characters." });
       return;
     }
     try {
@@ -43,31 +72,52 @@ export default function Settings() {
       setNameModalActive(false);
       setMessage({ message: `Name changed!`, severity: "success", open: true });
     } catch (error) {
-      setErrorMessage({ active: true, text: `Error executing action: ${error}` });
+      setErrorMessage({ active: true, text: authErrors(error) });
     }
   };
 
   const handleChangeEmail = async () => {
-    if (!email) return;
+    if (!email) {
+      setErrorMessage({ active: true, text: "Please enter a valid email address." });
+      return;
+    }
 
     if (userData.email == email) {
       setErrorMessage({ active: true, text: "New email should be different as the previous one..." });
-
+      return;
+    }
+    if (auth.currentUser?.email !== userData.email) {
+      setErrorMessage({ active: true, text: "Current email should be the same you used for this login session" });
       return;
     }
     try {
-      await changeEmail(userData, email);
-      setEmailModalActive(false);
-      setShowVerifyEmailModal(true);
+      const emailExists = await fetch(VERIFY_EMAIL_ROUTE, {
+        method: "POST",
+        body: JSON.stringify(email),
+      });
+      if (emailExists.ok) {
+        setErrorMessage({ active: true, text: "The new email is already associated with another account. " });
+      } else {
+        await changeEmail(userData, email);
+        setEmailModalActive(false);
+        setShowVerifyEmailModal(true);
+      }
     } catch (error) {
-      setErrorMessage({ active: true, text: `Error executing action: ${error}` });
+      setErrorMessage({ active: true, text: authErrors(error) });
     }
   };
 
   const handleChangePassword = async () => {
+    if (!userData.email) {
+      setErrorMessage({ active: true, text: "Please enter a valid email address." });
+      return;
+    }
+    if (!userData.password) {
+      setErrorMessage({ active: true, text: "Type your current password" });
+      return;
+    }
     if (!password) {
       setErrorMessage({ active: true, text: "Type a new password" });
-
       return;
     }
 
@@ -80,17 +130,30 @@ export default function Settings() {
       setPwdModalActive(false);
       setMessage({ message: `Password changed!`, severity: "success", open: true });
     } catch (error) {
-      setErrorMessage({ active: true, text: `Error executing action: ${error}` });
+      setErrorMessage({ active: true, text: authErrors(error) });
     }
   };
   const handleDeleteAccount = async () => {
+    if (!userData.email) {
+      setErrorMessage({ active: true, text: "Please enter a valid email address." });
+      return;
+    }
+    if (auth.currentUser?.email !== userData.email) {
+      setErrorMessage({ active: true, text: "Email should be the same you used for this login session" });
+      return;
+    }
+    if (!userData.password) {
+      setErrorMessage({ active: true, text: "Type your password" });
+      return;
+    }
     try {
       await DeleteAccount(userData);
       setFirebaseActiveUser({ email: "", uid: "" });
       setDeleteModalActive(false);
+      document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
       setShowAccountDeletedModal(true);
     } catch (error) {
-      setErrorMessage({ active: true, text: `Error executing action: ${error}` });
+      setErrorMessage({ active: true, text: authErrors(error) });
     }
   };
 
@@ -167,6 +230,10 @@ export default function Settings() {
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => setUserData({ ...userData, password: e.target.value }),
     },
   ];
+
+  if (loader) {
+    return <SettingsSkeleton />;
+  }
 
   return (
     <div className=" sm:mt-20 text-white  pb-10 py-10  mx-auto md:w-[90%] xl:w-[80%] 4k:w-[60%] max-w-full max-md:px-4">
@@ -308,23 +375,27 @@ export default function Settings() {
           </UserActionModal>
         )}
         {showAccountDeletedModal && (
-          <Modal modalActive={showAccountDeletedModal} setModalActive={setShowAccountDeletedModal}>
-            <div className="flex items-center justify-center flex-col gap-4 max-w-full">
-              <img src="/logo.png" alt="" className="w-[40%] md:w-[25%] xl:w-[35%] 2xl:w-[40%] 4k:w-[175px]" />
-              <p className="text-zinc-300">
-                Your account has been successfully deleted. <br /> Thank you for using our app.
-              </p>
-              <button
-                className="btn-primary px-8 mt-4"
-                onClick={() => {
-                  setShowVerifyEmailModal(false);
-                  router.push("/");
-                }}
-              >
-                Got it
-              </button>
+          <div className={`flex fixed z-[99999] h-screen w-full top-0 left-0 max-sm:p-6 flex-col justify-center items-center `}>
+            <div className="overlay bg-black opacity-95 absolute left-0 top-0 w-full h-full"></div>
+
+            <div className="user-options bg-black relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-white/30 px-6 py-8 w-full  sm:w-3/4 lg:w-3/6 xl:w-1/4">
+              <div className="flex items-center justify-center flex-col gap-4 max-w-full">
+                <img src="/logo.png" alt="" className="w-[40%] md:w-[25%] xl:w-[35%] 2xl:w-[40%] 4k:w-[175px]" />
+                <p className="text-zinc-300">
+                  Your account has been successfully deleted. <br /> Thank you for using our app.
+                </p>
+                <button
+                  className="btn-primary px-8 mt-4"
+                  onClick={() => {
+                    setShowVerifyEmailModal(false);
+                    router.push("/");
+                  }}
+                >
+                  Got it
+                </button>
+              </div>
             </div>
-          </Modal>
+          </div>
         )}
       </div>
 
