@@ -9,7 +9,7 @@ import { CircularProgress } from "@mui/material";
 import Input from "./common/Input";
 
 export default function AuthForm() {
-  const { setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
+  const { setLoadingScreen, setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const [loadingAuth, setLoadingAuth] = useState(false);
@@ -43,6 +43,11 @@ export default function AuthForm() {
       setAuthModalActive(false);
       setErrorMessage({ active: false, text: "" });
       setUserData({ username: "", email: "", password: "" });
+      setLoadingScreen(true);
+
+      setTimeout(() => {
+        setLoadingScreen(false);
+      }, 1000);
     } catch (error) {
       setErrorMessage({ active: true, text: authErrors(error) });
     } finally {

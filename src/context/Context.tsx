@@ -8,6 +8,7 @@ import Modal from "@/components/common/Modal";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { Isearch } from "@/helpers/search";
 import AuthForm from "@/components/AuthForm";
+import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 interface IContextValues {
   numberOfPages: number;
   setNumberOfPages: Dispatch<SetStateAction<number>>;
@@ -58,6 +59,8 @@ interface IContextValues {
   setReviewsError: Dispatch<SetStateAction<boolean>>;
   similarError: boolean;
   setSimilarError: Dispatch<SetStateAction<boolean>>;
+  loadingScreen: boolean;
+  setLoadingScreen: Dispatch<SetStateAction<boolean>>;
   listActive: string | null;
   setListActive: Dispatch<SetStateAction<string | null>>;
   message: { message: string; severity: string; open: boolean } | null;
@@ -104,6 +107,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchStarted, setSearchStarted] = useState(false);
+  const [loadingScreen, setLoadingScreen] = useState(false);
   const [numberOfPages, setNumberOfPages] = useState(0);
   const [pageActive, setPageActive] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -167,6 +171,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setMessage,
     searchResults,
     setSearchResults,
+    loadingScreen,
+    setLoadingScreen,
   };
 
   useEffect(() => {
@@ -205,7 +211,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     auth.onIdTokenChanged((user) => {
       async function saveTokenToCookies() {
         const token = await auth?.currentUser?.getIdToken();
-         document.cookie = `${ID_TOKEN_COOKIE_NAME}=${token};path=/`;
+        document.cookie = `${ID_TOKEN_COOKIE_NAME}=${token};path=/`;
       }
       if (user) {
         saveTokenToCookies();
@@ -213,6 +219,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     });
   }, []);
 
+  if (loadingScreen) return <LoadingScreen />;
   return (
     <Context.Provider value={contextValues}>
       {children}

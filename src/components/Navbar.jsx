@@ -10,7 +10,7 @@ export default function Navbar() {
   const navRef = useRef();
   const router = useRouter();
 
-  const { setUserLogged, authModalActive, setAuthModalActive, firebaseActiveUser, setFirebaseActiveUser } = useContext(Context);
+  const { setLoadingScreen,setUserLogged, authModalActive, setAuthModalActive, firebaseActiveUser, setFirebaseActiveUser } = useContext(Context);
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const [menuActive, setMenuActive] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
@@ -35,6 +35,11 @@ export default function Navbar() {
       setFirebaseActiveUser({ email: null, uid: null });
       setUserMenuActive(false);
       document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+      setLoadingScreen(true);
+
+      setTimeout(() => {
+        setLoadingScreen(false);
+      }, 1000);
       router.push("/");
     });
   };
