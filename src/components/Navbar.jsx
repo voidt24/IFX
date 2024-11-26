@@ -3,7 +3,7 @@ import { useRef, useEffect, useContext, useState } from "react";
 import Link from "next/link";
 import { Context } from "@/context/Context";
 import MenuDropdown from "./common/MenuDropDown";
-import { auth } from "@/firebase/firebase.config";
+import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
@@ -34,6 +34,7 @@ export default function Navbar() {
       setUserLogged(false);
       setFirebaseActiveUser({ email: null, uid: null });
       setUserMenuActive(false);
+      document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
       router.push("/");
     });
   };

@@ -1,14 +1,13 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useState, createContext, useEffect, Dispatch, SetStateAction } from "react";
-import { auth } from "../firebase/firebase.config";
+import { auth, ID_TOKEN_COOKIE_NAME } from "../firebase/firebase.config";
 import { useParams } from "next/navigation";
 import Modal from "@/components/common/Modal";
 
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { Isearch } from "@/helpers/search";
 import AuthForm from "@/components/AuthForm";
-
 interface IContextValues {
   numberOfPages: number;
   setNumberOfPages: Dispatch<SetStateAction<number>>;
@@ -200,6 +199,16 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
             setOpenDialog(true);
           }
         }, 4000);
+      }
+    });
+
+    auth.onIdTokenChanged((user) => {
+      async function saveTokenToCookies() {
+        const token = await auth?.currentUser?.getIdToken();
+         document.cookie = `${ID_TOKEN_COOKIE_NAME}=${token};path=/`;
+      }
+      if (user) {
+        saveTokenToCookies();
       }
     });
   }, []);
