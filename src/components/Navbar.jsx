@@ -88,9 +88,8 @@ export default function Navbar() {
     <nav className="nav z-[999] " ref={navRef}>
       <ul className={`links relative`}>
         <li>
-          <Link
+          <button
             className="nav-item-box sm:px-1.5 sm:py-1 sm:hover:bg-zinc-900 sm:rounded-full"
-            href=""
             onClick={() => {
               setMenuActive(!menuActive);
               setUserMenuActive(false);
@@ -102,18 +101,17 @@ export default function Navbar() {
           >
             <i className="bi bi-list max-sm:text-[137%] text-2xl 2xl:text-3xl"></i>
             <p className={`max-sm:text-[70%] sm:hidden`}>Menu</p>
-          </Link>
+          </button>
         </li>
         <MenuDropdown activeState={menuActive} setActiveState={setMenuActive} XPosition={"left-0"} navbarActions={menuActions} />
 
         <li>
-          <Link href="/" className="nav-item-box ">        
+          <Link href="/" className="nav-item-box ">
             <img src="/logo.png" className="w-[5rem] sm:w-[7.5rem] rounded-sm " alt="" />
           </Link>
         </li>
         <li>
-          <Link
-            href=""
+          <button
             className="nav-item-box sm:px-1.5 sm:py-1 sm:hover:bg-zinc-900 sm:rounded-full"
             onClick={() => {
               if (!auth.currentUser?.uid) {
@@ -130,7 +128,7 @@ export default function Navbar() {
           >
             <i className="bi bi-person-circle max-sm:text-[127%] text-2xl 2xl:text-3xl" id="user"></i>
             <p className=" max-sm:text-[70%] sm:hidden">Profile</p>
-          </Link>
+          </button>
         </li>
         <MenuDropdown activeState={userMenuActive} setActiveState={setUserMenuActive} XPosition={"right-0"} navbarActions={userActions} profileData={profileData} />
       </ul>
