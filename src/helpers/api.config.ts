@@ -14,6 +14,7 @@ export interface ISliderMovieData {
   poster_path: string | undefined; //both
   release_date: string | undefined; //movie
   vote_average: number | undefined; //both
+  media_type?: string | undefined; 
 }
 export interface ISliderTVData {
   backdrop_path: string | undefined; //both
