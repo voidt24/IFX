@@ -17,11 +17,10 @@ interface ISliderCardProps {
 const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, mediaType }: ISliderCardProps) => {
   const [poster, setPoster] = useState("");
   const [vote, setVote] = useState<string | undefined>();
-  const context = useContext(Context);
 
-  const { setCurrentId, setCurrentMediaType, currentMediaType, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
+  const { setCurrentId, setCurrentMediaType, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
 
-  const mediaTypeOfSpecificCard = `/${changeMediaType === "movie" ? "movies" : "tvshows"}`;
+  const mediaTypeOfSpecificCard = `${changeMediaType === "movie" ? "movies" : "tvshows"}`;
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const card = event.target.parentElement?.parentElement?.parentElement;
 
@@ -91,8 +90,9 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
         <span className="year">
           {((result as ISliderMovieData) && (result as ISliderMovieData).release_date?.slice(0, 4)) || ((result as ISliderTVData) && (result as ISliderTVData).first_air_date?.slice(0, 4))}
         </span>
+        {changeMediaType ? <span className="mediatype">{result.media_type}</span> : null}
         <Link
-          href={changeMediaType != null ? `${mediaTypeOfSpecificCard}/${result.id}` : `${mediaType}/${result.id}`}
+          href={changeMediaType != null ? `/${mediaTypeOfSpecificCard}/${result.id}` : `/${mediaType}/${result.id}`}
           onClick={() => {
             setCurrentId(result.id ?? undefined);
             if (changeMediaType) {
