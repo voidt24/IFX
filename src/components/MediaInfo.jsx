@@ -2,30 +2,36 @@
 import { useState, useContext, useRef, useEffect } from "react";
 import { Context } from "../../src/context/Context";
 import { handleTrailerClick } from "../../src/helpers/getTrailer";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Tooltip } from "@mui/material";
-import { handle_new_custom_lists, handle_favs_watchlists, get_custom_lists, handle_adding_to_custom_lists } from "../firebase/handle_favs_watchlists";
+import { handle_favs_watchlists } from "../firebase/handle_favs_watchlists";
 import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
-import Modal from "./common/Modal";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Loader from "./common/Loader";
 
 export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
-  const { currentId, setOpenTrailer, setTrailerKey, currentMediaType, setAuthModalActive, userLogged, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList, firebaseActiveUser } =
-    useContext(Context);
+  const {
+    setCurrentId,
+    currentId,
+    setOpenTrailer,
+    setTrailerKey,
+    currentMediaType,
+    setAuthModalActive,
+    userLogged,
+    addedToFavs,
+    setAddedToFavs,
+    addedtoWatchList,
+    setAddedtoWatchList,
+    firebaseActiveUser,
+  } = useContext(Context);
 
   const router = useRouter();
+  const params = useParams();
   const mediaTypeRef = useRef(null);
   const mediaTypeRef2 = useRef(null);
 
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
-  const [listModalActive, setListModalActive] = useState(false);
-  const [addToListModalActive, setAddToListModalActive] = useState(false);
-  const [newListModalActive, setNewListModalActive] = useState(true);
-  const [customList, setCustomList] = useState();
-  const [existingLists, setExistingLists] = useState([]);
-  const [activeSelectedElement, setActiveSelectedElement] = useState("");
 
   const truncatedTextStyle = {
     WebkitLineClamp: "2",
@@ -55,38 +61,15 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
     }
   };
 
-  const handleCustomLists = async (e) => {
-    e.preventDefault();
-    if (!customList || customList == "") {
-      return;
-    }
-
-    try {
-      await handle_new_custom_lists(firebaseActiveUser.uid, mediaTypeRef, state, customList, currentId);
-      setMessage({ message: "List created successfully!", severity: "success", open: true });
-      setListModalActive(false);
-    } catch (error) {
-      setMessage({ message: ` Error executing action on ${customList}: ${error}`, severity: "error", open: true });
-    }
-  };
-
-  const handleAddToCustomList = async (e) => {
-    e.preventDefault();
-
-    try {
-      await handle_adding_to_custom_lists(firebaseActiveUser.uid, mediaTypeRef, state, activeSelectedElement, currentId);
-      setMessage({ message: `Element saved in ${activeSelectedElement}!`, severity: "success", open: true });
-      setListModalActive(false);
-    } catch (error) {
-      setMessage({ message: ` Error executing action on ${activeSelectedElement}: ${error}`, severity: "error", open: true });
-    }
-
-    setActiveSelectedElement("");
-  };
-
   useEffect(() => {
     setShowReadMoreButton(ref.current.scrollHeight !== ref.current.clientHeight);
   }, []);
+
+  useEffect(() => {
+    if (currentId != params.id) {
+      setCurrentId(params.id);
+    }
+  }, [params.id]);
 
   return (
     <div className="media-details" style={{ backgroundImage: `url(${state.heroBackground})` }}>
@@ -95,7 +78,6 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
         className="bi bi-arrow-left"
         onClick={() => {
           router.back();
-          // window.scrollTo(0, 0);
         }}
       ></i>
 
@@ -131,21 +113,6 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               }}
             >
               <i className="bi bi-play-fill "></i> Play trailer
-            </button>
-            <button
-              className="rounded-full py-2 w-full bg-white/80 hover:bg-white text-black"
-              type="button "
-              onClick={async () => {
-                if (userLogged) {
-                  setListModalActive(!listModalActive);
-                  const list = await get_custom_lists(firebaseActiveUser.uid);
-                  setExistingLists(list);
-                } else {
-                  setAuthModalActive(true);
-                }
-              }}
-            >
-              <i className="bi bi-plus-lg"></i> Add to
             </button>
           </div>
 
@@ -214,110 +181,6 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
           </div>
         </div>
       </div>
-
-      {listModalActive && (
-        <Modal modalActive={listModalActive} setModalActive={setListModalActive}>
-          <div className="flex flex-col items-center justify-center gap-4 w-full">
-            <h2 className="text-2xl ">Add to</h2>
-
-            <div className="flex w-full items-center justify-center gap-6">
-              <button
-                className={`rounded-full bg-gray-800 hover:bg-gray-700 px-4 bg-transparent border-0 ${
-                  newListModalActive ? "text-[var(--primary)]" : "text-gray-400"
-                } hover:text-[var(--primary)] hover:bg-transparent `}
-                onClick={() => {
-                  setNewListModalActive(true);
-                  setAddToListModalActive(false);
-                }}
-              >
-                New list
-              </button>
-              <p className="">|</p>
-              <button
-                className={`rounded-full bg-gray-800 hover:bg-gray-700 px-4 bg-transparent border-0 ${
-                  addToListModalActive ? "text-[var(--primary)]" : "text-gray-400"
-                } hover:text-[var(--primary)] hover:bg-transparent`}
-                onClick={() => {
-                  setAddToListModalActive(true);
-                  setNewListModalActive(false);
-                }}
-              >
-                Your lists
-              </button>
-            </div>
-
-            <form className="flex flex-col gap-4 items-center  self-center sm:w-[195px] mt-6">
-              <label htmlFor="" className="w-full text-sm text-white flex flex-col gap-4">
-                {newListModalActive ? "Type the list name" : " Select your list"}
-              </label>
-              {newListModalActive ? (
-                <>
-                  <input
-                    className="input-style  w-full py-1.5 text-sm rounded-full"
-                    type="text"
-                    value={customList}
-                    onChange={(evt) => {
-                      setCustomList(evt.target.value);
-                    }}
-                    placeholder="ex. Science fiction"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="btn-primary text-sm !py-1.5 w-full "
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleCustomLists(e);
-                    }}
-                  >
-                    Add
-                  </button>
-                </>
-              ) : (
-                <>
-                  <select
-                    className="min-w-full  text-sm cursor-pointer hover:border-[goldenrod] outline-[goldenrod] px-2 py-1.5 transition-all text-white invalid:text-[white]/70  rounded-full   border border-gray-400 valid:bg-gray-900 "
-                    onClick={async () => {
-                      const list = await get_custom_lists(firebaseActiveUser.uid);
-                      setExistingLists(list);
-                    }}
-                    onChange={(e) => {
-                      setActiveSelectedElement(e.target.value);
-                    }}
-                    value={activeSelectedElement}
-                  >
-                    <option value={""} className="text-gray-500" selected>
-                      Select...
-                    </option>
-                    {existingLists &&
-                      existingLists.length > 0 &&
-                      existingLists.map((element, index) => {
-                        return (
-                          <option value={element} key={index}>
-                            {element}
-                          </option>
-                        );
-                      })}
-                  </select>
-
-                  {activeSelectedElement != "" && (
-                    <button
-                      className="btn-primary text-sm !py-1.5 min-w-full"
-                      type="submit"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleAddToCustomList(e);
-                      }}
-                    >
-                      Add
-                    </button>
-                  )}
-                </>
-              )}
-            </form>
-          </div>
-        </Modal>
-      )}
 
       <Snackbar
         open={message.open}
