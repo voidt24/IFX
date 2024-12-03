@@ -35,7 +35,7 @@ export default function AllMediaDataSkeleton() {
         <div className="lists flex flex-col items-center gap-4 text-center animate-pulse">
           <div className="results-container flex flex-col gap-4 xl:max-w-[1400px] w-full px-4">
             <div className="results grid grid-cols-2 gap-0.3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              {Array.from({ length: 12 }).map((_, index) => (
+              {Array.from({ length: 20}).map((_, index) => (
                 <SliderCardSkeleton key={index} />
               ))}
             </div>

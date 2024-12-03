@@ -59,7 +59,7 @@ export default function Hero({ results, type }: { results: ISliderMovieData[] | 
                   </Link>
                 </div>
 
-                <img className="rounded-lg md:rounded-xl" src={`${image}${sliderData.backdrop_path}`} alt="" />
+                <img className="rounded-lg md:rounded-xl" src={`${image}${sliderData.backdrop_path}`} alt="" width={3840} height={2160} />
                 <div className="lg:hidden blur absolute w-full bottom-0 h-[25%] md:h-16 z-10"> </div>
 
                 <div className="lg:hidden z-30 absolute bottom-0 w-full p-2 md:p-4">

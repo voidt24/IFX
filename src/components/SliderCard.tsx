@@ -71,7 +71,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
   }, [result]);
   return (
     poster && (
-      <div className="card" data-id={result.id}>
+      <div className="card " data-id={result.id}>
         <div
           className={`${
             Number(vote) == 0
@@ -101,7 +101,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
           }}
         >
           <div className="content " key={result.id}>
-            <img src={poster} alt="" className="rounded-lg" />
+            <img src={poster} alt="" className="rounded-lg" width={780} height={1170} />
           </div>
         </Link>
         {canBeEdited && edit && (
