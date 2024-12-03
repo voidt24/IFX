@@ -76,12 +76,12 @@ export default function AuthForm() {
           evt.preventDefault();
           handleSubmit();
         }}
-        className="auth-form gap-6 w-full sm:w-[80%] xl:w-[85%] 2xl:w-[65%] 4:w-[55%]"
+        className="auth-form gap-6 w-full sm:w-[80%] xl:w-[85%] 2xl:w-[65%] 4:w-[55%] "
       >
         {authInputFields.map((input, index) => {
           return (
             <label htmlFor="" key={index}>
-              {input.label}
+              <p className="mb-2">{input.label}</p>
               <Input type={input.type} placeholder={input.placeholder} value={input.value || ""} onChange={input.onChange} hasPassword={input.type == "password" ? true : false} />
             </label>
           );

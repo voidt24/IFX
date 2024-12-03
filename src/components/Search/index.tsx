@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import { search } from "../../helpers/search";
 import { useRouter } from "next/navigation";
+import Input from "../common/Input";
 export default function SearchBar() {
   const { setSearchResults, setLoadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, setNumberOfPages, searchQuery, setSearchQuery } = useContext(Context);
 
@@ -44,7 +45,7 @@ export default function SearchBar() {
   return (
     <>
       <form
-        className="flex justify-between gap-1 py-1 bg-zinc-900 z-50  w-full rounded-full border border-zinc-800"
+        className="flex justify-between  bg-zinc-900 z-50  w-full rounded-full border border-zinc-800 focus-within:border focus-within:border-blue-500 "
         onSubmit={(event) => {
           event.preventDefault();
           handleSearch(inputValue);
@@ -55,17 +56,16 @@ export default function SearchBar() {
           }
         }}
       >
-        <input
-          className="input-style !border-none !pl-4"
+        <Input
+          customClasses="focus-within:border-none sm:text-[100%] lg:text-[100%]  px-2 w-full"
           type="search"
-          id="search-input"
           placeholder="Search for a movie or tv show..."
           value={inputValue}
           onChange={(event) => {
             setInputValue(event.target.value);
           }}
         />
-        <button type="submit" className="border-0 hover:bg-zinc-800 rounded-full py-2 px-6" title={undefined}>
+        <button type="submit" className="border-0 hover:bg-zinc-800 rounded-full px-6" title={undefined}>
           <i className="bi bi-search"></i>
         </button>
       </form>
