@@ -45,7 +45,7 @@ export default function Hero({ results, type }: { results: ISliderMovieData[] | 
         {results &&
           results.slice(0, 5).map((sliderData, index) => {
             return (
-              <div className="relative " key={index} ref={index === 2 ? sliderContentRef : null}>
+              <div className="relative " key={index} ref={index === 1 ? sliderContentRef : null}>
                 <div className="max-lg:hidden hero-overlay"></div>
                 <div className="max-lg:hidden absolute flex flex-col gap-2 items-center justify-center top-1/2 text-center -translate-x-1/2 -translate-y-1/2 left-1/2 w-full z-20 text-[125%]">
                   <h1 className="title ">{(sliderData as ISliderMovieData).title || (sliderData as ISliderTVData).name}</h1>
