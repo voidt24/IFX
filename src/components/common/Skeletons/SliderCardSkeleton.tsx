@@ -2,9 +2,8 @@ import React from "react";
 
 const SliderCardSkeleton = () => {
   return (
-    <div className=" card border border-gray-700 rounded-lg p-2">
-      <div className=" max-md:h-32 h-48 lg:h-72 bg-gray-700 rounded mb-2 fallback-img"></div>
-      <div className=" h-4 bg-gray-700 rounded mb-1"></div>
+    <div className=" card border border-gray-700 rounded-lg p-2 ">
+      <div className=" min-h-[195px] sm:min-h-[191px] md:min-h-[228.95px] lg:min-h-[291.13px] bg-gray-700 rounded  fallback-img"></div>
     </div>
   );
 };

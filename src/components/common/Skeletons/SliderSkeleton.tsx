@@ -7,8 +7,7 @@ const SliderSkeleton = () => {
         <div className={`grid slider-with-cards__content`}>
           {[...Array(10)].map((_, index) => (
             <div key={index} className=" card border border-gray-700 rounded-lg p-2">
-              <div className=" max-md:h-32 h-48 lg:h-72 bg-gray-700 rounded mb-2 fallback-img"></div>
-              <div className=" h-4 bg-gray-700 rounded mb-1"></div>
+              <div className=" max-md:h-36 h-48 lg:h-72 bg-gray-700 rounded  fallback-img"></div>
             </div>
           ))}
         </div>
