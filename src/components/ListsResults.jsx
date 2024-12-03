@@ -3,7 +3,7 @@ import SliderCard from "./SliderCard";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { database, usersCollectionName } from "../firebase/firebase.config";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, getDocs } from "firebase/firestore";
 import { Snackbar, Alert } from "@mui/material";
 import Modal from "@/components/common/Modal";
 
@@ -13,20 +13,15 @@ export const ListsResults = ({ listName, savedElementResults }) => {
 
   const deleteFromFireStore = async (fieldName, customMessage = "List updated!") => {
     try {
-      const document = doc(database, usersCollectionName, firebaseActiveUser.uid);
-
-      const documentResult = await getDoc(document);
-
-      let dataSaved = documentResult.data();
-
-      const newData = dataSaved[fieldName].filter((el) => !checkedMedia.includes(el.id.toString()));
+      const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, fieldName);
+      const querySnapshot = await getDocs(activelistDocuments);
+      querySnapshot.forEach(async (doc) => {
+        if (checkedMedia.includes(doc.id.toString())) {
+          await deleteDoc(doc.ref);
+        }
+      });
       setEdit(false);
       setCheckedMedia([]);
-
-      const updateData = {};
-      updateData[fieldName] = newData;
-
-      updateDoc(document, updateData);
       setMessage({ message: customMessage, severity: "success", open: true });
     } catch (err) {
       setMessage({ message: "Error deleting data, try again later", severity: "error", open: true });
@@ -121,7 +116,7 @@ export const ListsResults = ({ listName, savedElementResults }) => {
             .slice()
             .reverse()
             .map((result) => {
-              return <SliderCard result={result} changeMediaType={result.mediatype} key={result.id} canBeEdited={true} />;
+              return <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} />;
             })}
         </div>
       ) : (

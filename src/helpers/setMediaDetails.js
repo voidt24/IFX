@@ -43,15 +43,3 @@ export const setMediaDetails = (data, dispatch) => {
     },
   });
 };
-
-export const setListsState = (userLogged, firebaseActiveUser, setAddedToFavs, setLoadingFavs, setAddedtoWatchList, setLoadingWatchlist, currentId) => {
-  if (userLogged) {
-    getFromDB(firebaseActiveUser.uid, "favorites", setAddedToFavs, setLoadingFavs, currentId);
-    getFromDB(firebaseActiveUser.uid, "watchlist", setAddedtoWatchList, setLoadingWatchlist, currentId);
-  } else {
-    setLoadingFavs(false);
-    setLoadingWatchlist(false);
-    setAddedToFavs(false);
-    setAddedtoWatchList(false);
-  }
-};

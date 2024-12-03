@@ -4,15 +4,12 @@ import Slider from "@/components/Slider";
 import { ListsResults } from "@/components/ListsResults";
 import { database, ID_TOKEN_COOKIE_NAME, usersCollectionName, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
 import { useContext, useEffect, useRef, useState } from "react";
-import { getFieldsFromCollection } from "@/firebase/fetchMyData";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Snackbar, Alert } from "@mui/material";
 import getCookie from "@/helpers/getCookie";
 export default function Lists() {
   const { listActive, setListActive, firebaseActiveUser, setCheckedMedia, edit, setEdit } = useContext(Context);
-
-  const [listsNames, setListsNames] = useState();
   const [currentListData, setCurrentListData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ active: false, text: "" });
@@ -72,42 +69,39 @@ export default function Lists() {
   }, [buttonRef.current, buttonRef2.current]);
 
   useEffect(() => {
-    //subscription to db to get real time changes
-    if (database && usersCollectionName && firebaseActiveUser?.uid) {
-      const document = doc(database, usersCollectionName, firebaseActiveUser.uid);
+    async function getData() {
+      //subscription to db to get real time changes
+      if (database && usersCollectionName && firebaseActiveUser?.uid) {
+        const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, listActive);
 
-      const unsub = onSnapshot(document, (doc) => {
-        setCurrentListData(doc.data()?.[listActive]);
-        setLoading(false);
-      });
+        const unsub = onSnapshot(activelistDocuments, (document) => {
+          const data = [];
+          document.forEach((doc) => {
+            data.push(doc.data());
+          });
+          setCurrentListData(data);
+        });
 
-      // return 'unsub' on component unmount to avoid being "subscribe" while not on this page
-      return () => {
-        unsub();
-      };
+        // return 'unsub' on component unmount to avoid being "subscribe" while not on this page
+        return () => {
+          unsub();
+        };
+      }
+    }
+
+    try {
+      getData();
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
   }, [firebaseActiveUser?.uid, listActive]);
 
-  useEffect(() => {
-    const getListsNames = async () => {
-      if (database && usersCollectionName && firebaseActiveUser?.uid) {
-        try {
-          const listsData = await getFieldsFromCollection(firebaseActiveUser.uid);
-          setListsNames(listsData);
-        } catch (e) {
-          setMessage({ message: "Error loading list names data, try again later", severity: "error", open: true });
-        }
-      }
-    };
-    getListsNames();
-  }, [firebaseActiveUser?.uid]);
-
   const defaultListButtons = ["favorites", "watchlist"];
   return (
-    <div className="lists py-10 sm:py-20">
+    <div className="lists py-10 sm:py-20 ">
       <Slider sideControls>
         {defaultListButtons &&
-          listsNames &&
           defaultListButtons.map((name, index) => {
             return (
               <button
@@ -116,35 +110,6 @@ export default function Lists() {
                 type="button"
                 ref={buttonRef2}
                 className={` rounded-full px-4 py-1 text-[70%] lg:text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
-                  listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600/50"
-                } `}
-                onClick={(evt) => {
-                  if (edit && listActive != name) {
-                    setEdit(false);
-                    document.querySelectorAll(".card").forEach((card) => {
-                      card.style.border = "3px solid transparent";
-                      card.querySelector("img").style.filter = "none";
-                      card.querySelector("img").style.transform = "scale(1)";
-                    });
-                    setCheckedMedia([]);
-                  }
-                  setListActive(name);
-                  evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
-                }}
-              >
-                {name}
-              </button>
-            );
-          })}
-        {listsNames &&
-          listsNames.map(([name, obj], index) => {
-            return (
-              <button
-                key={index}
-                style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
-                type="button"
-                ref={buttonRef}
-                className={`rounded-full px-4 py-1 text-[70%] lg:text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
                   listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600/50"
                 } `}
                 onClick={(evt) => {

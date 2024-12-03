@@ -7,15 +7,15 @@ import Similar from "@/components/Similar";
 import Cast from "@/components/Cast";
 import { Reviews } from "@/components/Reviews";
 import MediaInfo from "@/components/MediaInfo";
-import { setListsState, setMediaDetails } from "../helpers/setMediaDetails";
+import { setMediaDetails } from "../helpers/setMediaDetails";
 import { Snackbar, Alert } from "@mui/material";
-import Loader from "./common/Loader";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import MediaDetailsSkeleton from "./common/Skeletons/MediaDetailsSkeleton";
+import { auth } from "@/firebase/firebase.config";
+import { getFromDB } from "@/firebase/getFromDB";
 
 export const MediaDetails = ({ mediaType }) => {
-  const { currentId, currentMediaType, userLogged, firebaseActiveUser, initialDataError, setinitialDataError, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, setSimilarError } =
-    useContext(Context);
+  const { currentId, firebaseActiveUser, initialDataError, setinitialDataError, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, setSimilarError } = useContext(Context);
 
   const [state, dispatch] = useReducer(reducerFunction, mediaDetails_InitialState);
 
@@ -46,7 +46,24 @@ export const MediaDetails = ({ mediaType }) => {
       });
     }
 
-    setListsState(userLogged, firebaseActiveUser, setAddedToFavs, setLoadingFavs, setAddedtoWatchList, setLoadingWatchlist, currentId);
+    async function isElementSaved() {
+      if (auth.currentUser?.uid) {
+        try {
+          const isInFavs = await getFromDB(auth.currentUser.uid, "favorites", currentId);
+          const isInWatchlist = await getFromDB(auth.currentUser.uid, "watchlist", currentId);
+
+          isInFavs ? setAddedToFavs(true) : setAddedToFavs(false);
+          isInWatchlist ? setAddedtoWatchList(true) : setAddedtoWatchList(false);
+        } catch (er) {
+          setMessage({ message: "Error finding is this element was saved", severity: "error", open: true });
+        } finally {
+          setLoadingFavs(false);
+          setLoadingWatchlist(false);
+        }
+      }
+    }
+
+    isElementSaved();
   }, [currentId, firebaseActiveUser]);
 
   return state.loadingAllData ? (
