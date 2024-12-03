@@ -3,10 +3,11 @@ import { Context } from "@/context/Context";
 import { createUser } from "../firebase/createUser";
 import { authHandler } from "../firebase/authHandler";
 import { loginUser } from "../firebase/loginUser";
-import { authErrors } from "../firebase/firebase.config";
+import { authErrors, database } from "../firebase/firebase.config";
 import Error from "./common/Error";
 import { CircularProgress } from "@mui/material";
 import Input from "./common/Input";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function AuthForm() {
   const { setLoadingScreen, setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
@@ -44,6 +45,18 @@ export default function AuthForm() {
       setErrorMessage({ active: false, text: "" });
       setUserData({ username: "", email: "", password: "" });
       setLoadingScreen(true);
+
+      if (methodToUseForAuth == createUser) {
+        try {
+          const document = doc(database, `users/${resultFromAuth.user.uid}`);
+          const documentResult = await getDoc(document);
+
+          if (documentResult.exists()) {
+          } else {
+            await setDoc(document, { createdAt: resultFromAuth.user.metadata.creationTime, name: resultFromAuth.user.displayName, email: resultFromAuth.user.email, uid: resultFromAuth.user.uid });
+          }
+        } catch (error) {}
+      }
 
       setTimeout(() => {
         setLoadingScreen(false);
