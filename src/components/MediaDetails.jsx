@@ -60,6 +60,9 @@ export const MediaDetails = ({ mediaType }) => {
           setLoadingFavs(false);
           setLoadingWatchlist(false);
         }
+      } else {
+        setLoadingFavs(false);
+        setLoadingWatchlist(false);
       }
     }
 
