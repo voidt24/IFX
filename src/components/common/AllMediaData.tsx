@@ -72,7 +72,7 @@ export default function AllMediaData({
   }
   return (
     <DefaultLayout>
-      <div className=" sticky top-20 sm:top-36 w-full z-20 bg-black py-4">
+      <div className=" sticky top-[4.85rem] sm:top-[8.75rem] w-full z-20 bg-black py-4">
         <h2 className="text-center mb-6 lg:text-xl">{title}</h2>
         <div className="flex gap-6  ">
           <nav className="flex items-center justify-center w-full px-4 ">
