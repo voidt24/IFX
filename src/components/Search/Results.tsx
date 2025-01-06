@@ -96,7 +96,7 @@ export default function Results() {
             {loadingSearch ? (
               <Loader />
             ) : (
-              <div ref={ref} className="results h-[500px] xl:h-[650px] overflow-auto relative z-30 pb-10 ">
+              <div ref={ref} className="results w-full h-[500px] xl:h-[650px] overflow-auto relative z-30 pb-10 ">
                 {searchResults?.length && searchResults.length > 0 ? (
                   <>
                     {searchResults?.map((result: Isearch) => {
