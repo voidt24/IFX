@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { database, usersCollectionName } from "./firebase.config";
 
 export const fetchMyData = async (firebaseActiveUser, fieldName) => {
@@ -39,6 +39,23 @@ export const getFieldsFromCollection = async (documentName) => {
       const dataSaved = documentResult.data();
 
       return dataSaved;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const updateField = async (documentName, fieldName, newField) => {
+  try {
+    const document = doc(database, usersCollectionName, documentName);
+    //reference of document 'documentName'(uid from activeUser) within 'users' colection
+    const documentResult = await getDoc(document);
+    
+    if (documentResult.exists()) {
+      //if we found the uid within users collection
+      await updateDoc(document, {
+        [fieldName]: newField,
+      });
     }
   } catch (err) {
     throw err;
