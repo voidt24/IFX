@@ -8,6 +8,7 @@ import Error from "./common/Error";
 import { CircularProgress } from "@mui/material";
 import Input from "./common/Input";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { banners } from "@/helpers/banners/banners-sources";
 
 export default function AuthForm() {
   const { setLoadingScreen, setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
@@ -53,7 +54,7 @@ export default function AuthForm() {
 
           if (documentResult.exists()) {
           } else {
-            await setDoc(document, { createdAt: resultFromAuth.user.metadata.creationTime, name: resultFromAuth.user.displayName, email: resultFromAuth.user.email, uid: resultFromAuth.user.uid });
+            await setDoc(document, { createdAt: resultFromAuth.user.metadata.creationTime, name: resultFromAuth.user.displayName, email: resultFromAuth.user.email, uid: resultFromAuth.user.uid, banner: banners[0].src });
           }
         } catch (error) {}
       }
