@@ -11,6 +11,7 @@ export const mediaDetails_InitialState = {
   loadingCast: true,
   runtime: "",
   seasons: 0,
+  seasonsArray: []
 };
 
 export const mediaD_Actions = {
@@ -34,6 +35,7 @@ export const reducerFunction = (state, action) => {
         loadingAllData: action.payload.loadingAllData,
         runtime: action.payload.runtime,
         seasons: action.payload.seasons,
+        seasonsArray: action.payload.seasonsArray
       };
 
     case mediaD_Actions.set_All_DataLoader:

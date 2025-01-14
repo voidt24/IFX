@@ -9,11 +9,15 @@ import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Loader from "./common/Loader";
+import Player from "./Player";
+import Modal from "./common/Modal";
+import { MOVIES_MEDIA_VIDEO_URL, TV_MEDIA_VIDEO_URL } from "@/helpers/api.config";
 
 export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
   const {
     setCurrentId,
     currentId,
+    openTrailer,
     setOpenTrailer,
     setTrailerKey,
     currentMediaType,
@@ -40,7 +44,11 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
     display: "-webkit-box",
   };
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSeason, setActiveSeason] = useState(0);
+  const [seasonModal, setSeasonModal] = useState(false);
+  const [openPlayer, setOpenPlayer] = useState(false);
   const [showReadMoreButton, setShowReadMoreButton] = useState(false);
+  const [mediaURL, setMediaURL] = useState("");
 
   const ref = useRef();
 
@@ -109,10 +117,25 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
               className="btn-primary w-full"
               data-id={currentId}
               onClick={() => {
+                if (currentMediaType == mediaProperties.tv.route) {
+                  setSeasonModal(true);
+                } else {
+                  setOpenPlayer(true);
+                  setMediaURL(MOVIES_MEDIA_VIDEO_URL(currentId));
+                }
+                if (openTrailer) setOpenTrailer(false);
+              }}
+            >
+              <i className="bi bi-play-fill "></i> Play
+            </button>
+            <button
+              className="btn-primary w-full bg-neutral-800 text-gray-300 border border-zinc-700 hover:bg-gray-300 hover:text-black"
+              data-id={currentId}
+              onClick={() => {
                 handleTrailerClick(setOpenTrailer, currentId, currentMediaType, setTrailerKey);
               }}
             >
-              <i className="bi bi-play-fill "></i> Play trailer
+              <i className="bi bi-play "></i> Watch trailer
             </button>
           </div>
 
@@ -200,6 +223,49 @@ export const MediaInfo = ({ state, loadingFavs, loadingWatchlist }) => {
           {message.message}
         </Alert>
       </Snackbar>
+      {currentMediaType == mediaProperties.tv.route && (
+        <Modal modalActive={seasonModal} setModalActive={setSeasonModal}>
+          <div className="w-full max-h-[70vh] overflow-auto flex flex-col gap-8">
+            <h1 className="title">{state.title}</h1>
+
+            {state.seasonsArray.map((season, index) => {
+              const { episode_count, season_number } = season;
+              if (season.name != "Specials") {
+                return (
+                  <div className="flex flex-col gap-4 w-full rounded-xl bg-zinc-950 p-2" key={index}>
+                    <button
+                      onClick={() => {
+                        setActiveSeason(season);
+                      }}
+                      className={`text-center rounded-lg p-1 w-full hover:bg-zinc-900 border border-zinc-800 ${activeSeason == season ? " text-[var(--primary)]" : ""}`}
+                    >
+                      Season {season_number}
+                    </button>
+                    <div className={`flex items-start justify-center flex-wrap gap-4 ${activeSeason == season ? " h-full " : " overflow-hidden h-0"}`}>
+                      {[...Array(episode_count)].map((_, index) => {
+                        return (
+                          <button
+                            key={index}
+                            className="bg-zinc-800 px-8 hover:bg-zinc-700 p-2 rounded-lg"
+                            onClick={() => {
+                              setSeasonModal(false)
+                              setMediaURL(TV_MEDIA_VIDEO_URL(currentId, season_number, index + 1));
+                              setOpenPlayer(true);
+                            }}
+                          >
+                            E{index + 1}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              }
+            })}
+          </div>
+        </Modal>
+      )}
+      <Player openPlayer={openPlayer} setOpenPlayer={setOpenPlayer} mediaURL={mediaURL} />
     </div>
   );
 };

@@ -1,9 +1,13 @@
+import { mediaProperties } from "./mediaProperties.config";
+
 export const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 export const apiUrl = `https://api.themoviedb.org/3/`;
 export const image = `https://image.tmdb.org/t/p/original`;
 export const imageWithSize = (size: string) => `https://image.tmdb.org/t/p/w${size}`;
 export const CACHENAME = "prods-cache-v4";
+export const MOVIES_MEDIA_VIDEO_URL =  (id:number|undefined) => `https://vidsrc.me/embed/${mediaProperties.movie.mediaType}/${id}`;
+export const TV_MEDIA_VIDEO_URL =  (id:number|undefined,season:number, episode:number ) => `https://vidsrc.me/embed/${mediaProperties.tv.mediaType}?tmdb=${id}&season=${season}&episode=${episode}`;
 
 export interface ISliderMovieData {
   backdrop_path: string | undefined; //both

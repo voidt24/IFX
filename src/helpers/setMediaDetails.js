@@ -25,7 +25,7 @@ const getRunTime = (runtimeParam) => {
 };
 
 export const setMediaDetails = (data, dispatch) => {
-  const { title, original_name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons } = data;
+  const { title, original_name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons,seasons } = data;
   dispatch({
     type: mediaD_Actions.set_Media_Values,
     payload: {
@@ -40,6 +40,7 @@ export const setMediaDetails = (data, dispatch) => {
       loadingAllData: false,
       runtime: runtime ? getRunTime(runtime) : "",
       seasons: number_of_seasons ?  number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons" : "",
+      seasonsArray: seasons
     },
   });
 };
