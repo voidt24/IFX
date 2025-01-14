@@ -10,7 +10,7 @@ import { Snackbar, Alert } from "@mui/material";
 import getCookie from "@/helpers/getCookie";
 export default function Lists() {
   const { listActive, setListActive, firebaseActiveUser, setCheckedMedia, edit, setEdit } = useContext(Context);
-  const [currentListData, setCurrentListData] = useState([]);
+  const [currentListData, setCurrentListData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ active: false, text: "" });
   const buttonRef = useRef();
@@ -109,7 +109,7 @@ export default function Lists() {
                 style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
                 type="button"
                 ref={buttonRef2}
-                className={` rounded-full px-4 py-1 text-[70%] lg:text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
+                className={` rounded-full px-4 py-1 text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
                   listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600/50"
                 } `}
                 onClick={(evt) => {

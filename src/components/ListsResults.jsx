@@ -4,12 +4,13 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { database, usersCollectionName } from "../firebase/firebase.config";
 import { collection, deleteDoc, getDocs } from "firebase/firestore";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, CircularProgress } from "@mui/material";
 import Modal from "@/components/common/Modal";
 
 export const ListsResults = ({ listName, savedElementResults }) => {
   const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia, message, setMessage } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const deleteFromFireStore = async (fieldName, customMessage = "List updated!") => {
     try {
@@ -27,6 +28,11 @@ export const ListsResults = ({ listName, savedElementResults }) => {
       setMessage({ message: "Error deleting data, try again later", severity: "error", open: true });
     }
   };
+  useEffect(() => {
+    if (savedElementResults != null) {
+      setLoading(false);
+    }
+  }, [savedElementResults]);
 
   useEffect(() => {
     return () => {
@@ -110,14 +116,18 @@ export const ListsResults = ({ listName, savedElementResults }) => {
         </div>
       )}
 
-      {savedElementResults && savedElementResults.length > 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center h-full w-full">
+          <CircularProgress color="inherit" size={100} />
+        </div>
+      ) : savedElementResults && savedElementResults.length > 0 ? (
         <div className="results">
           {savedElementResults
             .slice()
             .reverse()
-            .map((result) => {
-              return <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} />;
-            })}
+            .map((result) => (
+              <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} />
+            ))}
         </div>
       ) : (
         <div className="w-full h-full flex items-center justify-center">You will see your saved data here...</div>
