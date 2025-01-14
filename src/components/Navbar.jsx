@@ -65,9 +65,15 @@ export default function Navbar() {
   ];
   const userActions = [
     {
-      name: "Lists",
+      name: "Profile",
+      href: "/profile",
+      icon: <i className="bi bi-person-fill"></i>,
+      actionFunction: setAuthModalActive,
+    },
+    {
+      name: "My Lists",
       href: "/lists",
-      icon: <i className="bi bi-person-lines-fill"></i>,
+      icon: <i className="bi bi-list-check"></i>,
       actionFunction: setAuthModalActive,
     },
     {
@@ -127,7 +133,7 @@ export default function Navbar() {
             }}
           >
             <i className="bi bi-person-circle max-sm:text-[127%] text-2xl 2xl:text-3xl" id="user"></i>
-            <p className=" max-sm:text-[70%] sm:hidden">Profile</p>
+            <p className=" max-sm:text-[70%] sm:hidden">Account</p>
           </button>
         </li>
         <MenuDropdown activeState={userMenuActive} setActiveState={setUserMenuActive} XPosition={"right-0"} navbarActions={userActions} profileData={profileData} />

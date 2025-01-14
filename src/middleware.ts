@@ -19,5 +19,5 @@ export const middleware = async (req: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/lists", "/settings"],
+  matcher: ["/profile", "/lists", "/settings"],
 };
