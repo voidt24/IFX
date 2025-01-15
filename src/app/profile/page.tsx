@@ -4,9 +4,10 @@ import { auth } from "@/firebase/firebase.config";
 import { useEffect, useState } from "react";
 export default function Profile() {
   const [profileData, setProfileData] = useState<{ displayName: string | null | undefined; email: string | null | undefined } | null>(null);
+
   useEffect(() => {
     setProfileData({ displayName: auth.currentUser?.displayName, email: auth.currentUser?.email });
-  }, [profileData]);
+  }, [auth]);
 
   return (
     <div className="lists py-10 sm:py-20 !gap-6">
