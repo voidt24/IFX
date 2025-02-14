@@ -23,16 +23,15 @@
     font-size: 140%;
     z-index: 5;
     position: absolute;
-    top: 30px;
+    top: 40px;
     left: 0;
 
     @media #{$sm} {
-      top: 60px;
-      left: 15px;
+      top: 90px;
+      left: 35px;
     }
-    @media #{$md} {
-      top: 60px;
-      left: 15px;
+    @media #{$lg} {
+      left: 55px;
     }
 
     &:hover {
