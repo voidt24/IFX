@@ -9,6 +9,22 @@ import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { Isearch } from "@/helpers/search";
 import AuthForm from "@/components/AuthForm";
 import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
+
+interface ImediaDetailsData {
+  results: [] | null;
+  heroBackground: string | null;
+  title: string | null;
+  poster: string | null;
+  overview: string | null;
+  releaseDate: string | null;
+  vote: string | null;
+  genres: string | null;
+  loadingAllData: boolean | null;
+  runtime: string | null;
+  seasons: string | null;
+  seasonsArray: [] | null;
+}
+
 interface IContextValues {
   numberOfPages: number;
   setNumberOfPages: Dispatch<SetStateAction<number>>;
@@ -67,7 +83,10 @@ interface IContextValues {
   setMessage: Dispatch<SetStateAction<{ message: string; severity: string; open: boolean } | null>>;
   searchResults: Isearch[] | null;
   setSearchResults: Dispatch<SetStateAction<Isearch[] | null>>;
+  mediaDetailsData: ImediaDetailsData | null;
+  setMediaDetailsData: Dispatch<SetStateAction<ImediaDetailsData | null>>;
 }
+
 export const Context = createContext<IContextValues>({} as IContextValues);
 
 export default function ContextWrapper({ children }: { children: React.ReactNode }) {
@@ -113,6 +132,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [searchQuery, setSearchQuery] = useState("");
 
   const { id: idFromUrl } = useParams();
+
+  const [mediaDetailsData, setMediaDetailsData] = useState<ImediaDetailsData | null>(null);
 
   const contextValues = {
     numberOfPages,
@@ -173,6 +194,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setSearchResults,
     loadingScreen,
     setLoadingScreen,
+    mediaDetailsData,
+    setMediaDetailsData,
   };
 
   useEffect(() => {

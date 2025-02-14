@@ -1,29 +1,40 @@
 "use client";
-import { useState, useEffect, useContext, useReducer } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Context } from "../context/Context";
-import { mediaD_Actions, mediaDetails_InitialState, reducerFunction } from "../helpers/reducerSelectedMedia";
 import NotFound from "./common/NotFound";
 import Similar from "@/components/Similar";
 import Cast from "@/components/Cast";
 import { Reviews } from "@/components/Reviews";
 import MediaInfo from "@/components/MediaInfo";
-import { setMediaDetails } from "../helpers/setMediaDetails";
+import { getRunTime } from "@/helpers/getRunTime";
 import { Snackbar, Alert } from "@mui/material";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import MediaDetailsSkeleton from "./common/Skeletons/MediaDetailsSkeleton";
 import { auth } from "@/firebase/firebase.config";
 import { getFromDB } from "@/firebase/getFromDB";
+import { image, imageWithSize } from "@/helpers/api.config";
 
 export const MediaDetails = ({ mediaType }) => {
-  const { currentId, firebaseActiveUser, initialDataError, setinitialDataError, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, setSimilarError } = useContext(Context);
-
-  const [state, dispatch] = useReducer(reducerFunction, mediaDetails_InitialState);
+  const {
+    currentId,
+    firebaseActiveUser,
+    initialDataError,
+    setinitialDataError,
+    setAddedToFavs,
+    setAddedtoWatchList,
+    setCastError,
+    setReviewsError,
+    setSimilarError,
+    mediaDetailsData,
+    setMediaDetailsData,
+  } = useContext(Context);
 
   const [similar, setSimilar] = useState([]);
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loadingFavs, setLoadingFavs] = useState(true);
   const [loadingWatchlist, setLoadingWatchlist] = useState(true);
+  const [loadingAllData, setLoadingAllData] = useState(true);
 
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
 
@@ -36,13 +47,29 @@ export const MediaDetails = ({ mediaType }) => {
         fetchDetailsData("reviews", mediaType, currentId),
       ]).then((result) => {
         const [byIdPromise, similarPromise, castPromise, reviewsPromise] = result;
+        const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
 
-        byIdPromise.status == "fulfilled" ? setMediaDetails(byIdPromise.value, dispatch) : setinitialDataError(true);
+        byIdPromise.status == "fulfilled"
+          ? setMediaDetailsData({
+              results: [byIdPromise[0]],
+              heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
+              title: title || name,
+              poster: `${imageWithSize("500")}${poster_path}` || "",
+              overview,
+              releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
+              vote: String(vote_average).slice(0, 3),
+              genres: (genres && genres.map((genre) => genre.name)) || "",
+              loadingAllData: false,
+              runtime: runtime ? getRunTime(runtime) : "",
+              seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
+              seasonsArray: seasons,
+            })
+          : setinitialDataError(true);
+
         similarPromise.status == "fulfilled" ? setSimilar(similarPromise.value.results) : setSimilarError(true);
         castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
         reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
-
-        dispatch({ type: mediaD_Actions.set_All_DataLoader, payload: { loadingAllData: false } });
+        setLoadingAllData(false);
       });
     }
 
@@ -69,13 +96,13 @@ export const MediaDetails = ({ mediaType }) => {
     isElementSaved();
   }, [currentId, firebaseActiveUser]);
 
-  return state.loadingAllData ? (
+  return loadingAllData ? (
     <MediaDetailsSkeleton />
-  ) : state.results[0] && state.results[0].success == false ? (
+  ) : mediaDetailsData.results[0] && mediaDetailsData.results[0].success == false ? (
     <NotFound />
   ) : (
     <div style={{ paddingBlockEnd: "7rem" }}>
-      {initialDataError ? <p className="text-center p-20">Error loading media information </p> : <MediaInfo state={state} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />}
+      {initialDataError ? <p className="text-center p-20">Error loading media information </p> : <MediaInfo state={mediaDetailsData} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />}
 
       <div className="extra-data">
         <Similar similar={similar} />
