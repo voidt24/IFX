@@ -5,8 +5,9 @@ interface ModalProps {
   modalActive: boolean;
   setModalActive: Dispatch<SetStateAction<boolean>>;
   children: React.ReactNode;
+  classes?: string
 }
-const Modal = ({ modalActive, setModalActive, children }: ModalProps) => {
+const Modal = ({ modalActive, setModalActive, children,classes }: ModalProps) => {
   return modalActive ? (
     <>
       <div className={`flex fixed z-[99999] h-screen w-full top-0 left-0 max-sm:p-6 flex-col justify-center items-center `}>
@@ -17,7 +18,7 @@ const Modal = ({ modalActive, setModalActive, children }: ModalProps) => {
           }}
         ></div>
 
-        <div className="user-options bg-black relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-white/30 px-6 py-8 w-full  sm:w-3/4 lg:w-3/6 xl:w-1/4">
+        <div className={`user-options bg-black relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-white/30 px-6 py-8 w-full  sm:w-3/4 lg:w-3/6 xl:w-1/4 ${classes}`}>
           <button
             onClick={() => {
               setModalActive(false);
