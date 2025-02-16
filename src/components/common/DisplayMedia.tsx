@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
-import { image, imageWithSize, MOVIES_MEDIA_VIDEO_URL, TV_MEDIA_VIDEO_URL } from "@/helpers/api.config";
+import { image, imageWithSize, MEDIA_URL_RESOLVER, srcOptions } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
@@ -9,6 +9,8 @@ import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { CircularProgress } from "@mui/material";
+import Slider from "../Slider";
 
 function DisplayMedia({ mediaType }: { mediaType: string }) {
   const { currentId, firebaseActiveUser, currentMediaType, setCurrentMediaType, mediaDetailsData, setMediaDetailsData, setCurrentId } = useContext(Context);
@@ -19,7 +21,8 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
   const searchParams = useSearchParams();
   const season = searchParams.get("season");
   const episode = searchParams.get("episode");
-  const [mediaURL, setMediaURL] = useState("");
+  const [mediaURL, setMediaURL] = useState<string | undefined>("");
+  const [selectedSrc, setSelectedSrc] = useState(0);
   const [seasonArray, setSeasonArray] = useState<
     {
       air_date: string;
@@ -79,7 +82,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
     if (currentId != undefined) {
       getInfo();
     }
-    setMediaURL(mediaType == "movie" ? MOVIES_MEDIA_VIDEO_URL(currentId) : TV_MEDIA_VIDEO_URL(currentId, Number(season), Number(episode)));
+    setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(0, currentId, "movie") : MEDIA_URL_RESOLVER(0, currentId, "tvshows", Number(season), Number(episode)));
     function paramIsValid(param: string | null) {
       if (!param || param == "0") return false;
 
@@ -102,11 +105,10 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
         season_number: number;
         vote_average: number;
       }
-      const newSeasonA: InewSeasonArray[]
-        | null = [];
+      const newSeasonA: InewSeasonArray[] | null = [];
 
-        let seasonA: InewSeasonArray;
-      for ( seasonA of mediaDetailsData?.seasonsArray) {
+      let seasonA: InewSeasonArray;
+      for (seasonA of mediaDetailsData?.seasonsArray) {
         if (seasonA.name != "Specials") {
           newSeasonA.push(seasonA);
         }
@@ -116,7 +118,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
   }, [currentId, firebaseActiveUser, path]);
 
   return (
-    <div className="media-details h-[85vh] md:h-screen pb-0" style={{ backgroundImage: `url(${mediaDetailsData?.heroBackground})` }}>
+    <div className="media-details  min-h-[90vh] sm:min-h-screen h-full pb-0 flex flex-col items-center justify-center " style={{ backgroundImage: `url(${mediaDetailsData?.heroBackground})` }}>
       <div className="overlay"></div>
       <i
         className="bi bi-arrow-left"
@@ -124,18 +126,49 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
           router.back();
         }}
       ></i>
-      <div className="media-details__initial-content  sm:w-[85%] lg:w-[80%] xl:w-[70%] m-auto flex flex-col items-center justify-center ">
-        <div className="bg-black/85 flex flex-col items-center justify-center gap-6 mt-6 h-[65%] lg:h-[70%]  w-full p-4 rounded-xl ">
-          <div className="flex flex-col gap-4 text-2xl xl:text-4xl">
-            <h2 className="">{mediaDetailsData?.title} </h2>
-            {mediaType === "tv" && (
-              <div className="text-[75%] xl:text-[45%] text-white/70">
-                {season && season != "0" && `Season ${season} - `}
-                {episode && episode != "0" && `Episode ${episode}`}
-              </div>
-            )}
+      <div className="media-details__initial-content h-full w-full sm:w-[85%] lg:w-[80%] xl:w-[75%] 4k:w-[1500px] m-auto flex flex-col items-center justify-center ">
+        <div className="bg-black/85 flex flex-col items-center justify-center gap-2 xl:gap-6  h-auto  w-full p-4 rounded-xl ">
+          <h2 className="text-lg xl:text-3xl">
+            {mediaDetailsData?.title} ({mediaDetailsData?.releaseDate})
+          </h2>
+          {mediaType === "tv" && (
+            <div className=" xl:text-xl text-white/70">
+              {season && season != "0" && `Season ${season} - `}
+              {episode && episode != "0" && `Episode ${episode}`}
+            </div>
+          )}
+          {mediaURL == "" ? (
+            <div className="h-[20rem] lg:h-[40rem] xl:h-[40rem]  w-full flex items-center justify-center">
+              {" "}
+              <CircularProgress color="inherit" size={30} />
+            </div>
+          ) : (
+            <iframe src={mediaURL} className="h-[20rem] lg:h-[40rem] xl:h-[40rem] w-full " title="media" referrerPolicy="origin" allowFullScreen></iframe>
+          )}
+          <div className="text-xl xl:text-2xl w-full">
+            <div className="src-options p-2 text-[55%] ">
+              <Slider sideControls>
+                {srcOptions.map((option, index) => {
+                  return (
+                    <>
+                      <button
+                        className={`border bg-black rounded-full py-.5  ${selectedSrc == index ? "bg-zinc-300 text-black" : "text-white/70 hover:bg-zinc-800"}`}
+                        onClick={() => {
+                          if (selectedSrc != index) {
+                            setSelectedSrc(index);
+                            setMediaURL("");
+                            setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(index, currentId, "movie") : MEDIA_URL_RESOLVER(index, currentId, "tvshows", Number(season), Number(episode)));
+                          }
+                        }}
+                      >
+                        Option {index + 1}
+                      </button>
+                    </>
+                  );
+                })}
+              </Slider>
+            </div>
           </div>
-          <iframe src={mediaURL} className="h-full w-full" frameBorder="0" referrerPolicy="origin" allowFullScreen></iframe>{" "}
         </div>
         {mediaType == mediaProperties.tv.mediaType && (
           <div className=" w-full z-20  py-4">
