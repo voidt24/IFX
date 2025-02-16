@@ -9,9 +9,9 @@ import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Loader from "./common/Loader";
-import Player from "./Player";
 import Modal from "./common/Modal";
-import { MOVIES_MEDIA_VIDEO_URL, TV_MEDIA_VIDEO_URL } from "@/helpers/api.config";
+import { API_KEY, apiUrl, image } from "@/helpers/api.config";
+import { getRunTime } from "@/helpers/getRunTime";
 
 export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
   const {
@@ -34,6 +34,8 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
   const router = useRouter();
   const params = useParams();
   const mediaTypeRef = useRef(null);
+  const seasonBtnRef = useRef(null);
+  const seasonBtnRef2 = useRef(null);
   const mediaTypeRef2 = useRef(null);
 
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
@@ -47,9 +49,8 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSeason, setActiveSeason] = useState(0);
   const [seasonModal, setSeasonModal] = useState(false);
-  const [openPlayer, setOpenPlayer] = useState(false);
   const [showReadMoreButton, setShowReadMoreButton] = useState(false);
-  const [mediaURL, setMediaURL] = useState("");
+  const [episodesArray, setEpisodesArray] = useState([]);
 
   const ref = useRef();
   const path = usePathname();
@@ -123,7 +124,6 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
                   setSeasonModal(true);
                 } else {
                   router.push(`${currentId}/watch?name=${mediaDetailsData?.title}`);
-                  setMediaURL(MOVIES_MEDIA_VIDEO_URL(currentId));
                 }
                 if (openTrailer) setOpenTrailer(false);
               }}
@@ -226,40 +226,72 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
         </Alert>
       </Snackbar>
       {currentMediaType == mediaProperties.tv.route && (
-        <Modal modalActive={seasonModal} setModalActive={setSeasonModal}>
-          <div className="w-full max-h-[70vh] overflow-auto flex flex-col gap-8">
+        <Modal modalActive={seasonModal} setModalActive={setSeasonModal} classes="max-sm:w-[100%] sm:w-[90%] lg:w-[85%] xl:w-[70%] 4k:w-[1300px] !p-2 lg:!px-4 lg:!py-8" ref={seasonBtnRef2}>
+          <div className="w-full max-h-[70vh] overflow-auto flex flex-col gap-8 ">
             <h1 className="title">{mediaDetailsData.title}</h1>
 
             {mediaDetailsData.seasonsArray.map((season, index) => {
               const { episode_count, season_number } = season;
-              if (season.name != "Specials") {
+              if (season.name !== "Specials" && season.air_date && new Date(season.air_date).getTime() <= Date.now()) {
                 return (
-                  <div className="flex flex-col gap-4 w-full rounded-xl bg-zinc-950 p-2" key={index}>
+                  <div className="flex flex-col gap-2 w-full rounded-xl bg-zinc-950 p-2" key={index}>
                     <button
-                      onClick={() => {
-                        setActiveSeason(season);
+                      ref={season === activeSeason ? seasonBtnRef : null}
+                      className={` rounded-lg p-4 w-full hover:bg-zinc-900 border hover:border-zinc-700 ${
+                        activeSeason === season ? "text-[var(--primary)] border-[var(--primary)]" : "border-zinc-800"
+                      } flex  items-center justify-center `}
+                      onClick={async () => {
+                        if (activeSeason === season) {
+                          setActiveSeason(null);
+                        } else {
+                          setActiveSeason(season);
+                        }
+                        try {
+                          const seasonResponse = await fetch(`${apiUrl}${currentMediaType === "tvshows" ? "tv" : "movie"}/${currentId}/season/${season_number}?api_key=${API_KEY}`);
+                          const json = await seasonResponse.json();
+                          setEpisodesArray(json);
+                        } catch (error) {
+                          console.error("Error fetching season data:", error);
+                        }
+                        if (seasonBtnRef.current) {
+                          seasonBtnRef.current.scrollIntoView({ behavior: "smooth"});
+                        }
                       }}
-                      className={`text-center rounded-lg p-1 w-full hover:bg-zinc-900 border border-zinc-800 ${activeSeason == season ? " text-[var(--primary)]" : ""}`}
                     >
-                      Season {season_number}
+                      <p className="">Season {season_number}</p>
+                      <i className={`ml-auto ${activeSeason === season ? "bi bi-caret-up-fill" : "bi bi-caret-down-fill"}`}></i>
                     </button>
-                    <div className={`flex items-start justify-center flex-wrap gap-4 ${activeSeason == season ? " h-full " : " overflow-hidden h-0"}`}>
-                      {[...Array(episode_count)].map((_, index) => {
-                        return (
-                          <button
-                            key={index}
-                            className="bg-zinc-800 px-8 hover:bg-zinc-700 p-2 rounded-lg"
-                            onClick={() => {
-                              setSeasonModal(false);
-                              router.push(`${path}/watch?name=${mediaDetailsData?.title}&season=${season_number}&episode=${index + 1}`);
 
-                              setMediaURL(TV_MEDIA_VIDEO_URL(currentId, season_number, index + 1));
-                            }}
-                          >
-                            E{index + 1}
-                          </button>
-                        );
-                      })}
+                    <div className={`flex items-start justify-center flex-wrap gap-4 ${activeSeason === season ? "h-full py-6" : "overflow-hidden h-0"}`}>
+                      {Array.from({ length: episode_count ?? 0 }).map(
+                        (_, index) =>
+                          episodesArray?.episodes?.[index] &&
+                          new Date(episodesArray?.episodes?.[index].air_date).getTime() <= Date.now() && (
+                            <button
+                              key={index}
+                              className="bg-zinc-900 px-2 hover:bg-zinc-700 py-2 lg:py-3 rounded-lg w-full"
+                              onClick={() => {
+                                setSeasonModal(false);
+                                router.push(`${path}/watch?name=${mediaDetailsData?.title}&season=${season_number}&episode=${index + 1}`);
+                              }}
+                            >
+                              <div className="flex items-center justify-center gap-2 w-full">
+                                <p>{index + 1}.</p>
+
+                                <>
+                                  <img src={`${image}${episodesArray.episodes[index].still_path}`} className="rounded-md object-cover w-[40%] md:w-[25%] xl:w-[20%] h-full" alt="" />
+                                  <div className="flex flex-col gap-2 w-full">
+                                    <div className="min-md:font-bold max-md:text-sm w-full flex items-center justify-center">
+                                      <p className="w-full h-full">{episodesArray.episodes[index].name}</p>
+                                      <p className="text-right text-zinc-500 !text-[75%] h-full">{episodesArray.episodes[index].runtime && getRunTime(episodesArray.episodes[index].runtime)}</p>
+                                    </div>
+                                    <p className="max-md:hidden text-zinc-400 xl:w-[75%] m-auto">{episodesArray.episodes[index].overview}</p>
+                                  </div>
+                                </>
+                              </div>
+                            </button>
+                          )
+                      )}
                     </div>
                   </div>
                 );
@@ -268,7 +300,6 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
           </div>
         </Modal>
       )}
-      <Player openPlayer={openPlayer} setOpenPlayer={setOpenPlayer} mediaURL={mediaURL} />
     </div>
   );
 };
