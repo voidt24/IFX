@@ -21,7 +21,7 @@ const CollapsibleElement = ({ children, customClassesForParent, regularChildrenC
 
   useEffect(() => {
     setIsContentFullyVisible(ref?.current?.scrollHeight !== ref?.current?.clientHeight);
-  }, []);
+  }, [ref?.current?.scrollHeight, ref?.current?.clientHeight]);
 
   return (
     <>
@@ -38,7 +38,7 @@ const CollapsibleElement = ({ children, customClassesForParent, regularChildrenC
                 onClick={() => {
                   if (isOpen) {
                   }
-                  setIsOpen(!isOpen); 
+                  setIsOpen(!isOpen);
                 }}
               >
                 {isOpen ? "Show less" : "Show more"}

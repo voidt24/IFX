@@ -29,6 +29,8 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     setAddedtoWatchList,
     firebaseActiveUser,
     mediaDetailsData,
+    episodesArray,
+    setEpisodesArray,
   } = useContext(Context);
 
   const router = useRouter();
@@ -50,7 +52,6 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
   const [activeSeason, setActiveSeason] = useState(0);
   const [seasonModal, setSeasonModal] = useState(false);
   const [showReadMoreButton, setShowReadMoreButton] = useState(false);
-  const [episodesArray, setEpisodesArray] = useState([]);
 
   const ref = useRef();
   const path = usePathname();
