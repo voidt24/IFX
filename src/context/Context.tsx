@@ -25,6 +25,33 @@ interface ImediaDetailsData {
   seasonsArray: [] | null;
 }
 
+interface Iepisode {
+  air_date: string;
+  episode_number: number;
+  episode_type: string;
+  id: number;
+  name: string;
+  overview: string;
+  production_code: string;
+  runtime: number;
+  season_number: number;
+  show_id: number;
+  still_path: string;
+  vote_average: number;
+  vote_count: number;
+}
+interface IepisodesArray {
+  air_date: string | null;
+  episodes: Iepisode[] | null;
+  id: number | null;
+  name: string | null;
+  overview: string | null;
+  poster_path: string | null;
+  season_number: number | null;
+  vote_average: number | null;
+  _id: string | null;
+}
+
 interface IContextValues {
   numberOfPages: number;
   setNumberOfPages: Dispatch<SetStateAction<number>>;
@@ -85,6 +112,8 @@ interface IContextValues {
   setSearchResults: Dispatch<SetStateAction<Isearch[] | null>>;
   mediaDetailsData: ImediaDetailsData | null;
   setMediaDetailsData: Dispatch<SetStateAction<ImediaDetailsData | null>>;
+  episodesArray: IepisodesArray[] | null;
+  setEpisodesArray: Dispatch<SetStateAction<IepisodesArray[] | null>>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
@@ -134,6 +163,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const { id: idFromUrl } = useParams();
 
   const [mediaDetailsData, setMediaDetailsData] = useState<ImediaDetailsData | null>(null);
+
+  const [episodesArray, setEpisodesArray] = useState<IepisodesArray[] | null>(null);
 
   const contextValues = {
     numberOfPages,
@@ -196,6 +227,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setLoadingScreen,
     mediaDetailsData,
     setMediaDetailsData,
+    episodesArray,
+    setEpisodesArray,
   };
 
   useEffect(() => {

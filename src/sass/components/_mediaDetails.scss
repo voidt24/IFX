@@ -23,11 +23,11 @@
     font-size: 140%;
     z-index: 5;
     position: absolute;
-    top: 40px;
+    top: 30px;
     left: 0;
 
     @media #{$sm} {
-      top: 90px;
+      top: 75px;
       left: 35px;
     }
     @media #{$lg} {
