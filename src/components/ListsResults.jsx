@@ -6,8 +6,9 @@ import { database, usersCollectionName } from "../firebase/firebase.config";
 import { collection, deleteDoc, getDocs } from "firebase/firestore";
 import { Snackbar, Alert, CircularProgress } from "@mui/material";
 import Modal from "@/components/common/Modal";
+import SelectDropdown from "@/components/common/SelectDropdown";
 
-export const ListsResults = ({ listName, savedElementResults }) => {
+export const ListsResults = ({ listName, savedElementResults, setCurrentListData, listSelectedChange }) => {
   const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia, message, setMessage } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -42,82 +43,84 @@ export const ListsResults = ({ listName, savedElementResults }) => {
   }, []);
 
   return (
-    <div className="results-container flex flex-col gap-4 xl:max-w-[1400px] ">
-      {savedElementResults && savedElementResults.length > 0 && (
-        <div className="options flex justify-between items-center w-full">
-          <span className="flex flex-col  text-left">
-            <p>List</p>
-            <p className=" text-[120%] lg:text-[160%] text-[var(--primary)]">{listName.toUpperCase()}</p>
-          </span>
-
-          <div className="options-btns flex gap-4 max-md:text-[75%]">
-            <button
-              className="border-0 bg-none hover:bg-transparent"
-              onClick={() => {
-                setEdit(!edit);
-                if (edit) {
-                  // TODO: use react
-                  document.querySelectorAll(".card").forEach((card) => {
-                    card.style.border = "3px solid transparent";
-                    card.querySelector("img").style.filter = "none";
-                    card.querySelector("img").style.transform = "scale(1)";
-                  });
-                }
-                setCheckedMedia([]);
-              }}
-            >
-              <i className="bi bi-pencil-square"></i> {edit ? "Done" : "Edit"}
-            </button>
-
-            {checkedMedia.length > 0 && (
+    <div className="results-container flex flex-col gap-4 xl:max-w-[1400px] overflow-auto h-full !pt-1 !pb-20 relative">
+      <div className="options flex justify-between items-center w-full sticky top-[-4px] left-0 bg-black z-50 py-4">
+        <span className="flex flex-col  text-left">
+          <p>List</p>
+          <p className=" text-[120%] lg:text-[160%] text-[var(--primary)] mb-2">{listName.toUpperCase()}</p>
+          <SelectDropdown currentListData={savedElementResults} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
+        </span>
+        {savedElementResults && savedElementResults.length > 0 && (
+          <>
+            <div className="options-btns flex gap-4 max-md:text-[75%]">
               <button
                 className="border-0 bg-none hover:bg-transparent"
                 onClick={() => {
-                  setConfirmDialog(true);
+                  setEdit(!edit);
+                  if (edit) {
+                    // TODO: use react
+                    document.querySelectorAll(".card").forEach((card) => {
+                      card.style.border = "3px solid transparent";
+                      card.querySelector("img").style.filter = "none";
+                      card.querySelector("img").style.transform = "scale(1)";
+                    });
+                  }
+                  setCheckedMedia([]);
                 }}
               >
-                <i className="bi bi-trash3"></i> Delete
+                <i className="bi bi-pencil-square"></i> {edit ? "Done" : "Edit"}
               </button>
-            )}
-          </div>
 
-          {confirmDialog && (
-            <Modal modalActive={confirmDialog} setModalActive={setConfirmDialog}>
-              <div className="flex flex-col gap-4 max-md:text-sm py-4">
-                <p className="">Do you really you want to delete this data from {listName}?</p>
+              {checkedMedia.length > 0 && (
+                <button
+                  className="border-0 bg-none hover:bg-transparent"
+                  onClick={() => {
+                    setConfirmDialog(true);
+                  }}
+                >
+                  <i className="bi bi-trash3"></i> Delete
+                </button>
+              )}
+            </div>
 
-                <div className="delete-options flex gap-4">
-                  <button
-                    type="submit"
-                    className="w-full rounded-full  hover:bg-zinc-800 px-4 py-1"
-                    onClick={() => {
-                      setConfirmDialog(false);
-                    }}
-                    autoFocus
-                  >
-                    Cancel
-                  </button>
+            {confirmDialog && (
+              <Modal modalActive={confirmDialog} setModalActive={setConfirmDialog}>
+                <div className="flex flex-col gap-4 max-md:text-sm py-4">
+                  <p className="">Do you really you want to delete this data from {listName}?</p>
 
-                  <button
-                    type="submit"
-                    className="w-full btn-primary"
-                    onClick={() => {
-                      deleteFromFireStore(listName);
-                      setConfirmDialog(false);
-                    }}
-                    autoFocus
-                  >
-                    Confirm
-                  </button>
+                  <div className="delete-options flex gap-4">
+                    <button
+                      type="submit"
+                      className="w-full rounded-full  hover:bg-zinc-800 px-4 py-1"
+                      onClick={() => {
+                        setConfirmDialog(false);
+                      }}
+                      autoFocus
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      className="w-full btn-primary"
+                      onClick={() => {
+                        deleteFromFireStore(listName);
+                        setConfirmDialog(false);
+                      }}
+                      autoFocus
+                    >
+                      Confirm
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </Modal>
-          )}
-        </div>
-      )}
+              </Modal>
+            )}
+          </>
+        )}
+      </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-full w-full">
+        <div className="flex items-start justify-center h-full w-full min-h-screen pt-12">
           <CircularProgress color="inherit" size={100} />
         </div>
       ) : savedElementResults && savedElementResults.length > 0 ? (
@@ -130,7 +133,7 @@ export const ListsResults = ({ listName, savedElementResults }) => {
             ))}
         </div>
       ) : (
-        <div className="w-full h-full flex items-center justify-center">You will see your saved data here...</div>
+        <div className="w-full h-full mt-2">You will see your saved data here...</div>
       )}
 
       <Snackbar

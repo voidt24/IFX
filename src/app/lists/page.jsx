@@ -5,17 +5,15 @@ import { ListsResults } from "@/components/ListsResults";
 import { database, ID_TOKEN_COOKIE_NAME, usersCollectionName, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
 import { useContext, useEffect, useRef, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Snackbar, Alert } from "@mui/material";
 import getCookie from "@/helpers/getCookie";
 export default function Lists() {
   const { listActive, setListActive, firebaseActiveUser, setCheckedMedia, edit, setEdit } = useContext(Context);
   const [currentListData, setCurrentListData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [listSelectedChange, setListSelectedChange] = useState(false);
   const [message, setMessage] = useState({ active: false, text: "" });
   const buttonRef = useRef();
   const buttonRef2 = useRef();
-  const [loader, setLoader] = useState(true);
 
   const truncatedTextStyle = {
     WebkitLineClamp: "1",
@@ -46,8 +44,6 @@ export default function Lists() {
       verifyToken();
     } catch (e) {
       router.push("/");
-    } finally {
-      setLoader(false);
     }
   }, []);
 
@@ -80,6 +76,7 @@ export default function Lists() {
             data.push(doc.data());
           });
           setCurrentListData(data);
+          setListSelectedChange(!listSelectedChange);
         });
 
         // return 'unsub' on component unmount to avoid being "subscribe" while not on this page
@@ -91,16 +88,13 @@ export default function Lists() {
 
     try {
       getData();
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) {}
   }, [firebaseActiveUser?.uid, listActive]);
 
   const defaultListButtons = ["favorites", "watchlist"];
   return (
-    <div className="lists py-10 sm:py-20 ">
-      <Slider sideControls>
+    <div className="lists pt-10 sm:pt-20 max-sm:h-[80vh] sm:h-screen sm:min-h-screen overflow-hidden">
+      <Slider>
         {defaultListButtons &&
           defaultListButtons.map((name, index) => {
             return (
@@ -109,7 +103,7 @@ export default function Lists() {
                 style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
                 type="button"
                 ref={buttonRef2}
-                className={` rounded-full px-4 py-1 text-[90%] text-white  border border-gray-200 focus:z-10  border-none  ${
+                className={` rounded-full px-5 py-2 text-[98%] text-white  border border-gray-200 focus:z-10  border-none  ${
                   listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600/50"
                 } `}
                 onClick={(evt) => {
@@ -123,6 +117,7 @@ export default function Lists() {
                     setCheckedMedia([]);
                   }
                   setListActive(name);
+
                   evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
                 }}
               >
@@ -131,14 +126,7 @@ export default function Lists() {
             );
           })}
       </Slider>
-
-      {loading ? (
-        <CircularProgress color="inherit" size={100} />
-      ) : (
-        <>
-          <ListsResults listName={listActive} savedElementResults={currentListData} />
-        </>
-      )}
+      <ListsResults listName={listActive} savedElementResults={currentListData} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
 
       <Snackbar
         open={message?.open}
