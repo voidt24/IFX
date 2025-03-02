@@ -75,9 +75,9 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     }
   };
 
-  async function getSeasonData() {
+  async function getSeasonData(season) {
     try {
-      const seasonResponse = await fetch(`${apiUrl}${currentMediaType === "tvshows" ? "tv" : "movie"}/${currentId}/season/${activeSeason}?api_key=${API_KEY}`);
+      const seasonResponse = await fetch(`${apiUrl}${currentMediaType === "tvshows" ? "tv" : "movie"}/${currentId}/season/${season}?api_key=${API_KEY}`);
       const json = await seasonResponse.json();
       setEpisodesArray(json);
 
@@ -94,7 +94,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     setShowReadMoreButton(ref.current.scrollHeight !== ref.current.clientHeight);
 
     if (activeSeason > 0 && seasonModal) {
-      getSeasonData();
+      getSeasonData(activeSeason);
     }
   }, []);
 
@@ -268,8 +268,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
                         } else {
                           setActiveSeason(season_number);
                         }
-
-                        await getSeasonData();
+                        await getSeasonData(season_number);
                         if (seasonBtnRef.current) {
                           seasonBtnRef.current.scrollIntoView({ behavior: "smooth" });
                         }
