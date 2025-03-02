@@ -14,7 +14,19 @@ import Slider from "../Slider";
 import CollapsibleElement from "./CollapsibleElement";
 
 function DisplayMedia({ mediaType }: { mediaType: string }) {
-  const { currentId, firebaseActiveUser, currentMediaType, setCurrentMediaType, mediaDetailsData, setMediaDetailsData, setCurrentId, episodesArray, setEpisodesArray } = useContext(Context);
+  const {
+    currentId,
+    firebaseActiveUser,
+    currentMediaType,
+    setCurrentMediaType,
+    mediaDetailsData,
+    setMediaDetailsData,
+    setCurrentId,
+    episodesArray,
+    setEpisodesArray,
+    setSeasonModal,
+    setActiveSeason,
+  } = useContext(Context);
   const path = usePathname();
 
   const { id: idFromUrl } = useParams();
@@ -194,7 +206,9 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
 
               <div className="flex flex-col gap-2 items-start justify-center">
                 <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                  <h2 className="font-bold text-xl md:text-2xl xl:text-3xl  text-left">{mediaDetailsData?.title}</h2>
+                  <Link className="font-bold text-xl md:text-2xl xl:text-3xl text-left hover:underline" href={`/${currentMediaType}/${currentId}`}>
+                    {mediaDetailsData?.title}
+                  </Link>
 
                   {mediaType == mediaProperties.tv.mediaType && (
                     <p className="text-zinc-300 text-left max-lg:text-[88%]">
@@ -301,7 +315,14 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
                     </li>
 
                     <li>
-                      <Link href={`/${currentMediaType}/${currentId}`} className={`flex items-center justify-center max-md:px-3 px-6 h-8 leading-tight  border border-zinc-500 `}>
+                      <Link
+                        href={`/${currentMediaType}/${currentId}`}
+                        onClick={() => {
+                          setActiveSeason(Number(season));
+                          setSeasonModal(true);
+                        }}
+                        className={`flex items-center justify-center max-md:px-3 px-6 h-8 leading-tight  border border-zinc-500 `}
+                      >
                         <i className="bi bi-list"></i>
                       </Link>
                     </li>

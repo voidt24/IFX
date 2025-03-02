@@ -31,6 +31,10 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     mediaDetailsData,
     episodesArray,
     setEpisodesArray,
+    activeSeason,
+    setActiveSeason,
+    seasonModal,
+    setSeasonModal,
   } = useContext(Context);
 
   const router = useRouter();
@@ -49,8 +53,6 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     display: "-webkit-box",
   };
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSeason, setActiveSeason] = useState(0);
-  const [seasonModal, setSeasonModal] = useState(false);
   const [showReadMoreButton, setShowReadMoreButton] = useState(false);
 
   const ref = useRef();
@@ -73,8 +75,27 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     }
   };
 
+  async function getSeasonData() {
+    try {
+      const seasonResponse = await fetch(`${apiUrl}${currentMediaType === "tvshows" ? "tv" : "movie"}/${currentId}/season/${activeSeason}?api_key=${API_KEY}`);
+      const json = await seasonResponse.json();
+      setEpisodesArray(json);
+
+      setTimeout(() => {
+        if (seasonBtnRef.current) {
+          seasonBtnRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 1);
+    } catch (error) {
+      console.error("Error fetching season data:", error);
+    }
+  }
   useEffect(() => {
     setShowReadMoreButton(ref.current.scrollHeight !== ref.current.clientHeight);
+
+    if (activeSeason > 0 && seasonModal) {
+      getSeasonData();
+    }
   }, []);
 
   useEffect(() => {
@@ -237,33 +258,28 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
                 return (
                   <div className="flex flex-col gap-2 w-full rounded-xl bg-zinc-950 p-2" key={index}>
                     <button
-                      ref={season === activeSeason ? seasonBtnRef : null}
+                      ref={season_number === activeSeason ? seasonBtnRef : null}
                       className={` rounded-lg p-4 w-full hover:bg-zinc-900 border hover:border-zinc-700 ${
-                        activeSeason === season ? "text-[var(--primary)] border-[var(--primary)]" : "border-zinc-800"
+                        activeSeason === season_number ? "text-[var(--primary)] border-[var(--primary)]" : "border-zinc-800"
                       } flex  items-center justify-center `}
                       onClick={async () => {
-                        if (activeSeason === season) {
+                        if (activeSeason === season_number) {
                           setActiveSeason(null);
                         } else {
-                          setActiveSeason(season);
+                          setActiveSeason(season_number);
                         }
-                        try {
-                          const seasonResponse = await fetch(`${apiUrl}${currentMediaType === "tvshows" ? "tv" : "movie"}/${currentId}/season/${season_number}?api_key=${API_KEY}`);
-                          const json = await seasonResponse.json();
-                          setEpisodesArray(json);
-                        } catch (error) {
-                          console.error("Error fetching season data:", error);
-                        }
+
+                        await getSeasonData();
                         if (seasonBtnRef.current) {
-                          seasonBtnRef.current.scrollIntoView({ behavior: "smooth"});
+                          seasonBtnRef.current.scrollIntoView({ behavior: "smooth" });
                         }
                       }}
                     >
                       <p className="">Season {season_number}</p>
-                      <i className={`ml-auto ${activeSeason === season ? "bi bi-caret-up-fill" : "bi bi-caret-down-fill"}`}></i>
+                      <i className={`ml-auto ${activeSeason === season_number ? "bi bi-caret-up-fill" : "bi bi-caret-down-fill"}`}></i>
                     </button>
 
-                    <div className={`flex items-start justify-center flex-wrap gap-4 ${activeSeason === season ? "h-full py-6" : "overflow-hidden h-0"}`}>
+                    <div className={`flex items-start justify-center flex-wrap gap-4 ${activeSeason === season_number ? "h-full py-6" : "overflow-hidden h-0"}`}>
                       {Array.from({ length: episode_count ?? 0 }).map(
                         (_, index) =>
                           episodesArray?.episodes?.[index] &&

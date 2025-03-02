@@ -114,6 +114,10 @@ interface IContextValues {
   setMediaDetailsData: Dispatch<SetStateAction<ImediaDetailsData | null>>;
   episodesArray: IepisodesArray[] | null;
   setEpisodesArray: Dispatch<SetStateAction<IepisodesArray[] | null>>;
+  activeSeason: number;
+  setActiveSeason: Dispatch<SetStateAction<number>>;
+  seasonModal: boolean;
+  setSeasonModal: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
@@ -165,6 +169,9 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [mediaDetailsData, setMediaDetailsData] = useState<ImediaDetailsData | null>(null);
 
   const [episodesArray, setEpisodesArray] = useState<IepisodesArray[] | null>(null);
+
+  const [activeSeason, setActiveSeason] = useState(0);
+  const [seasonModal, setSeasonModal] = useState(false);
 
   const contextValues = {
     numberOfPages,
@@ -229,6 +236,10 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setMediaDetailsData,
     episodesArray,
     setEpisodesArray,
+    activeSeason,
+    setActiveSeason,
+    seasonModal,
+    setSeasonModal,
   };
 
   useEffect(() => {
