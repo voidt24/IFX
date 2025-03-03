@@ -22,7 +22,7 @@ export default function Hero({ results, type }: { results: ISliderMovieData[] | 
   return (
     <div className="slider-test max-w-full lg:max-w-[95%] 2xl:max-w-[80%] 4K:max-w-[75%] relative px-2 mx-auto w-full overflow-hidden">
       <span className="flex justify-between items-center w-full px-2 pb-2">
-        <h1 className="lg:text-xl text-white/85">What's trending on {type}</h1>
+        <h1 className="lg:text-xl text-white/85">What's trending in {type}</h1>
       </span>
       <i
         className="bi bi-chevron-left absolute top-[45%] left-5 max-md:bg-black/40  max-md:hover:bg-white/10 bg-black/80 px-1 hover:bg-white/30 text-xl rounded-md z-30 max-md:text-white/20 text-white/90"

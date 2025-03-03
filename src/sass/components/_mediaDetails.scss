@@ -50,10 +50,14 @@
       padding-inline: 0.5rem;
 
       img {
-        max-width: 34%;
+        max-width: 29%;
         border-radius: 8px;
         object-fit: cover;
         border: 1px solid goldenrod;
+
+        @media #{$fourK} {
+          max-width: 270px;
+        }
       }
 
       .info-container-text {
@@ -82,14 +86,6 @@
             font-size: 110%;
           }
         }
-        .info {
-          span {
-            // background-color: #86868658;
-            // padding: 0.1rem 1.3rem;
-            // border-radius: 25px;
-          }
-        }
-
         .options {
           display: flex;
           align-items: center;
@@ -121,16 +117,26 @@
     max-width: 70%;
   }
   @media #{$fourK} {
-    max-width: 65%;
+    max-width: 60%;
   }
   h3 {
     @media #{$xl} {
       font-size: 150%;
     }
   }
- 
-  .cast {
 
+  .similar {
+    .slider-with-cards {
+      @media #{$xxl} {
+        max-width: 90%;
+      }
+      @media #{$fourK} {
+        max-width: 85%;
+      }
+    }
+  }
+
+  .cast {
     &__member {
       text-align: center;
       display: flex;
@@ -162,9 +168,6 @@
     .review-content {
       position: relative;
       border-radius: 12px;
-      // height: 700px;
-
-      // background-color: #0c0c0c;
 
       @media #{$md} {
         width: 80%;
@@ -182,23 +185,18 @@
 
       .fixed {
         position: sticky;
-        // background-color: #0c0c0c;
         padding-block: 0.8rem;
         left: 0;
         top: 0;
         z-index: 2;
-        // border-bottom: 1px solid #ffffff30;
         padding-inline: 1.4rem;
       }
     }
-
-    
 
     #author {
       font-weight: bolder;
     }
     .review-text {
-      // color: #dfdfdf;
       margin-top: 0.7rem;
       line-height: 22px;
       padding-inline: 1.4rem;

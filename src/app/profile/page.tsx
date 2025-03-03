@@ -14,8 +14,6 @@ export default function Profile() {
       <Banner />
 
       <div className="flex gap-2">
-        <i className="bi bi-person-circle self-center max-sm:text-[127%] text-2xl 2xl:text-3xl " id="user"></i>
-
         <div className="flex flex-col gap-1 justify-center items-start ">
           <p className="text-xl">{profileData?.displayName}</p>
           <p className="text-zinc-400">{profileData?.email}</p>

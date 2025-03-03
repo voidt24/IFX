@@ -26,7 +26,7 @@ export default function Results() {
             <div className=" sticky top-0 w-full z-50 bg-zinc-900 p-4">
               <div className="flex gap-2 mb-4 flex-col">
                 <button
-                  className="self-start text-center p1 rounded-full text-[120%] hover:text-[var(--primary)]"
+                  className="self-start text-center px-2 py-1 rounded-full text-[120%] hover:text-[var(--primary)]"
                   onClick={() => {
                     setSearchStarted(false);
                   }}
@@ -96,7 +96,7 @@ export default function Results() {
             {loadingSearch ? (
               <Loader />
             ) : (
-              <div ref={ref} className="results w-full h-[500px] xl:h-[650px] overflow-auto relative z-30 pb-10 ">
+              <div ref={ref} className="results w-full h-[500px] xl:h-[650px] overflow-auto relative z-30 pb-10 2xl:w-[85%] 4k:w-[80%]">
                 {searchResults?.length && searchResults.length > 0 ? (
                   <>
                     {searchResults?.map((result: Isearch) => {

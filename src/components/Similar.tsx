@@ -12,7 +12,7 @@ export const Similar = ({ similar }: { similar: (ISliderMovieData | ISliderTVDat
     return <p className="p-2">Error loading similar media </p>;
   }
   return (
-    <>
+    <div className="similar">
       <h3>Similar</h3>
       {similar && similar.length > 0 ? (
         <Slider sideControls={true} expectingCards={true}>
@@ -23,7 +23,7 @@ export const Similar = ({ similar }: { similar: (ISliderMovieData | ISliderTVDat
       ) : (
         <p className="text-gray-500 text-center">No similar results available</p>
       )}
-    </>
+    </div>
   );
 };
 

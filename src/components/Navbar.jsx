@@ -105,7 +105,7 @@ export default function Navbar() {
               }
             }}
           >
-            <i className="bi bi-list max-sm:text-[137%] text-2xl 2xl:text-3xl"></i>
+            <i className="bi bi-list max-sm:text-[137%] text-xl 2xl:text-2xl"></i>
             <p className={`max-sm:text-[70%] sm:hidden`}>Menu</p>
           </button>
         </li>
@@ -132,7 +132,7 @@ export default function Navbar() {
               }
             }}
           >
-            <i className="bi bi-person-circle max-sm:text-[127%] text-2xl 2xl:text-3xl" id="user"></i>
+            <i className="bi bi-person-circle max-sm:text-[127%] text-xl 2xl:text-2xl" id="user"></i>
             <p className=" max-sm:text-[70%] sm:hidden">Account</p>
           </button>
         </li>
