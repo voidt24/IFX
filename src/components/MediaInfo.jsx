@@ -248,7 +248,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
         </Alert>
       </Snackbar>
       {currentMediaType == mediaProperties.tv.route && (
-        <Modal modalActive={seasonModal} setModalActive={setSeasonModal} classes="max-sm:w-[100%] sm:w-[90%] lg:w-[85%] xl:w-[70%] 4k:w-[1300px] !p-2 lg:!px-4 lg:!py-8" ref={seasonBtnRef2}>
+        <Modal modalActive={seasonModal} setModalActive={setSeasonModal} customClasses="max-sm:w-[100%] sm:w-[90%] lg:w-[85%] xl:w-[70%] 4k:w-[1300px] !p-2 lg:!px-4 lg:!py-8" ref={seasonBtnRef2}>
           <div className="w-full max-h-[70vh] overflow-auto flex flex-col gap-8 ">
             <h1 className="title">{mediaDetailsData.title}</h1>
 
