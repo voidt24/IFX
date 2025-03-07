@@ -106,8 +106,6 @@ interface IContextValues {
   setLoadingScreen: Dispatch<SetStateAction<boolean>>;
   listActive: string | null;
   setListActive: Dispatch<SetStateAction<string | null>>;
-  message: { message: string; severity: string; open: boolean } | null;
-  setMessage: Dispatch<SetStateAction<{ message: string; severity: string; open: boolean } | null>>;
   searchResults: Isearch[] | null;
   setSearchResults: Dispatch<SetStateAction<Isearch[] | null>>;
   mediaDetailsData: ImediaDetailsData | null;
@@ -152,8 +150,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [similarError, setSimilarError] = useState(false);
 
   const [listActive, setListActive] = useState<string | null>("favorites");
-
-  const [message, setMessage] = useState<{ message: string; severity: string; open: boolean } | null>(null);
 
   const [searchResults, setSearchResults] = useState<Isearch[] | null>([]);
 
@@ -226,8 +222,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setSimilarError,
     listActive,
     setListActive,
-    message,
-    setMessage,
     searchResults,
     setSearchResults,
     loadingScreen,

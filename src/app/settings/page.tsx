@@ -4,7 +4,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import DeleteAccount from "@/firebase/importantActons/DeleteAccount";
 import { auth, authErrors, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
-import { Alert, Snackbar } from "@mui/material";
 import changePassword from "@/firebase/importantActons/changePassword";
 import changeEmail from "@/firebase/importantActons/changeEmail";
 import changeDisplayName from "@/firebase/importantActons/changeDisplayName";
@@ -13,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/common/Modal";
 import getCookie from "@/helpers/getCookie";
 import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";
+import Notification from "@/components/common/Notification";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -27,7 +27,7 @@ export default function Settings() {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const router = useRouter();
-  const [message, setMessage] = useState<{ message: string | undefined; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "null", severity: "info", open: false });
+  const [message, setMessage] = useState({ message: "", severity: "info", open: false });
   const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
   const [showAccountDeletedModal, setShowAccountDeletedModal] = useState(false);
 
@@ -399,24 +399,7 @@ export default function Settings() {
         )}
       </div>
 
-      <Snackbar
-        open={message?.open}
-        autoHideDuration={3500}
-        onClose={() => {
-          setMessage({ ...message, open: false });
-        }}
-      >
-        <Alert
-          onClose={() => {
-            setMessage({ ...message, open: false });
-          }}
-          severity={message.severity}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {message?.message}
-        </Alert>
-      </Snackbar>
+      <Notification message={message} setMessage={setMessage} />
     </div>
   );
 }

@@ -5,13 +5,13 @@ import { handleTrailerClick } from "../../src/helpers/getTrailer";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { Tooltip } from "@mui/material";
 import { handle_favs_watchlists } from "../firebase/handle_favs_watchlists";
-import { Snackbar, Alert } from "@mui/material";
 import { DBLists } from "@/firebase/firebase.config";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Loader from "./common/Loader";
 import Modal from "./common/Modal";
 import { API_KEY, apiUrl, image } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
+import Notification from "./common/Notification";
 
 export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
   const {
@@ -44,7 +44,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
   const seasonBtnRef2 = useRef(null);
   const mediaTypeRef2 = useRef(null);
 
-  const [message, setMessage] = useState({ message: null, severity: null, open: false });
+  const [message, setMessage] = useState({ message: "", severity: "info", open: false });
 
   const truncatedTextStyle = {
     WebkitLineClamp: "2",
@@ -229,24 +229,8 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
         </div>
       </div>
 
-      <Snackbar
-        open={message.open}
-        autoHideDuration={3500}
-        onClose={() => {
-          setMessage({ ...message, open: false });
-        }}
-      >
-        <Alert
-          onClose={() => {
-            setMessage({ ...message, open: false });
-          }}
-          severity={message.severity}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {message.message}
-        </Alert>
-      </Snackbar>
+      <Notification message={message} setMessage={setMessage} />
+
       {currentMediaType == mediaProperties.tv.route && (
         <Modal modalActive={seasonModal} setModalActive={setSeasonModal} customClasses="max-sm:w-[100%] sm:w-[90%] lg:w-[85%] xl:w-[70%] 4k:w-[1300px] !p-2 lg:!px-4 lg:!py-8" ref={seasonBtnRef2}>
           <div className="w-full max-h-[70vh] overflow-auto flex flex-col gap-8 ">

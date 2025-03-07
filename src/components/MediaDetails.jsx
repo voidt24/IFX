@@ -7,12 +7,12 @@ import Cast from "@/components/Cast";
 import { Reviews } from "@/components/Reviews";
 import MediaInfo from "@/components/MediaInfo";
 import { getRunTime } from "@/helpers/getRunTime";
-import { Snackbar, Alert } from "@mui/material";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import MediaDetailsSkeleton from "./common/Skeletons/MediaDetailsSkeleton";
 import { auth } from "@/firebase/firebase.config";
 import { getFromDB } from "@/firebase/getFromDB";
 import { image, imageWithSize } from "@/helpers/api.config";
+import Notification from "./common/Notification";
 
 export const MediaDetails = ({ mediaType }) => {
   const {
@@ -36,7 +36,7 @@ export const MediaDetails = ({ mediaType }) => {
   const [loadingWatchlist, setLoadingWatchlist] = useState(true);
   const [loadingAllData, setLoadingAllData] = useState(true);
 
-  const [message, setMessage] = useState({ message: null, severity: null, open: false });
+  const [message, setMessage] = useState({ message: "", severity: "info", open: false });
 
   useEffect(() => {
     if (currentId != undefined) {
@@ -110,24 +110,7 @@ export const MediaDetails = ({ mediaType }) => {
         <Reviews reviews={reviews} />
       </div>
 
-      <Snackbar
-        open={message.open}
-        autoHideDuration={3500}
-        onClose={() => {
-          setMessage({ ...message, open: false });
-        }}
-      >
-        <Alert
-          onClose={() => {
-            setMessage({ ...message, open: false });
-          }}
-          severity="error"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {message.message}
-        </Alert>
-      </Snackbar>
+      <Notification message={message} setMessage={setMessage} />
     </div>
   );
 };

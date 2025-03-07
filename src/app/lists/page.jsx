@@ -5,13 +5,13 @@ import { ListsResults } from "@/components/ListsResults";
 import { database, ID_TOKEN_COOKIE_NAME, usersCollectionName, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
 import { useContext, useEffect, useRef, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { Snackbar, Alert } from "@mui/material";
 import getCookie from "@/helpers/getCookie";
+import Notification from "@/components/common/Notification";
 export default function Lists() {
   const { listActive, setListActive, firebaseActiveUser, setCheckedMedia, edit, setEdit } = useContext(Context);
   const [currentListData, setCurrentListData] = useState(null);
   const [listSelectedChange, setListSelectedChange] = useState(false);
-  const [message, setMessage] = useState({ active: false, text: "" });
+  const [message, setMessage] = useState({ message: "", severity: "info", open: false });
   const buttonRef = useRef();
   const buttonRef2 = useRef();
 
@@ -128,24 +128,7 @@ export default function Lists() {
       </Slider>
       <ListsResults listName={listActive} savedElementResults={currentListData} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
 
-      <Snackbar
-        open={message?.open}
-        autoHideDuration={3500}
-        onClose={() => {
-          setMessage({ ...message, open: false });
-        }}
-      >
-        <Alert
-          onClose={() => {
-            setMessage({ ...message, open: false });
-          }}
-          severity={message.severity}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {message.message}
-        </Alert>
-      </Snackbar>
+      <Notification message={message} setMessage={setMessage} />
     </div>
   );
 }

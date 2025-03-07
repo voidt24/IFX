@@ -4,14 +4,16 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { database, usersCollectionName } from "../firebase/firebase.config";
 import { collection, deleteDoc, getDocs } from "firebase/firestore";
-import { Snackbar, Alert, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import Modal from "@/components/common/Modal";
+import Notification from "@/components/common/Notification";
 import SelectDropdown from "@/components/common/SelectDropdown";
 
 export const ListsResults = ({ listName, savedElementResults, setCurrentListData, listSelectedChange }) => {
-  const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia, message, setMessage } = useContext(Context);
+  const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState({ message: "", severity: "info", open: false });
 
   const deleteFromFireStore = async (fieldName, customMessage = "List updated!") => {
     try {
@@ -136,24 +138,7 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
         <div className="w-full h-full mt-2">You will see your saved data here...</div>
       )}
 
-      <Snackbar
-        open={message?.open}
-        autoHideDuration={3500}
-        onClose={() => {
-          setMessage({ ...message, open: false });
-        }}
-      >
-        <Alert
-          onClose={() => {
-            setMessage({ ...message, open: false });
-          }}
-          severity={message?.severity}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {message?.message}
-        </Alert>
-      </Snackbar>
+      <Notification message={message} setMessage={setMessage} />
     </div>
   );
 };
