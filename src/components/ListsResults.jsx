@@ -6,9 +6,10 @@ import { CircularProgress } from "@mui/material";
 import Notification from "@/components/common/Notification";
 import SelectDropdown from "@/components/common/SelectDropdown";
 import ConfirmDeleteModal from "./common/ConfirmDeleteModal";
+import ListOptionsBar from "./common/ListOptionsBar";
 
 export const ListsResults = ({ listName, savedElementResults, setCurrentListData, listSelectedChange }) => {
-  const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
+  const { firebaseActiveUser, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ message: "", severity: "info", open: false });
@@ -35,37 +36,16 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
         </span>
         {savedElementResults && savedElementResults.length > 0 && (
           <>
-            <div className="options-btns flex gap-4 max-md:text-[75%]">
-              <button
-                className="border-0 bg-none hover:bg-transparent"
-                onClick={() => {
-                  setEdit(!edit);
-                  if (edit) {
-                    // TODO: use react
-                    document.querySelectorAll(".card").forEach((card) => {
-                      card.style.border = "3px solid transparent";
-                      card.querySelector("img").style.filter = "none";
-                      card.querySelector("img").style.transform = "scale(1)";
-                    });
-                  }
-                  setCheckedMedia([]);
-                }}
-              >
-                <i className="bi bi-pencil-square"></i> {edit ? "Done" : "Edit"}
-              </button>
-
-              {checkedMedia.length > 0 && (
-                <button
-                  className="border-0 bg-none hover:bg-transparent"
-                  onClick={() => {
-                    setConfirmDialog(true);
-                  }}
-                >
-                  <i className="bi bi-trash3"></i> Delete
-                </button>
-              )}
-            </div>
-
+            <ListOptionsBar
+              setConfirmDialog={setConfirmDialog}
+              actionOnClick={() => {
+                document.querySelectorAll(".card").forEach((card) => {
+                  card.style.border = "3px solid transparent";
+                  card.querySelector("img").style.filter = "none";
+                  card.querySelector("img").style.transform = "scale(1)";
+                });
+              }}
+            />
             {confirmDialog && (
               <ConfirmDeleteModal
                 confirmDialog={confirmDialog}
