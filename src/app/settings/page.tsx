@@ -27,7 +27,11 @@ export default function Settings() {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const router = useRouter();
-  const [message, setMessage] = useState({ message: "", severity: "info", open: false });
+  const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
+    message: "",
+    severity: "info",
+    open: false,
+  });
   const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
   const [showAccountDeletedModal, setShowAccountDeletedModal] = useState(false);
 
