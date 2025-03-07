@@ -8,7 +8,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import getCookie from "@/helpers/getCookie";
 import Notification from "@/components/common/Notification";
 export default function Lists() {
-  const { listActive, setListActive, firebaseActiveUser, setCheckedMedia, edit, setEdit } = useContext(Context);
+  const { listActive, setListActive, firebaseActiveUser, listChanged, setCheckedMedia, edit, setEdit } = useContext(Context);
   const [currentListData, setCurrentListData] = useState(null);
   const [listSelectedChange, setListSelectedChange] = useState(false);
   const [message, setMessage] = useState({ message: "", severity: "info", open: false });
@@ -89,7 +89,7 @@ export default function Lists() {
     try {
       getData();
     } catch (error) {}
-  }, [firebaseActiveUser?.uid, listActive]);
+  }, [firebaseActiveUser?.uid, listActive, listChanged]);
 
   const defaultListButtons = ["favorites", "watchlist"];
   return (

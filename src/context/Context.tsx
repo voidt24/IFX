@@ -116,6 +116,8 @@ interface IContextValues {
   setActiveSeason: Dispatch<SetStateAction<number>>;
   seasonModal: boolean;
   setSeasonModal: Dispatch<SetStateAction<boolean>>;
+  listChanged: boolean;
+  setListChanged: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
@@ -168,6 +170,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
   const [activeSeason, setActiveSeason] = useState(0);
   const [seasonModal, setSeasonModal] = useState(false);
+  const [listChanged, setListChanged] = useState(false);
 
   const contextValues = {
     numberOfPages,
@@ -234,6 +237,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setActiveSeason,
     seasonModal,
     setSeasonModal,
+    listChanged,
+    setListChanged,
   };
 
   useEffect(() => {
