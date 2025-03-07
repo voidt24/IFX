@@ -9,6 +9,7 @@ import AllMediaDataSkeleton from "./Skeletons/AllMediaDataSkeleton";
 import SliderCardSkeleton from "./Skeletons/SliderCardSkeleton";
 import { Context } from "@/context/Context";
 import SignUpBanner from "./SignUpBanner";
+import Pagination from "./Pagination";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -75,52 +76,7 @@ export default function AllMediaData({
       <div className=" sticky top-[4.85rem] sm:top-[7.90rem] w-full z-20 bg-black py-4">
         <h2 className="text-center mb-6 lg:text-xl">{title}</h2>
         <div className="flex gap-6  ">
-          <nav className="flex items-center justify-center w-full px-4 ">
-            <ul className="flex text-[60%] md:text-[70%] self-center bg-zinc-800 rounded-full">
-              <li>
-                <button
-                  className="flex items-center justify-center max-md:px-2 px-4 h-8 ms-0  leading-tight text-gray-200  border  border-zinc-500 rounded-s-full hover:bg-zinc-500 hover:text-white"
-                  onClick={() => {
-                    if (pageActive > 1) {
-                      setPageActive(pageActive - 1);
-                    }
-                  }}
-                >
-                  Prev
-                </button>
-              </li>
-
-              {Array.from({ length: ELEMENTS_TO_SHOW }).map((_, index) => {
-                return (
-                  <li key={index}>
-                    <button
-                      className={`flex items-center justify-center max-md:px-2.5 px-4 h-8 leading-tight  border border-zinc-500 ${
-                        Number(index + 1) === pageActive ? "bg-[goldenrod]  hover:bg-[goldenrod] text-white" : " hover:bg-zinc-500  text-gray-300"
-                      }`}
-                      onClick={() => {
-                        setPageActive(Number(index + 1));
-                      }}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                );
-              })}
-
-              <li>
-                <button
-                  className="flex items-center justify-center max-md:px-2 px-4 h-8 leading-tight text-gray-200  border border-zinc-500 rounded-e-full hover:bg-zinc-500 hover:text-white"
-                  onClick={() => {
-                    if (pageActive < ELEMENTS_TO_SHOW) {
-                      setPageActive(pageActive + 1);
-                    }
-                  }}
-                >
-                  Next
-                </button>
-              </li>
-            </ul>
-          </nav>
+          <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={ELEMENTS_TO_SHOW} />
         </div>
       </div>
 

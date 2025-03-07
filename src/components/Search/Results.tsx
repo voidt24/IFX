@@ -5,6 +5,7 @@ import { Context } from "@/context/Context";
 import SliderCard from "../SliderCard";
 import Loader from "../common/Loader";
 import { Isearch } from "@/helpers/search";
+import Pagination from "../common/Pagination";
 
 export default function Results() {
   const { searchResults, loadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, numberOfPages, searchQuery, setNumberOfPages } = useContext(Context);
@@ -34,56 +35,7 @@ export default function Results() {
                   <i className="bi bi-x"></i>
                 </button>
 
-                {numberOfPages > 1 && (
-                  <>
-                    <nav className="flex items-center justify-center w-full">
-                      <ul className="flex text-[70%] self-center bg-zinc-800 rounded-full">
-                        <li>
-                          <button
-                            className="flex items-center justify-center max-md:px-3 px-4 h-8 ms-0  leading-tight text-gray-200  border  border-zinc-500 rounded-s-full hover:bg-gray-500 hover:text-white"
-                            onClick={() => {
-                              if (pageActive > 1) {
-                                setPageActive(pageActive - 1);
-                              }
-                            }}
-                          >
-                            Prev
-                          </button>
-                        </li>
-
-                        {Array.from({ length: numberOfPages }).map((_, index) => {
-                          return (
-                            <li key={index}>
-                              <button
-                                className={`flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight  border border-zinc-500 ${
-                                  Number(index + 1) === pageActive ? "bg-[goldenrod]  hover:bg-[goldenrod] text-white" : " hover:bg-gray-500  text-gray-300"
-                                }`}
-                                onClick={() => {
-                                  setPageActive(Number(index + 1));
-                                }}
-                              >
-                                {index + 1}
-                              </button>
-                            </li>
-                          );
-                        })}
-
-                        <li>
-                          <button
-                            className="flex items-center justify-center max-md:px-3 px-4 h-8 leading-tight text-gray-200  border border-zinc-500 rounded-e-full hover:bg-gray-500 hover:text-white"
-                            onClick={() => {
-                              if (pageActive < 5) {
-                                setPageActive(pageActive + 1);
-                              }
-                            }}
-                          >
-                            Next
-                          </button>
-                        </li>
-                      </ul>
-                    </nav>
-                  </>
-                )}
+                {numberOfPages > 1 && <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={numberOfPages} />}
               </div>
 
               {numberOfPages > 1 && (
