@@ -2,35 +2,17 @@ import SliderCard from "./SliderCard";
 
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
-import { database, usersCollectionName } from "../firebase/firebase.config";
-import { collection, deleteDoc, getDocs } from "firebase/firestore";
 import { CircularProgress } from "@mui/material";
 import Modal from "@/components/common/Modal";
 import Notification from "@/components/common/Notification";
 import SelectDropdown from "@/components/common/SelectDropdown";
+import deleteFromFireStore from "@/firebase/deleteFromFirebase";
 
 export const ListsResults = ({ listName, savedElementResults, setCurrentListData, listSelectedChange }) => {
   const { firebaseActiveUser, edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ message: "", severity: "info", open: false });
-
-  const deleteFromFireStore = async (fieldName, customMessage = "List updated!") => {
-    try {
-      const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, fieldName);
-      const querySnapshot = await getDocs(activelistDocuments);
-      querySnapshot.forEach(async (doc) => {
-        if (checkedMedia.includes(doc.id.toString())) {
-          await deleteDoc(doc.ref);
-        }
-      });
-      setEdit(false);
-      setCheckedMedia([]);
-      setMessage({ message: customMessage, severity: "success", open: true });
-    } catch (err) {
-      setMessage({ message: "Error deleting data, try again later", severity: "error", open: true });
-    }
-  };
   useEffect(() => {
     if (savedElementResults != null) {
       setLoading(false);
@@ -93,7 +75,7 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
                   <div className="delete-options flex gap-4">
                     <button
                       type="submit"
-                      className="w-full rounded-full  hover:bg-zinc-800 px-4 py-1"
+                      className="w-full rounded-full bg-zinc-800 hover:bg-zinc-700 px-4 py-1"
                       onClick={() => {
                         setConfirmDialog(false);
                       }}
@@ -105,9 +87,17 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
                     <button
                       type="submit"
                       className="w-full btn-primary"
-                      onClick={() => {
-                        deleteFromFireStore(listName);
-                        setConfirmDialog(false);
+                      onClick={async () => {
+                        try {
+                          await deleteFromFireStore(firebaseActiveUser, listName, checkedMedia);
+                          setEdit(false);
+                          setCheckedMedia([]);
+                          setMessage({ message: "List updated!", severity: "success", open: true });
+                        } catch (err) {
+                          setMessage({ message: "Error deleting data, try again later", severity: "error", open: true });
+                        } finally {
+                          setConfirmDialog(false);
+                        }
                       }}
                       autoFocus
                     >
