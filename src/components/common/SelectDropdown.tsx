@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Context } from "@/context/Context";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
 interface MediaItem {
   id: number;
@@ -15,6 +16,8 @@ interface Props {
 }
 
 export default function SelectDropdown({ currentListData, setCurrentListData, listSelectedChange }: Props) {
+  const { edit, setEdit, setCheckedMedia } = useContext(Context);
+
   const [selected, setSelected] = useState("Filter by");
   const [currentList, setCurrentList] = useState<MediaItem[] | []>([]);
   const filterOptions = ["Movies", "TV Shows"];
@@ -50,7 +53,18 @@ export default function SelectDropdown({ currentListData, setCurrentListData, li
 
   return (
     <div className="relative inline-block text-left">
-      <select title="select" value={selected} onChange={(e) => setSelected(e.target.value)} className="px-4 rounded-lg py-1.5 w-40 border border-zinc-500 bg-gray-900 text-gray-200 outline-none">
+      <select
+        title="select"
+        value={selected}
+        onChange={(e) => {
+          setSelected(e.target.value);
+          if (edit) {
+            setEdit(false);
+            setCheckedMedia([]);
+          }
+        }}
+        className="px-4 rounded-lg py-1.5 w-40 border border-zinc-500 bg-gray-900 text-gray-200 outline-none"
+      >
         <option value="Filter by" disabled>
           Filter by
         </option>

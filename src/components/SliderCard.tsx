@@ -12,9 +12,10 @@ interface ISliderCardProps {
   changeMediaType?: string | null;
   canBeEdited?: boolean;
   mediaType?: string;
+  isChecked?: boolean;
 }
 
-const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, mediaType }: ISliderCardProps) => {
+const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, mediaType, isChecked }: ISliderCardProps) => {
   const [poster, setPoster] = useState("");
   const [vote, setVote] = useState<string | undefined>();
 
@@ -22,28 +23,6 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
 
   const mediaTypeOfSpecificCard = `${changeMediaType === "movie" ? "movies" : "tvshows"}`;
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const card = event.target.parentElement?.parentElement?.parentElement;
-
-    if (event.target.checked) {
-      if (card) {
-        card.style.border = "3px solid rgb(255 166 0)";
-        const cardImg = card.querySelector("img");
-
-        if (cardImg) {
-          cardImg.style.filter = "grayscale(1)";
-        }
-      }
-    } else {
-      if (card) {
-        card.style.border = "3px solid transparent";
-        const cardImg = card.querySelector("img");
-
-        if (cardImg) {
-          cardImg.style.filter = "none";
-        }
-      }
-    }
-
     if (event.target.checked) {
       if (!checkedMedia?.includes(event.target.id)) {
         setCheckedMedia([...checkedMedia, event.target.id]);
@@ -71,7 +50,10 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
   }, [result]);
   return (
     poster && (
-      <div className="card " data-id={result.id}>
+      <div
+        className={`card ${isChecked ? "border-[3px] border-[#ffa600]  hover:!bg-none hover:!filter-none hover:!border-[3px] hover:!border-[#ffa600] " : " border-[3px] border-transparent"}`}
+        data-id={result.id}
+      >
         <div
           className={`${
             Number(vote) == 0
@@ -101,7 +83,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
           }}
         >
           <div className="content " key={result.id}>
-            <img src={poster} alt="" className="rounded-lg" width={780} height={1170} />
+            <img src={poster} alt="" className={`rounded-lg ${isChecked ? "grayscale" : "grayscale-0 "}`} width={780} height={1170} />
           </div>
         </Link>
         {canBeEdited && edit && (

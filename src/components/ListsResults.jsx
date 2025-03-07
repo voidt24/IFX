@@ -38,13 +38,6 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
           <>
             <ListOptionsBar
               setConfirmDialog={setConfirmDialog}
-              actionOnClick={() => {
-                document.querySelectorAll(".card").forEach((card) => {
-                  card.style.border = "3px solid transparent";
-                  card.querySelector("img").style.filter = "none";
-                  card.querySelector("img").style.transform = "scale(1)";
-                });
-              }}
             />
             {confirmDialog && (
               <ConfirmDeleteModal
@@ -72,7 +65,7 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
             .slice()
             .reverse()
             .map((result) => (
-              <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} />
+              <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} isChecked={checkedMedia.includes(result.id.toString())} />
             ))}
         </div>
       ) : (
