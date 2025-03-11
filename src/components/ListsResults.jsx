@@ -36,9 +36,7 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
         </span>
         {savedElementResults && savedElementResults.length > 0 && (
           <>
-            <ListOptionsBar
-              setConfirmDialog={setConfirmDialog}
-            />
+            <ListOptionsBar setConfirmDialog={setConfirmDialog} />
             {confirmDialog && (
               <ConfirmDeleteModal
                 confirmDialog={confirmDialog}
@@ -61,12 +59,9 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
         </div>
       ) : savedElementResults && savedElementResults.length > 0 ? (
         <div className="results">
-          {savedElementResults
-            .slice()
-            .reverse()
-            .map((result) => (
-              <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} isChecked={checkedMedia.includes(result.id.toString())} />
-            ))}
+          {savedElementResults.map((result) => (
+            <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} isChecked={checkedMedia.includes(result.id.toString())} />
+          ))}
         </div>
       ) : (
         <div className="w-full h-full mt-2">You will see your saved data here...</div>

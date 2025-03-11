@@ -50,10 +50,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
   }, [result]);
   return (
     poster && (
-      <div
-        className={`card ${isChecked ? "border-[3px] border-[#ffa600]  hover:!bg-none hover:!filter-none hover:!border-[3px] hover:!border-[#ffa600] " : " border-[3px] border-transparent"}`}
-        data-id={result.id}
-      >
+      <div className={`card ${isChecked ? " border-[3px] border-[#ffa600]  hover:!border-[3px] hover:!border-[#ffa600] " : " border-[3px] border-transparent"}`} data-id={result.id}>
         <div
           className={`${
             Number(vote) == 0
@@ -83,7 +80,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
           }}
         >
           <div className="content " key={result.id}>
-            <img src={poster} alt="" className={`rounded-lg ${isChecked ? "grayscale" : "grayscale-0 "}`} width={780} height={1170} />
+            <img src={poster} alt="" className={`rounded-lg`} width={780} height={1170} />
           </div>
         </Link>
         {canBeEdited && edit && (
