@@ -31,7 +31,7 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
       <div className="options flex justify-between items-center w-full sticky top-[-4px] left-0 bg-black z-50 py-4">
         <span className="flex flex-col  text-left">
           <p>List</p>
-          <p className=" text-[120%] lg:text-[160%] text-[var(--primary)] mb-2">{listName.toUpperCase()}</p>
+          <p className=" text-[105%] lg:text-[125%] text-[var(--primary)] mb-2">{listName.toUpperCase()}</p>
           <SelectDropdown currentListData={savedElementResults} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
         </span>
         {savedElementResults && savedElementResults.length > 0 && (

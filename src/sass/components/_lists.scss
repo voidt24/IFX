@@ -26,7 +26,13 @@
     }
   }
   .results-container {
-    width: 90%;
-    padding: 32px 12px;
+    width: 100%;
+    padding-inline: 0.8rem;
+    @media #{$sm} {
+      padding-inline: 2rem;
+    }
+    @media #{$lg} {
+      padding-inline: 3.3rem;
+    }
   }
 }

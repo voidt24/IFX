@@ -103,8 +103,8 @@ export default function Lists() {
                 style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
                 type="button"
                 ref={buttonRef2}
-                className={` rounded-full px-5 py-2 text-[98%] text-white  border border-gray-200 focus:z-10  border-none  ${
-                  listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600/50"
+                className={` rounded-full px-5 py-1.5 lg:py-2 text-[85%] lg:text-[95%] text-white  border border-gray-200 focus:z-10  border-none  ${
+                  listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600"
                 } `}
                 onClick={(evt) => {
                   if (edit && listActive != name) {

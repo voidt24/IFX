@@ -63,7 +63,7 @@ export default function SelectDropdown({ currentListData, setCurrentListData, li
             setCheckedMedia([]);
           }
         }}
-        className="px-4 rounded-lg py-1.5 w-40 border border-zinc-500 bg-gray-900 text-gray-200 outline-none"
+        className="px-4 rounded-lg py-1.5 w-40 border border-zinc-500 bg-gray-900 text-gray-200 outline-none text-sm xl:text-base"
       >
         <option value="Filter by" disabled>
           Filter by
