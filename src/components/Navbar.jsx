@@ -5,15 +5,18 @@ import { Context } from "@/context/Context";
 import MenuDropdown from "./common/MenuDropDown";
 import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Navbar() {
   const navRef = useRef();
   const router = useRouter();
 
-  const { setLoadingScreen,setUserLogged, authModalActive, setAuthModalActive, firebaseActiveUser, setFirebaseActiveUser } = useContext(Context);
+  const { setLoadingScreen, setUserLogged, authModalActive, setAuthModalActive, firebaseActiveUser, setFirebaseActiveUser, setNoAccount } = useContext(Context);
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const [menuActive, setMenuActive] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
+
   const profileData = {
     displayName: auth.currentUser?.displayName,
     email: auth.currentUser?.email,
@@ -28,6 +31,17 @@ export default function Navbar() {
         }
       }
     });
+  }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoadingAuth({ state: "on" });
+      } else {
+        setLoadingAuth({ state: "off" });
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
   const handleLogout = async () => {
     auth.signOut().then(() => {
@@ -106,7 +120,6 @@ export default function Navbar() {
             }}
           >
             <i className="bi bi-list max-sm:text-[137%] text-xl 2xl:text-2xl"></i>
-            <p className={`max-sm:text-[70%] sm:hidden`}>Menu</p>
           </button>
         </li>
         <MenuDropdown activeState={menuActive} setActiveState={setMenuActive} XPosition={"left-0"} navbarActions={menuActions} />
@@ -117,24 +130,33 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
-          <button
-            className="nav-item-box sm:px-1.5 sm:py-1 sm:hover:bg-zinc-900 sm:rounded-full"
-            onClick={() => {
-              if (!auth.currentUser?.uid) {
+          {loadingAuth.state === "unknown" ? (
+            <div className="py-2 px-4 bg-zinc-800 rounded-full animate-pulse"></div>
+          ) : loadingAuth.state === "off" ? (
+            <button
+              className="nav-item-box px-3.5 py-1 bg-zinc-900 sm:hover:bg-zinc-800 border border-zinc-600 rounded-full"
+              onClick={() => {
+                setNoAccount(false);
                 setAuthModalActive(!authModalActive);
-              } else {
+              }}
+            >
+              <p className=" max-sm:text-[80%] ">Log in</p>
+            </button>
+          ) : (
+            <button
+              className="nav-item-box sm:px-1.5 sm:py-1 sm:hover:bg-zinc-900 sm:rounded-full"
+              onClick={() => {
                 setUserMenuActive(!userMenuActive);
                 setMenuActive(false);
-              }
 
-              if (errorMessage.active) {
-                setErrorMessage({ active: false, text: "" });
-              }
-            }}
-          >
-            <i className="bi bi-person-circle max-sm:text-[127%] text-xl 2xl:text-2xl" id="user"></i>
-            <p className=" max-sm:text-[70%] sm:hidden">Account</p>
-          </button>
+                if (errorMessage.active) {
+                  setErrorMessage({ active: false, text: "" });
+                }
+              }}
+            >
+              <i className="bi bi-person-circle max-sm:text-[127%] text-xl 2xl:text-2xl" id="user"></i>
+            </button>
+          )}
         </li>
         <MenuDropdown activeState={userMenuActive} setActiveState={setUserMenuActive} XPosition={"right-0"} navbarActions={userActions} profileData={profileData} />
       </ul>
