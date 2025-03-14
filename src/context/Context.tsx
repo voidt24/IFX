@@ -89,9 +89,6 @@ interface IContextValues {
   setEdit: Dispatch<SetStateAction<boolean>>;
   checkedMedia: (number | string)[];
   setCheckedMedia: Dispatch<SetStateAction<(number | string)[]>>;
-  isMember: boolean;
-  openDialog: boolean;
-  setOpenDialog: Dispatch<SetStateAction<boolean>>;
   initialDataIsLoading: boolean;
   setInitialDataIsLoading: Dispatch<SetStateAction<boolean>>;
   initialDataError: boolean;
@@ -137,9 +134,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [loadingAllData, setLoadingAllData] = useState(true);
   const [edit, setEdit] = useState(false);
   const [checkedMedia, setCheckedMedia] = useState<(number | string)[]>([]);
-
-  const [isMember, setIsMember] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
 
   const [initialDataIsLoading, setInitialDataIsLoading] = useState(true);
 
@@ -210,9 +204,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setEdit,
     checkedMedia,
     setCheckedMedia,
-    isMember,
-    openDialog,
-    setOpenDialog,
     initialDataIsLoading,
     setInitialDataIsLoading,
     initialDataError,
@@ -261,16 +252,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
       if (user) {
         setUserLogged(true);
         setFirebaseActiveUser({ email: user.email, uid: user.uid });
-
-        setIsMember(true);
-        setOpenDialog(false);
-      } else {
-        setTimeout(() => {
-          if (!user && !localStorage.getItem("auth")) {
-            setIsMember(false);
-            setOpenDialog(true);
-          }
-        }, 4000);
       }
     });
 
