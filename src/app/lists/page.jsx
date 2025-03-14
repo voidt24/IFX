@@ -7,6 +7,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import getCookie from "@/helpers/getCookie";
 import Notification from "@/components/common/Notification";
+import DefaultLayout from "@/components/layout/DefaultLayout";
 export default function Lists() {
   const { listActive, setListActive, firebaseActiveUser, listChanged, setCheckedMedia, edit, setEdit } = useContext(Context);
   const [currentListData, setCurrentListData] = useState(null);
@@ -93,42 +94,44 @@ export default function Lists() {
 
   const defaultListButtons = ["favorites", "watchlist"];
   return (
-    <div className="lists pt-10 sm:pt-20 max-sm:h-[80vh] sm:h-screen sm:min-h-screen overflow-hidden">
-      <Slider>
-        {defaultListButtons &&
-          defaultListButtons.map((name, index) => {
-            return (
-              <button
-                key={index}
-                style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
-                type="button"
-                ref={buttonRef2}
-                className={` rounded-full px-5 py-1.5 lg:py-2 text-[85%] lg:text-[95%] text-white  border border-gray-200 focus:z-10  border-none  ${
-                  listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600"
-                } `}
-                onClick={(evt) => {
-                  if (edit && listActive != name) {
-                    setEdit(false);
-                    document.querySelectorAll(".card").forEach((card) => {
-                      card.style.border = "3px solid transparent";
-                      card.querySelector("img").style.filter = "none";
-                      card.querySelector("img").style.transform = "scale(1)";
-                    });
-                    setCheckedMedia([]);
-                  }
-                  setListActive(name);
+    <DefaultLayout>
+      <div className="lists max-sm:h-[80vh] sm:h-screen sm:min-h-screen overflow-hidden">
+        <Slider>
+          {defaultListButtons &&
+            defaultListButtons.map((name, index) => {
+              return (
+                <button
+                  key={index}
+                  style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
+                  type="button"
+                  ref={buttonRef2}
+                  className={` rounded-full px-5 py-1.5 lg:py-2 text-[85%] lg:text-[95%] text-white  border border-gray-200 focus:z-10  border-none  ${
+                    listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600"
+                  } `}
+                  onClick={(evt) => {
+                    if (edit && listActive != name) {
+                      setEdit(false);
+                      document.querySelectorAll(".card").forEach((card) => {
+                        card.style.border = "3px solid transparent";
+                        card.querySelector("img").style.filter = "none";
+                        card.querySelector("img").style.transform = "scale(1)";
+                      });
+                      setCheckedMedia([]);
+                    }
+                    setListActive(name);
 
-                  evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
-                }}
-              >
-                {name}
-              </button>
-            );
-          })}
-      </Slider>
-      <ListsResults listName={listActive} savedElementResults={currentListData} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
+                    evt.target.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }}
+                >
+                  {name}
+                </button>
+              );
+            })}
+        </Slider>
+        <ListsResults listName={listActive} savedElementResults={currentListData} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
 
-      <Notification message={message} setMessage={setMessage} />
-    </div>
+        <Notification message={message} setMessage={setMessage} />
+      </div>
+    </DefaultLayout>
   );
 }

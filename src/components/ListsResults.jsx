@@ -28,7 +28,7 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
 
   return (
     <div className="results-container flex flex-col gap-4 xl:max-w-[1400px] overflow-auto h-full !pt-1 !pb-20 relative">
-      <div className="options flex justify-between items-center w-full sticky top-[-4px] left-0 bg-black z-50 py-4">
+      <div className="options flex justify-between items-center w-full sticky top-[-4px] left-0 bg-black z-[10] pb-4">
         <span className="flex flex-col  text-left">
           <p>List</p>
           <p className=" text-[105%] lg:text-[125%] text-[var(--primary)] mb-2">{listName.toUpperCase()}</p>
@@ -58,7 +58,7 @@ export const ListsResults = ({ listName, savedElementResults, setCurrentListData
           <CircularProgress color="inherit" size={100} />
         </div>
       ) : savedElementResults && savedElementResults.length > 0 ? (
-        <div className="results">
+        <div className="results z-[9]">
           {savedElementResults.map((result) => (
             <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} isChecked={checkedMedia.includes(result.id.toString())} />
           ))}

@@ -13,6 +13,7 @@ import Modal from "@/components/common/Modal";
 import getCookie from "@/helpers/getCookie";
 import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";
 import Notification from "@/components/common/Notification";
+import DefaultLayout from "@/components/layout/DefaultLayout";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -240,170 +241,172 @@ export default function Settings() {
   }
 
   return (
-    <div className=" sm:mt-20 text-white  pb-10 py-10  mx-auto md:w-[90%] xl:w-[80%] 4k:w-[60%] max-w-full max-md:px-4">
-      <h1 className="text-3xl font-bold mb-6 border-b border-zinc-700 pb-4">Settings</h1>
+    <DefaultLayout>
+      <div className=" text-white  pb-10  md:w-[90%] xl:w-[80%] 4k:w-[60%] max-w-full max-md:px-4">
+        <h1 className="text-3xl font-bold mb-6 border-b border-zinc-700 pb-4">Settings</h1>
 
-      {/* Settings Content */}
-      <div>
-        {/* General Section */}
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">General</h2>
-          <div className="flex flex-col gap-4">
-            <div className="flex justify-between">
-              <button
-                className="text-gray-300 px-4 hover:bg-zinc-700 rounded-full py-1"
-                onClick={() => {
-                  setNameModalActive(!nameModalActive);
-                  setName("");
-                }}
-              >
-                Name &gt;
-              </button>
-            </div>
-            <div className="flex justify-between">
-              <button
-                className="text-gray-300 px-4 hover:bg-zinc-700 rounded-full py-1"
-                onClick={() => {
-                  setEmailModalActive(!emailModalActive);
-                  setUserData({ email: "", password: "" });
-                  setEmail("");
-                }}
-              >
-                Email address &gt;
-              </button>
-            </div>
-            <div className="flex justify-between">
-              <button
-                className="text-gray-300 px-4 hover:bg-zinc-700 rounded-full py-1"
-                onClick={() => {
-                  setPwdModalActive(!pwdModalActive);
-                  setUserData({ email: "", password: "" });
-                  setPassword("");
-                }}
-              >
-                Password &gt;
-              </button>
+        {/* Settings Content */}
+        <div>
+          {/* General Section */}
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-4">General</h2>
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-between">
+                <button
+                  className="text-gray-300 px-4 hover:bg-zinc-700 rounded-full py-1"
+                  onClick={() => {
+                    setNameModalActive(!nameModalActive);
+                    setName("");
+                  }}
+                >
+                  Name &gt;
+                </button>
+              </div>
+              <div className="flex justify-between">
+                <button
+                  className="text-gray-300 px-4 hover:bg-zinc-700 rounded-full py-1"
+                  onClick={() => {
+                    setEmailModalActive(!emailModalActive);
+                    setUserData({ email: "", password: "" });
+                    setEmail("");
+                  }}
+                >
+                  Email address &gt;
+                </button>
+              </div>
+              <div className="flex justify-between">
+                <button
+                  className="text-gray-300 px-4 hover:bg-zinc-700 rounded-full py-1"
+                  onClick={() => {
+                    setPwdModalActive(!pwdModalActive);
+                    setUserData({ email: "", password: "" });
+                    setPassword("");
+                  }}
+                >
+                  Password &gt;
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        {/* namemodal */}
-        {nameModalActive && (
-          <UserActionModal
-            title="Change name"
-            fieldsToAdd={changeDisplayNameFields}
-            modalActive={nameModalActive}
-            setModalActive={setNameModalActive}
-            onSubmitHandler={handleChangeDisplayName}
-            errorMessage={errorMessage}
-            setErrorMessage={setErrorMessage}
-          />
-        )}
-        {/* emailmodal */}
-        {emailModalActive && (
-          <UserActionModal
-            title="Change email"
-            fieldsToAdd={changeEmailFields}
-            modalActive={emailModalActive}
-            setModalActive={setEmailModalActive}
-            onSubmitHandler={handleChangeEmail}
-            errorMessage={errorMessage}
-            setErrorMessage={setErrorMessage}
-          />
-        )}
+          {/* namemodal */}
+          {nameModalActive && (
+            <UserActionModal
+              title="Change name"
+              fieldsToAdd={changeDisplayNameFields}
+              modalActive={nameModalActive}
+              setModalActive={setNameModalActive}
+              onSubmitHandler={handleChangeDisplayName}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            />
+          )}
+          {/* emailmodal */}
+          {emailModalActive && (
+            <UserActionModal
+              title="Change email"
+              fieldsToAdd={changeEmailFields}
+              modalActive={emailModalActive}
+              setModalActive={setEmailModalActive}
+              onSubmitHandler={handleChangeEmail}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            />
+          )}
 
-        {showVerifyEmailModal && (
-          <Modal modalActive={showVerifyEmailModal} setModalActive={setShowVerifyEmailModal}>
-            <div className="flex items-center justify-center flex-col gap-4 max-w-full">
-              <svg className="w-20 h-20 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M2.038 5.61A2.01 2.01 0 0 0 2 6v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6c0-.12-.01-.238-.03-.352l-.866.65-7.89 6.032a2 2 0 0 1-2.429 0L2.884 6.288l-.846-.677Z" />
-                <path d="M20.677 4.117A1.996 1.996 0 0 0 20 4H4c-.225 0-.44.037-.642.105l.758.607L12 10.742 19.9 4.7l.777-.583Z" />
-              </svg>
-
-              <h2 className="text-2xl">Verify your email</h2>
-              <p className="text-zinc-300">
-                We have just sent an email to <span className="text-[var(--primary)]">{email}</span>. <br /> Please follow the link to verify your new email.
-              </p>
-              <button
-                className="btn-primary px-8 mt-4"
-                onClick={() => {
-                  setShowVerifyEmailModal(false);
-                }}
-              >
-                Got it
-              </button>
-            </div>
-          </Modal>
-        )}
-        {/* pwd modal */}
-        {pwdModalActive && (
-          <UserActionModal
-            title="Change password"
-            fieldsToAdd={changePasswordFields}
-            modalActive={pwdModalActive}
-            setModalActive={setPwdModalActive}
-            onSubmitHandler={handleChangePassword}
-            errorMessage={errorMessage}
-            setErrorMessage={setErrorMessage}
-          />
-        )}
-
-        {/* Advanced Section */}
-        <div>
-          <h2 className="text-lg font-semibold mb-4">Advanced</h2>
-          <button
-            className="text-red-500 px-4 hover:bg-red-950 rounded-full py-1"
-            onClick={() => {
-              setDeleteModalActive(true);
-              setUserData({ email: "", password: "" });
-            }}
-          >
-            Delete account &gt;
-          </button>
-        </div>
-
-        {/* delete account  modal */}
-        {deleteModalActive && (
-          <UserActionModal
-            title="Delete account"
-            fieldsToAdd={deleteAccountFields}
-            modalActive={deleteModalActive}
-            setModalActive={setDeleteModalActive}
-            onSubmitHandler={handleDeleteAccount}
-            errorMessage={errorMessage}
-            setErrorMessage={setErrorMessage}
-          >
-            <p className="text-left leading-7">
-              Once you delete your account, all your data is permanently removed from Prods. <br />
-              *Deleted accounts are not recoverable.
-            </p>
-          </UserActionModal>
-        )}
-        {showAccountDeletedModal && (
-          <div className={`flex fixed z-[99999] h-screen w-full top-0 left-0 max-sm:p-6 flex-col justify-center items-center `}>
-            <div className="overlay bg-black opacity-95 absolute left-0 top-0 w-full h-full"></div>
-
-            <div className="user-options bg-black relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-white/30 px-6 py-8 w-full  sm:w-3/4 lg:w-3/6 xl:w-1/4">
+          {showVerifyEmailModal && (
+            <Modal modalActive={showVerifyEmailModal} setModalActive={setShowVerifyEmailModal}>
               <div className="flex items-center justify-center flex-col gap-4 max-w-full">
-                <img src="/logo.png" alt="" className="w-[40%] md:w-[25%] xl:w-[35%] 2xl:w-[40%] 4k:w-[175px]" />
+                <svg className="w-20 h-20 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M2.038 5.61A2.01 2.01 0 0 0 2 6v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6c0-.12-.01-.238-.03-.352l-.866.65-7.89 6.032a2 2 0 0 1-2.429 0L2.884 6.288l-.846-.677Z" />
+                  <path d="M20.677 4.117A1.996 1.996 0 0 0 20 4H4c-.225 0-.44.037-.642.105l.758.607L12 10.742 19.9 4.7l.777-.583Z" />
+                </svg>
+
+                <h2 className="text-2xl">Verify your email</h2>
                 <p className="text-zinc-300">
-                  Your account has been successfully deleted. <br /> Thank you for using our app.
+                  We have just sent an email to <span className="text-[var(--primary)]">{email}</span>. <br /> Please follow the link to verify your new email.
                 </p>
                 <button
                   className="btn-primary px-8 mt-4"
                   onClick={() => {
                     setShowVerifyEmailModal(false);
-                    router.push("/");
                   }}
                 >
                   Got it
                 </button>
               </div>
-            </div>
-          </div>
-        )}
-      </div>
+            </Modal>
+          )}
+          {/* pwd modal */}
+          {pwdModalActive && (
+            <UserActionModal
+              title="Change password"
+              fieldsToAdd={changePasswordFields}
+              modalActive={pwdModalActive}
+              setModalActive={setPwdModalActive}
+              onSubmitHandler={handleChangePassword}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            />
+          )}
 
-      <Notification message={message} setMessage={setMessage} />
-    </div>
+          {/* Advanced Section */}
+          <div>
+            <h2 className="text-lg font-semibold mb-4">Advanced</h2>
+            <button
+              className="text-red-500 px-4 hover:bg-red-950 rounded-full py-1"
+              onClick={() => {
+                setDeleteModalActive(true);
+                setUserData({ email: "", password: "" });
+              }}
+            >
+              Delete account &gt;
+            </button>
+          </div>
+
+          {/* delete account  modal */}
+          {deleteModalActive && (
+            <UserActionModal
+              title="Delete account"
+              fieldsToAdd={deleteAccountFields}
+              modalActive={deleteModalActive}
+              setModalActive={setDeleteModalActive}
+              onSubmitHandler={handleDeleteAccount}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            >
+              <p className="text-left leading-7">
+                Once you delete your account, all your data is permanently removed from Prods. <br />
+                *Deleted accounts are not recoverable.
+              </p>
+            </UserActionModal>
+          )}
+          {showAccountDeletedModal && (
+            <div className={`flex fixed z-[99999] h-screen w-full top-0 left-0 max-sm:p-6 flex-col justify-center items-center `}>
+              <div className="overlay bg-black opacity-95 absolute left-0 top-0 w-full h-full"></div>
+
+              <div className="user-options bg-black relative flex flex-col gap-3 items-center justify-center text-white z-30 border border-white/30 px-6 py-8 w-full  sm:w-3/4 lg:w-3/6 xl:w-1/4">
+                <div className="flex items-center justify-center flex-col gap-4 max-w-full">
+                  <img src="/logo.png" alt="" className="w-[40%] md:w-[25%] xl:w-[35%] 2xl:w-[40%] 4k:w-[175px]" />
+                  <p className="text-zinc-300">
+                    Your account has been successfully deleted. <br /> Thank you for using our app.
+                  </p>
+                  <button
+                    className="btn-primary px-8 mt-4"
+                    onClick={() => {
+                      setShowVerifyEmailModal(false);
+                      router.push("/");
+                    }}
+                  >
+                    Got it
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Notification message={message} setMessage={setMessage} />
+      </div>
+    </DefaultLayout>
   );
 }

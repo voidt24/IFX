@@ -1,7 +1,10 @@
 .lists {
   height: 100%;
   @extend .flex-col-center;
-  gap: 1rem;
+  gap: .3rem;
+  @media #{$sm} {
+    gap: 1rem;
+  }
   text-align: center;
 
   #user-in-profile {
