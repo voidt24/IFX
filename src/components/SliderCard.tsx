@@ -69,6 +69,12 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
         <span className="year">
           {((result as ISliderMovieData) && (result as ISliderMovieData).release_date?.slice(0, 4)) || ((result as ISliderTVData) && (result as ISliderTVData).first_air_date?.slice(0, 4))}
         </span>
+        {(result.release_date && new Date(result.release_date).getTime() > Date.now()) || (result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()) ? (
+          <span className="cooming-soon uppercase absolute bottom-10 text-center w-full xl:w-[80%] left-0 right-0 xl:rounded-lg z-[2] mx-auto bg-[var(--primary)] py-1 text-black font-bold text-[70%] lg:text-sm  ">
+            coming soon
+          </span>
+         ) : null}
+
         {changeMediaType ? <span className="mediatype">{result.media_type}</span> : null}
         <Link
           href={changeMediaType != null ? `/${mediaTypeOfSpecificCard}/${result.id}` : `/${mediaType}/${result.id}`}

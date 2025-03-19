@@ -13,6 +13,7 @@ import { auth } from "@/firebase/firebase.config";
 import { getFromDB } from "@/firebase/getFromDB";
 import { image, imageWithSize } from "@/helpers/api.config";
 import Notification from "./common/Notification";
+import formatReleaseDate from "@/helpers/formatReleaseDate";
 
 export const MediaDetails = ({ mediaType }) => {
   const {
@@ -48,7 +49,6 @@ export const MediaDetails = ({ mediaType }) => {
       ]).then((result) => {
         const [byIdPromise, similarPromise, castPromise, reviewsPromise] = result;
         const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
-
         byIdPromise.status == "fulfilled"
           ? setMediaDetailsData({
               results: [byIdPromise[0]],
@@ -56,7 +56,7 @@ export const MediaDetails = ({ mediaType }) => {
               title: title || name,
               poster: `${imageWithSize("500")}${poster_path}` || "",
               overview,
-              releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
+              releaseDate: release_date ? formatReleaseDate(release_date) : formatReleaseDate(first_air_date),
               vote: String(vote_average).slice(0, 3),
               genres: (genres && genres.map((genre) => genre.name)) || "",
               loadingAllData: false,
