@@ -6,7 +6,7 @@ import { Context } from "@/context/Context";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import Link from "next/link";
-import { ISliderMovieData, ISliderTVData } from "@/helpers/api.config";
+import { ISliderData } from "@/helpers/api.config";
 import HomeSkeleton from "@/components/common/Skeletons/HomeSkeleton";
 import SliderSkeleton from "@/components/common/Skeletons/SliderSkeleton";
 import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
@@ -25,21 +25,19 @@ const Hero = dynamic(() => import("@/components/Hero"), {
 });
 export default function Home() {
   const { firebaseActiveUser, initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError } = useContext(Context);
-  const [moviesApiData, setMoviesApiData] = useState<ISliderMovieData[]>([]);
-  const [tvApiData, setTvApiData] = useState<ISliderTVData[]>([]);
-  const [moviesHeroApiData, setMoviesHeroApiData] = useState<ISliderMovieData[]>([]);
+  const [moviesApiData, setMoviesApiData] = useState<ISliderData[]>([]);
+  const [tvApiData, setTvApiData] = useState<ISliderData[]>([]);
+  const [moviesHeroApiData, setMoviesHeroApiData] = useState<ISliderData[]>([]);
 
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
-    MethodThatSavesInMovies?: Dispatch<SetStateAction<ISliderMovieData[]>>,
-    MethodThatSavesInTV?: Dispatch<SetStateAction<ISliderTVData[]>>,
+    MethodThatSavesInMovies?: Dispatch<SetStateAction<ISliderData[]>>,
+    MethodThatSavesInTV?: Dispatch<SetStateAction<ISliderData[]>>,
     categoryForMovie?: string
   ) => {
     fetchInitialData(mediaTypeObj, categoryForMovie)
-      .then((data: (ISliderMovieData | ISliderTVData)[]) => {
-        mediaTypeObj.route == mediaProperties.movie.route
-          ? MethodThatSavesInMovies && MethodThatSavesInMovies(data as ISliderMovieData[])
-          : MethodThatSavesInTV && MethodThatSavesInTV(data as ISliderTVData[]);
+      .then((data: ISliderData[]) => {
+        mediaTypeObj.route == mediaProperties.movie.route ? MethodThatSavesInMovies && MethodThatSavesInMovies(data) : MethodThatSavesInTV && MethodThatSavesInTV(data);
       })
       .catch(() => {
         setInitialDataError(true);
@@ -85,17 +83,14 @@ export default function Home() {
           </span>
           <Slider sideControls={true} expectingCards={true}>
             {moviesApiData &&
-              moviesApiData.slice(0, 12).map((sliderData: ISliderMovieData | ISliderTVData) => {
+              moviesApiData.slice(5, 17).map((sliderData: ISliderData) => {
                 return <SliderCard result={sliderData} key={sliderData.id} mediaType={"movies"} />;
               })}
           </Slider>
         </div>
 
-        {!firebaseActiveUser?.uid ? (
-         <SignUpBanner/>
-        ) : null}
+        {!firebaseActiveUser?.uid ? <SignUpBanner /> : null}
         <Hero results={tvApiData} type="TV Shows" />
-
 
         <div className="w-full max-w-full lg:max-w-[95%] 2xl:max-w-[80%] 4K:max-w-[75%]">
           <span className="flex justify-between items-center w-full px-2 pb-2">

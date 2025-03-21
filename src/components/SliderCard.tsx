@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useContext, useEffect, ChangeEvent } from "react";
-import { imageWithSize, ISliderMovieData, ISliderTVData } from "../helpers/api.config";
+import { imageWithSize, ISliderData } from "../helpers/api.config";
 import { Context } from "@/context/Context";
 import Link from "next/link";
 
 import Checkbox from "@mui/material/Checkbox";
-import { Isearch } from "@/helpers/search";
 interface ISliderCardProps {
-  result: ISliderMovieData | ISliderTVData | Isearch;
+  result: ISliderData; 
   changeMediaType?: string | null;
   canBeEdited?: boolean;
   mediaType?: string;
@@ -67,7 +66,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
           {poster != "" && <p>{!vote ? 0 : vote + "%"}</p>}
         </div>
         <span className="year">
-          {((result as ISliderMovieData) && (result as ISliderMovieData).release_date?.slice(0, 4)) || ((result as ISliderTVData) && (result as ISliderTVData).first_air_date?.slice(0, 4))}
+          { result?.release_date?.slice(0, 4) || result?.first_air_date?.slice(0, 4)}
         </span>
         {(result.release_date && new Date(result.release_date).getTime() > Date.now()) || (result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()) ? (
           <span className="cooming-soon uppercase absolute bottom-10 text-center w-full xl:w-[80%] left-0 right-0 xl:rounded-lg z-[2] mx-auto bg-[var(--primary)] py-1 text-black font-bold text-[70%] lg:text-sm  ">

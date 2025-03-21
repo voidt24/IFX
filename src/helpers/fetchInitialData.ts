@@ -1,4 +1,4 @@
-import { apiUrl, API_KEY, CACHENAME, ISliderMovieData, ISliderTVData } from "./api.config";
+import { apiUrl, API_KEY, CACHENAME, ISliderData } from "./api.config";
 import { INITIAL_DATA_EXPIRATION_TIME } from "./constants";
 const validTime = INITIAL_DATA_EXPIRATION_TIME; //2 days
 
@@ -20,7 +20,7 @@ export const fetchInitialData = async (obj: { mediaType: string; searchCategory:
     }
   }
 
-  const getFromApi = async (): Promise<(ISliderMovieData | ISliderTVData)[]> => {
+  const getFromApi = async (): Promise<ISliderData[]> => {
     try {
       const data = await fetch(url);
 
@@ -36,36 +36,25 @@ export const fetchInitialData = async (obj: { mediaType: string; searchCategory:
         //that's why we save 20 trending results for tv (limit[2] = 20) so we show the first 4 in hero and the other 15 in slider :)
         //for movies, both list are fine so we save 4 trending for hero (limit[0] = 4) and 15 popular for slider (limit[1] = 15)
 
-        const result: (ISliderTVData | ISliderMovieData)[] = [];
+        const result: ISliderData[] = [];
 
-        jsonDataResults.forEach((element: ISliderMovieData | ISliderTVData) => {
-          let resultObject: ISliderTVData | ISliderMovieData;
+        jsonDataResults.forEach((element: ISliderData) => {
+          let resultObject: ISliderData ;
 
-          if (mediaType == "tv") {
             resultObject = {
               backdrop_path: element.backdrop_path || undefined, //both
               id: element.id || undefined, //both
-              name: (element as ISliderTVData).name || undefined, //este sale en movie
-              original_name: (element as ISliderTVData).original_name || undefined, //movie
+              title: element.title || undefined,
+              original_title: element.original_title || undefined,
+              name: element.name || undefined, //este sale en movie
+              original_name: element.original_name || undefined, //movie
               overview: element.overview || undefined, //both
               poster_path: element.poster_path || undefined, //both
-              media_type: (element as ISliderTVData).media_type || undefined, //movie
-              first_air_date: (element as ISliderTVData).first_air_date || undefined, //movie
+              media_type: element.media_type || undefined, //movie
+              release_date: element.release_date || undefined,
+              first_air_date: element.first_air_date || undefined, //movie
               vote_average: element.vote_average || undefined, //both
             };
-          } else {
-            resultObject = {
-              backdrop_path: element.backdrop_path || undefined, //both
-              id: element.id || undefined, //both
-              title: (element as ISliderMovieData).title || undefined, //este sale en movie
-              original_title: (element as ISliderMovieData).original_title || undefined, //movie
-              overview: element.overview || undefined, //both
-              poster_path: element.poster_path || undefined, //both
-              release_date: (element as ISliderMovieData).release_date || undefined, //movie
-              vote_average: element.vote_average || undefined, //both
-            };
-          }
-
           result.push(resultObject);
         });
 
@@ -87,7 +76,7 @@ export const fetchInitialData = async (obj: { mediaType: string; searchCategory:
   }
 };
 
-async function getFromCache(validTime: number, getFromApi: () => Promise<(ISliderMovieData | ISliderTVData)[]>, NAME_TO_SAVE_ON_CACHE: string) {
+async function getFromCache(validTime: number, getFromApi: () => Promise<ISliderData[]>, NAME_TO_SAVE_ON_CACHE: string) {
   try {
     const response = await caches.match(NAME_TO_SAVE_ON_CACHE);
     const expirationResponse = await caches.match(`${NAME_TO_SAVE_ON_CACHE}-expiration`);
@@ -118,7 +107,7 @@ async function getFromCache(validTime: number, getFromApi: () => Promise<(ISlide
   }
 }
 
-async function saveToCache(jsonDataResults: (ISliderMovieData | ISliderTVData)[], validTime: number, NAME_TO_SAVE_ON_CACHE: string) {
+async function saveToCache(jsonDataResults:  ISliderData[], validTime: number, NAME_TO_SAVE_ON_CACHE: string) {
   try {
     const responseClone = new Response(JSON.stringify(jsonDataResults), {
       headers: { "Content-Type": "application/json" },

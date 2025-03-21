@@ -65,25 +65,17 @@ export const MEDIA_URL_RESOLVER = (index: number, mediaId: number | undefined, m
   return srcOptions[index][`${mediaType}Src`];
 };
 
-export interface ISliderMovieData {
-  backdrop_path: string | undefined; //both
-  id: number | undefined; //both
-  title: string | undefined; //este sale en movie
-  original_title: string | undefined; //movie
-  overview: string | undefined; //both
-  poster_path: string | undefined; //both
-  release_date: string | undefined; //movie
-  vote_average: number | undefined; //both
-  media_type?: string | undefined; 
-}
-export interface ISliderTVData {
-  backdrop_path: string | undefined; //both
-  id: number | undefined; //both
-  name: string | undefined; //este sale en tv y es el que en teoria deberia mostrar porque siempre esta en ingles
-  original_name: string | undefined; //tv
-  overview: string | undefined; //both
-  poster_path: string | undefined; //both
-  media_type: string | undefined; //tv
-  first_air_date: string | undefined; //tv
-  vote_average: number | undefined; //both
+export interface ISliderData {
+  backdrop_path?: string | undefined;
+  id: number | undefined;
+  title?: string | undefined; //show 1st for movies
+  original_title?: string | undefined;
+  name?: string | undefined; //show 1st for TV
+  original_name?: string | undefined;
+  overview?: string | undefined;
+  poster_path: string | undefined;
+  media_type?: string | undefined;
+  release_date?: string | undefined;
+  first_air_date?: string | undefined;
+  vote_average: number | undefined;
 }

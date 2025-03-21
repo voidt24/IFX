@@ -6,9 +6,9 @@ import { useParams } from "next/navigation";
 import Modal from "@/components/common/Modal";
 
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
-import { Isearch } from "@/helpers/search";
 import AuthForm from "@/components/AuthForm";
 import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
+import { ISliderData } from "@/helpers/api.config";
 
 interface ImediaDetailsData {
   results: [] | null;
@@ -103,8 +103,8 @@ interface IContextValues {
   setLoadingScreen: Dispatch<SetStateAction<boolean>>;
   listActive: string | null;
   setListActive: Dispatch<SetStateAction<string | null>>;
-  searchResults: Isearch[] | null;
-  setSearchResults: Dispatch<SetStateAction<Isearch[] | null>>;
+  searchResults: ISliderData[] | null;
+  setSearchResults: Dispatch<SetStateAction<ISliderData[] | null>>;
   mediaDetailsData: ImediaDetailsData | null;
   setMediaDetailsData: Dispatch<SetStateAction<ImediaDetailsData | null>>;
   episodesArray: IepisodesArray[] | null;
@@ -147,7 +147,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
   const [listActive, setListActive] = useState<string | null>("favorites");
 
-  const [searchResults, setSearchResults] = useState<Isearch[] | null>([]);
+  const [searchResults, setSearchResults] = useState<ISliderData[] | null>([]);
 
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchStarted, setSearchStarted] = useState(false);

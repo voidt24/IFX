@@ -1,11 +1,11 @@
 "use client";
 import { useContext, useRef, useLayoutEffect } from "react";
-import { image, ISliderMovieData, ISliderTVData } from "../helpers/api.config";
+import { image, ISliderData } from "../helpers/api.config";
 
 import Link from "next/link";
 import { Context } from "@/context/Context";
 
-export default function Hero({ results, type }: { results: ISliderMovieData[] | ISliderTVData[]; type: string }) {
+export default function Hero({ results, type }: { results: ISliderData[]; type: string }) {
   const { setCurrentId } = useContext(Context);
 
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -48,7 +48,7 @@ export default function Hero({ results, type }: { results: ISliderMovieData[] | 
               <div className="relative " key={index} ref={index === 1 ? sliderContentRef : null}>
                 <div className="max-lg:hidden hero-overlay"></div>
                 <div className="max-lg:hidden absolute flex flex-col gap-2 items-center justify-center top-1/2 text-center -translate-x-1/2 -translate-y-1/2 left-1/2 w-full z-20 text-[125%]">
-                  <h1 className="title ">{(sliderData as ISliderMovieData).title || (sliderData as ISliderTVData).name}</h1>
+                  <h1 className="title ">{sliderData.title || sliderData.name}</h1>
 
                   <Link
                     className="  btn-primary  border border-[#ffffff4b] text-[70%] py-[2px] px-4"
@@ -64,7 +64,7 @@ export default function Hero({ results, type }: { results: ISliderMovieData[] | 
 
                 <div className="lg:hidden z-30 absolute bottom-0 w-full p-2 md:p-4">
                   <div className="buttons flex items-center gap-8 justify-end  text-[75%] md:text-sm">
-                    <h1 className="title ">{(sliderData as ISliderMovieData).title || (sliderData as ISliderTVData).name}</h1>
+                    <h1 className="title ">{sliderData.title || sliderData.name}</h1>
                     <Link
                       className="  bg-black/40 rounded-full  border border-[#ffffff4b] text-[85%] py-[1px] px-4 "
                       href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}

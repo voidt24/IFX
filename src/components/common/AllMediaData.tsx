@@ -1,7 +1,7 @@
 "use client";
 import DefaultLayout from "@/components/layout/DefaultLayout";
 import SliderCard from "@/components/SliderCard";
-import { ISliderMovieData, ISliderTVData } from "@/helpers/api.config";
+import { ISliderData } from "@/helpers/api.config";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
@@ -21,7 +21,7 @@ export default function AllMediaData({
   title: string;
 }) {
   const { setCurrentId, firebaseActiveUser } = useContext(Context);
-  const [apiData, setApiData] = useState<(ISliderMovieData | ISliderTVData)[]>([]);
+  const [apiData, setApiData] = useState<ISliderData[]>([]);
   const [pageActive, setPageActive] = useState<number>(1);
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [DataIsLoading, setDataIsLoading] = useState(true);
@@ -31,14 +31,14 @@ export default function AllMediaData({
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
     pageActive: number,
-    MethodThatSavesInState?: Dispatch<SetStateAction<(ISliderMovieData | ISliderTVData)[]>>,
+    MethodThatSavesInState?: Dispatch<SetStateAction<ISliderData[]>>,
     categoryForMovie?: string
   ) => {
     fetchInitialData(mediaTypeObj, categoryForMovie, pageActive)
-      .then((data: (ISliderMovieData | ISliderTVData)[]) => {
-        mediaTypeObj.route == mediaProperties.movie.route
-          ? MethodThatSavesInState && MethodThatSavesInState(data as ISliderMovieData[])
-          : MethodThatSavesInState && MethodThatSavesInState(data as ISliderTVData[]);
+      .then((data: ISliderData[]) => {
+        if (MethodThatSavesInState) {
+          MethodThatSavesInState(data);
+        }
       })
       .catch(() => {
         setInitialDataError(true);

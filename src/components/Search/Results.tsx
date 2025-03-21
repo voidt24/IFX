@@ -4,8 +4,8 @@ import { useContext } from "react";
 import { Context } from "@/context/Context";
 import SliderCard from "../SliderCard";
 import Loader from "../common/Loader";
-import { Isearch } from "@/helpers/search";
 import Pagination from "../common/Pagination";
+import { ISliderData } from "@/helpers/api.config";
 
 export default function Results() {
   const { searchResults, loadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, numberOfPages, searchQuery, setNumberOfPages } = useContext(Context);
@@ -31,6 +31,7 @@ export default function Results() {
                   onClick={() => {
                     setSearchStarted(false);
                   }}
+                  title="close"
                 >
                   <i className="bi bi-x"></i>
                 </button>
@@ -51,7 +52,7 @@ export default function Results() {
               <div ref={ref} className="results w-full h-[500px] xl:h-[650px] overflow-auto relative z-30 pb-10 2xl:w-[85%] 4k:w-[80%]">
                 {searchResults?.length && searchResults.length > 0 ? (
                   <>
-                    {searchResults?.map((result: Isearch) => {
+                    {searchResults?.map((result: ISliderData) => {
                       return <SliderCard result={result} changeMediaType={result.media_type} key={result.id} />;
                     })}
                   </>

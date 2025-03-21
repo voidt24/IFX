@@ -1,4 +1,4 @@
-import { CACHENAME, ISliderMovieData, ISliderTVData } from "../api.config";
+import { CACHENAME, ISliderData } from "../api.config";
 import { IdataResults } from "../search";
 
 export const getFromCache = async (url: string, getFromApi: () => Promise<unknown>) => {
@@ -25,7 +25,7 @@ export const getFromCache = async (url: string, getFromApi: () => Promise<unknow
   }
 };
 
-export const saveToCache = async (json: ISliderMovieData[] | ISliderTVData[] | IdataResults, url: string, validTime: number) => {
+export const saveToCache = async (json: ISliderData[] | IdataResults, url: string, validTime: number) => {
   try {
     const responseClone = new Response(JSON.stringify(json), {
       headers: { "Content-Type": "application/json" },
