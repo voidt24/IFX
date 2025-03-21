@@ -39,9 +39,7 @@ export const fetchInitialData = async (obj: { mediaType: string; searchCategory:
         const result: ISliderData[] = [];
 
         jsonDataResults.forEach((element: ISliderData) => {
-          let resultObject: ISliderData ;
-
-            resultObject = {
+          const resultObject: ISliderData  = {
               backdrop_path: element.backdrop_path || undefined, //both
               id: element.id || undefined, //both
               title: element.title || undefined,
