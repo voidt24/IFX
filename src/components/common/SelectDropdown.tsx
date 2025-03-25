@@ -1,54 +1,24 @@
 import { Context } from "@/context/Context";
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-interface MediaItem {
-  id: number;
-  media_type: "movie" | "tv";
-  poster_path: string;
-  release_date: string;
-  title: string;
-  vote_average: string;
-}
 interface Props {
-  currentListData: MediaItem[];
-  setCurrentListData: Dispatch<SetStateAction<MediaItem[] | null>>;
-  listSelectedChange: boolean;
+  listSelectedChange?: boolean;
+  selectDefaultName: string;
+  selectOptions: string[];
+  actionWhenSelectChange: (selected: string) => void;
 }
 
-export default function SelectDropdown({ currentListData, setCurrentListData, listSelectedChange }: Props) {
+export default function SelectDropdown({ listSelectedChange, selectDefaultName, selectOptions, actionWhenSelectChange }: Props) {
   const { edit, setEdit, setCheckedMedia } = useContext(Context);
 
-  const [selected, setSelected] = useState("Filter by");
-  const [currentList, setCurrentList] = useState<MediaItem[] | []>([]);
-  const filterOptions = ["Movies", "TV Shows"];
+  const [selected, setSelected] = useState(selectDefaultName);
 
-  useEffect(() => {
-    setCurrentList(currentListData);
-    setSelected("Filter by");
+  useEffect(() => { //applicable to /lists only when selecting a new list: "favorites to watchlist" or vice versa
+    setSelected(selectDefaultName);
   }, [listSelectedChange]);
 
   useEffect(() => {
-    switch (selected) {
-      case "All":
-        setCurrentListData(currentList);
-        break;
-      case filterOptions[0]:
-        const sortedMovies = [...currentList];
-
-        const resultMovies = sortedMovies.filter((obj) => {
-          return obj.media_type == "movie";
-        });
-        setCurrentListData(resultMovies);
-        break;
-      case filterOptions[1]:
-        const sortedTV = [...currentList];
-
-        const resultTV = sortedTV.filter((obj) => {
-          return obj.media_type == "tv";
-        });
-        setCurrentListData(resultTV);
-        break;
-    }
+    actionWhenSelectChange(selected);
   }, [selected]);
 
   return (
@@ -63,13 +33,13 @@ export default function SelectDropdown({ currentListData, setCurrentListData, li
             setCheckedMedia([]);
           }
         }}
-        className="px-4 rounded-lg py-1.5 w-40 border border-zinc-500 bg-gray-900 text-gray-200 outline-none text-sm xl:text-base"
+        className="px-4 rounded-lg py-1.5 border border-zinc-500 bg-gray-900 text-gray-200 outline-none text-sm xl:text-base w-full"
       >
-        <option value="Filter by" disabled>
-          Filter by
+        <option value={selectDefaultName} disabled>
+          {selectDefaultName}
         </option>
-        {selected != "Filter by" && <option value={"All"}>All</option>}
-        {filterOptions.map((option) => (
+        {selected != selectDefaultName && <option value={"All"}>All</option>}
+        {selectOptions.map((option) => (
           <>
             <option key={option} value={option}>
               {option}

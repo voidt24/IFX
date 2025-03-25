@@ -77,7 +77,7 @@ export default function Lists() {
             data.push(doc.data());
           });
           setCurrentListData(data);
-          setListSelectedChange(!listSelectedChange);
+          setListSelectedChange(!listSelectedChange); //when selecting a new list: "favorites to watchlist" or vice versa this will trigger the dropdown to its default state
         });
 
         // return 'unsub' on component unmount to avoid being "subscribe" while not on this page
@@ -128,7 +128,7 @@ export default function Lists() {
               );
             })}
         </Slider>
-        <ListsResults listName={listActive} savedElementResults={currentListData} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
+        <ListsResults listName={listActive} currentListData={currentListData} setCurrentListData={setCurrentListData} listSelectedChange={listSelectedChange} />
 
         <Notification message={message} setMessage={setMessage} />
       </div>
