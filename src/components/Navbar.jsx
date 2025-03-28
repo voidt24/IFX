@@ -124,7 +124,7 @@ export default function Navbar() {
         </li>
         <MenuDropdown activeState={menuActive} setActiveState={setMenuActive} XPosition={"left-0"} navbarActions={menuActions} />
 
-        <li>
+        <li id="logo">
           <Link href="/" className="nav-item-box ">
             <img src="/logo.png" className="w-[5rem] sm:w-[7.5rem] rounded-sm " alt="" />
           </Link>

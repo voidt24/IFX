@@ -7,11 +7,24 @@
   z-index: 99;
   background: #000;
   bottom: 0;
-  padding-block: .8rem;
+  padding-block: 0.8rem;
   font-size: 90%;
 
+  #logo {
+    position: absolute;
+    left: 47%;
+    transform: translate(-47%);
+    top: 5;
+    @media #{$sm} {
+      position: unset;
+      transform: none;
+      top: auto;
+      left: auto;
+    }
+  }
+
   @media #{$sm} {
-    padding-block: .6rem;
+    padding-block: 0.6rem;
     font-size: 100%;
     top: 0;
     bottom: unset;
