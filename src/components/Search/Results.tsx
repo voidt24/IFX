@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import { Context } from "@/context/Context";
 import SliderCard from "../SliderCard";
@@ -9,6 +9,7 @@ import { ISliderData } from "@/helpers/api.config";
 
 export default function Results() {
   const { searchResults, loadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, numberOfPages, searchQuery, setNumberOfPages } = useContext(Context);
+  const [startingPage, setStartingPage] = useState(1);
 
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function Results() {
                   <i className="bi bi-x"></i>
                 </button>
 
-                {numberOfPages > 1 && <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={numberOfPages} />}
+                {numberOfPages > 1 && <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={numberOfPages} startingPage={startingPage} setStartingPage={setStartingPage} />}
               </div>
 
               {numberOfPages > 1 && (

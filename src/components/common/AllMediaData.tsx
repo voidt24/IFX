@@ -10,6 +10,8 @@ import SliderCardSkeleton from "./Skeletons/SliderCardSkeleton";
 import { Context } from "@/context/Context";
 import SignUpBanner from "./SignUpBanner";
 import Pagination from "./Pagination";
+import SelectDropdown from "./SelectDropdown";
+import { selectFilterMovieCategories, selectFilterTVCategories, selectFilterProviders } from "@/helpers/constants";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -20,25 +22,35 @@ export default function AllMediaData({
   searchCategory: string;
   title: string;
 }) {
-  const { setCurrentId, firebaseActiveUser } = useContext(Context);
+  const { currentMediaType, setCurrentId, firebaseActiveUser } = useContext(Context);
   const [apiData, setApiData] = useState<ISliderData[]>([]);
   const [pageActive, setPageActive] = useState<number>(1);
+  const [elementsToShow, setElementsToShow] = useState<number>(8);
   const [pageIsLoading, setPageIsLoading] = useState(true);
+  const [newProvider, setNewProvider] = useState(true);
+  const [provider, setProvider] = useState<string | null>(null);
+  const [genre, setGenre] = useState<string | null>(null);
   const [DataIsLoading, setDataIsLoading] = useState(true);
   const [initialDataError, setInitialDataError] = useState(false);
-  const ELEMENTS_TO_SHOW = 8;
+  const [startingPage, setStartingPage] = useState(1);
+
 
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
     pageActive: number,
+    provider: string | null = null,
+    genre: string | null = null,
     MethodThatSavesInState?: Dispatch<SetStateAction<ISliderData[]>>,
     categoryForMovie?: string
   ) => {
-    fetchInitialData(mediaTypeObj, categoryForMovie, pageActive)
-      .then((data: ISliderData[]) => {
+    fetchInitialData(mediaTypeObj, provider, genre, categoryForMovie, pageActive)
+      .then((data: [ISliderData[], number]) => {
+        const [results, total_pages] = data;
         if (MethodThatSavesInState) {
-          MethodThatSavesInState(data);
+          MethodThatSavesInState(results);
         }
+
+        setElementsToShow(Number(total_pages));
       })
       .catch(() => {
         setInitialDataError(true);
@@ -57,8 +69,8 @@ export default function AllMediaData({
 
   useEffect(() => {
     setDataIsLoading(true);
-    fetchAndSetData(mediaTypeObj, pageActive, setApiData, searchCategory);
-  }, [pageActive]);
+    fetchAndSetData(mediaTypeObj, pageActive, provider, genre, setApiData, searchCategory);
+  }, [pageActive, newProvider, genre]);
 
   if (initialDataError) {
     return (
@@ -75,8 +87,31 @@ export default function AllMediaData({
     <DefaultLayout>
       <div className=" sticky top-[4.85rem] sm:top-[7.90rem] w-full z-20 bg-black py-4">
         <h2 className="text-center mb-6 lg:text-xl">{title}</h2>
-        <div className="flex gap-6  ">
-          <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={ELEMENTS_TO_SHOW} />
+        <div className="flex gap-6  flex-col">
+          <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={elementsToShow} startingPage={startingPage} setStartingPage={setStartingPage} />
+          <div className="flex gap-4">
+            <SelectDropdown
+              selectDefaultName="Platform"
+              selectOptions={selectFilterProviders}
+              actionWhenSelectChange={(selected) => {
+                if (pageActive !== 1) setPageActive(1);
+                if (startingPage !== 1) setStartingPage(1);
+                setProvider(selected);
+                setNewProvider(!newProvider);
+              }}
+            />
+            <SelectDropdown
+              selectDefaultName="Genre"
+              selectOptions={currentMediaType == mediaProperties.movie.route ? selectFilterMovieCategories : selectFilterTVCategories}
+              actionWhenSelectChange={(selected) => {
+                if (pageActive !== 1) setPageActive(1);
+                if (startingPage !== 1) setStartingPage(1);
+                if (selected !== "Genre") {
+                  setGenre(selected);
+                }
+              }}
+            />
+          </div>
         </div>
       </div>
 

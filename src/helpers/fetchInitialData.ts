@@ -1,25 +1,65 @@
 import { apiUrl, API_KEY, CACHENAME, ISliderData } from "./api.config";
-import { INITIAL_DATA_EXPIRATION_TIME } from "./constants";
+import { movieGenresCode, tvGenresCode, INITIAL_DATA_EXPIRATION_TIME, providersNetworkCode, providersWatchCode } from "./constants";
 const validTime = INITIAL_DATA_EXPIRATION_TIME; //2 days
 
-export const fetchInitialData = async (obj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string }, categoryForMovie?: string, pageNumber?: number) => {
+function getProviderNetworkId(providerName: string | null) {
+  return providerName && providersNetworkCode[providerName];
+}
+function getProviderWatchId(providerName: string | null) {
+  return providerName && providersWatchCode[providerName];
+}
+function getGenreCode(genreName: string | null, media_type: string | null) {
+  return media_type == "tv" ? genreName && tvGenresCode[genreName] : genreName && movieGenresCode[genreName];
+}
+
+export const fetchInitialData = async (
+  obj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
+  provider: string | null = null,
+  genreCode: string | null = null,
+  categoryForMovie?: string,
+  pageNumber?: number
+) => {
   const { mediaType, searchCategory } = obj;
   const TRENDING_CATEGORY = searchCategory[0];
 
   let url = "";
   let NAME_TO_SAVE_ON_CACHE = "";
-  if (mediaType == "tv") {
-    url = `${apiUrl}${TRENDING_CATEGORY}/${mediaType}/day?api_key=${API_KEY}&page=${pageNumber || 1}`;
-    NAME_TO_SAVE_ON_CACHE = `${mediaType}-${TRENDING_CATEGORY}-initial-search-${pageNumber}`;
-  } else {
-    NAME_TO_SAVE_ON_CACHE = `${mediaType}-${categoryForMovie}-initial-search-${pageNumber}`;
-    if (categoryForMovie == "trending") {
-      url = `${apiUrl}${categoryForMovie}/${mediaType}/day?api_key=${API_KEY}&page=${pageNumber || 1}`;
-    } else {
-      url = `${apiUrl}${mediaType}/${categoryForMovie}?api_key=${API_KEY}&page=${pageNumber || 1}`;
-    }
+  const validProvider = provider && provider !== "Platform" && provider !== "All";
+  const validGenre = genreCode && genreCode !== "All";
+
+  function createDiscoverURL(params: string) {
+    return `${apiUrl}discover/${mediaType}?api_key=${API_KEY}&page=${pageNumber || 1}${validProvider ? params : ``}${validGenre ? `&with_genres=${getGenreCode(genreCode, mediaType)}` : ``}`;
   }
 
+  if (mediaType == "tv") {
+    if (validProvider || validGenre) {
+      if (provider == "Crunchyroll") {
+        url = createDiscoverURL(`&watch_region=US&with_watch_providers=${getProviderWatchId(provider)}`);
+        NAME_TO_SAVE_ON_CACHE = `discover/${mediaType}${validProvider ? `&with_watch_providers=${getProviderWatchId(provider)}` : ""}${
+          validGenre ? `&with_genres=${getGenreCode(genreCode, mediaType)}` : ""
+        }&page=${pageNumber}`;
+      } else {
+        url = createDiscoverURL(`&with_networks=${getProviderNetworkId(provider)}`);
+        NAME_TO_SAVE_ON_CACHE = `discover/${mediaType}${validProvider ? `&with_networks=${getProviderNetworkId(provider)}` : ""}${
+          validGenre ? `&with_genres=${getGenreCode(genreCode, mediaType)}` : ""
+        }&page=${pageNumber}`;
+      }
+    } else {
+      NAME_TO_SAVE_ON_CACHE = `${mediaType}-${TRENDING_CATEGORY}-initial-search-${pageNumber ? pageNumber : ""}`;
+      url = `${apiUrl}${TRENDING_CATEGORY}/${mediaType}/day?api_key=${API_KEY}&page=${pageNumber || 1}`;
+    }
+  }
+  if (mediaType == "movie") {
+    if (validProvider || validGenre) {
+      url = createDiscoverURL(`&watch_region=US&with_watch_providers=${getProviderWatchId(provider)}`);
+      NAME_TO_SAVE_ON_CACHE = `discover/${mediaType}-${validProvider ? `&with_watch_providers=${getProviderWatchId(provider)}` : ""}${
+        validGenre ? `&with_genres=${getGenreCode(genreCode, mediaType)}` : ""
+      }&page=${pageNumber}`;
+    } else {
+      url = `${apiUrl}${categoryForMovie === "trending" ? `trending/${mediaType}/day` : `${mediaType}/${categoryForMovie}`}?api_key=${API_KEY}&page=${pageNumber || 1}`;
+      NAME_TO_SAVE_ON_CACHE = `${mediaType}-${categoryForMovie}-initial-search-${pageNumber ? pageNumber : ""}`;
+    }
+  }
   const getFromApi = async (): Promise<ISliderData[]> => {
     try {
       const data = await fetch(url);
@@ -29,7 +69,6 @@ export const fetchInitialData = async (obj: { mediaType: string; searchCategory:
       if (data.ok) {
         // const jsonDataResults = jsonDataRequest.results.slice(0, limit[1]); //12 results
         const jsonDataResults = jsonDataRequest.results; //12 results
-
         // const jsonDataResults = jsonDataRequest.results.slice(0, limit[1]); //ONLY USED IN MOVIES SECTION...
 
         //for tv, we show trending results for both hero and slider bc "popular" list is not the best (has a bunch of not popular tvshows)
@@ -39,24 +78,24 @@ export const fetchInitialData = async (obj: { mediaType: string; searchCategory:
         const result: ISliderData[] = [];
 
         jsonDataResults.forEach((element: ISliderData) => {
-          const resultObject: ISliderData  = {
-              backdrop_path: element.backdrop_path || undefined, //both
-              id: element.id || undefined, //both
-              title: element.title || undefined,
-              original_title: element.original_title || undefined,
-              name: element.name || undefined, //este sale en movie
-              original_name: element.original_name || undefined, //movie
-              overview: element.overview || undefined, //both
-              poster_path: element.poster_path || undefined, //both
-              media_type: element.media_type || undefined, //movie
-              release_date: element.release_date || undefined,
-              first_air_date: element.first_air_date || undefined, //movie
-              vote_average: element.vote_average || undefined, //both
-            };
+          const resultObject: ISliderData = {
+            backdrop_path: element.backdrop_path || undefined, //both
+            id: element.id || undefined, //both
+            title: element.title || undefined,
+            original_title: element.original_title || undefined,
+            name: element.name || undefined, //este sale en movie
+            original_name: element.original_name || undefined, //movie
+            overview: element.overview || undefined, //both
+            poster_path: element.poster_path || undefined, //both
+            media_type: element.media_type || undefined, //movie
+            release_date: element.release_date || undefined,
+            first_air_date: element.first_air_date || undefined, //movie
+            vote_average: element.vote_average || undefined, //both
+          };
           result.push(resultObject);
         });
 
-        return result;
+        return [result, jsonDataRequest.total_pages];
       } else {
         return Promise.reject();
       }
@@ -105,7 +144,7 @@ async function getFromCache(validTime: number, getFromApi: () => Promise<ISlider
   }
 }
 
-async function saveToCache(jsonDataResults:  ISliderData[], validTime: number, NAME_TO_SAVE_ON_CACHE: string) {
+async function saveToCache(jsonDataResults: ISliderData[], validTime: number, NAME_TO_SAVE_ON_CACHE: string) {
   try {
     const responseClone = new Response(JSON.stringify(jsonDataResults), {
       headers: { "Content-Type": "application/json" },

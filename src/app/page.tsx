@@ -35,11 +35,11 @@ export default function Home() {
     MethodThatSavesInTV?: Dispatch<SetStateAction<ISliderData[]>>,
     categoryForMovie?: string
   ) => {
-    fetchInitialData(mediaTypeObj, categoryForMovie)
-      .then((data: ISliderData[]) => {
-        mediaTypeObj.route == mediaProperties.movie.route ? MethodThatSavesInMovies && MethodThatSavesInMovies(data) : MethodThatSavesInTV && MethodThatSavesInTV(data);
+    fetchInitialData(mediaTypeObj, null, null, categoryForMovie)
+      .then((data: [ISliderData[], number]) => {
+        mediaTypeObj.route == mediaProperties.movie.route ? MethodThatSavesInMovies && MethodThatSavesInMovies(data[0]) : MethodThatSavesInTV && MethodThatSavesInTV(data[0]);
       })
-      .catch(() => {
+      .catch((e) => {
         setInitialDataError(true);
       })
       .finally(() => {
@@ -53,7 +53,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchAndSetData(mediaProperties.movie, setMoviesHeroApiData, undefined, mediaProperties.movie.searchCategory[0]);
-    fetchAndSetData(mediaProperties.movie, setMoviesApiData, undefined, mediaProperties.movie.searchCategory[1]);
+    fetchAndSetData(mediaProperties.movie, setMoviesApiData, undefined, mediaProperties.movie.searchCategory[0]);
     fetchAndSetData(mediaProperties.tv, undefined, setTvApiData);
   }, []);
 

@@ -16,12 +16,11 @@ export function generateMetadata({ params }: Params): Metadata {
 }
 
 function isValidRoute(route: string) {
-  return route === "movies" || route ===  "tvshows";
+  return route === "movies" || route === "tvshows";
 }
 export default function MediaType({ params }: Params) {
-    const {mediaType} = params
-    const mediaTypeObj = mediaType == "movies" ? mediaProperties.movie : mediaProperties.tv;
-    const searchCategory = mediaType == "movies" ? "popular": "trending";
-    const title = mediaType == "movies" ? "All movies" : "All TV Shows";
-  return isValidRoute(mediaType) && <AllMediaData mediaTypeObj={mediaTypeObj} searchCategory={searchCategory} title={title} />;
+  const { mediaType } = params;
+  const mediaTypeObj = mediaType == "movies" ? mediaProperties.movie : mediaProperties.tv;
+  const title = mediaType == "movies" ? "All movies" : "All TV Shows";
+  return isValidRoute(mediaType) && <AllMediaData mediaTypeObj={mediaTypeObj} searchCategory={"trending"} title={title} />;
 }
