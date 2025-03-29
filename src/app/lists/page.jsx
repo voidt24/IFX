@@ -8,6 +8,8 @@ import { collection, onSnapshot } from "firebase/firestore";
 import getCookie from "@/helpers/getCookie";
 import Notification from "@/components/common/Notification";
 import DefaultLayout from "@/components/layout/DefaultLayout";
+import { useRouter } from "next/navigation";
+
 export default function Lists() {
   const { listActive, setListActive, firebaseActiveUser, listChanged, setCheckedMedia, edit, setEdit } = useContext(Context);
   const [currentListData, setCurrentListData] = useState(null);
@@ -15,6 +17,7 @@ export default function Lists() {
   const [message, setMessage] = useState({ message: "", severity: "info", open: false });
   const buttonRef = useRef();
   const buttonRef2 = useRef();
+  const router = useRouter();
 
   const truncatedTextStyle = {
     WebkitLineClamp: "1",
