@@ -7,14 +7,13 @@ interface Props {
   confirmDialog: boolean;
   setConfirmDialog: Dispatch<SetStateAction<boolean>>;
   listName: string;
-  firebaseActiveUser: { email: string | null; uid: string | null };
-  setEdit: Dispatch<SetStateAction<boolean>>;
-  checkedMedia: (number | string)[];
-  setCheckedMedia: Dispatch<SetStateAction<(number | string)[]>>;
-  setMessage: Dispatch<SetStateAction<{ message: string; severity: string; open: boolean }>>;
+  extraActions?: () => void | null;
+  elementsToDelete: (number | string)[];
+  setElementsToDelete?: Dispatch<SetStateAction<(number | string)[]>> | null;
+  setMessage: Dispatch<SetStateAction<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>>;
 }
-function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, firebaseActiveUser, setEdit, checkedMedia, setCheckedMedia, setMessage }: Props) {
-  const { listChanged, setListChanged } = useContext(Context);
+function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, setElementsToDelete, setMessage }: Props) {
+  const { firebaseActiveUser, listChanged, setListChanged } = useContext(Context);
 
   return (
     <Modal modalActive={confirmDialog} setModalActive={setConfirmDialog}>
@@ -38,9 +37,9 @@ function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, firebas
             className="w-full btn-primary"
             onClick={async () => {
               try {
-                await deleteFromFireStore(firebaseActiveUser, listName, checkedMedia);
-                setEdit(false);
-                setCheckedMedia([]);
+                await deleteFromFireStore(firebaseActiveUser, listName, elementsToDelete);
+                extraActions && extraActions();
+                setElementsToDelete && setElementsToDelete([]);
                 setMessage({ message: "List updated!", severity: "success", open: true });
                 setListChanged(!listChanged);
               } catch (err) {

@@ -12,7 +12,10 @@ import Link from "next/link";
 import { CircularProgress } from "@mui/material";
 import Slider from "../Slider";
 import CollapsibleElement from "./CollapsibleElement";
-
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { database, usersCollectionName } from "@/firebase/firebase.config";
+import { IhistoryMedia } from "@/Types/index";
+import { saveToHistory } from "@/firebase/saveToHistory";
 function DisplayMedia({ mediaType }: { mediaType: string }) {
   const {
     currentId,
@@ -77,6 +80,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
         setMediaDetailsData({
           results: [],
           heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
+          bigHeroBackground: `${image}${backdrop_path}`,
           title: title || name,
           poster: `${imageWithSize("500")}${poster_path}`,
           overview,
@@ -143,7 +147,38 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
     if (mediaType == "tv") {
       getEpisodes();
     }
-  }, [currentId, firebaseActiveUser, path]);
+
+    let dataToSave: IhistoryMedia = {
+      id: currentId,
+      media_type: currentMediaType === "tvshows" ? "tv" : "movie",
+      ...(currentMediaType === "tvshows" && {
+        episodeId: episodesArray?.[0].episodes?.[Number(episode) - 1].id,
+        season: Number(season),
+        episode: episodesArray?.[0].episodes?.[Number(episode) - 1].name,
+        episode_number: Number(episode),
+        episode_image: `${image}${episodesArray?.[0].episodes?.[Number(episode) - 1].still_path}`,
+      }),
+      title: mediaDetailsData?.title,
+      vote_average: currentMediaType === "tvshows" ? episodesArray?.[0].episodes?.[Number(episode) - 1].vote_average : mediaDetailsData?.vote,
+      poster_path: mediaDetailsData?.poster,
+      backdrop_path: mediaDetailsData?.bigHeroBackground,
+      release_date: mediaDetailsData?.releaseDate,
+      watchedAt: Date.now(),
+    };
+
+    if (firebaseActiveUser && firebaseActiveUser.uid && dataToSave) {
+      if (dataToSave.media_type === "movie" && currentId) {
+        saveToHistory(dataToSave, currentId, firebaseActiveUser.uid);
+      } else {
+        if (dataToSave.episodeId) {
+          saveToHistory(dataToSave, dataToSave.episodeId, firebaseActiveUser.uid);
+        }
+      }
+    } else {
+      console.log("no guardamos nada");
+    }
+    // console.log(dataToSave, currentId, firebaseActiveUser, firebaseActiveUser?.uid ?? "null pewrro");
+  }, [currentId, firebaseActiveUser, season, episode, path]);
 
   const truncatedTextStyle: React.CSSProperties & { WebkitLineClamp: string; WebkitBoxOrient: "horizontal" | "vertical" | "inline-axis" | "block-axis" } = {
     WebkitLineClamp: "3 ",
@@ -171,21 +206,19 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
               <Slider sideControls>
                 {srcOptions.map((option, index) => {
                   return (
-                    <>
-                      <button
-                        key={index}
-                        className={`border bg-black rounded-full py-.5  ${selectedSrc == index ? "bg-zinc-300 text-black" : "text-white/70 hover:bg-zinc-800"}`}
-                        onClick={() => {
-                          if (selectedSrc != index) {
-                            setSelectedSrc(index);
-                            setMediaURL("");
-                            setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(index, currentId, "movie") : MEDIA_URL_RESOLVER(index, currentId, "tvshows", Number(season), Number(episode)));
-                          }
-                        }}
-                      >
-                        Option {index + 1}
-                      </button>
-                    </>
+                    <button
+                      key={index}
+                      className={`border bg-black rounded-full py-.5  ${selectedSrc == index ? "bg-zinc-300 text-black" : "text-white/70 hover:bg-zinc-800"}`}
+                      onClick={() => {
+                        if (selectedSrc != index) {
+                          setSelectedSrc(index);
+                          setMediaURL("");
+                          setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(index, currentId, "movie") : MEDIA_URL_RESOLVER(index, currentId, "tvshows", Number(season), Number(episode)));
+                        }
+                      }}
+                    >
+                      Option {index + 1}
+                    </button>
                   );
                 })}
               </Slider>

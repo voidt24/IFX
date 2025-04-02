@@ -53,6 +53,7 @@ export const MediaDetails = ({ mediaType }) => {
           ? setMediaDetailsData({
               results: [byIdPromise[0]],
               heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
+              bigHeroBackground: `${image}${backdrop_path}`,
               title: title || name,
               poster: `${imageWithSize("500")}${poster_path}` || "",
               overview,

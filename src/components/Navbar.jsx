@@ -11,7 +11,7 @@ export default function Navbar() {
   const navRef = useRef();
   const router = useRouter();
 
-  const { setLoadingScreen, setUserLogged, authModalActive, setAuthModalActive, firebaseActiveUser, setFirebaseActiveUser, setNoAccount } = useContext(Context);
+  const { setLoadingScreen, setUserLogged, authModalActive, setAuthModalActive, setFirebaseActiveUser, setNoAccount } = useContext(Context);
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const [menuActive, setMenuActive] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
@@ -88,6 +88,12 @@ export default function Navbar() {
       name: "My Lists",
       href: "/lists",
       icon: <i className="bi bi-list-check"></i>,
+      actionFunction: setAuthModalActive,
+    },
+    {
+      name: "History",
+      href: "/history",
+      icon: <i className="bi bi-clock-history"></i>,
       actionFunction: setAuthModalActive,
     },
     {

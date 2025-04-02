@@ -10,7 +10,7 @@ import ListOptionsBar from "./common/ListOptionsBar";
 import { selectFilterCategories } from "@/helpers/constants";
 
 export const ListsResults = ({ listName, currentListData, setCurrentListData, listSelectedChange }) => {
-  const { firebaseActiveUser, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
+  const { setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [originalListData, setOriginalListData] = useState([]);
@@ -18,8 +18,8 @@ export const ListsResults = ({ listName, currentListData, setCurrentListData, li
   const [message, setMessage] = useState({ message: "", severity: "info", open: false });
   useEffect(() => {
     if (currentListData) {
-      setOriginalListData(currentListData); 
-      setCurrentListData(currentListData); 
+      setOriginalListData(currentListData);
+      setCurrentListData(currentListData);
       setLoading(false);
     }
   }, [listSelectedChange]);
@@ -67,10 +67,11 @@ export const ListsResults = ({ listName, currentListData, setCurrentListData, li
                 confirmDialog={confirmDialog}
                 setConfirmDialog={setConfirmDialog}
                 listName={listName}
-                firebaseActiveUser={firebaseActiveUser}
-                setEdit={setEdit}
-                checkedMedia={checkedMedia}
-                setCheckedMedia={setCheckedMedia}
+                extraActions={() => {
+                  setEdit(false);
+                }}
+                elementsToDelete={checkedMedia}
+                setElementsToDelete={setCheckedMedia}
                 setMessage={setMessage}
               />
             )}
