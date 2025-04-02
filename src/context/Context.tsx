@@ -13,6 +13,7 @@ import { ISliderData } from "@/helpers/api.config";
 interface ImediaDetailsData {
   results: [] | null;
   heroBackground: string | null;
+  bigHeroBackground: string | null; //to get the backdrop even in smaller size devices
   title: string | null;
   poster: string | null;
   overview: string | null;
