@@ -12,6 +12,7 @@ import Modal from "./common/Modal";
 import { API_KEY, apiUrl, image } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
 import Notification from "./common/Notification";
+import { saveToHistory } from "@/firebase/saveToHistory";
 
 export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
   const {
@@ -79,7 +80,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     try {
       const seasonResponse = await fetch(`${apiUrl}${currentMediaType === "tvshows" ? "tv" : "movie"}/${currentId}/season/${season}?api_key=${API_KEY}`);
       const json = await seasonResponse.json();
-      setEpisodesArray(json);
+      setEpisodesArray([json]);
 
       setTimeout(() => {
         if (seasonBtnRef.current) {
@@ -146,6 +147,25 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
                   setSeasonModal(true);
                 } else {
                   router.push(`${currentId}/watch?name=${mediaDetailsData?.title}`);
+
+                  let dataToSave = {
+                    id: currentId,
+                    media_type: currentMediaType === "tvshows" ? "tv" : "movie",
+                    title: mediaDetailsData?.title,
+                    vote_average: mediaDetailsData?.vote,
+                    poster_path: mediaDetailsData?.poster,
+                    backdrop_path: mediaDetailsData?.bigHeroBackground,
+                    release_date: mediaDetailsData?.releaseDate,
+                    watchedAt: Date.now(),
+                  };
+
+                  if (firebaseActiveUser && currentId && firebaseActiveUser.uid) {
+                    try {
+                      saveToHistory(dataToSave, currentId, firebaseActiveUser.uid);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }
                 }
                 if (openTrailer) setOpenTrailer(false);
               }}
@@ -265,27 +285,51 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
                     <div className={`flex items-start justify-center flex-wrap gap-4 ${activeSeason === season_number ? "h-full py-6" : "overflow-hidden h-0"}`}>
                       {Array.from({ length: episode_count ?? 0 }).map(
                         (_, index) =>
-                          episodesArray?.episodes?.[index] &&
-                          new Date(episodesArray?.episodes?.[index].air_date).getTime() <= Date.now() && (
+                          episodesArray?.[0].episodes?.[index] &&
+                          new Date(episodesArray?.[0].episodes?.[index].air_date).getTime() <= Date.now() && (
                             <button
                               key={index}
                               className="bg-zinc-900 px-2 hover:bg-zinc-700 py-2 lg:py-3 rounded-lg w-full"
                               onClick={() => {
                                 setSeasonModal(false);
                                 router.push(`${path}/watch?name=${mediaDetailsData?.title}&season=${season_number}&episode=${index + 1}`);
+                                let dataToSave = {
+                                  id: currentId,
+                                  episodeId: episodesArray?.[0].episodes?.[index].id,
+                                  media_type: currentMediaType === "tvshows" ? "tv" : "movie",
+                                  title: mediaDetailsData?.title,
+                                  season: season_number,
+                                  episode: episodesArray?.[0].episodes[index].name,
+                                  episode_number: index + 1,
+                                  vote_average: episodesArray?.[0].episodes?.[index].vote_average || 0,
+                                  poster_path: mediaDetailsData?.poster,
+                                  backdrop_path: mediaDetailsData?.bigHeroBackground,
+                                  episode_image: `${image}${episodesArray?.[0].episodes[index].still_path}`,
+                                  release_date: mediaDetailsData?.releaseDate,
+                                  watchedAt: Date.now(),
+                                };
+                                if (firebaseActiveUser && firebaseActiveUser.uid && dataToSave.episodeId && firebaseActiveUser.uid) {
+                                  try {
+                                    saveToHistory(dataToSave, episodesArray?.[0].episodes?.[index].id, firebaseActiveUser.uid);
+                                  } catch (error) {
+                                    console.log(error);
+                                  }
+                                }
                               }}
                             >
                               <div className="flex items-center justify-center gap-2 w-full">
                                 <p>{index + 1}.</p>
 
                                 <>
-                                  <img src={`${image}${episodesArray.episodes[index].still_path}`} className="rounded-md object-cover w-[40%] md:w-[25%] xl:w-[20%] h-full" alt="" />
+                                  <img src={`${image}${episodesArray?.[0].episodes[index].still_path}`} className="rounded-md object-cover w-[40%] md:w-[25%] xl:w-[20%] h-full" alt="" />
                                   <div className="flex flex-col gap-2 w-full">
                                     <div className="min-md:font-bold max-md:text-sm w-full flex items-center justify-center">
-                                      <p className="w-full h-full">{episodesArray.episodes[index].name}</p>
-                                      <p className="text-right text-zinc-500 !text-[75%] h-full">{episodesArray.episodes[index].runtime && getRunTime(episodesArray.episodes[index].runtime)}</p>
+                                      <p className="w-full h-full">{episodesArray?.[0].episodes[index].name}</p>
+                                      <p className="text-right text-zinc-500 !text-[75%] h-full">
+                                        {episodesArray?.[0].episodes[index].runtime && getRunTime(episodesArray?.[0].episodes[index].runtime)}
+                                      </p>
                                     </div>
-                                    <p className="max-md:hidden text-zinc-400 xl:w-[75%] m-auto">{episodesArray.episodes[index].overview}</p>
+                                    <p className="max-md:hidden text-zinc-400 xl:w-[75%] m-auto">{episodesArray?.[0].episodes[index].overview}</p>
                                   </div>
                                 </>
                               </div>
