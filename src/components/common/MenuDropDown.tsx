@@ -22,7 +22,7 @@ export default function MenuDropdown({
   profileData?: { displayName: string; email: string };
 }) {
   return activeState ? (
-    <div className={` border border-white/60 absolute ${XPosition}  ${profileData ? "h-[300px]" : "h-[200px]"} bottom-14 sm:top-14 bg-black user-options`}>
+    <div className={` border border-white/60 absolute ${XPosition}  ${profileData ? "min-h-[350px]" : "h-[200px]"} bottom-14 sm:top-14 bg-black user-options`}>
       {profileData && (
         <div className="flex  gap-2 items-start justify-center pb-4  border-b border-zinc-700">
           <div className="flex flex-col gap-1 items-start justify-center ">

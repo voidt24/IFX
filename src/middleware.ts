@@ -12,7 +12,7 @@ export const middleware = async (req: NextRequest) => {
     return getMovieURLParamsMiddleware(req);
   }
 
-  if (["/profile", "/lists", "/settings"].includes(path)) {
+  if (["/profile", "/lists", "/history", "/settings"].includes(path)) {
     if (!req.cookies.has(ID_TOKEN_COOKIE_NAME)) {
       return NextResponse.redirect(new URL("/", req.url));
     }
