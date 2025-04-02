@@ -54,7 +54,13 @@ export default function AuthForm() {
 
           if (documentResult.exists()) {
           } else {
-            await setDoc(document, { createdAt: resultFromAuth.user.metadata.creationTime, name: resultFromAuth.user.displayName, email: resultFromAuth.user.email, uid: resultFromAuth.user.uid, banner: banners[0].src });
+            await setDoc(document, {
+              createdAt: resultFromAuth.user.metadata.creationTime,
+              name: resultFromAuth.user.displayName,
+              email: resultFromAuth.user.email,
+              uid: resultFromAuth.user.uid,
+              banner: banners[0].src,
+            });
           }
         } catch (error) {}
       }
@@ -81,9 +87,16 @@ export default function AuthForm() {
       >
         {authInputFields.map((input, index) => {
           return (
-            <label htmlFor="" key={index}>
+            <label htmlFor={index.toString()} key={index}>
               <p className="mb-2">{input.label}</p>
-              <Input type={input.type} placeholder={input.placeholder} value={input.value || ""} onChange={input.onChange} hasPassword={input.type == "password" ? true : false} />
+              <Input
+                id={index.toString()}
+                type={input.type}
+                placeholder={input.placeholder}
+                value={input.value || ""}
+                onChange={input.onChange}
+                hasPassword={input.type == "password" ? true : false}
+              />
             </label>
           );
         })}
@@ -104,9 +117,10 @@ export default function AuthForm() {
         </button>
       </form>
 
-      <p>
+      <p data-testid="accountText">
         {noAccount ? "Already have an account? " : "Dont have an account? "}
         <button
+          data-testid="changeText"
           className=" border-none  mt-2 p-0 text-[var(--primary)] hover:bg-transparent hover:underline"
           onClick={() => {
             noAccount ? setNoAccount(false) : setNoAccount(true);
