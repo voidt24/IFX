@@ -87,11 +87,11 @@ function History() {
             <h1 className="text-xl xl:text-2xl text-center  sticky left-0 top-0 bg-black py-4">History</h1>
             {currentListData
               .sort((a: IhistoryMedia, b: IhistoryMedia) => (b.watchedAt ?? 0) - (a.watchedAt ?? 0))
-              .map((result: any, index) => (
+              .map((result: IhistoryMedia, index) => (
                 <div className=" flex items-center justify-center gap-4 border bg-zinc-900/40  border-zinc-800/90 flex-col rounded-lg  sm:w-[85%] lg:w-[80%] m-auto" key={index}>
                   <header className=" w-full  bg-zinc-900/40 ">
                     <p className="date text-[95%] lg:text-lg   mt-1 text-center py-2 text-zinc-500">
-                      {new Date(result.watchedAt).toLocaleDateString("en-US", {
+                      {new Date(result.watchedAt ?? "").toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
@@ -130,7 +130,7 @@ function History() {
                     <button
                       onClick={() => {
                         if (firebaseActiveUser && firebaseActiveUser.uid) {
-                          setElementsToDelete([result.media_type == "tv" ? result.episodeId.toString() : result.id.toString()]);
+                          setElementsToDelete([result.media_type == "tv" ? result.episodeId?.toString() ?? "" : result.id?.toString() ?? ""]);
                           setConfirmDialog(true);
                         }
                       }}

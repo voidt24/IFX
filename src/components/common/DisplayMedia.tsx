@@ -148,7 +148,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
       getEpisodes();
     }
 
-    let dataToSave: IhistoryMedia = {
+    const dataToSave: IhistoryMedia = {
       id: currentId,
       media_type: currentMediaType === "tvshows" ? "tv" : "movie",
       ...(currentMediaType === "tvshows" && {
@@ -174,10 +174,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
           saveToHistory(dataToSave, dataToSave.episodeId, firebaseActiveUser.uid);
         }
       }
-    } else {
-      console.log("no guardamos nada");
-    }
-    // console.log(dataToSave, currentId, firebaseActiveUser, firebaseActiveUser?.uid ?? "null pewrro");
+    } 
   }, [currentId, firebaseActiveUser, season, episode, path]);
 
   const truncatedTextStyle: React.CSSProperties & { WebkitLineClamp: string; WebkitBoxOrient: "horizontal" | "vertical" | "inline-axis" | "block-axis" } = {
