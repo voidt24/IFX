@@ -1,8 +1,6 @@
 "use client";
-import { database, ID_TOKEN_COOKIE_NAME, usersCollectionName, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
-import getCookie from "@/helpers/getCookie";
+import { database, usersCollectionName } from "@/firebase/firebase.config";
 import React, { useEffect, useState, useContext } from "react";
-import { useRouter } from "next/navigation";
 import { Context } from "@/context/Context";
 import { collection, onSnapshot } from "firebase/firestore";
 import ConfirmDeleteModal from "@/components/common/ConfirmDeleteModal";
@@ -10,6 +8,7 @@ import { CircularProgress } from "@mui/material";
 import Notification from "@/components/common/Notification";
 import Link from "next/link";
 import { IhistoryMedia } from "@/Types/index";
+import useVerifyToken from "@/Hooks/useVerifyToken";
 
 function History() {
   const { firebaseActiveUser } = useContext(Context);
@@ -21,11 +20,13 @@ function History() {
   });
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [elementsToDelete, setElementsToDelete] = useState<(number | string)[]>([]);
-  const router = useRouter();
+
+  useVerifyToken();
+
   async function getData() {
     if (!database && !usersCollectionName && !firebaseActiveUser?.uid) {
       setCurrentListData([]);
-      return
+      return;
     }
     //subscription to db to get real time changes
     if (database && usersCollectionName && firebaseActiveUser?.uid) {
@@ -46,30 +47,6 @@ function History() {
     }
   }
 
-  useEffect(() => {
-    async function verifyToken() {
-      const authCookie = getCookie(ID_TOKEN_COOKIE_NAME);
-
-      if (!authCookie) {
-        router.push("/");
-        return;
-      }
-
-      const verify = await fetch(VERIFY_TOKEN_ROUTE, {
-        method: "POST",
-        body: JSON.stringify({ token: authCookie }),
-      });
-
-      if (!verify.ok) {
-        router.push("/");
-      }
-    }
-    try {
-      verifyToken();
-    } catch (e) {
-      router.push("/");
-    }
-  }, []);
   useEffect(() => {
     try {
       getData();

@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "@/context/Context";
 import DeleteAccount from "@/firebase/importantActons/DeleteAccount";
-import { auth, authErrors, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
+import { auth, authErrors, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE } from "@/firebase/firebase.config";
 import changePassword from "@/firebase/importantActons/changePassword";
 import changeEmail from "@/firebase/importantActons/changeEmail";
 import changeDisplayName from "@/firebase/importantActons/changeDisplayName";
 import UserActionModal from "@/components/common/UserActionModal";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/common/Modal";
-import getCookie from "@/helpers/getCookie";
 import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";
 import Notification from "@/components/common/Notification";
 import DefaultLayout from "@/components/layout/DefaultLayout";
+import useVerifyToken from "@/Hooks/useVerifyToken";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -36,32 +36,7 @@ export default function Settings() {
   const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
   const [showAccountDeletedModal, setShowAccountDeletedModal] = useState(false);
 
-  useEffect(() => {
-    async function verifyToken() {
-      const authCookie = getCookie(ID_TOKEN_COOKIE_NAME);
-
-      if (!authCookie) {
-        router.push("/");
-        return;
-      }
-
-      const verify = await fetch(VERIFY_TOKEN_ROUTE, {
-        method: "POST",
-        body: JSON.stringify({ token: authCookie }),
-      });
-
-      if (!verify.ok) {
-        router.push("/");
-      }
-    }
-    try {
-      verifyToken();
-    } catch (e) {
-      router.push("/");
-    } finally {
-      setLoader(false);
-    }
-  }, []);
+  useVerifyToken(setLoader);
 
   const handleChangeDisplayName = async () => {
     if (!name) {
