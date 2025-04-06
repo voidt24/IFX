@@ -2,23 +2,25 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import Modal from "./Modal";
 import deleteFromFireStore from "@/firebase/deleteFromFirebase";
 import { Context } from "@/context/Context";
+import DisplayMedia from "./DisplayMedia";
 
 interface Props {
   confirmDialog: boolean;
   setConfirmDialog: Dispatch<SetStateAction<boolean>>;
-  listName: string;
+  listName: string | string[];
   extraActions?: () => void | null;
   elementsToDelete: (number | string)[];
   setElementsToDelete?: Dispatch<SetStateAction<(number | string)[]>> | null;
+  displayMessage?: string ;
   setMessage: Dispatch<SetStateAction<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>>;
 }
-function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, setElementsToDelete, setMessage }: Props) {
+function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, setElementsToDelete,displayMessage, setMessage }: Props) {
   const { firebaseActiveUser, listChanged, setListChanged } = useContext(Context);
 
   return (
     <Modal modalActive={confirmDialog} setModalActive={setConfirmDialog}>
       <div className="flex flex-col gap-4 max-md:text-sm py-4">
-        <p className="">Do you really you want to delete this data from {listName}?</p>
+        <p className="">{`Do you really you want to delete this data from ${Array.isArray(listName) ? displayMessage : listName} ?`}</p>
 
         <div className="delete-options flex gap-4">
           <button
