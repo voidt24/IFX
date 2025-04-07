@@ -12,10 +12,17 @@ import Link from "next/link";
 import { CircularProgress } from "@mui/material";
 import Slider from "../Slider";
 import CollapsibleElement from "./CollapsibleElement";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { database, usersCollectionName } from "@/firebase/firebase.config";
-import { IhistoryMedia } from "@/Types/index";
+import { IhistoryMedia, ISeasonArray } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
+
+function paramIsValid(param: string | null) {
+  if (!param || Number(param) < 1) return false;
+
+  if (Number.isSafeInteger(Number(param))) {
+    return true;
+  }
+}
+
 function DisplayMedia({ mediaType }: { mediaType: string }) {
   const {
     currentId,
@@ -51,27 +58,41 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
       vote_average: number;
     }[]
   >();
-
+  const [mediaTypeReady, setMediaTypeReady] = useState(false);
   const params = new URLSearchParams(searchParams.toString());
   params.set("season", "1");
   params.set("episode", "1");
 
   useEffect(() => {
-    const mediaTypeFromUrl = setMedia(path);
-    if (isValidMediatype(mediaTypeFromUrl)) {
-      setCurrentMediaType(mediaTypeFromUrl);
-    } else {
-      setCurrentMediaType("movies");
+    return () => {
+      setMediaDetailsData(null);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mediaType == "tv" && (!paramIsValid(season) || !paramIsValid(episode))) {
+      router.push(`?${params.toString()}`);
     }
+  }, [season, episode]);
+
+  //1.set mediatype always to a valid value or to 'movies' by  default
+  //2.establish mediaTypeReady to advance to other requests in order to get correct data
+  useEffect(() => {
+    const mediaTypeFromUrl = setMedia(path);
+    setCurrentMediaType(isValidMediatype(mediaTypeFromUrl) ? mediaTypeFromUrl : "movies");
+    setMediaTypeReady(true);
   }, [path]);
 
+  //set currentId to url value (if url changes)
   useEffect(() => {
     if (Number(idFromUrl) != currentId && currentId == undefined) {
       setCurrentId(Number(idFromUrl));
     }
   }, [idFromUrl]);
 
+  // if mediatype is set and currentId is valid, get  general info of movie or tvshow
   useEffect(() => {
+    if (!mediaTypeReady || !currentId) return;
     async function getInfo() {
       try {
         const data = await fetchDetailsData("byId", currentMediaType == "movies" ? "movie" : "tv", currentId);
@@ -96,41 +117,24 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
         throw error;
       }
     }
-    if (currentId != undefined) {
-      getInfo();
-    }
+    getInfo();
+
     setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(0, currentId, "movie") : MEDIA_URL_RESOLVER(0, currentId, "tvshows", Number(season), Number(episode)));
-    function paramIsValid(param: string | null) {
-      if (!param || param == "0") return false;
+  }, [mediaTypeReady, currentId, season, episode, path]);
 
-      if (Number.isSafeInteger(Number(param))) {
-        return true;
-      }
-    }
-    if (mediaType == "tv" && (!paramIsValid(season) || !paramIsValid(episode))) {
-      router.push(`?${params.toString()}`);
-    }
+  useEffect(() => {
+    if (!mediaDetailsData) return;
 
-    if (mediaDetailsData?.seasonsArray && Array.isArray(mediaDetailsData.seasonsArray)) {
-      interface InewSeasonArray {
-        air_date: string;
-        episode_count: number;
-        id: number;
-        name: string;
-        overview: string;
-        poster_path: string;
-        season_number: number;
-        vote_average: number;
-      }
-      const newSeasonA: InewSeasonArray[] | null = [];
+    if (mediaDetailsData.seasonsArray && Array.isArray(mediaDetailsData.seasonsArray)) {
+      const seasonInfo: ISeasonArray[] | null = [];
 
-      let seasonA: InewSeasonArray;
-      for (seasonA of mediaDetailsData?.seasonsArray) {
+      let seasonA: ISeasonArray;
+      for (seasonA of mediaDetailsData.seasonsArray) {
         if (seasonA.name != "Specials") {
-          newSeasonA.push(seasonA);
+          seasonInfo.push(seasonA);
         }
       }
-      setSeasonArray(newSeasonA);
+      setSeasonArray(seasonInfo);
     }
 
     async function getEpisodes() {
@@ -147,19 +151,24 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
     if (mediaType == "tv") {
       getEpisodes();
     }
+  }, [mediaDetailsData]);
+
+  useEffect(() => {
+    if (!mediaDetailsData || (mediaTypeReady && currentMediaType === "tvshows" && !episodesArray)) return;
 
     const dataToSave: IhistoryMedia = {
       id: currentId,
       media_type: currentMediaType === "tvshows" ? "tv" : "movie",
-      ...(currentMediaType === "tvshows" && {
-        episodeId: episodesArray?.[0].episodes?.[Number(episode) - 1].id,
-        season: Number(season),
-        episode: episodesArray?.[0].episodes?.[Number(episode) - 1].name,
-        episode_number: Number(episode),
-        episode_image: `${image}${episodesArray?.[0].episodes?.[Number(episode) - 1].still_path}`,
-      }),
+      ...(currentMediaType === "tvshows" &&
+        episodesArray && {
+          episodeId: episodesArray[0].episodes?.[Number(episode) - 1].id,
+          season: Number(season),
+          episode: episodesArray[0].episodes?.[Number(episode) - 1].name,
+          episode_number: Number(episode),
+          episode_image: `${image}${episodesArray[0].episodes?.[Number(episode) - 1].still_path}`,
+        }),
       title: mediaDetailsData?.title,
-      vote_average: currentMediaType === "tvshows" ? episodesArray?.[0].episodes?.[Number(episode) - 1].vote_average : mediaDetailsData?.vote,
+      vote_average: currentMediaType === "tvshows" && episodesArray ? episodesArray[0].episodes?.[Number(episode) - 1].vote_average : mediaDetailsData.vote,
       poster_path: mediaDetailsData?.poster,
       backdrop_path: mediaDetailsData?.bigHeroBackground,
       release_date: mediaDetailsData?.releaseDate,
@@ -174,8 +183,8 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
           saveToHistory(dataToSave, dataToSave.episodeId, firebaseActiveUser.uid);
         }
       }
-    } 
-  }, [currentId, firebaseActiveUser, season, episode, path]);
+    }
+  }, [mediaDetailsData, episodesArray, firebaseActiveUser]);
 
   const truncatedTextStyle: React.CSSProperties & { WebkitLineClamp: string; WebkitBoxOrient: "horizontal" | "vertical" | "inline-axis" | "block-axis" } = {
     WebkitLineClamp: "3 ",
