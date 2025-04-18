@@ -38,6 +38,11 @@ export const MediaDetails = ({ mediaType }) => {
   const [loadingAllData, setLoadingAllData] = useState(true);
 
   const [message, setMessage] = useState({ message: "", severity: "info", open: false });
+    useEffect(() => {
+      return () => {
+        setMediaDetailsData(null);
+      };
+    }, []);
 
   useEffect(() => {
     if (currentId != undefined) {

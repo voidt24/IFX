@@ -111,7 +111,7 @@ function History() {
                     {result[1].map((data, childIndex) => (
                       <div
                         className=" relative flex flex-col lg:flex-row w-[85%] items-center justify-center lg:w-[95%]  gap-4  rounded-lg border border-zinc-800 bg-zinc-900/30 lg:hover:bg-zinc-900/60  p-4"
-                        key={`${result[0]}-${data.id}`}
+                        key={`${result[0]}-${data.id}-${data.season}-${data.episode}`}
                       >
                         <div className="relative  rounded-md md:w-[80%] lg:w-[140%] xl:w-[55%] 2xl:w-[45%] ">
                           <img className=" block w-full rounded-md " src={data.media_type === "movie" ? `${data.backdrop_path}` : `${data.episode_image}`} alt="" />
