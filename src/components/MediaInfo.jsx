@@ -105,6 +105,13 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
     }
   }, [params.id]);
 
+  useEffect(() => {
+    return () => {
+      setEpisodesArray(null);
+      setActiveSeason(0);
+    };
+  }, []);
+
   return (
     <div className="media-details" style={{ backgroundImage: `url(${mediaDetailsData.heroBackground})` }}>
       <div className="overlay"></div>
