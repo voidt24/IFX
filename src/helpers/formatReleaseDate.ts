@@ -1,7 +1,7 @@
 export default function formatReleaseDate(date: string) {
   const formatedDate = new Date(date);
   if (formatedDate.getTime() > Date.now())
-    return `Available on ${formatedDate.toLocaleDateString("en-US", {
+    return `${formatedDate.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",

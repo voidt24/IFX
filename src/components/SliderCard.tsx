@@ -6,8 +6,9 @@ import { Context } from "@/context/Context";
 import Link from "next/link";
 
 import Checkbox from "@mui/material/Checkbox";
+import formatReleaseDate from "@/helpers/formatReleaseDate";
 interface ISliderCardProps {
-  result: ISliderData; 
+  result: ISliderData;
   changeMediaType?: string | null;
   canBeEdited?: boolean;
   mediaType?: string;
@@ -66,13 +67,20 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
           {poster != "" && <p>{!vote ? 0 : vote + "%"}</p>}
         </div>
         <span className="year">
-          { result?.release_date?.slice(0, 4) || result?.first_air_date?.slice(0, 4)}
+          {result.release_date
+            ? result.release_date && new Date(result.release_date).getTime() > Date.now()
+              ? new Date(result.release_date).getFullYear()
+              : result?.release_date?.slice(0, 4)
+            : result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()
+            ? new Date(result.first_air_date).getFullYear()
+            : result?.first_air_date?.slice(0, 4)}
         </span>
         {(result.release_date && new Date(result.release_date).getTime() > Date.now()) || (result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()) ? (
-          <span className="cooming-soon uppercase absolute bottom-10 text-center w-full xl:w-[80%] left-0 right-0 xl:rounded-lg z-[2] mx-auto bg-[var(--primary)] py-1 text-black font-bold text-[70%] lg:text-sm  ">
+          <span className="cooming-soon block uppercase absolute bottom-10 text-center w-full left-0 right-0 z-[2] bg-[var(--primary)] py-1 text-black font-bold text-[70%] lg:text-[80%] [text-shadow:none]">
             coming soon
+            <span className="block text-zinc-900 text-[85%]">{formatReleaseDate(result.release_date || result.first_air_date || "")}</span>
           </span>
-         ) : null}
+        ) : null}
 
         {changeMediaType ? <span className="mediatype">{result.media_type}</span> : null}
         <Link
@@ -85,7 +93,7 @@ const SliderCard = ({ result, changeMediaType = null, canBeEdited = false, media
           }}
         >
           <div className="content " key={result.id}>
-            <img src={poster} alt="" className={`rounded-lg`} width={780} height={1170} />
+            <img src={poster} alt="" className={`rounded-md`} width={780} height={1170} />
           </div>
         </Link>
         {canBeEdited && edit && (

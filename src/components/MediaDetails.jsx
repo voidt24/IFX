@@ -107,7 +107,7 @@ export const MediaDetails = ({ mediaType }) => {
   ) : mediaDetailsData.results[0] && mediaDetailsData.results[0].success == false ? (
     <NotFound />
   ) : (
-    <div style={{ paddingBlockEnd: "7rem" }}>
+    <div className="bg-[#000005] pb-28">
       {initialDataError ? <p className="text-center p-20">Error loading media information </p> : <MediaInfo state={mediaDetailsData} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />}
 
       <div className="extra-data">

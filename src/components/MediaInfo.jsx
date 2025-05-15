@@ -127,9 +127,9 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
           <img src={mediaDetailsData.poster} alt="" id="poster" />
 
           <div className="info-container-text flex justify-center items-center flex-col gap-2 ">
-            <h1 className="title">{mediaDetailsData.title}</h1>
+            <h1 className="title [text-shadow:2px_2px_5px_#000] font-medium">{mediaDetailsData.title}</h1>
             <div className="info flex items-center justify-center flex-wrap  md:text-[70%] lg:text-[80%] gap-2 text-gray-300">
-              <span>{mediaDetailsData.releaseDate}</span>•{currentMediaType == mediaProperties.movie.route && <span>{mediaDetailsData.runtime}</span>}
+              <span>{new Date(mediaDetailsData.releaseDate).getTime() > Date.now() ? `Available on ${mediaDetailsData.releaseDate}` : mediaDetailsData.releaseDate}</span>•{currentMediaType == mediaProperties.movie.route && <span>{mediaDetailsData.runtime}</span>}
               {currentMediaType == mediaProperties.tv.route && <span>{mediaDetailsData.seasons}</span>}•
               <span>
                 {mediaDetailsData.genres &&
@@ -146,6 +146,8 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
           </div>
 
           <div className="main-btns flex flex-col justify-center items-center w-full gap-4  sm:w-[300px] md:flex-row text-[80%]">
+
+          {new Date(mediaDetailsData.releaseDate).getTime() < Date.now() &&
             <button
               className="btn-primary w-full"
               data-id={currentId}
@@ -179,6 +181,10 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }) => {
             >
               <i className="bi bi-play-fill "></i> Play
             </button>
+          
+          }
+
+
             <button
               className="btn-primary w-full bg-neutral-800 text-gray-300 border border-zinc-700 hover:bg-gray-300 hover:text-black"
               data-id={currentId}
