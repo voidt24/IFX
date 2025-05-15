@@ -14,18 +14,17 @@ export const Slider = ({ controls = false, sideControls = false, expectingCards 
 
   return (
     <div className={`${expectingCards ? "slider-with-cards" : "slider"}  relative ${sideControls && "lg:px-4"}`}>
-
       {sideControls && (
         <>
           <i
-            className="bi bi-chevron-left left text-zinc-500 hover:text-gray-400 absolute left-0  max-lg:hidden text-2xl -mx-2"
+            className="bi bi-chevron-left left absolute top-[45%] left-5 max-md:bg-black/40  max-md:hover:bg-white/10 bg-black/80 px-1 hover:bg-white/30 text-xl rounded-md z-30 max-md:text-white/20 text-white/90"
             onClick={(event) => {
               moveSlider(event, sliderRef, expectingCards);
             }}
           ></i>
 
           <i
-            className="bi bi-chevron-right right text-zinc-500 hover:text-gray-400 absolute right-0 max-lg:hidden text-2xl -mx-2"
+            className="bi bi-chevron-right right absolute top-[45%] right-5 max-md:bg-black/40  max-md:hover:bg-white/10 bg-black/80 px-1 hover:bg-white/30 text-xl rounded-md z-30 max-md:text-white/20 text-white/90"
             onClick={(event) => {
               moveSlider(event, sliderRef, expectingCards);
             }}
@@ -33,7 +32,7 @@ export const Slider = ({ controls = false, sideControls = false, expectingCards 
         </>
       )}
 
-      <div className={`grid ${expectingCards ? "slider-with-cards__content gap-[0.3rem] xl:gap-[0.6rem]" : "slider__content"} `} ref={sliderRef}>
+      <div className={`grid ${expectingCards ? "slider-with-cards__content gap-[0.3rem] xl:gap-[0.5rem]" : "slider__content"} `} ref={sliderRef}>
         {children}
       </div>
     </div>

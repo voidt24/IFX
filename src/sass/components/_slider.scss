@@ -107,7 +107,7 @@
 
   &__content {
     grid-auto-flow: column;
-    grid-auto-columns: 32%;
+    grid-auto-columns: 43%;
     overflow-y: hidden;
     scroll-behavior: smooth;
     @media #{$xss} {
@@ -123,7 +123,10 @@
       grid-auto-columns: 14.5%;
     }
     @media #{$xxl} {
-      grid-auto-columns: 15.5%;
+      grid-auto-columns: 13.5%;
+    }
+    @media #{$fourK} {
+      grid-auto-columns: 12%;
     }
     &::-webkit-scrollbar {
       height: 0;
@@ -135,10 +138,6 @@
   &__content {
     &::-webkit-scrollbar {
       height: 0;
-    }
-
-    img {
-      scroll-snap-align: center;
     }
   }
 }
