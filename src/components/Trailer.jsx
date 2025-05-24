@@ -19,7 +19,7 @@ const Trailer = () => {
   }
 
   return openTrailer ? (
-    <div className={minBtn ? "min" : "trailer"} style={{ backgroundColor: trailerKey === null && "black" }}>
+    <div className={`transition-all duration-300 ${minBtn ? "min " : "trailer right-0"}`} style={{ backgroundColor: trailerKey === null && "black" }}>
       <button
         className="trailer-btn close-btn"
         onClick={() => {
