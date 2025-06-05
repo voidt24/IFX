@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useState, createContext, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, createContext, useEffect, Dispatch, SetStateAction, useRef } from "react";
 import { auth, ID_TOKEN_COOKIE_NAME } from "../firebase/firebase.config";
 import { useParams } from "next/navigation";
 import Modal from "@/components/common/Modal";
@@ -116,6 +116,12 @@ interface IContextValues {
   setSeasonModal: Dispatch<SetStateAction<boolean>>;
   listChanged: boolean;
   setListChanged: Dispatch<SetStateAction<boolean>>;
+  showSearchBar: boolean;
+  setShowSearchBar: Dispatch<SetStateAction<boolean>>;
+  userMenuActive: boolean;
+  setUserMenuActive: Dispatch<SetStateAction<boolean>>;
+  containerMargin: number | undefined;
+  setContainerMargin: Dispatch<SetStateAction<number | undefined>>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
@@ -166,6 +172,9 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [activeSeason, setActiveSeason] = useState(0);
   const [seasonModal, setSeasonModal] = useState(false);
   const [listChanged, setListChanged] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [userMenuActive, setUserMenuActive] = useState(false);
+  const [containerMargin, setContainerMargin] = useState<number | undefined>();
 
   const contextValues = {
     numberOfPages,
@@ -231,6 +240,12 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setSeasonModal,
     listChanged,
     setListChanged,
+    showSearchBar,
+    setShowSearchBar,
+    userMenuActive,
+    setUserMenuActive,
+    containerMargin,
+    setContainerMargin,
   };
 
   useEffect(() => {
