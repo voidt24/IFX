@@ -5,11 +5,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        brand:{
+          primary: "#0d75ff",
+          light: "#5688F2",
+        },
+
+        content:{
+          primary:"#fff",
+          secondary:"#d4d4d8",
+          third:"#a3a3a3",
+          muted:"#686767",
+        },
+
+        surface:{
+          modal:"#0f1118cb",
+          hover:"#0f1118cb"
+        }
       },
+
+      spacing:{
+      }
+    
     },
     screens: {
+      // => @media (min-width: 480px) { ... }
+      xs: "480px",
       // => @media (min-width: 640px) { ... }
       sm: "640px",
       // => @media (min-width: 768px) { ... }
