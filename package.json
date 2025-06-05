@@ -1,6 +1,6 @@
 {
-  "name": "newproductions",
-  "version": "0.1.0",
+  "name": "ifx",
+  "version": "4.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -23,6 +23,8 @@
     "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18",
+    "react-headroom": "^3.2.1",
+    "react-remove-scroll": "^2.7.1",
     "sass": "^1.79.4"
   },
   "devDependencies": {
