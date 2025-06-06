@@ -1,4 +1,5 @@
 import AllMediaData from "@/components/common/AllMediaData";
+import { APP_NAME } from "@/helpers/api.config";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { Metadata } from "next";
 
@@ -8,7 +9,7 @@ interface Params {
 
 export function generateMetadata({ params }: Params): Metadata {
   const { mediaType } = params;
-  const title = mediaType === "movies" ? "Movies - Prods" : "TV Shows - Prods";
+  const title = mediaType === "movies" ? `Movies - ${APP_NAME}` : `TV Shows - ${APP_NAME}`;
 
   return {
     title,

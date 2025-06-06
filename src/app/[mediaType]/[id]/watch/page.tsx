@@ -1,4 +1,5 @@
 import DisplayMedia from "@/components/common/DisplayMedia";
+import { APP_NAME } from "@/helpers/api.config";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 interface Params {
@@ -12,7 +13,7 @@ export function generateMetadata({ params }: Params): Metadata {
   const episode = headersList.get("x-episode") || "N/A";
 
   return {
-    title: params.mediaType == "movies" ? `Watch ${name} - Prods` : `Watch ${name} - S${season}-E${episode} - Prods`,
+    title: params.mediaType == "movies" ? `Watch ${name} - ${APP_NAME}` : `Watch ${name} - S${season}-E${episode} - ${APP_NAME}`,
   };
 }
 
