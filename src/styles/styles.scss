@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+:root {
+}
+*,
+*::before,
+::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #434343;
+    border-radius: 12px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #dedede97;
+    border-radius: 12px;
+  }
+}
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  color: #ffffff;
+  font-family: "DM Sans", sans-serif;
+  background: #000000;
+}
+
+a {
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+}
+button,
+i {
+  cursor: pointer;
+}
+
+.spinner {
+  height: 300px;
+}
+
+.blur {
+  background-color: #2121216a;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.overlay-base {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.to-top-gradient-bg {
+  @extend .overlay-base;
+  background: linear-gradient(to top, #000005, #0c0e13ed, #0c0e13d8, #0c0e1300);
+}
+.overlay {
+  @extend .overlay-base;
+  background: #000000a8;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.side-hero-overlay {
+  @extend .overlay-base;
+  background: linear-gradient(to right, #000000, #000000ed, #00000070, #00000000);
+}
+
+.show-more-btn {
+  @apply cursor-pointer underline py-2 text-content-primary hover:text-content-secondary text-center;
+}
+.flex-col-center {
+  @apply flex flex-col justify-center items-center;
+}
+.flex-col-start {
+  @apply flex flex-col justify-start items-center;
+}
+.flex-col-between {
+  @apply flex flex-col justify-between items-center;
+}
+.flex-row-center {
+  @apply flex justify-center items-center;
+}
+.flex-row-between {
+  @apply flex justify-between items-center;
+}
+
+.btn-primary {
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-full px-4 py-2 bg-content-primary hover:bg-content-secondary text-black shadow-[1px_1px_7px_#000] [text-shadow:none] font-semibold border border-gray-700 border-none;
+}
+.btn-secondary {
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-full px-4 py-2 bg-content-third hover:bg-content-primary text-black shadow-[1px_1px_7px_#000] [text-shadow:none] font-semibold border border-gray-700 border-none;
+}
+.input-style {
+  @apply bg-zinc-900 relative w-full outline-none rounded-full px-2 border border-zinc-800 text-white;
+}
+.wrapper {
+  @apply m-auto relative pt-4 w-full pb-[2rem] px-[0.5rem] md:min-w-[97%] md:max-w-[97%] lg:min-w-[95%] lg:max-w-[95%] 4k:min-w-[85%] 4k:max-w-[85%];
+}
+
+.slider-arrow {
+  @apply max-md:hidden absolute top-[50%] translate-y-[-50%] px-1 text-xl rounded-md z-[2] bg-black/80 hover:bg-white/30 max-md:bg-black/40  max-md:hover:bg-white/10 max-md:text-white/20;
+}
+
+.nav {
+  @apply flex-row-center py-[0.4rem] w-full px-4  bg-none text-[90%] backdrop-blur-[30px] bg-black/80 max-lg:z-[99] z-[999];
+}
+
+.nav-item-box {
+  @apply flex flex-col items-center justify-center;
+}
+
+.mobile-hidden {
+  @apply max-sm:hidden;
+}
+.desktop-hidden {
+  @apply sm:hidden;
+}
+
+.nav-mobile-icon {
+  @apply max-sm:text-[155%] leading-none desktop-hidden;
+}
+
+.some-animation {
+  animation: fadezoom 0.8s ease-out;
+}
+
+@keyframes fadezoom {
+  from {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.card {
+  .year,
+  .mediatype,
+  .vote {
+    @apply text-[57%] md:text-[60%] 2xl:text-[75%];
+  }
+
+  // fondo del check
+  .MuiSvgIcon-root {
+    background-color: rgba(255, 255, 255, 0.283);
+    padding: 0.2rem;
+  }
+
+  // tamaño general del check en cards
+  .css-20bmp1-MuiSvgIcon-root {
+    @apply lg:text-[2.3rem];
+  }
+}
+.media-lists {
+  @apply grid grid-cols-2 gap-[0.3rem]
+         sm:grid-cols-4
+         lg:grid-cols-5
+         xl:grid-cols-7
+         4k:grid-cols-8 4k:gap-[0.6rem];
+}
+
+.no-scrollbar {
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+}
+.slider {
+  @apply px-[0.5rem] mx-auto max-w-[95%] sm:min-w-[30%] sm:max-w-[70%] lg:[min-width:auto] lg:max-w-[695px];
+
+  .slider__content {
+    @apply grid gap-[0.3rem] overflow-y-hidden scroll-smooth [grid-auto-flow:column] [grid-auto-columns:minmax(30%,1fr)] no-scrollbar;
+  }
+}
+
+.slider-with-cards {
+  @apply px-[0.5rem] mx-auto w-full;
+
+  .slider-with-cards__content {
+    @apply grid overflow-y-hidden scroll-smooth
+    [grid-auto-flow:column] [grid-auto-columns:43%]
+    xs:[grid-auto-columns:27%]
+    sm:[grid-auto-columns:22%]
+    md:[grid-auto-columns:20%]
+    lg:[grid-auto-columns:14.5%]
+    2xl:[grid-auto-columns:13.5%]
+    4k:[grid-auto-columns:10%]
+    no-scrollbar;
+  }
+}
+
+.trailer-btn {
+  @apply absolute bg-black text-white border border-[#303030] px-[0.7rem] py-[0.2rem] transition-all duration-500 hover:scale-110 rounded-full;
+}
+
+.settings-btn {
+  @apply text-content-secondary px-4 hover:bg-zinc-800 rounded-full py-1;
+}
+.title-style {
+  @apply text-3xl font-bold mb-6 border-b border-zinc-700 pb-4;
+}
