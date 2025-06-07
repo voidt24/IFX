@@ -10,7 +10,7 @@ import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CircularProgress } from "@mui/material";
-import Slider from "../Slider";
+import Slider from "../Slider/Slider";
 import CollapsibleElement from "./CollapsibleElement";
 import { IhistoryMedia, ISeasonArray } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
@@ -36,6 +36,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
     setEpisodesArray,
     setSeasonModal,
     setActiveSeason,
+    containerMargin,
   } = useContext(Context);
   const path = usePathname();
 
@@ -195,26 +196,21 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
 
   return (
     <div
-      className="media-details min-h-[90vh] sm:min-h-screen  h-full pb-6 sm:mt-16 flex flex-col items-center justify-center "
-      style={{ backgroundImage: `url(${mediaDetailsData?.heroBackground})` }}
+      className=" relative text-center bg-cover bg-top bg-no-repeat overflow-hidden"
+      style={{ backgroundImage: `url(${mediaDetailsData?.heroBackground})`, marginTop: containerMargin ? `${containerMargin}px` : undefined }}
     >
-      <div className="overlay"></div>
-      <i
-        className="bi bi-arrow-left"
-        onClick={() => {
-          router.back();
-        }}
-      ></i>
-      <div className="media-details__initial-content h-full w-full sm:w-[85%] lg:w-[80%] xl:w-[75%] 4k:w-[1500px] m-auto flex flex-col items-center justify-center ">
-        <div className="bg-black/85 flex flex-col items-center justify-center gap-2 xl:gap-4  h-auto  w-full px-2 md:px-4 max-sm:py-12 py-4 rounded-xl xl:px-10">
-          <div className="src-options text-xl xl:text-2xl w-full">
-            <div className=" p-2 text-[55%] ">
-              <Slider sideControls>
+      <div className="to-top-gradient-bg z-[1]"></div>
+
+      <div className="wrapper relative z-[2]">
+        <div className="h-full w-full m-auto flex flex-col items-center justify-center">
+          <div className="bg-black/35 backdrop-blur-lg flex flex-col items-center justify-center gap-2 xl:gap-4 h-auto w-full px-2 md:px-4 max-sm:py-12 py-4 rounded-xl xl:px-10">
+            <div className="src-options p-0 w-full max-sm:text-[80%]">
+              <Slider sideControls padding="px-7">
                 {srcOptions.map((option, index) => {
                   return (
                     <button
                       key={index}
-                      className={`border bg-black rounded-full py-.5  ${selectedSrc == index ? "bg-zinc-300 text-black" : "text-white/70 hover:bg-zinc-800"}`}
+                      className={`border bg-black rounded-full py-[4px]  ${selectedSrc == index ? "bg-zinc-300 text-black" : "text-content-secondary hover:text-content-primary hover:bg-zinc-800"}`}
                       onClick={() => {
                         if (selectedSrc != index) {
                           setSelectedSrc(index);
@@ -229,169 +225,172 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
                 })}
               </Slider>
             </div>
-          </div>
-          {mediaURL == "" ? (
-            <div className="h-[20rem] lg:h-[40rem] xl:h-[40rem]  w-full flex items-center justify-center">
-              {" "}
-              <CircularProgress color="inherit" size={30} />
-            </div>
-          ) : (
-            <iframe src={mediaURL} className="h-[20rem] lg:h-[40rem] xl:h-[40rem] w-full " title="media" referrerPolicy="origin" allowFullScreen></iframe>
-          )}
 
-          <div className="flex flex-col items-center justify-center md:items-start md:justify-start gap-6 xl:gap-10 w-full mt-6 px-4">
-            <div className="flex  justify-center items-start  md:items-start  gap-3.5 xl:gap-6">
-              <img src={mediaDetailsData?.poster || ""} alt="poster" className="w-32 md:w-40 xl:w-56 h-auto rounded-lg border border-[var(--primary)]" />
+            {mediaURL == "" ? (
+              <div className="h-[20rem] lg:h-[40rem] xl:h-[40rem]  w-full flex items-center justify-center">
+                {" "}
+                <CircularProgress color="inherit" size={30} />
+              </div>
+            ) : (
+              <iframe src={mediaURL} className="h-[20rem] lg:h-[40rem] xl:h-[40rem] w-full  rounded-lg" title="media" referrerPolicy="origin" allowFullScreen></iframe>
+            )}
 
-              <div className="flex flex-col gap-2 items-start justify-center">
-                <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                  <Link className="font-bold text-xl md:text-2xl xl:text-3xl text-left hover:underline" href={`/${currentMediaType}/${currentId}`}>
-                    {mediaDetailsData?.title}
-                  </Link>
+            <div className="flex-col-center md:items-start md:justify-start gap-6 xl:gap-10 w-full mt-6 px-1">
+              <div className="flex justify-center items-start  md:items-start  gap-3.5 xl:gap-6">
+                <img src={mediaDetailsData?.poster || ""} alt="poster" className="w-32 md:w-40 xl:w-56 h-auto min-h-40 rounded-lg" />
 
-                  {mediaType == mediaProperties.tv.mediaType && (
-                    <p className="text-zinc-300 text-left max-lg:text-[88%]">
-                      {season && season != "0" && `Season ${season} - `}
-                      {episode && episode != "0" && `Episode ${episode} `}
-                      {episodesArray?.[0]?.episodes &&
-                        episodesArray[0].episodes[Number(episode) - 1]?.name.toLowerCase() != `episode ${Number(episode)}` &&
-                        `- ${episodesArray[0].episodes[Number(episode) - 1]?.name}`}
-                    </p>
-                  )}
-                </div>
-                <div className="text-left text-zinc-400 text-[80%] md:text-[90%] flex flex-col gap-2">
-                  <div>
-                    {mediaType == mediaProperties.tv.mediaType ? (
-                      episodesArray == null ? (
-                        ""
-                      ) : episodesArray?.[0]?.episodes ? (
-                        <p>{getRunTime(episodesArray[0].episodes?.[Number(episode) - 1]?.runtime)}</p>
-                      ) : (
-                        "No runtime data available"
-                      )
-                    ) : (
-                      mediaDetailsData?.runtime
+                <div className="flex flex-col items-start justify-center gap-2">
+                  <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                    <Link className="font-bold text-xl md:text-2xl xl:text-3xl text-left hover:underline" href={`/${currentMediaType}/${currentId}`}>
+                      {mediaDetailsData?.title}
+                    </Link>
+
+                    {mediaType == mediaProperties.tv.mediaType && (
+                      <p className="text-content-secondary text-left max-lg:text-[88%]">
+                        {season && season != "0" && `Season ${season} - `}
+                        {episode && episode != "0" && `Episode ${episode} `}
+                        {episodesArray?.[0]?.episodes &&
+                          episodesArray[0].episodes[Number(episode) - 1]?.name.toLowerCase() != `episode ${Number(episode)}` &&
+                          `- ${episodesArray[0].episodes[Number(episode) - 1]?.name}`}
+                      </p>
                     )}
                   </div>
-                  <div>
-                    {mediaType == mediaProperties.tv.mediaType ? (
-                      episodesArray == null ? (
-                        ""
-                      ) : episodesArray?.[0]?.episodes ? (
-                        <p>{episodesArray[0].episodes[Number(episode) - 1]?.air_date}</p>
+                  <div className="text-left text-content-third text-[80%] md:text-[90%] flex flex-col gap-2">
+                    <div>
+                      {mediaType == mediaProperties.tv.mediaType ? (
+                        episodesArray == null ? (
+                          ""
+                        ) : episodesArray?.[0]?.episodes ? (
+                          <p>{getRunTime(episodesArray[0].episodes?.[Number(episode) - 1]?.runtime)}</p>
+                        ) : (
+                          "No runtime data available"
+                        )
                       ) : (
-                        "No episode data available"
-                      )
-                    ) : (
-                      mediaDetailsData?.releaseDate
-                    )}
+                        mediaDetailsData?.runtime
+                      )}
+                    </div>
+                    <div>
+                      {mediaType == mediaProperties.tv.mediaType ? (
+                        episodesArray == null ? (
+                          ""
+                        ) : episodesArray?.[0]?.episodes ? (
+                          <p>{episodesArray[0].episodes[Number(episode) - 1]?.air_date}</p>
+                        ) : (
+                          "No episode data available"
+                        )
+                      ) : (
+                        mediaDetailsData?.releaseDate
+                      )}
+                    </div>
+                    <div>
+                      <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.mediaType ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
+                    </div>
+                    <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0]}</p>
                   </div>
-                  <div>
-                    <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.mediaType ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
-                  </div>
-                  <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0]}</p>
-                </div>
 
-                <div className=" info max-md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-zinc-400 text-[85%] md:text-[95%] xl:text-[100%]">
-                  <CollapsibleElement customClassesForParent={"text-zinc-200 md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-                    {mediaType == mediaProperties.tv.mediaType ? (
-                      episodesArray == null ? (
-                        ""
-                      ) : episodesArray?.[0]?.episodes ? (
-                        <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
+                  <div className=" info max-md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
+                    <CollapsibleElement customClassesForParent={" md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
+                      {mediaType == mediaProperties.tv.mediaType ? (
+                        episodesArray == null ? (
+                          ""
+                        ) : episodesArray?.[0]?.episodes ? (
+                          <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
+                        ) : (
+                          "No overview"
+                        )
                       ) : (
-                        "No overview"
-                      )
-                    ) : (
-                      mediaDetailsData?.overview
-                    )}
-                  </CollapsibleElement>
+                        mediaDetailsData?.overview
+                      )}
+                    </CollapsibleElement>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="info md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-zinc-400 text-[85%] md:text-[95%] xl:text-[100%]">
-              <CollapsibleElement customClassesForParent={"text-zinc-200 md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-                {mediaType == mediaProperties.tv.mediaType ? (
-                  episodesArray == null ? (
-                    ""
-                  ) : episodesArray?.[0]?.episodes ? (
-                    <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
+              {/* MOBILE */}
+              <div className="info md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
+                <CollapsibleElement customClassesForParent={"md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
+                  {mediaType == mediaProperties.tv.mediaType ? (
+                    episodesArray == null ? (
+                      ""
+                    ) : episodesArray?.[0]?.episodes ? (
+                      <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
+                    ) : (
+                      "No overview"
+                    )
                   ) : (
-                    "No overview"
-                  )
-                ) : (
-                  mediaDetailsData?.overview
-                )}
-              </CollapsibleElement>
-            </div>
-          </div>
-
-          {mediaType == mediaProperties.tv.mediaType && (
-            <div className=" w-full z-20  py-4">
-              <div className="flex gap-6  ">
-                <nav className="flex items-center justify-center w-full px-4 ">
-                  <ul className="flex text-[75%] self-center bg-zinc-950 rounded-full">
-                    <li>
-                      <button
-                        className={`flex items-center justify-center max-md:px-6 px-8 h-8 ms-0  leading-tight border  border-zinc-500 rounded-s-full ${
-                          episode == "1" ? " pointer-events-none text-zinc-600" : "pointer-events-auto text-gray-200   hover:bg-zinc-800 hover:text-white"
-                        }`}
-                        onClick={() => {
-                          if (episode && Number(episode) > 1) {
-                            const newEpisode = (Number(episode) - 1).toString();
-
-                            const params = new URLSearchParams(searchParams.toString());
-                            params.set("episode", newEpisode);
-
-                            window.location.search = params.toString();
-                          }
-                        }}
-                      >
-                        <i className={`bi bi-chevron-left font-bold`}></i>
-                        Previous
-                      </button>
-                    </li>
-
-                    <li>
-                      <Link
-                        href={`/${currentMediaType}/${currentId}`}
-                        onClick={() => {
-                          setActiveSeason(Number(season));
-                          setSeasonModal(true);
-                        }}
-                        className={`flex items-center justify-center max-md:px-3 px-6 h-8 leading-tight  border border-zinc-500 `}
-                      >
-                        <i className="bi bi-list"></i>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <button
-                        className={`flex items-center justify-center max-md:px-6 px-8 h-8 ms-0  leading-tight border  border-zinc-500 rounded-e-full ${
-                          seasonArray && seasonArray[Number(season) - 1] && Number(episode) == seasonArray[Number(season) - 1].episode_count
-                            ? " pointer-events-none text-zinc-600"
-                            : "pointer-events-auto text-gray-200   hover:bg-zinc-800 hover:text-white"
-                        }`}
-                        onClick={() => {
-                          if (episode && seasonArray && Number(episode) < seasonArray[Number(season) - 1].episode_count) {
-                            const newEpisode = (Number(episode) + 1).toString();
-
-                            const params = new URLSearchParams(searchParams.toString());
-                            params.set("episode", newEpisode);
-
-                            window.location.search = params.toString();
-                          }
-                        }}
-                      >
-                        Next <i className={`bi bi-chevron-right font-bold`}></i>
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
+                    mediaDetailsData?.overview
+                  )}
+                </CollapsibleElement>
               </div>
             </div>
-          )}
+            {/* ----------- */}
+
+            {mediaType == mediaProperties.tv.mediaType && (
+              <div className=" w-full z-20 py-4">
+                <div className="flex gap-6  ">
+                  <nav className="flex items-center justify-center w-full px-4 ">
+                    <ul className="flex text-[75%] self-center bg-surface-modal rounded-full">
+                      <li>
+                        <button
+                          className={`flex items-center justify-center max-md:px-6 px-8 h-8 ms-0  leading-tight border  border-content-muted rounded-s-full ${
+                            episode == "1" ? " pointer-events-none text-content-muted" : "pointer-events-auto text-content-primary hover:bg-surface-hover"
+                          }`}
+                          onClick={() => {
+                            if (episode && Number(episode) > 1) {
+                              const newEpisode = (Number(episode) - 1).toString();
+
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.set("episode", newEpisode);
+
+                              window.location.search = params.toString();
+                            }
+                          }}
+                        >
+                          <i className={`bi bi-chevron-left font-bold`}></i>
+                          Previous
+                        </button>
+                      </li>
+
+                      <li>
+                        <Link
+                          href={`/${currentMediaType}/${currentId}`}
+                          onClick={() => {
+                            setActiveSeason(Number(season));
+                            setSeasonModal(true);
+                          }}
+                          className={`flex items-center justify-center max-md:px-3 px-6 h-8 leading-tight  border border-content-muted  hover:bg-surface-hover`}
+                        >
+                          <i className="bi bi-list"></i>
+                        </Link>
+                      </li>
+
+                      <li>
+                        <button
+                          className={`flex items-center justify-center max-md:px-6 px-8 h-8 ms-0  leading-tight border  border-content-muted rounded-e-full ${
+                            seasonArray && seasonArray[Number(season) - 1] && Number(episode) == seasonArray[Number(season) - 1].episode_count
+                              ? " pointer-events-none text-zinc-600"
+                              : "pointer-events-auto text-gray-200   hover:bg-surface-hover hover:text-white"
+                          }`}
+                          onClick={() => {
+                            if (episode && seasonArray && Number(episode) < seasonArray[Number(season) - 1].episode_count) {
+                              const newEpisode = (Number(episode) + 1).toString();
+
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.set("episode", newEpisode);
+
+                              window.location.search = params.toString();
+                            }
+                          }}
+                        >
+                          Next <i className={`bi bi-chevron-right font-bold`}></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

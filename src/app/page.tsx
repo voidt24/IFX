@@ -1,6 +1,5 @@
 "use client";
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
-import DefaultLayout from "@/components/layout/DefaultLayout";
 import dynamic from "next/dynamic";
 import { Context } from "@/context/Context";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
@@ -13,18 +12,18 @@ import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton
 import HeroSkeleton from "@/components/common/Skeletons/HeroSkeleton";
 import SignUpBanner from "@/components/common/SignUpBanner";
 
-const Slider = dynamic(() => import("@/components/Slider"), {
+const Slider = dynamic(() => import("@/components/Slider/Slider"), {
   loading: () => <SliderSkeleton />,
 });
 
-const SliderCard = dynamic(() => import("@/components/SliderCard"), {
+const SliderCard = dynamic(() => import("@/components/Slider/SliderCard"), {
   loading: () => <SliderCardSkeleton />,
 });
-const Hero = dynamic(() => import("@/components/Hero"), {
+const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
 });
 export default function Home() {
-  const { firebaseActiveUser, initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError } = useContext(Context);
+  const { firebaseActiveUser, initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError, containerMargin } = useContext(Context);
   const [moviesApiData, setMoviesApiData] = useState<ISliderData[]>([]);
   const [tvApiData, setTvApiData] = useState<ISliderData[]>([]);
   const [moviesHeroApiData, setMoviesHeroApiData] = useState<ISliderData[]>([]);
@@ -70,33 +69,39 @@ export default function Home() {
   }
 
   return (
-    <DefaultLayout>
-      <div className="flex flex-col gap-10 lg:gap-20 items-center justify-center">
-        <Hero results={moviesHeroApiData} type="Movies" />
+    <div className="relative" style={{ marginTop: containerMargin ? `${containerMargin}px` : undefined }}>
+      <Hero results={moviesHeroApiData} type="Movies" hasTitle={window.innerWidth < 640} />
+      <div className=" mt-6 pb-0">
+        <div className=" flex-col-center gap-4 lg:gap-6 ">
+          <div className="w-full ">
+            <span className="flex-row-between w-full px-3 sm:px-6 pb-2">
+              <h1 className="text-lg lg:text-2xl font-medium">Popular Movies</h1>
+              <Link className="hover:underline text-[85%] lg:text-[90%] text-content-secondary" href={"/movies"}>
+                See all &gt;
+              </Link>
+            </span>
+            <Slider sideControls={true} expectingCards={true} XPosition="5">
+              {moviesApiData &&
+                moviesApiData.slice(5, 17).map((sliderData: ISliderData) => {
+                  return <SliderCard result={sliderData} key={sliderData.id} mediaType={"movies"} />;
+                })}
+            </Slider>
+          </div>
 
-        <div className="w-full max-w-full lg:max-w-[95%] 2xl:max-w-[80%] 4K:max-w-[75%]">
-          <span className="flex justify-between items-center w-full px-2 pb-2">
-            <h1 className="lg:text-xl text-white/85">Popular Movies</h1>
-            <Link className="hover:underline text-[80%] text-white/70" href={"/movies"}>
-              See all
-            </Link>
-          </span>
-          <Slider sideControls={true} expectingCards={true}>
-            {moviesApiData &&
-              moviesApiData.slice(5, 17).map((sliderData: ISliderData) => {
-                return <SliderCard result={sliderData} key={sliderData.id} mediaType={"movies"} />;
-              })}
-          </Slider>
+          {!firebaseActiveUser?.uid ? <SignUpBanner /> : null}
         </div>
+      </div>
 
-        {!firebaseActiveUser?.uid ? <SignUpBanner /> : null}
-        <Hero results={tvApiData} type="TV Shows" />
+      <div className="mt-6">
+        <Hero results={tvApiData} type="TV Shows" hasTitle={true} />
+      </div>
 
-        <div className="w-full max-w-full lg:max-w-[95%] 2xl:max-w-[80%] 4K:max-w-[75%]">
-          <span className="flex justify-between items-center w-full px-2 pb-2">
-            <h1 className="lg:text-xl text-white/85">Popular TV Shows</h1>
-            <Link className="hover:underline text-[80%] text-white/70" href={"/tvshows"}>
-              See all
+      <div className=" mt-6">
+        <div className="w-full ">
+          <span className="flex justify-between items-center w-full px-3 sm:px-6 pb-2">
+            <h1 className="text-lg lg:text-2xl font-medium text-white">Popular TV Shows</h1>
+            <Link className="hover:underline text-[85%] lg:text-[90%] text-content-secondary" href={"/tvshows"}>
+              See all &gt;
             </Link>
           </span>
           <Slider sideControls={true} expectingCards={true}>
@@ -107,6 +112,15 @@ export default function Home() {
           </Slider>
         </div>
       </div>
-    </DefaultLayout>
+
+      <footer className="max-sm:hidden bg-black/50 shadow-sm text-content-muted py-4 text-center mt-10 relative">
+        <span className="text-[70%] ">
+          © {new Date().getFullYear().toString()}{" "}
+          <a href="/" className="hover:underline">
+            IFX
+          </a>
+        </span>
+      </footer>
+    </div>
   );
 }

@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import Modal from "./Modal";
 import deleteFromFireStore from "@/firebase/deleteFromFirebase";
 import { Context } from "@/context/Context";
-import DisplayMedia from "./DisplayMedia";
 
 interface Props {
   confirmDialog: boolean;
@@ -25,7 +24,7 @@ function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraAc
         <div className="delete-options flex gap-4">
           <button
             type="submit"
-            className="w-full rounded-full bg-zinc-800 hover:bg-zinc-700 px-4 py-1"
+            className="w-full btn-secondary"
             onClick={() => {
               setConfirmDialog(false);
             }}

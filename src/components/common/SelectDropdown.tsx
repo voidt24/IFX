@@ -13,7 +13,8 @@ export default function SelectDropdown({ listSelectedChange, selectDefaultName, 
 
   const [selected, setSelected] = useState(selectDefaultName);
 
-  useEffect(() => { //applicable to /lists only when selecting a new list: "favorites to watchlist" or vice versa
+  useEffect(() => {
+    //applicable to /lists only when selecting a new list: "favorites to watchlist" or vice versa
     setSelected(selectDefaultName);
   }, [listSelectedChange]);
 
@@ -33,7 +34,7 @@ export default function SelectDropdown({ listSelectedChange, selectDefaultName, 
             setCheckedMedia([]);
           }
         }}
-        className="px-4 rounded-lg py-1.5 border border-zinc-500 bg-gray-900 text-gray-200 outline-none text-sm xl:text-base w-full"
+        className="px-4 rounded-lg py-1.5 border border-zinc-500 bg-surface-modal text-content-primary outline-none w-full"
       >
         <option value={selectDefaultName} disabled>
           {selectDefaultName}

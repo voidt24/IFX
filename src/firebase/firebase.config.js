@@ -3,9 +3,8 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 export const ID_TOKEN_COOKIE_NAME = "prods_firebase_idtoken";
-export const VERIFY_TOKEN_ROUTE = `https://prods.vercel.app/api/auth/verifyToken/`;
-export const VERIFY_EMAIL_ROUTE = `https://prods.vercel.app/api/account/verifyEmailExistence/`;
-// TODO: Add SDKs for Firebase products that you want to use
+export const VERIFY_TOKEN_ROUTE = `https://ifxtv.vercel.app/api/auth/verifyToken/`;
+export const VERIFY_EMAIL_ROUTE = `https://ifxtv.vercel.app/api/account/verifyEmailExistence/`;
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration

@@ -19,7 +19,7 @@ const config: Config = {
 
         surface:{
           modal:"#0f1118cb",
-          hover:"#0f1118cb"
+          hover:"#181b26d9"
         }
       },
 

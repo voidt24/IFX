@@ -1,81 +1,40 @@
 import React from "react";
+import HeroSkeleton from "./HeroSkeleton";
 
 const MediaDetailsSkeleton = () => {
   return (
     <>
-      <div className="media-details bg-black pt-10  animate-pulse">
-        <i className="bi bi-arrow-left text-gray-400 text-2xl absolute top-8 left-4"></i>
-        <div className="media-details__initial-content sm:px-10 sm:w-[80%] lg:w-[60%] xl:w-[45%] m-auto">
-          <div className="media-details__info-container flex flex-col items-center justify-center gap-6 mt-12 sm:mt-20">
-            {/* Skeleton para la imagen */}
-            <div className="w-[35%] h-44 sm:h-56 lg:h-60 lg:w-[30%] 2xl:w-56 2xl:h-72 4k:w-64 4k:h-80 bg-gray-700 rounded-md"></div>
+      <div className="media-details pt-14 max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-4 w-full absolute top-0 ">
+        <div className="max-lg:hidden animate-pulse">
+          <HeroSkeleton></HeroSkeleton>
+        </div>
 
-            <div className="info-container-text flex justify-center items-center flex-col gap-2">
-              {/* Skeleton para el título */}
-              <div className="h-4 bg-gray-700 w-28 rounded-md"></div>
-              <div className="h-4 bg-gray-700 w-40 rounded-md"></div>
-            </div>
-
-            {/* Skeleton para los botones */}
-            <div className="main-btns flex flex-col justify-center items-center w-full gap-4 sm:w-[300px] md:flex-row">
-              <div className="h-10 w-full bg-gray-700 rounded-full"></div>
-              <div className="h-10 w-full bg-gray-700 rounded-full"></div>
-            </div>
-
-            {/* Skeleton para la descripción */}
-            <div className="flex items-center  flex-col ovrview text-[70%] lg:text-[80%]">
-              <div className="h-4 w-60 bg-gray-700 rounded-md"></div>
-              <div className="mt-2 h-4 w-40 bg-gray-700 rounded-md"></div>
-            </div>
-
-            {/* Skeleton para las opciones adicionales */}
-            <div className="main-lists-options flex gap-2 mt-2">
-              <div className="w-6 h-6 bg-gray-700 rounded-full"></div>
-              <div className="w-6 h-6 bg-gray-700 rounded-full"></div>
-            </div>
+        <div className="lg:hidden h-[90vh] w-full bg-surface-modal p-10  animate-pulse">
+          <div className="lg:hidden h-full w-full bg-gray-800 p-2 flex flex-col items-center justify-center gap-4">
+            <div className="h-4 w-[60%] bg-gray-700 rounded-lg "></div>
+            <div className="h-2 w-[40%] bg-gray-700 rounded-lg "></div>
+            <div className="h-2 w-[24%] bg-gray-700 rounded-lg "></div>
           </div>
         </div>
-      </div>
-
-      <div className="extra-data  animate-pulse">
-        <div className={`my-10 slider-with-cards relative lg:px-4 `}>
-          <div className={`grid slider-with-cards__content`}>
-            {[...Array(10)].map((_, index) => (
-              <div key={index} className=" card border border-gray-700 rounded-lg p-2">
-                <div className=" max-md:h-32 h-48 lg:h-72 bg-gray-700 rounded mb-2 fallback-img"></div>
-                <div className=" h-4 bg-gray-700 rounded mb-1"></div>
+        <div className="flex-col-start gap-4 w-full h-full animate-pulse mt-10">
+          <div className="flex-row-center gap-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div className="flex-col-center gap-1 bg-surface-modal" key={index}>
+                <div className="h-2 w-20 bg-gray-800 rounded-lg "></div>
               </div>
             ))}
           </div>
-        </div>
 
-        <div className={`slider-with-cards relative lg:px-4 mb-10 `}>
-          <div className={`grid slider-with-cards__content`}>
-            {[...Array(8)].map((_, index) => (
-              <div className="cast__member" key={index}>
-                <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
-                <div className=" w-16 h-2 bg-gray-500 mt-2"> </div>
-                <div className=" w-10 h-2 bg-gray-500 mt-2"> </div>
-              </div>
-            ))}
+          <div className="tab-content w-full h-full max-h-[500px] overflow-auto ">
+            <div className="flex flex-col gap-2">
+              <div className="w-full h-[350px] bg-surface-modal rounded-md"></div>
+            </div>
           </div>
         </div>
 
-        <div className="reviews">
-          {[...Array(2)].map((_, index) => (
-            <div className="review-content bg-gray-700 py-4 px-2" key={index}>
-              <span className="fixed flex justify-between items-center ">
-                <span id="author">
-                  <div className=" w-20 h-2 bg-gray-500"> </div>{" "}
-                </span>
-                <div className=" w-16 h-2 bg-gray-500"> </div>
-              </span>
-
-              <div className="review-text w-[90%] h-2 bg-gray-500 mx-6"></div>
-              <div className="review-text w-[90%] h-2 bg-gray-500 mx-6"></div>
-              <div className="review-text w-[90%] h-2 bg-gray-500 mx-6"></div>
-            </div>
-          ))}
+        <div className="lg:hidden w-full fixed bottom-0 px-6 pb-6 pt-20 left-[50%] translate-x-[-50%] z-[4]">
+          <div className="to-top-gradient-bg h-full z-[2]"></div>
+          <div className="h-12 w-full bg-gray-800 rounded-full z-50 relative"></div>
         </div>
       </div>
     </>

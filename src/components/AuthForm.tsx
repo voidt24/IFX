@@ -77,17 +77,17 @@ export default function AuthForm() {
 
   return (
     <>
-      {noAccount ? <h2 className="bold text-xl">Sign up</h2> : <h2 className="bold text-xl">Login</h2>}
+      <h2 className="font-semibold text-2xl">{noAccount ? "Sign up" : "Login"} </h2>
       <form
+        className="auth-form flex-col-center gap-6 w-full sm:w-[80%] xl:w-[85%] 2xl:w-[65%] 4:w-[55%] "
         onSubmit={(evt) => {
           evt.preventDefault();
           handleSubmit();
         }}
-        className="auth-form gap-6 w-full sm:w-[80%] xl:w-[85%] 2xl:w-[65%] 4:w-[55%] "
       >
         {authInputFields.map((input, index) => {
           return (
-            <label htmlFor={index.toString()} key={index}>
+            <label htmlFor={index.toString()} key={index} className="w-full text-left">
               <p className="mb-2">{input.label}</p>
               <Input
                 id={index.toString()}
@@ -103,11 +103,15 @@ export default function AuthForm() {
 
         {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-        <button className={`rounded-3xl w-full    ${loadingAuth ? "bg-white/20 cursor-wait text-zinc-500" : "bg-white/90 hover:bg-white text-black cursor-pointer"}`} type="submit" onClick={() => {}}>
+        <button
+          className={`btn-primary  hover:bg-brand-hover  w-full py-3 ${loadingAuth && "btn-secondary cursor-wait "}`}
+          type="submit"
+          onClick={() => {}}
+        >
           {loadingAuth ? (
             <span className="flex gap-1 items-center justify-center">
-              <CircularProgress size={15} color="inherit" />
-              <p>Loading</p>
+              <CircularProgress size={15} color="primary" />
+              <p>Loading...</p>
             </span>
           ) : noAccount ? (
             "Create account"
@@ -121,7 +125,7 @@ export default function AuthForm() {
         {noAccount ? "Already have an account? " : "Dont have an account? "}
         <button
           data-testid="changeText"
-          className=" border-none  mt-2 p-0 text-[var(--primary)] hover:bg-transparent hover:underline"
+          className=" border-none mt-2 text-brand-primary hover:text-brand-hover hover:underline "
           onClick={() => {
             noAccount ? setNoAccount(false) : setNoAccount(true);
 

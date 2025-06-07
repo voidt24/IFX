@@ -100,10 +100,10 @@ i {
 }
 
 .btn-primary {
-  @apply hover:scale-105 transition duration-200 ease-in-out rounded-full px-4 py-2 bg-content-primary hover:bg-content-secondary text-black shadow-[1px_1px_7px_#000] [text-shadow:none] font-semibold border border-gray-700 border-none;
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-full px-4 py-2 bg-content-primary lg:hover:bg-content-secondary text-black shadow-[1px_1px_7px_#000] [text-shadow:none] font-semibold border border-gray-700 border-none;
 }
 .btn-secondary {
-  @apply hover:scale-105 transition duration-200 ease-in-out rounded-full px-4 py-2 bg-content-third hover:bg-content-primary text-black shadow-[1px_1px_7px_#000] [text-shadow:none] font-semibold border border-gray-700 border-none;
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-full px-4 py-2 bg-content-third lg:hover:bg-content-primary text-black shadow-[1px_1px_7px_#000] [text-shadow:none] font-semibold border border-gray-700 border-none;
 }
 .input-style {
   @apply bg-zinc-900 relative w-full outline-none rounded-full px-2 border border-zinc-800 text-white;
@@ -117,7 +117,7 @@ i {
 }
 
 .nav {
-  @apply flex-row-center py-[0.4rem] w-full px-4  bg-none text-[90%] backdrop-blur-[30px] bg-black/80 max-lg:z-[99] z-[999];
+  @apply flex-row-center py-[0.8rem] lg:py-[0.5rem] w-full px-4  bg-none text-[90%] backdrop-blur-[30px] bg-black/60 max-lg:z-[99] z-[999];
 }
 
 .nav-item-box {

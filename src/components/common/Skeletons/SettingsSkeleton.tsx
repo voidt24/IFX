@@ -5,35 +5,26 @@ export default function SettingsSkeleton() {
         <div className="mb-6">
           <div className="flex flex-col gap-4">
             <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/2 rounded-full"></div>
+              <div className="bg-surface-modal h-8 w-1/2 rounded-full"></div>
             </div>
             <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/3 rounded-full"></div>
-            </div>
-            <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/4 rounded-full"></div>
+              <div className="bg-surface-modal h-8 w-1/3 rounded-full"></div>
             </div>
           </div>
           <div className="flex flex-col gap-4 mt-10">
             <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/2 rounded-full"></div>
+              <div className="bg-surface-modal h-8 w-1/2 rounded-full"></div>
             </div>
             <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/3 rounded-full"></div>
-            </div>
-            <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/4 rounded-full"></div>
+              <div className="bg-surface-modal h-8 w-1/3 rounded-full"></div>
             </div>
           </div>
           <div className="flex flex-col gap-4 mt-10">
             <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/2 rounded-full"></div>
+              <div className="bg-surface-modal h-8 w-1/2 rounded-full"></div>
             </div>
             <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/3 rounded-full"></div>
-            </div>
-            <div className="flex justify-between">
-              <div className="bg-zinc-700 h-8 w-1/4 rounded-full"></div>
+              <div className="bg-surface-modal h-8 w-1/3 rounded-full"></div>
             </div>
           </div>
         </div>

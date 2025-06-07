@@ -1,6 +1,6 @@
 "use client";
 import { Context } from "@/context/Context";
-import Slider from "@/components/Slider";
+import Slider from "@/components/Slider/Slider";
 import { ListsResults } from "@/components/ListsResults";
 import { database, usersCollectionName } from "@/firebase/firebase.config";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -8,9 +8,10 @@ import { collection, onSnapshot } from "firebase/firestore";
 import Notification from "@/components/common/Notification";
 import DefaultLayout from "@/components/layout/DefaultLayout";
 import useVerifyToken from "@/Hooks/useVerifyToken";
+import Wrapper from "@/components/common/Wrapper/Wrapper";
 
 export default function Lists() {
-  const { listActive, setListActive, firebaseActiveUser, listChanged, setCheckedMedia, edit, setEdit } = useContext(Context);
+  const { listActive, setListActive, firebaseActiveUser, listChanged, setCheckedMedia, edit, setEdit, containerMargin } = useContext(Context);
   const [currentListData, setCurrentListData] = useState(null);
   const [listSelectedChange, setListSelectedChange] = useState(false);
   const [message, setMessage] = useState({ message: "", severity: "info", open: false });
@@ -72,20 +73,18 @@ export default function Lists() {
 
   const defaultListButtons = ["favorites", "watchlist"];
   return (
-    <DefaultLayout>
-      <div className="lists max-sm:h-[80vh] sm:h-screen sm:min-h-screen overflow-hidden">
+    <Wrapper>
+      <div className="flex-col-center gap-4">
         <Slider>
           {defaultListButtons &&
             defaultListButtons.map((name, index) => {
               return (
                 <button
                   key={index}
-                  style={truncatedTextStyle} //para que el boton no exceda de una linea y cambie el layout
+                  style={truncatedTextStyle}
                   type="button"
                   ref={buttonRef2}
-                  className={` rounded-full px-5 py-1.5 lg:py-2 text-[85%] lg:text-[95%] text-white  border border-gray-200 focus:z-10  border-none  ${
-                    listActive === name ? "active bg-[var(--primary)] hover:bg-[var(--primary)]" : "bg-gray-600/50 hover:bg-gray-600"
-                  } `}
+                  className={`hover:scale-100 ${listActive === name ? " btn-primary " : "btn-secondary !bg-white/15 !text-content-primary"} `}
                   onClick={(evt) => {
                     if (edit && listActive != name) {
                       setEdit(false);
@@ -110,6 +109,6 @@ export default function Lists() {
 
         <Notification message={message} setMessage={setMessage} />
       </div>
-    </DefaultLayout>
+    </Wrapper>
   );
 }

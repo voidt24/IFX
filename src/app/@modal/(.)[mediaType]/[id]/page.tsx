@@ -1,6 +1,7 @@
 import MediaDetails from "@/components/MediaDetails/MediaDetails";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { Metadata } from "next";
+import NextModal from "../../NextModal";
 
 interface Params {
   params: { mediaType: string; id: string };
@@ -36,7 +37,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 const Media = ({ params }: Params) => {
-  return <MediaDetails mediaType={params.mediaType == "movies" ? "movie" : "tv"} />;
+  return (
+    <NextModal>
+      <MediaDetails mediaType={params.mediaType == "movies" ? "movie" : "tv"} />
+    </NextModal>
+  );
 };
 
 export default Media;

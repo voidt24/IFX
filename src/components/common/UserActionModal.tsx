@@ -24,7 +24,7 @@ export default function UserActionModal({ children, title, fieldsToAdd, modalAct
   return (
     <Modal modalActive={modalActive} setModalActive={setModalActive}>
       <>
-        <h2 className="bold text-xl mb-4">{title}</h2>
+        <h2 className=" mb-4 font-semibold text-2xl">{title}</h2>
         {children}
         <DynamicForm fieldsToAdd={fieldsToAdd} onSubmitHandler={onSubmitHandler} errorMessage={errorMessage} setErrorMessage={setErrorMessage} />
       </>

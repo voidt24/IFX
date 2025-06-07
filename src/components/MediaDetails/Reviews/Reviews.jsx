@@ -18,21 +18,18 @@ export const Reviews = ({ reviews }) => {
   return (
     reviews && (
       <>
-        <h3 style={{ marginTop: "40px" }}>Reviews</h3>
         {reviews.length > 0 ? (
-          <div className="reviews">
+          <div className="flex-col-center gap-12 md:w-[80%] md:mx-auto xl:w-[70%] xxl:w-[60%] 4k:w-[45%]">
             {reviews.map((result) => {
               return (
-                <CollapsibleElement key={result.id} customClassesForParent={"review-content bg-neutral-900"} truncatedTextStyle={truncatedTextStyle}>
+                <CollapsibleElement key={result.id} customClassesForParent={"review-content bg-surface-modal rounded-lg max-md:p-4 px-8 py-2"} truncatedTextStyle={truncatedTextStyle}>
                   <ReviewCard result={result} />
                 </CollapsibleElement>
               );
             })}
           </div>
         ) : (
-          <p className="text-gray-500 text-center">
-            No reviews available
-          </p>
+          <p className="text-content-muted text-center">No reviews available</p>
         )}
       </>
     )

@@ -1,10 +1,11 @@
 import { useContext } from "react";
-import { Context } from "../context/Context";
-import SliderCard from "./SliderCard";
-import Slider from "./Slider";
-import { ISliderData } from "@/helpers/api.config";
 
-export const Similar = ({ similar }: { similar: (ISliderData)[] }) => {
+import { ISliderData } from "@/helpers/api.config";
+import { Context } from "@/context/Context";
+import SliderCard from "../Slider/SliderCard";
+import Slider from "../Slider/Slider";
+
+export const Similar = ({ similar }: { similar: ISliderData[] }) => {
   const { similarError, currentMediaType } = useContext(Context);
 
   if (similarError) {
@@ -12,9 +13,9 @@ export const Similar = ({ similar }: { similar: (ISliderData)[] }) => {
   }
   return (
     <div className="similar">
-      <h3>Similar</h3>
+      {/* <h3>Similar</h3> */}
       {similar && similar.length > 0 ? (
-        <Slider sideControls={true} expectingCards={true}>
+        <Slider  sideControls={true} expectingCards={true}>
           {similar.map((result: ISliderData, index: number) => {
             return <SliderCard result={result} key={result.id ?? index + 56356} mediaType={currentMediaType} />;
           })}

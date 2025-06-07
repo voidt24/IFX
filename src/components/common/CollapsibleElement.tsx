@@ -36,8 +36,6 @@ const CollapsibleElement = ({ children, customClassesForParent, regularChildrenC
                 className="show-more-btn"
                 ref={btnRef}
                 onClick={() => {
-                  if (isOpen) {
-                  }
                   setIsOpen(!isOpen);
                 }}
               >
@@ -46,27 +44,13 @@ const CollapsibleElement = ({ children, customClassesForParent, regularChildrenC
             )}
           </>
         ) : (
-          <>
-            {children}
-            <span
-              style={{
-                display: !isMaximized ? "none" : "block",
-                zIndex: "2",
-                height: "190px",
-                width: "100%",
-                position: "absolute",
-                bottom: "0",
-                left: "0",
-                background: "linear-gradient(transparent, #000000de, black)",
-              }}
-            ></span>
-          </>
+          children
         )}
       </div>
 
       {!truncatedTextStyle && (
         <p
-          className={`show-more-btn text-center  z-10 `}
+          className="show-more-btn"
           onClick={() => {
             if (!isMaximized) {
               btnRef?.current?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });

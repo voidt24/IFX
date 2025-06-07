@@ -58,11 +58,11 @@ export default function Banner() {
   return (
     <>
       {loading ? (
-        <div className="results-container flex items-center justify-center max-sm:h-40 sm:h-72 md:h-80 xl:h-[420px] animate-pulse mx-auto rounded-lg bg-neutral-700/50 overflow-hidden !p-0 xl:max-w-[1400px]">
+        <div className="w-full flex items-center justify-center max-sm:h-40 sm:h-72 md:h-80 xl:h-[420px] animate-pulse mx-auto rounded-lg bg-neutral-700/50 overflow-hidden !p-0 xl:max-w-[1400px]">
           <CircularProgress color="inherit" size={30} />
         </div>
       ) : (
-        <div className="results-container mx-auto rounded-lg shadow-lg overflow-hidden !p-0 text-white xl:max-w-[1400px]">
+        <div className="mx-auto rounded-lg shadow-lg overflow-hidden !p-0 text-white xl:max-w-[1400px] w-[97%] mt-4">
           <div className="relative bg-neutral-800/50 max-sm:h-40 sm:h-72 md:h-80 xl:h-[420px] overflow-hidden">
             <div className={`h-full object-contain bg-center bg-cover mx-auto `} style={{ backgroundImage: `url(${banner})` }}></div>
             {/* EDIT BANNER BUTTON */}
@@ -78,8 +78,8 @@ export default function Banner() {
           </div>
 
           {/* MODAL TO CHOOSE BANNER */}
-          <Modal modalActive={bannersModal} setModalActive={setBannersModal} closeBtnToLeft={true} customClasses="sm:!w-[85%] lg:!w-[65%] 4k:!w-[45%]">
-            <div className="w-full h-[85vh] flex flex-col gap-4 items-center justify-center">
+          <Modal modalActive={bannersModal} setModalActive={setBannersModal} closeBtnToLeft={true} customClasses="sm:!w-[85%] lg:!w-[65%] 4k:!w-[45%] ">
+            <div className="w-full flex flex-col gap-4 items-center justify-center h-[50vh] lg:h-[70vh]">
               <h2 className="lg:text-xl ">Select a banner for your profile</h2>
               <button
                 onClick={() => {

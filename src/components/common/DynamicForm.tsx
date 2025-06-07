@@ -29,15 +29,20 @@ export default function DynamicForm({ fieldsToAdd, onSubmitHandler, errorMessage
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setLoadingAuth(true);
-        onSubmitHandler();
-        setLoadingAuth(false);
+        try {
+          setLoadingAuth(true);
+          onSubmitHandler();
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoadingAuth(false);
+        }
       }}
-      className="auth-form gap-6 w-full sm:w-[80%] xl:w-[85%] 2xl:w-[65%] 4:w-[55%]"
+      className="auth-form gap-6 w-full sm:w-[80%] xl:w-[85%] 2xl:w-[65%] 4:w-[55%] flex-col-center p-1"
     >
       {fieldsToAdd.map((input, index) => {
         return (
-          <label htmlFor="" key={index}>
+          <label htmlFor="" key={index} className="w-full flex flex-col items-start gap-1 ">
             {input.label}
             <Input type={input.type} placeholder={input.placeholder} value={input.value || ""} onChange={input.onChange} hasPassword={input.type == "password" ? true : false} />
           </label>
@@ -45,11 +50,11 @@ export default function DynamicForm({ fieldsToAdd, onSubmitHandler, errorMessage
       })}
       {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-      <button className={`rounded-3xl w-full ${loadingAuth ? "bg-white/20 cursor-wait text-zinc-500" : "bg-white/90 hover:bg-white text-black cursor-pointer"}`} type="submit" onClick={() => {}}>
+      <button className={`btn-primary w-full ${loadingAuth ? "btn-secondary cursor-wait " : ""}`} type="submit" onClick={() => {}}>
         {loadingAuth ? (
           <span className="flex gap-1 items-center justify-center">
-            <CircularProgress size={15} color="inherit" />
-            <p>Loading</p>
+            <CircularProgress size={15} color="primary" />
+            <p>Loading...</p>
           </span>
         ) : (
           "Confirm"

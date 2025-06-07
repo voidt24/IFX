@@ -1,4 +1,4 @@
-import SliderCard from "./SliderCard";
+import SliderCard from "./Slider/SliderCard";
 
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
@@ -8,6 +8,7 @@ import SelectDropdown from "@/components/common/SelectDropdown";
 import ConfirmDeleteModal from "./common/ConfirmDeleteModal";
 import ListOptionsBar from "./common/ListOptionsBar";
 import { selectFilterCategories } from "@/helpers/constants";
+import ToTop from "./common/ToTop/ToTop";
 
 export const ListsResults = ({ listName, currentListData, setCurrentListData, listSelectedChange }) => {
   const { setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
@@ -32,11 +33,11 @@ export const ListsResults = ({ listName, currentListData, setCurrentListData, li
   }, []);
 
   return (
-    <div className="results-container flex flex-col gap-4 xl:max-w-[1400px] overflow-auto h-full !pt-1 !pb-20 relative">
-      <div className="options flex justify-between items-center w-full sticky top-[-4px] left-0 bg-black z-[10] pb-4">
+    <div className="flex flex-col gap-2 h-full relative">
+      <div className="options flex justify-between items-center w-full bg-none">
         <span className="flex flex-col  text-left">
           <p>List</p>
-          <p className=" text-[105%] lg:text-[125%] text-[var(--primary)] mb-2">{listName.toUpperCase()}</p>
+          <p className=" text-[105%] lg:text-[125%] text-brand-light mb-2">{listName.toUpperCase()}</p>
           <SelectDropdown
             listSelectedChange={listSelectedChange}
             selectDefaultName="Filter by"
@@ -84,10 +85,12 @@ export const ListsResults = ({ listName, currentListData, setCurrentListData, li
           <CircularProgress color="inherit" size={100} />
         </div>
       ) : currentListData && currentListData.length > 0 ? (
-        <div className="results z-[9]">
+        <div className="media-lists">
           {currentListData.map((result) => (
             <SliderCard result={result} changeMediaType={result.media_type} key={result.id} canBeEdited={true} isChecked={checkedMedia.includes(result.id.toString())} />
           ))}
+
+          {currentListData.length > 35 && <ToTop />}
         </div>
       ) : (
         <div className="w-full h-full mt-2">You will see your saved data here...</div>
