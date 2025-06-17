@@ -12,8 +12,8 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/common/Modal";
 import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";
 import Notification from "@/components/common/Notification";
-import useVerifyToken from "@/Hooks/useVerifyToken";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
+import useVerifyToken from "@/Hooks/useVerifyToken";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
