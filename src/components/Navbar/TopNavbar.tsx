@@ -38,6 +38,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
     setUserLogged,
     authModalActive,
     setAuthModalActive,
+    firebaseActiveUser,
     setFirebaseActiveUser,
     setNoAccount,
     showSearchBar,
@@ -182,7 +183,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
                 <ul className="flex gap-2 items-center justify-center">
                   <li>
                     <button
-                      className=" px-3.5 py-1 sm:hover:bg-surface-hover rounded-full"
+                      className="w-[2rem] h-[2rem] sm:hover:bg-gray-800 rounded-full"
                       id="main-search-btn"
                       onClick={() => {
                         if (userMenuActive) setUserMenuActive(false);
@@ -208,7 +209,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
                       </button>
                     ) : (
                       <button
-                        className=" px-3.5 py-1 sm:hover:bg-surface-hover sm:rounded-full"
+                        className={`w-[2rem] h-[2rem] rounded-full font-semibold  ${userMenuActive ? "bg-brand-primary/80" : "bg-gray-800"} lg:hover:bg-brand-primary/80`}
                         onClick={() => {
                           if (showSearchBar) setShowSearchBar(false);
 
@@ -217,7 +218,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
                         }}
                         title="user-option"
                       >
-                        <i className={`"bi ${!userMenuActive ? "bi-person-circle" : "bi-x-lg"}  text-xl 2xl:text-2xl"`} id="user"></i>
+                        <span className="text-xl">{auth.currentUser?.displayName?.slice(0, 1).toUpperCase() || firebaseActiveUser?.email?.slice(0, 1).toUpperCase()}</span>
                       </button>
                     )}
                   </li>
@@ -270,7 +271,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
             <ul className="flex gap-2 items-center justify-center">
               <li>
                 <button
-                  className=" px-3.5 py-1 sm:hover:bg-surface-hover rounded-full"
+                  className="w-[2rem] h-[2rem] sm:hover:bg-gray-800 rounded-full"
                   id="main-search-btn"
                   onClick={() => {
                     if (userMenuActive) setUserMenuActive(false);
@@ -283,7 +284,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
               </li>
               <li className="">
                 {loadingAuth.state === "unknown" ? (
-                  <div className="py-2 px-4 bg-zinc-800 rounded-full animate-pulse"></div>
+                  <div className="py-2 px-4 bg-gray-800 rounded-full animate-pulse"></div>
                 ) : loadingAuth.state === "off" ? (
                   <button
                     className=" btn-primary px-2.5 py-1 shadow-none "
@@ -296,7 +297,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
                   </button>
                 ) : (
                   <button
-                    className=" px-3.5 py-1 sm:hover:bg-surface-hover sm:rounded-full"
+                    className={`w-[2rem] h-[2rem] rounded-full  font-semibold ${userMenuActive ? "bg-brand-primary/80" : "bg-gray-800"} lg:hover:bg-brand-primary/80`}
                     onClick={() => {
                       if (showSearchBar) setShowSearchBar(false);
 
@@ -305,7 +306,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
                     }}
                     title="user-option"
                   >
-                    <i className={`"bi ${!userMenuActive ? "bi-person-circle" : "bi-x-lg"}  max-sm:text-[127%] text-xl 2xl:text-2xl"`} id="user"></i>
+                    <span className="text-xl">{auth.currentUser?.displayName?.slice(0, 1).toUpperCase() || firebaseActiveUser?.email?.slice(0, 1).toUpperCase()}</span>
                   </button>
                 )}
               </li>
