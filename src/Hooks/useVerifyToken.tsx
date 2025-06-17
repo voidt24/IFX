@@ -12,30 +12,30 @@ function useVerifyToken(setLoader?: Dispatch<SetStateAction<boolean>>) {
   const router = useRouter();
 
   useEffect(() => {
-    async function verifyToken() {
-      const authCookie = getCookie(ID_TOKEN_COOKIE_NAME);
+    // async function verifyToken() {
+    //   const authCookie = getCookie(ID_TOKEN_COOKIE_NAME);
 
-      if (!authCookie) {
-        router.push("/");
-        return;
-      }
+    //   if (!authCookie) {
+    //     router.push("/");
+    //     return;
+    //   }
 
-      const verify = await fetch(VERIFY_TOKEN_ROUTE, {
-        method: "POST",
-        body: JSON.stringify({ token: authCookie }),
-      });
+    //   const verify = await fetch(VERIFY_TOKEN_ROUTE, {
+    //     method: "POST",
+    //     body: JSON.stringify({ token: authCookie }),
+    //   });
 
-      if (!verify.ok) {
-        router.push("/");
-      }
-    }
-    try {
-      verifyToken();
-    } catch (e) {
-      router.push("/");
-    } finally {
-      setLoader && setLoader(false);
-    }
+    //   if (!verify.ok) {
+    //     router.push("/");
+    //   }
+    // }
+    // try {
+    //   verifyToken();
+    // } catch (e) {
+    //   router.push("/");
+    // } finally {
+    //   setLoader && setLoader(false);
+    // }
   }, []);
 }
 
