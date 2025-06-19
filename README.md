@@ -30,7 +30,7 @@
 - Material UI
 - TMDB API
 
-## Check the demo: https://prods.vercel.app
+## Check the demo: https://ifxtv.vercel.app
 
 ### Images:
 <img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737502996/pr7_q5logz.webp" alt="Descripción" width="90%">
