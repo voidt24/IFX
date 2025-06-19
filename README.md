@@ -1,4 +1,5 @@
-<img src="public/logo.png" alt="Descripción" width="45%">
+
+<img src="public/apple-icon-180.png" alt="Descripción">
 
 ## API Based streaming platform
 ### Users can:
