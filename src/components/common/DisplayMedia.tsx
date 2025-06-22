@@ -71,6 +71,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
   }, []);
 
   useEffect(() => {
+    if (season == null || episode == null) return;
     if (mediaType == "tv" && (!paramIsValid(season) || !paramIsValid(episode))) {
       router.push(`?${params.toString()}`);
     }
@@ -161,7 +162,8 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
       id: currentId,
       media_type: currentMediaType === "tvshows" ? "tv" : "movie",
       ...(currentMediaType === "tvshows" &&
-        episodesArray && {
+        episodesArray &&
+        episodesArray[0].episodes?.[Number(episode) - 1] && {
           episodeId: episodesArray[0].episodes?.[Number(episode) - 1].id,
           season: Number(season),
           episode: episodesArray[0].episodes?.[Number(episode) - 1].name,
@@ -169,7 +171,8 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
           episode_image: `${image}${episodesArray[0].episodes?.[Number(episode) - 1].still_path}`,
         }),
       title: mediaDetailsData?.title,
-      vote_average: currentMediaType === "tvshows" && episodesArray ? episodesArray[0].episodes?.[Number(episode) - 1].vote_average : mediaDetailsData.vote,
+      vote_average:
+        currentMediaType === "tvshows" && episodesArray && episodesArray[0].episodes?.[Number(episode) - 1] ? episodesArray[0].episodes?.[Number(episode) - 1].vote_average : mediaDetailsData.vote,
       poster_path: mediaDetailsData?.poster,
       backdrop_path: mediaDetailsData?.bigHeroBackground,
       release_date: mediaDetailsData?.releaseDate,
@@ -293,7 +296,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
                       {mediaType == mediaProperties.tv.mediaType ? (
                         episodesArray == null ? (
                           ""
-                        ) : episodesArray?.[0]?.episodes ? (
+                        ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
                           <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
                         ) : (
                           "No overview"
@@ -312,7 +315,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
                   {mediaType == mediaProperties.tv.mediaType ? (
                     episodesArray == null ? (
                       ""
-                    ) : episodesArray?.[0]?.episodes ? (
+                    ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
                       <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
                     ) : (
                       "No overview"
