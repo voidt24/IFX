@@ -20,10 +20,12 @@
     "bootstrap-icons": "^1.11.3",
     "firebase": "^10.13.2",
     "firebase-admin": "^13.0.1",
+    "motion": "^12.18.1",
     "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18",
     "react-headroom": "^3.2.1",
+    "react-modal-sheet": "^4.4.0",
     "react-remove-scroll": "^2.7.1",
     "sass": "^1.79.4"
   },
