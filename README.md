@@ -1,4 +1,5 @@
-<img src="public/logo.png" alt="Descripción" width="45%">
+
+<img src="public/apple-icon-180.png" alt="Descripción">
 
 ## API Based streaming platform
 ### Users can:
@@ -30,14 +31,4 @@
 - Material UI
 - TMDB API
 
-## Check the demo: https://prods.vercel.app
-
-### Images:
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737502996/pr7_q5logz.webp" alt="Descripción" width="90%">
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737503454/pr1_ykno63.webp" alt="Descripción" width="90%">
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737503452/pr10_gnssr3.webp" alt="Descripción" width="90%">
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737503455/pr8_n8trfi.webp" alt="Descripción" width="90%">
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737502995/pr9_py6ear.webp" alt="Descripción" width="90%">
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737502994/pr5_mrer8x.webp" alt="Descripción" width="90%">
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737505290/pr11_cvaahj.webp" alt="Descripción" width="90%">
-<img src="https://res.cloudinary.com/andreyt/image/upload/q_auto/v1737502993/pr4_njelbw.webp" alt="Descripción" width="90%">
+## Check the demo: https://ifxtv.vercel.app
