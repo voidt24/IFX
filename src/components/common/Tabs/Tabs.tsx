@@ -25,7 +25,7 @@ function Tabs({ children }: { children: ReactNode }) {
         })}
       </div>
 
-      <div className="tab-content w-full h-full max-h-[500px] overflow-auto ">{childrenArray[activeTab]}</div>
+      <div className="tab-content w-full h-auto lg:max-h-[500px] lg:overflow-auto ">{childrenArray[activeTab]}</div>
     </div>
   );
 }
