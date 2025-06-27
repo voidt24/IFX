@@ -9,6 +9,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import SearchSlideOver from "../common/SearchSlideOver";
 import SlideOver from "../common/SlideOver";
+import useIsMobile from "@/Hooks/useIsMobile";
 
 export const menuActions = [
   {
@@ -52,6 +53,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
 
+  const isMobile = useIsMobile(640);
   const profileData = {
     displayName: auth.currentUser?.displayName,
     email: auth.currentUser?.email,
@@ -137,7 +139,7 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
 
   return (
     <>
-      {windowWidth < 640 ? (
+      {isMobile ? (
         <div className=" fixed top-0 w-full max-lg:z-[99] z-[999]" ref={navRef}>
           <Headroom className="transition-all duration-500">
             <nav className="nav ">
