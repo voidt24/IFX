@@ -1,4 +1,5 @@
-import { apiUrl, API_KEY, CACHENAME, ISliderData } from "./api.config";
+import { IMediaData } from "@/Types";
+import { apiUrl, API_KEY, CACHENAME } from "./api.config";
 import { movieGenresCode, tvGenresCode, INITIAL_DATA_EXPIRATION_TIME, providersNetworkCode, providersWatchCode } from "./constants";
 const validTime = INITIAL_DATA_EXPIRATION_TIME; //2 days
 
@@ -60,7 +61,7 @@ export const fetchInitialData = async (
       NAME_TO_SAVE_ON_CACHE = `${mediaType}-${categoryForMovie}-initial-search-${pageNumber ? pageNumber : ""}`;
     }
   }
-  const getFromApi = async (): Promise<ISliderData[]> => {
+  const getFromApi = async (): Promise<IMediaData[]> => {
     try {
       const data = await fetch(url);
 
@@ -75,12 +76,12 @@ export const fetchInitialData = async (
         //that's why we save 20 trending results for tv (limit[2] = 20) so we show the first 4 in hero and the other 15 in slider :)
         //for movies, both list are fine so we save 4 trending for hero (limit[0] = 4) and 15 popular for slider (limit[1] = 15)
 
-        const result: ISliderData[] = [];
+        const result: IMediaData[] = [];
 
-        jsonDataResults.forEach((element: ISliderData) => {
-          const resultObject: ISliderData = {
+        jsonDataResults.forEach((element: IMediaData) => {
+          const resultObject: IMediaData = {
             backdrop_path: element.backdrop_path || undefined, //both
-            id: element.id || undefined, //both
+            id: element.id, //both
             title: element.title || undefined,
             original_title: element.original_title || undefined,
             name: element.name || undefined, //este sale en movie
@@ -113,7 +114,7 @@ export const fetchInitialData = async (
   }
 };
 
-async function getFromCache(validTime: number, getFromApi: () => Promise<ISliderData[]>, NAME_TO_SAVE_ON_CACHE: string) {
+async function getFromCache(validTime: number, getFromApi: () => Promise<IMediaData[]>, NAME_TO_SAVE_ON_CACHE: string) {
   try {
     const response = await caches.match(NAME_TO_SAVE_ON_CACHE);
     const expirationResponse = await caches.match(`${NAME_TO_SAVE_ON_CACHE}-expiration`);
@@ -144,7 +145,7 @@ async function getFromCache(validTime: number, getFromApi: () => Promise<ISlider
   }
 }
 
-async function saveToCache(jsonDataResults: ISliderData[], validTime: number, NAME_TO_SAVE_ON_CACHE: string) {
+async function saveToCache(jsonDataResults: IMediaData[], validTime: number, NAME_TO_SAVE_ON_CACHE: string) {
   try {
     const responseClone = new Response(JSON.stringify(jsonDataResults), {
       headers: { "Content-Type": "application/json" },

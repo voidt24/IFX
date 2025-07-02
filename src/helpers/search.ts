@@ -1,17 +1,11 @@
-import { apiUrl, API_KEY, ISliderData } from "./api.config";
+import { apiUrl, API_KEY } from "./api.config";
 import { getFromCache, saveToCache } from "./cache/cache";
 import { ONE_MONTH } from "./constants";
-export interface Isearch {
-  id: number;
-  name: string;
-  poster_path: string;
-  media_type: string;
-  vote_average: number;
-}
+import { IMediaData } from "@/Types/index";
 
 export interface IdataResults {
   page: number;
-  results: ISliderData[];
+  results: IMediaData[];
   total_pages: number;
 }
 export const search = async (query: string, page: number) => {
@@ -29,9 +23,9 @@ export const search = async (query: string, page: number) => {
       searchDataResults.page = json.page;
       searchDataResults.total_pages = json.total_pages;
 
-      results.forEach((result: ISliderData) => {
-        if (result.media_type !== "person" && result.media_type) {
-          const searchDataObj: ISliderData = {
+      results.forEach((result: IMediaData) => {
+        if ( result.media_type && result.media_type == "tv" || result.media_type =="movie") {
+          const searchDataObj: IMediaData = {
             id: result.id,
             name: result.name ?? result.title,
             poster_path: result.poster_path,
