@@ -1,5 +1,5 @@
 export interface IhistoryMedia {
-  id?: number ;
+  id: number ;
   title?: string | null;
   media_type?: "tv" | "movie";
   poster_path?: string | null;
