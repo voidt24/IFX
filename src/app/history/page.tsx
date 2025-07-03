@@ -13,7 +13,7 @@ import ToTop from "@/components/common/ToTop/ToTop";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 
 function History() {
-  const { firebaseActiveUser, currentId, setCurrentId, containerMargin } = useContext(Context);
+  const { firebaseActiveUser, setCurrentId, isMobilePWA } = useContext(Context);
   const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
     message: "",
@@ -143,15 +143,25 @@ function History() {
                         </div>
 
                         <div className="w-full p-4 text-center sm:w-[75%]  lg:w-[95%] xl:w-[80%] 2xl:w-[50%] 4k:w-[40%] m-auto flex-col-center gap-2">
-                          <Link
-                            onClick={() => {
-                              setCurrentId(data.id);
-                            }}
-                            href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`}
-                            className="text-xl font-semibold hover:underline"
-                          >
-                            {data.title}
-                          </Link>
+                          {isMobilePWA ? (
+                            <p
+                              onClick={() => {
+                                setCurrentId(data.id);
+                              }}
+                            >
+                              {data.title}
+                            </p>
+                          ) : (
+                            <Link
+                              onClick={() => {
+                                setCurrentId(data.id);
+                              }}
+                              href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`}
+                              className="text-xl font-semibold hover:underline"
+                            >
+                              {data.title}
+                            </Link>
+                          )}
                           {data.media_type === "tv" && (
                             <span className="text-[85%] text-content-secondary ">
                               <span>Season: {data.season}</span>
