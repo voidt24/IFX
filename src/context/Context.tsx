@@ -1,16 +1,17 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useState, createContext, useEffect, Dispatch, SetStateAction, useRef } from "react";
+import { useState, createContext, useEffect, Dispatch, SetStateAction, useRef, RefObject } from "react";
 import { auth, ID_TOKEN_COOKIE_NAME } from "../firebase/firebase.config";
 import { useParams } from "next/navigation";
 import Modal from "@/components/common/Modal";
-
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import AuthForm from "@/components/AuthForm";
 import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
-import { ISliderData } from "@/helpers/api.config";
+import { IMediaData } from "@/Types/index";
+import { useIsPWA } from "@/Hooks/useIsPWA";
+import useIsMobile from "@/Hooks/useIsMobile";
 
-interface ImediaDetailsData {
+export interface ImediaDetailsData {
   results: [] | null;
   heroBackground: string | null;
   bigHeroBackground: string | null; //to get the backdrop even in smaller size devices
@@ -19,7 +20,7 @@ interface ImediaDetailsData {
   overview: string | null;
   releaseDate: string | null;
   vote: string | null;
-  genres: string | null;
+  genres: { id: number; name: string }[];
   loadingAllData: boolean | null;
   runtime: string | null;
   seasons: string | null;
@@ -64,14 +65,14 @@ interface IContextValues {
   setLoadingSearch: Dispatch<SetStateAction<boolean>>;
   searchStarted: boolean;
   setSearchStarted: Dispatch<SetStateAction<boolean>>;
-  currentId: number | undefined;
-  setCurrentId: Dispatch<SetStateAction<number | undefined>>;
+  currentId: number;
+  setCurrentId: Dispatch<SetStateAction<number>>;
   openTrailer: boolean;
   setOpenTrailer: Dispatch<SetStateAction<boolean>>;
   trailerKey: number | undefined;
   setTrailerKey: Dispatch<SetStateAction<number | undefined>>;
-  currentMediaType: string;
-  setCurrentMediaType: Dispatch<SetStateAction<string>>;
+  currentMediaType: "movies" | "tvshows";
+  setCurrentMediaType: Dispatch<SetStateAction<"movies" | "tvshows">>;
   authModalActive: boolean;
   setAuthModalActive: Dispatch<SetStateAction<boolean>>;
   userLogged: boolean;
@@ -102,16 +103,18 @@ interface IContextValues {
   setSimilarError: Dispatch<SetStateAction<boolean>>;
   loadingScreen: boolean;
   setLoadingScreen: Dispatch<SetStateAction<boolean>>;
-  listActive: string | null;
-  setListActive: Dispatch<SetStateAction<string | null>>;
-  searchResults: ISliderData[] | null;
-  setSearchResults: Dispatch<SetStateAction<ISliderData[] | null>>;
+  listActive: string;
+  setListActive: Dispatch<SetStateAction<string>>;
+  searchResults: IMediaData[] | null;
+  setSearchResults: Dispatch<SetStateAction<IMediaData[] | null>>;
   mediaDetailsData: ImediaDetailsData | null;
   setMediaDetailsData: Dispatch<SetStateAction<ImediaDetailsData | null>>;
   episodesArray: IepisodesArray[] | null;
   setEpisodesArray: Dispatch<SetStateAction<IepisodesArray[] | null>>;
-  activeSeason: number;
-  setActiveSeason: Dispatch<SetStateAction<number>>;
+  activeSeason: number | null;
+  setActiveSeason: Dispatch<SetStateAction<number | null>>;
+  activeEpisode: number | null;
+  setActiveEpisode: Dispatch<SetStateAction<number | null>>;
   seasonModal: boolean;
   setSeasonModal: Dispatch<SetStateAction<boolean>>;
   listChanged: boolean;
@@ -122,16 +125,25 @@ interface IContextValues {
   setUserMenuActive: Dispatch<SetStateAction<boolean>>;
   containerMargin: number | undefined;
   setContainerMargin: Dispatch<SetStateAction<number | undefined>>;
+  sheetMediaType: "movies" | "tvshows";
+  setSheetMediaType: Dispatch<SetStateAction<"movies" | "tvshows">>;
+  sheetSeason: number | undefined;
+  setSheetSeason: Dispatch<SetStateAction<number | undefined>>;
+  sheetEpisode: number | undefined;
+  setSheetEpisode: Dispatch<SetStateAction<number | undefined>>;
+  isPWA: boolean;
+  isMobilePWA: boolean;
+  sheetsRef: RefObject<HTMLDivElement>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
 
 export default function ContextWrapper({ children }: { children: React.ReactNode }) {
   const path = usePathname();
-  const [currentId, setCurrentId] = useState<number | undefined>();
+  const [currentId, setCurrentId] = useState<number>(0);
   const [openTrailer, setOpenTrailer] = useState(false);
   const [trailerKey, setTrailerKey] = useState<number | undefined>();
-  const [currentMediaType, setCurrentMediaType] = useState("");
+  const [currentMediaType, setCurrentMediaType] = useState<"movies" | "tvshows">("movies");
   const [authModalActive, setAuthModalActive] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
   const [noAccount, setNoAccount] = useState(true);
@@ -152,9 +164,9 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
   const [similarError, setSimilarError] = useState(false);
 
-  const [listActive, setListActive] = useState<string | null>("favorites");
+  const [listActive, setListActive] = useState<string>("favorites");
 
-  const [searchResults, setSearchResults] = useState<ISliderData[] | null>([]);
+  const [searchResults, setSearchResults] = useState<IMediaData[] | null>([]);
 
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchStarted, setSearchStarted] = useState(false);
@@ -169,12 +181,21 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
   const [episodesArray, setEpisodesArray] = useState<IepisodesArray[] | null>(null);
 
-  const [activeSeason, setActiveSeason] = useState(0);
+  const [activeSeason, setActiveSeason] = useState<number | null>(0);
+  const [activeEpisode, setActiveEpisode] = useState<number | null>(0);
   const [seasonModal, setSeasonModal] = useState(false);
   const [listChanged, setListChanged] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [containerMargin, setContainerMargin] = useState<number | undefined>();
+  const [sheetMediaType, setSheetMediaType] = useState<"movies" | "tvshows">("movies");
+  const [sheetSeason, setSheetSeason] = useState<number | undefined>();
+  const [sheetEpisode, setSheetEpisode] = useState<number | undefined>();
+
+  const sheetsRef = useRef<HTMLDivElement>(null);
+  const isPWA = useIsPWA();
+  const isMobile = useIsMobile(768);
+  const isMobilePWA = isPWA && isMobile;
 
   const contextValues = {
     numberOfPages,
@@ -236,6 +257,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setEpisodesArray,
     activeSeason,
     setActiveSeason,
+    activeEpisode,
+    setActiveEpisode,
     seasonModal,
     setSeasonModal,
     listChanged,
@@ -246,6 +269,15 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setUserMenuActive,
     containerMargin,
     setContainerMargin,
+    sheetMediaType,
+    setSheetMediaType,
+    sheetSeason,
+    setSheetSeason,
+    sheetEpisode,
+    setSheetEpisode,
+    isPWA,
+    sheetsRef,
+    isMobilePWA,
   };
 
   useEffect(() => {
