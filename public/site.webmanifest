@@ -1,6 +1,7 @@
 {
   "name": "IFX",
   "short_name": "IFX",
+  "start_url": "/",
   "icons": [
     {
       "src": "/manifest-icon-192.maskable.png",
