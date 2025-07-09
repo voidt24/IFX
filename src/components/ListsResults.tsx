@@ -47,9 +47,6 @@ export const ListsResults = ({
   return (
     <div className="flex flex-col gap-2 h-full relative">
       <div className="options flex justify-between items-center w-full bg-none">
-        <span className="flex flex-col  text-left">
-          <p>List</p>
-          <p className=" text-[105%] lg:text-[125%] text-brand-light mb-2">{listName.toUpperCase()}</p>
           <SelectDropdown
             listSelectedChange={listSelectedChange}
             selectDefaultName="Filter by"
@@ -71,9 +68,8 @@ export const ListsResults = ({
               }
             }}
           />
-        </span>
         {currentListData && currentListData.length > 0 && (
-          <>
+          <div className="my-4">
             <ListOptionsBar setConfirmDialog={setConfirmDialog} />
             {confirmDialog && (
               <ConfirmDeleteModal
@@ -88,7 +84,7 @@ export const ListsResults = ({
                 setMessage={setMessage}
               />
             )}
-          </>
+          </div>
         )}
       </div>
 
