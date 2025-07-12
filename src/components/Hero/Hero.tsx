@@ -1,24 +1,16 @@
 "use client";
-import { useContext, useRef, useLayoutEffect } from "react";
-import { image, ISliderData } from "../../helpers/api.config";
-
+import { useContext, useRef } from "react";
+import { image } from "../../helpers/api.config";
 import Link from "next/link";
 import { Context } from "@/context/Context";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
+import { IMediaData, MediaTypeApi } from "@/Types";
 
-export default function Hero({ results, type, hasTitle }: { results: ISliderData[]; type: string; hasTitle?: boolean }) {
-  const { setCurrentId } = useContext(Context);
+export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
+  const { setCurrentId, setSheetMediaType, setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      if (sliderRef && sliderRef.current)
-        if (sliderContentRef && sliderContentRef.current) {
-          sliderRef.current.scrollLeft = sliderContentRef.current.offsetLeft;
-        }
-    }, 2000);
-  }, []);
 
   return (
     <div className="slider-test max-w-full relative px-2 mx-auto w-full h-full overflow-hidden">
@@ -87,18 +79,32 @@ export default function Hero({ results, type, hasTitle }: { results: ISliderData
                       <span className=" text-content-secondary text-[75%]">Available on {formatReleaseDate(sliderData.release_date || sliderData.first_air_date || "")}</span>
                     ) : null}
                   </div>
-                  <Link
-                    className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
-                    href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
-                    onClick={() => {
-                      setCurrentId(sliderData.id);
-                      sessionStorage.setItem("navigatingFromApp", "1");
-                    }}
-                  >
-                    <i className="bi bi-caret-right-fill leading-none text-[90%]"></i>
-                  </Link>
+                  {isMobilePWA ? (
+                    <button
+                      className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
+                      onClick={() => {
+                        setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
+                        setCurrentId(sliderData.id);
+                        setOpenMediaDetailsSheet(true);
+                      }}
+                      title="media-details-button"
+                    >
+                      <i className="bi bi-caret-right-fill leading-none text-[90%]"></i>
+                    </button>
+                  ) : (
+                    <Link
+                      className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
+                      href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
+                      onClick={() => {
+                        setCurrentId(sliderData.id);
+                        sessionStorage.setItem("navigatingFromApp", "1");
+                      }}
+                    >
+                      <i className="bi bi-caret-right-fill leading-none text-[90%]"></i>
+                    </Link>
+                  )}
                 </div>
-                {/* </div> */}
+                {/*  */}
               </div>
             );
           })}

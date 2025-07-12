@@ -5,12 +5,13 @@ import { Context } from "@/context/Context";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import Link from "next/link";
-import { ISliderData } from "@/helpers/api.config";
+import { IMediaData } from "@/Types";
 import HomeSkeleton from "@/components/common/Skeletons/HomeSkeleton";
 import SliderSkeleton from "@/components/common/Skeletons/SliderSkeleton";
 import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
 import HeroSkeleton from "@/components/common/Skeletons/HeroSkeleton";
 import SignUpBanner from "@/components/common/SignUpBanner";
+import { getApiMediaType } from "@/helpers/getApiMediaType";
 
 const Slider = dynamic(() => import("@/components/Slider/Slider"), {
   loading: () => <SliderSkeleton />,
@@ -24,18 +25,18 @@ const Hero = dynamic(() => import("@/components/Hero/Hero"), {
 });
 export default function Home() {
   const { firebaseActiveUser, initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError, containerMargin } = useContext(Context);
-  const [moviesApiData, setMoviesApiData] = useState<ISliderData[]>([]);
-  const [tvApiData, setTvApiData] = useState<ISliderData[]>([]);
-  const [moviesHeroApiData, setMoviesHeroApiData] = useState<ISliderData[]>([]);
+  const [moviesApiData, setMoviesApiData] = useState<IMediaData[]>([]);
+  const [tvApiData, setTvApiData] = useState<IMediaData[]>([]);
+  const [moviesHeroApiData, setMoviesHeroApiData] = useState<IMediaData[]>([]);
 
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
-    MethodThatSavesInMovies?: Dispatch<SetStateAction<ISliderData[]>>,
-    MethodThatSavesInTV?: Dispatch<SetStateAction<ISliderData[]>>,
+    MethodThatSavesInMovies?: Dispatch<SetStateAction<IMediaData[]>>,
+    MethodThatSavesInTV?: Dispatch<SetStateAction<IMediaData[]>>,
     categoryForMovie?: string
   ) => {
     fetchInitialData(mediaTypeObj, null, null, categoryForMovie)
-      .then((data: [ISliderData[], number]) => {
+      .then((data: [IMediaData[], number]) => {
         mediaTypeObj.route == mediaProperties.movie.route ? MethodThatSavesInMovies && MethodThatSavesInMovies(data[0]) : MethodThatSavesInTV && MethodThatSavesInTV(data[0]);
       })
       .catch((e) => {
@@ -47,7 +48,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setCurrentId(undefined);
+    setCurrentId(0);
   }, []);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function Home() {
 
   return (
     <div className="relative" style={{ marginTop: containerMargin ? `${containerMargin}px` : undefined }}>
-      <Hero results={moviesHeroApiData} type="Movies" hasTitle={window.innerWidth < 640} />
+      <Hero results={moviesHeroApiData} type="Movies" hasTitle={window.innerWidth < 640} mediaType="movie" />
       <div className=" mt-6 pb-0">
         <div className=" flex-col-center gap-4 lg:gap-6 ">
           <div className="w-full ">
@@ -82,8 +83,8 @@ export default function Home() {
             </span>
             <Slider sideControls={true} expectingCards={true} XPosition="5">
               {moviesApiData &&
-                moviesApiData.slice(5, 17).map((sliderData: ISliderData) => {
-                  return <SliderCard result={sliderData} key={sliderData.id} mediaType={"movies"} />;
+                moviesApiData.slice(5, 17).map((sliderData: IMediaData) => {
+                  return <SliderCard key={sliderData.id} result={sliderData} mediaType={getApiMediaType("movies")} />;
                 })}
             </Slider>
           </div>
@@ -93,7 +94,7 @@ export default function Home() {
       </div>
 
       <div className="mt-6">
-        <Hero results={tvApiData} type="TV Shows" hasTitle={true} />
+        <Hero results={tvApiData} type="TV Shows" hasTitle={true} mediaType="tv" />
       </div>
 
       <div className=" mt-6">
@@ -107,7 +108,7 @@ export default function Home() {
           <Slider sideControls={true} expectingCards={true}>
             {tvApiData &&
               tvApiData.slice(5, 17).map((sliderData) => {
-                return <SliderCard result={sliderData} key={sliderData.id} mediaType={"tvshows"} />;
+                return <SliderCard key={sliderData.id} result={sliderData} mediaType={getApiMediaType("tvshows")} />;
               })}
           </Slider>
         </div>
