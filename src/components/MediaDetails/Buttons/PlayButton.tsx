@@ -1,5 +1,4 @@
 import { Context, ImediaDetailsData } from "@/context/Context";
-import { useSheetStack } from "@/context/SheetContext";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { IhistoryMedia } from "@/Types";
 import { MediaTypeApi } from "@/Types/mediaType";
@@ -7,9 +6,8 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
 function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: MediaTypeApi; data: ImediaDetailsData }) {
-  const { firebaseActiveUser, setSeasonModal, openTrailer, setOpenTrailer, isPWA } = useContext(Context);
+  const { firebaseActiveUser, setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setCurrentId, setSheetMediaType } = useContext(Context);
   const router = useRouter();
-  const { pushPlayMediaSheet } = useSheetStack();
 
   return (
     <button
@@ -19,8 +17,10 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
         if (mediaType == "tv") {
           setSeasonModal(true);
         } else {
-          if (isPWA) {
-            pushPlayMediaSheet(mediaType, mediaId);
+          if (isMobilePWA) {
+            setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
+            setCurrentId(mediaId);
+            setOpenDisplayMediaSheet(true);
           } else {
             router.push(`${mediaId}/watch?name=${data?.title}`);
           }
