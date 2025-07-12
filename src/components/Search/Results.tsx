@@ -5,7 +5,7 @@ import { Context } from "@/context/Context";
 import SliderCard from "../Slider/SliderCard";
 import Loader from "../common/Loader";
 import Pagination from "../common/Pagination";
-import { ISliderData } from "@/helpers/api.config";
+import { IMediaData } from "@/Types/index";
 
 export default function Results() {
   const { searchResults, loadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, numberOfPages, searchQuery, setNumberOfPages } = useContext(Context);
@@ -32,15 +32,11 @@ export default function Results() {
           ) : (
             <div ref={ref} className="flex flex-col gap-4 h-!full w-!full z-30">
               <div className="media-lists h-full">
-                {searchResults?.length && searchResults.length > 0 ? (
-                  <>
-                    {searchResults?.map((result: ISliderData) => {
-                      return <SliderCard result={result} changeMediaType={result.media_type} key={result.id} />;
-                    })}
-                  </>
-                ) : (
-                  searchStarted && <p className="col-span-full mt-4">no results</p>
-                )}
+                {searchResults?.length && searchResults.length > 0
+                  ? searchResults?.map((result: IMediaData) => {
+                      return <SliderCard key={result.id} result={result} canBeEdited={true} mediaType={result.media_type} />;
+                    })
+                  : searchStarted && <p className="col-span-full mt-4">no results</p>}
               </div>
               {searchStarted && !loadingSearch && (
                 <div className="w-full ">

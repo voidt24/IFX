@@ -5,7 +5,6 @@ import { Context } from "@/context/Context";
 import Link from "next/link";
 import Checkbox from "@mui/material/Checkbox";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
-import { useSheetStack } from "@/context/SheetContext";
 import { MediaTypeApi, IMediaData } from "@/Types/index";
 interface ISliderCardProps {
   result: IMediaData;
@@ -18,8 +17,8 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
   const [poster, setPoster] = useState("");
   const [vote, setVote] = useState<string | undefined>();
 
-  const { setCurrentId, setCurrentMediaType, edit, setEdit, checkedMedia, setCheckedMedia, showSearchBar, setShowSearchBar, setSheetMediaType, isMobilePWA } = useContext(Context);
-  const { pushMediaDetailsSheet } = useSheetStack();
+  const { setOpenMediaDetailsSheet, setCurrentId, setCurrentMediaType, edit, setEdit, checkedMedia, setCheckedMedia, showSearchBar, setShowSearchBar, setSheetMediaType, isMobilePWA } =
+    useContext(Context);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       if (!checkedMedia?.includes(event.target.id)) {
@@ -59,7 +58,9 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
         {isMobilePWA ? (
           <button
             onClick={() => {
-              pushMediaDetailsSheet(mediaType, result.id);
+              setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
+              setCurrentId(result.id);
+              setOpenMediaDetailsSheet(true);
 
               if (canBeEdited) {
                 setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows");

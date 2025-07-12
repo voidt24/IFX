@@ -1,12 +1,10 @@
 "use client";
-import DefaultLayout from "@/components/layout/DefaultLayout";
 import SliderCard from "@/components/Slider/SliderCard";
-import { ISliderData } from "@/helpers/api.config";
+import { IMediaData } from "@/Types/index";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import AllMediaDataSkeleton from "./Skeletons/AllMediaDataSkeleton";
-import SliderCardSkeleton from "./Skeletons/SliderCardSkeleton";
 import { Context } from "@/context/Context";
 import SignUpBanner from "./SignUpBanner";
 import Pagination from "./Pagination";
@@ -23,8 +21,8 @@ export default function AllMediaData({
   searchCategory: string;
   title: string;
 }) {
-  const { currentMediaType, setCurrentId, firebaseActiveUser, containerMargin } = useContext(Context);
-  const [apiData, setApiData] = useState<ISliderData[]>([]);
+  const { currentMediaType, setCurrentId, firebaseActiveUser } = useContext(Context);
+  const [apiData, setApiData] = useState<IMediaData[]>([]);
   const [pageActive, setPageActive] = useState<number>(1);
   const [elementsToShow, setElementsToShow] = useState<number>(8);
   const [pageIsLoading, setPageIsLoading] = useState(true);
@@ -40,16 +38,15 @@ export default function AllMediaData({
     pageActive: number,
     provider: string | null = null,
     genre: string | null = null,
-    MethodThatSavesInState?: Dispatch<SetStateAction<ISliderData[]>>,
+    MethodThatSavesInState?: Dispatch<SetStateAction<IMediaData[]>>,
     categoryForMovie?: string
   ) => {
     fetchInitialData(mediaTypeObj, provider, genre, categoryForMovie, pageActive)
-      .then((data: [ISliderData[], number]) => {
+      .then((data: [IMediaData[], number]) => {
         const [results, total_pages] = data;
         if (MethodThatSavesInState) {
           MethodThatSavesInState(results);
         }
-
         setElementsToShow(Number(total_pages));
       })
       .catch(() => {
@@ -64,7 +61,7 @@ export default function AllMediaData({
   };
 
   useEffect(() => {
-    setCurrentId(undefined);
+    setCurrentId(0);
   }, []);
 
   useEffect(() => {
@@ -118,7 +115,7 @@ export default function AllMediaData({
 
           <div className="media-lists ">
             {apiData.map((sliderData) => {
-              return <SliderCard result={sliderData} key={sliderData.id} mediaType={mediaTypeObj.route} />;
+              return <SliderCard key={sliderData.id} result={sliderData} mediaType={sliderData.media_type} />;
             })}
           </div>
         </div>
