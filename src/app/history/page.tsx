@@ -13,7 +13,7 @@ import ToTop from "@/components/common/ToTop/ToTop";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 
 function History() {
-  const { firebaseActiveUser, setCurrentId, isMobilePWA } = useContext(Context);
+  const { firebaseActiveUser, setCurrentId, isMobilePWA, setSheetMediaType, setOpenMediaDetailsSheet } = useContext(Context);
   const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
     message: "",
@@ -144,13 +144,16 @@ function History() {
 
                         <div className="w-full p-4 text-center sm:w-[75%]  lg:w-[95%] xl:w-[80%] 2xl:w-[50%] 4k:w-[40%] m-auto flex-col-center gap-2">
                           {isMobilePWA ? (
-                            <p
+                            <button
                               onClick={() => {
                                 setCurrentId(data.id);
+                                setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows");
+                                setOpenMediaDetailsSheet(true);
                               }}
                             >
+                              
                               {data.title}
-                            </p>
+                            </button>
                           ) : (
                             <Link
                               onClick={() => {
