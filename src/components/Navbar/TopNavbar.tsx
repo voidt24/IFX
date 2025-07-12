@@ -49,7 +49,6 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
     setContainerMargin,
   } = useContext(Context);
   const [menuActive, setMenuActive] = useState(false);
-  const [windowWidth, setWindowWidth] = useState<number>(0);
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
 
@@ -68,17 +67,8 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
       }
     });
 
-    function onResize() {
-      if (!window) return;
-
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener("resize", onResize);
-
     return () => {
       unsubscribe();
-      window.removeEventListener("resize", onResize);
     };
   }, []);
 
