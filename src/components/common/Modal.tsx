@@ -1,5 +1,6 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
+import { Context } from "@/context/Context";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { RemoveScroll } from "react-remove-scroll";
 
 interface ModalProps {
@@ -10,9 +11,10 @@ interface ModalProps {
   closeBtnToLeft?: boolean;
 }
 const Modal = ({ modalActive, setModalActive, children, customClasses, closeBtnToLeft = false }: ModalProps) => {
+  const { sheetsRef } = useContext(Context);
   return modalActive ? (
     <>
-      <RemoveScroll>
+      <RemoveScroll shards={[sheetsRef]}>
         <div className={`flex fixed z-[9999] h-screen w-full top-0 left-0 max-sm:p-1.5 flex-col justify-center items-center`}>
           <div
             className="overlay"
