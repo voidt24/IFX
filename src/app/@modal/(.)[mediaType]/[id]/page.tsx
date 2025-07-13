@@ -1,45 +1,14 @@
 import MediaDetails from "@/components/MediaDetails/MediaDetails";
-import { fetchDetailsData } from "@/helpers/fetchDetailsData";
-import { Metadata } from "next";
 import NextModal from "../../NextModal";
 
 interface Params {
   params: { mediaType: string; id: string };
 }
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { mediaType, id } = params;
-  async function getData(mediaType: string, id: string) {
-    let mediaTitle = "Movie Details";
-
-    try {
-      const mediaDetails = await fetchDetailsData("byId", mediaType == "movies" ? "movie" : "tv", id);
-
-      if (mediaType == "movies") {
-        if ((mediaDetails && mediaDetails.title) || mediaDetails.original_title) {
-          mediaTitle = mediaDetails.title || mediaDetails.original_title;
-        }
-      } else {
-        if ((mediaDetails && mediaDetails.name) || mediaDetails.original_name) {
-          mediaTitle = mediaDetails.name || mediaDetails.original_name;
-        }
-      }
-
-      return mediaTitle;
-    } catch (error) {
-      console.error("Error fetching title:", error);
-    }
-  }
-  const title = await getData(mediaType, id);
-
-  return {
-    title: title + " - Prods",
-  };
-}
 
 const Media = ({ params }: Params) => {
   return (
     <NextModal>
-      <MediaDetails mediaType={params.mediaType == "movies" ? "movie" : "tv"} />
+      <MediaDetails mediaType={params.mediaType == "movies" ? "movie" : "tv"} mediaId={Number(params.id)} />
     </NextModal>
   );
 };

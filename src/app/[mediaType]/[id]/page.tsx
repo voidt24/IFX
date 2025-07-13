@@ -1,4 +1,5 @@
 import MediaDetails from "@/components/MediaDetails/MediaDetails";
+import { APP_NAME } from "@/helpers/api.config";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { Metadata } from "next";
 
@@ -31,12 +32,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const title = await getData(mediaType, id);
 
   return {
-    title: title + " - Prods",
+    title: title + ` - ${APP_NAME}`,
   };
 }
 
 const Media = ({ params }: Params) => {
-  return <MediaDetails mediaType={params.mediaType == "movies" ? "movie" : "tv"} />;
+  return <MediaDetails mediaType={params.mediaType == "movies" ? "movie" : "tv"} mediaId={Number(params.id)} />;
 };
 
 export default Media;
