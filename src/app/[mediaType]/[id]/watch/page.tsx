@@ -1,9 +1,10 @@
 import DisplayMedia from "@/components/common/DisplayMedia";
 import { APP_NAME } from "@/helpers/api.config";
+import { MediaTypeUrl } from "@/Types/mediaType";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 interface Params {
-  params: { mediaType: string; id: string };
+  params: { mediaType: MediaTypeUrl; id: string };
 }
 
 export function generateMetadata({ params }: Params): Metadata {
@@ -18,5 +19,5 @@ export function generateMetadata({ params }: Params): Metadata {
 }
 
 export default function Watch({ params }: Params) {
-  return <DisplayMedia mediaType={params.mediaType == "movies" ? "movie" : "tv"} />;
+  return <DisplayMedia mediaType={params.mediaType} />;
 }

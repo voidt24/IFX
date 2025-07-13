@@ -14,6 +14,8 @@ import Slider from "../Slider/Slider";
 import CollapsibleElement from "./CollapsibleElement";
 import { IhistoryMedia, ISeasonArray } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
+import { MediaTypeApi, MediaTypeUrl } from "@/Types/mediaType";
+import { getApiMediaType } from "@/helpers/getApiMediaType";
 
 function paramIsValid(param: string | null) {
   if (!param || Number(param) < 1) return false;
@@ -23,7 +25,15 @@ function paramIsValid(param: string | null) {
   }
 }
 
-function DisplayMedia({ mediaType }: { mediaType: string }) {
+export async function getInfo(mediaType: MediaTypeApi, mediaId: number | undefined) {
+  try {
+    const data = await fetchDetailsData("byId", mediaType, mediaId);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const {
     currentId,
     firebaseActiveUser,
@@ -45,6 +55,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
   const searchParams = useSearchParams();
   const season = searchParams.get("season");
   const episode = searchParams.get("episode");
+  const name = searchParams.get("name");
   const [mediaURL, setMediaURL] = useState<string | undefined>("");
   const [selectedSrc, setSelectedSrc] = useState(0);
   const [seasonArray, setSeasonArray] = useState<
@@ -71,11 +82,32 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
   }, []);
 
   useEffect(() => {
-    if (season == null || episode == null) return;
-    if (mediaType == "tv" && (!paramIsValid(season) || !paramIsValid(episode))) {
-      router.push(`?${params.toString()}`);
+    if (mediaType == "movies" && (season == null || episode == null)) return;
+    if (mediaType == "tvshows") {
+      if (season == null || episode == null || !paramIsValid(season) || !paramIsValid(episode)) {
+        router.push(`?${params.toString()}`);
+      }
     }
   }, [season, episode]);
+
+  useEffect(() => {
+    if (!mediaTypeReady || !currentId || !mediaDetailsData) return;
+
+    if (name == null || (name != null && name != mediaDetailsData.title?.trim())) {
+      const params = new URLSearchParams();
+      if (season == null || episode == null || !paramIsValid(season) || !paramIsValid(episode)) {
+        params.set("season", "1");
+        params.set("episode", "1");
+        router.push(`?${params.toString()}`);
+      } else {
+        params.set("name", mediaDetailsData.title ?? "");
+        params.set("season", season);
+        params.set("episode", episode);
+      }
+
+      router.push(`?${params.toString()}`);
+    }
+  }, [mediaTypeReady, currentId, season, episode, path, name, mediaDetailsData]);
 
   //1.set mediatype always to a valid value or to 'movies' by  default
   //2.establish mediaTypeReady to advance to other requests in order to get correct data
@@ -95,33 +127,31 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
   // if mediatype is set and currentId is valid, get  general info of movie or tvshow
   useEffect(() => {
     if (!mediaTypeReady || !currentId) return;
-    async function getInfo() {
-      try {
-        const data = await fetchDetailsData("byId", currentMediaType == "movies" ? "movie" : "tv", currentId);
-        const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = data;
 
-        setMediaDetailsData({
-          results: [],
-          heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
-          bigHeroBackground: `${image}${backdrop_path}`,
-          title: title || name,
-          poster: `${imageWithSize("500")}${poster_path}`,
-          overview,
-          releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
-          vote: String(vote_average).slice(0, 3),
-          genres: genres && genres.map((genre: { name: string }) => genre.name),
-          loadingAllData: false,
-          runtime: runtime ? getRunTime(runtime) : "",
-          seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
-          seasonsArray: seasons,
-        });
-      } catch (error) {
-        throw error;
-      }
+    async function setInitialData() {
+      const inf = await getInfo(getApiMediaType(mediaType), currentId);
+      const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = inf;
+
+      setMediaDetailsData({
+        results: [],
+        heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
+        bigHeroBackground: `${image}${backdrop_path}`,
+        title: title || name,
+        poster: `${imageWithSize("500")}${poster_path}`,
+        overview,
+        releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
+        vote: String(vote_average).slice(0, 3),
+        genres: genres && genres.map((genre: { name: string }) => genre.name),
+        loadingAllData: false,
+        runtime: runtime ? getRunTime(runtime) : "",
+        seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
+        seasonsArray: seasons,
+      });
     }
-    getInfo();
 
-    setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(0, currentId, "movie") : MEDIA_URL_RESOLVER(0, currentId, "tvshows", Number(season), Number(episode)));
+    setInitialData();
+
+    setMediaURL(mediaType == "movies" ? MEDIA_URL_RESOLVER(0, currentId, "movie") : MEDIA_URL_RESOLVER(0, currentId, "tv", Number(season), Number(episode)));
   }, [mediaTypeReady, currentId, season, episode, path]);
 
   useEffect(() => {
@@ -150,7 +180,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
         console.error("Error fetching season data:", error);
       }
     }
-    if (mediaType == "tv") {
+    if (mediaType == "tvshows") {
       getEpisodes();
     }
   }, [mediaDetailsData]);
@@ -218,7 +248,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
                         if (selectedSrc != index) {
                           setSelectedSrc(index);
                           setMediaURL("");
-                          setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(index, currentId, "movie") : MEDIA_URL_RESOLVER(index, currentId, "tvshows", Number(season), Number(episode)));
+                          setMediaURL(mediaType == "movies" ? MEDIA_URL_RESOLVER(index, currentId, "movie") : MEDIA_URL_RESOLVER(index, currentId, "tv", Number(season), Number(episode)));
                         }
                       }}
                     >
@@ -288,7 +318,7 @@ function DisplayMedia({ mediaType }: { mediaType: string }) {
                     <div>
                       <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.mediaType ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
                     </div>
-                    <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0]}</p>
+                    <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0].name}</p>
                   </div>
 
                   <div className=" info max-md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
