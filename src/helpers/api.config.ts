@@ -20,28 +20,28 @@ export const srcOptions = [
   { src: "https://player.smashy.stream" },
 ];
 
-export const MEDIA_URL_RESOLVER = (index: number, mediaId: number | undefined, mediaType: "movie" | "tvshows", season: number | null = null, episode: number | null = null) => {
+export const MEDIA_URL_RESOLVER = (index: number, mediaId: number, mediaType: "movie" | "tv", season: number | null = null, episode: number | null = null) => {
   const srcOptions = [
     {
       movieSrc: `https://ythd.org/embed/${mediaId}`,
-      tvshowsSrc: `https://ythd.org/embed/${mediaId}/${season}-${episode}`,
+      tvSrc: `https://ythd.org/embed/${mediaId}/${season}-${episode}`,
     },
     {      
       movieSrc: `https://vidlink.pro/${mediaProperties.movie.mediaType}/${mediaId}`,
-      tvshowsSrc: `https://vidlink.pro/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
+      tvSrc: `https://vidlink.pro/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
     },
     {
       movieSrc: `https://embed.su/embed/${mediaProperties.movie.mediaType}/${mediaId}`,
-      tvshowsSrc: `https://embed.su/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
+      tvSrc: `https://embed.su/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
     },
     
     {
       movieSrc: `https://multiembed.mov/directstream.php?video_id=${mediaId}&tmdb=1`,
-      tvshowsSrc: `https://multiembed.mov/directstream.php?video_id=${mediaId}&tmdb=1&s=${season}&e=${episode}`,
+      tvSrc: `https://multiembed.mov/directstream.php?video_id=${mediaId}&tmdb=1&s=${season}&e=${episode}`,
     },
     {
       movieSrc: `https://vidsrc.cc/v3/embed/${mediaProperties.movie.mediaType}/${mediaId}`,
-      tvshowsSrc: `https://vidsrc.cc/v3/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
+      tvSrc: `https://vidsrc.cc/v3/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
     },
     {
       movieSrc: `https://moviesapi.club/${mediaProperties.movie.mediaType}/${mediaId}`,
@@ -49,34 +49,19 @@ export const MEDIA_URL_RESOLVER = (index: number, mediaId: number | undefined, m
     },
     {      
       movieSrc: `https://2embed.cc/embed/${mediaId}`,
-      tvshowsSrc: `https://www.2embed.cc/embedtv/${mediaId}&tmdb=1&s=${season}&e=${episode}`,
+      tvSrc: `https://www.2embed.cc/embedtv/${mediaId}&tmdb=1&s=${season}&e=${episode}`,
     },
 
     {      
       movieSrc: `https://nontongo.win/embed/${mediaProperties.movie.mediaType}/${mediaId}`,
-      tvshowsSrc: `https://nontongo.win/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
+      tvSrc: `https://nontongo.win/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
     },
 
     {
       movieSrc: `https://player.smashy.stream/${mediaProperties.movie.mediaType}/${mediaId}`,
-      tvshowsSrc: `https://player.smashy.stream/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
+      tvSrc: `https://player.smashy.stream/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
     },
   ];
 
   return srcOptions[index][`${mediaType}Src`];
 };
-
-export interface ISliderData {
-  backdrop_path?: string | undefined;
-  id: number | undefined;
-  title?: string | undefined; //show 1st for movies
-  original_title?: string | undefined;
-  name?: string | undefined; //show 1st for TV
-  original_name?: string | undefined;
-  overview?: string | undefined;
-  poster_path: string | undefined;
-  media_type?: string | undefined;
-  release_date?: string | undefined;
-  first_air_date?: string | undefined;
-  vote_average: number | undefined;
-}
