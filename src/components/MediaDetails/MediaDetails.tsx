@@ -20,19 +20,8 @@ import { MediaTypeApi } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
-  const {
-    currentId,
-    setAddedToFavs,
-    setAddedtoWatchList,
-    setCastError,
-    setReviewsError,
-    mediaDetailsData,
-    setMediaDetailsData,
-    setOpenTrailer,
-    setTrailerKey,
-    currentMediaType,
-    isMobilePWA,
-  } = useContext(Context);
+  const { currentId, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, mediaDetailsData, setMediaDetailsData, setOpenTrailer, setTrailerKey, currentMediaType, isMobilePWA } =
+    useContext(Context);
 
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -146,7 +135,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
               </div>
             </div>
           </Tab>
-          <Tab title="Reviews">
+          <Tab title={`Reviews (${reviews.length})`}>
             <Reviews reviews={reviews} />
           </Tab>
         </Tabs>
