@@ -99,8 +99,6 @@ interface IContextValues {
   setCastError: Dispatch<SetStateAction<boolean>>;
   reviewsError: boolean;
   setReviewsError: Dispatch<SetStateAction<boolean>>;
-  similarError: boolean;
-  setSimilarError: Dispatch<SetStateAction<boolean>>;
   loadingScreen: boolean;
   setLoadingScreen: Dispatch<SetStateAction<boolean>>;
   listActive: string;
@@ -165,8 +163,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [castError, setCastError] = useState(false);
 
   const [reviewsError, setReviewsError] = useState(false);
-
-  const [similarError, setSimilarError] = useState(false);
 
   const [listActive, setListActive] = useState<string>("favorites");
 
@@ -249,8 +245,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setCastError,
     reviewsError,
     setReviewsError,
-    similarError,
-    setSimilarError,
     listActive,
     setListActive,
     searchResults,

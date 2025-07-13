@@ -12,7 +12,6 @@ import { getFromDB } from "@/firebase/getFromDB";
 import { image } from "@/helpers/api.config";
 import Notification from "../common/Notification";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
-import Similar from "./Similar";
 import Tabs from "../common/Tabs/Tabs";
 import { Tab } from "../common/Tabs/Tab";
 import { handleTrailerClick } from "@/helpers/getTrailer";
@@ -27,7 +26,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
     setAddedtoWatchList,
     setCastError,
     setReviewsError,
-    setSimilarError,
     mediaDetailsData,
     setMediaDetailsData,
     setOpenTrailer,
@@ -36,7 +34,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
     isMobilePWA,
   } = useContext(Context);
 
-  const [similar, setSimilar] = useState([]);
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loadingFavs, setLoadingFavs] = useState(true);
@@ -56,11 +53,10 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
     if ((!isMobilePWA && currentId != undefined) || (isMobilePWA && mediaId != undefined)) {
       Promise.allSettled([
         fetchDetailsData("byId", mediaType, isMobilePWA ? mediaId : currentId),
-        fetchDetailsData("similar", mediaType, isMobilePWA ? mediaId : currentId),
         fetchDetailsData("cast", mediaType, isMobilePWA ? mediaId : currentId),
         fetchDetailsData("reviews", mediaType, isMobilePWA ? mediaId : currentId),
       ]).then((result) => {
-        const [byIdPromise, similarPromise, castPromise, reviewsPromise] = result;
+        const [byIdPromise, castPromise, reviewsPromise] = result;
         if (byIdPromise.status == "fulfilled") {
           const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
 
@@ -82,7 +78,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
           (isMobilePWA ? setmediaDetailsPWA : setMediaDetailsData)(mediaDetails);
 
-          similarPromise.status == "fulfilled" ? setSimilar(similarPromise.value.results) : setSimilarError(true);
           castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
           reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
           setLoadingAllData(false);
@@ -153,9 +148,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
           </Tab>
           <Tab title="Reviews">
             <Reviews reviews={reviews} />
-          </Tab>
-          <Tab title="Similar">
-              <Similar similar={similar} mediaType={mediaType} />
           </Tab>
         </Tabs>
       </div>
