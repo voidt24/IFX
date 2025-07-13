@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
 import "../styles/styles.scss";
 import ContextWrapper from "../context/Context";
-import Trailer from "@/components/Trailer";
 import DefaultLayout from "@/components/layout/DefaultLayout";
+import DisplayMediaSheet from "@/components/Sheet/DisplayMediaSheet";
+import MediaDetailsSheet from "@/components/Sheet/MediaDetailsSheet";
 export const metadata: Metadata = {
   title: "IFX",
   description: "Watch and save your favorite films and series, discover new productions and save them into your watchlists!",
@@ -48,8 +49,9 @@ export default function RootLayout({ children, modal }: Readonly<{ children: Rea
           <DefaultLayout>
             {children}
             {modal}
-            <Trailer />
           </DefaultLayout>
+          <MediaDetailsSheet />
+          <DisplayMediaSheet />
         </ContextWrapper>
       </body>
     </html>
