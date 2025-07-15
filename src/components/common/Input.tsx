@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface inputProps {
   id?: string;
@@ -11,16 +11,16 @@ interface inputProps {
   customClassesForInput?: string;
 }
 
-export default function Input({ id, type, placeholder, value, onChange, hasPassword, customClassesForWrapper,customClassesForInput }: inputProps) {
+export default function Input({ id, type, placeholder, value, onChange, hasPassword, customClassesForWrapper, customClassesForInput }: inputProps) {
   const [passwordType, setPasswordType] = useState<"password" | "text">("password");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [inputRef]);
+
   return (
-    <span
-      className={`w-full flex-row-center bg-white/5 relative rounded-full focus-within:border focus-within:border-blue-500 lg:text-[80%] ${
-        hasPassword ? "pr-2" : ""
-      } ${customClassesForWrapper}`}
-    >
+    <span className={`w-full flex-row-center bg-white/5 relative rounded-full focus-within:border focus-within:border-blue-500 lg:text-[80%] ${hasPassword ? "pr-2" : ""} ${customClassesForWrapper}`}>
       <input
         id={id}
         ref={inputRef}
