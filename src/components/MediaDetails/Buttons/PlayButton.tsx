@@ -24,26 +24,26 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
           } else {
             router.push(`${mediaId}/watch?name=${data?.title}`);
           }
-        }
-
-        const dataToSave: IhistoryMedia = {
-          id: mediaId,
-          media_type: mediaType,
-          title: data?.title,
-          vote_average: data?.vote,
-          poster_path: data?.poster,
-          backdrop_path: data?.bigHeroBackground,
-          release_date: data?.releaseDate,
-          watchedAt: Date.now(),
-        };
-
-        if (firebaseActiveUser && mediaId && firebaseActiveUser.uid) {
-          try {
-            saveToHistory(dataToSave, mediaId, firebaseActiveUser.uid);
-          } catch (error) {
-            console.log(error);
+          const dataToSave: IhistoryMedia = {
+            id: mediaId,
+            media_type: mediaType,
+            title: data?.title,
+            vote_average: data?.vote,
+            poster_path: data?.poster,
+            backdrop_path: data?.bigHeroBackground,
+            release_date: data?.releaseDate,
+            watchedAt: Date.now(),
+          };
+  
+          if (firebaseActiveUser && mediaId && firebaseActiveUser.uid) {
+            try {
+              saveToHistory(dataToSave, mediaId, firebaseActiveUser.uid);
+            } catch (error) {
+              console.log(error);
+            }
           }
         }
+
 
         if (openTrailer) setOpenTrailer(false);
       }}
