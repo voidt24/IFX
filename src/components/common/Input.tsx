@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import { Context } from "@/context/Context";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 interface inputProps {
   id?: string;
@@ -14,10 +15,13 @@ interface inputProps {
 export default function Input({ id, type, placeholder, value, onChange, hasPassword, customClassesForWrapper, customClassesForInput }: inputProps) {
   const [passwordType, setPasswordType] = useState<"password" | "text">("password");
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const { showSearchBar, openSearchDrawer } = useContext(Context);
+  
   useEffect(() => {
-    inputRef.current?.focus();
-  }, [inputRef]);
+    if (showSearchBar || openSearchDrawer) {
+      inputRef.current?.focus();
+    }
+  }, [inputRef, showSearchBar, openSearchDrawer]);
 
   return (
     <span className={`w-full flex-row-center bg-white/5 relative rounded-full focus-within:border focus-within:border-blue-500 lg:text-[80%] ${hasPassword ? "pr-2" : ""} ${customClassesForWrapper}`}>

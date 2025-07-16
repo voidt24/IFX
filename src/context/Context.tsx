@@ -136,6 +136,10 @@ interface IContextValues {
   setOpenMediaDetailsSheet: Dispatch<SetStateAction<boolean>>;
   openDisplayMediaSheet: boolean;
   setOpenDisplayMediaSheet: Dispatch<SetStateAction<boolean>>;
+  openSearchDrawer: boolean;
+  setOpenSearchDrawer: Dispatch<SetStateAction<boolean>>;
+  openUserDrawer: boolean;
+  setOpenUserDrawer: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
@@ -195,6 +199,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const sheetsRef = useRef<HTMLDivElement>(null);
   const [openMediaDetailsSheet, setOpenMediaDetailsSheet] = useState(false);
   const [openDisplayMediaSheet, setOpenDisplayMediaSheet] = useState(false);
+  const [openSearchDrawer, setOpenSearchDrawer] = useState(false);
+  const [openUserDrawer, setOpenUserDrawer] = useState(false);
   const isPWA = useIsPWA();
   const isMobile = useIsMobile(768);
   const isMobilePWA = isPWA && isMobile;
@@ -282,6 +288,10 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setOpenMediaDetailsSheet,
     openDisplayMediaSheet,
     setOpenDisplayMediaSheet,
+    openSearchDrawer,
+    setOpenSearchDrawer,
+    openUserDrawer,
+    setOpenUserDrawer,
   };
 
   useEffect(() => {

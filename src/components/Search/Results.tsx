@@ -8,7 +8,7 @@ import Pagination from "../common/Pagination";
 import { IMediaData } from "@/Types/index";
 
 export default function Results() {
-  const { searchResults, loadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, numberOfPages, searchQuery, setNumberOfPages } = useContext(Context);
+  const { searchResults, loadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, numberOfPages, searchQuery, setNumberOfPages, isMobilePWA } = useContext(Context);
   const [startingPage, setStartingPage] = useState(1);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -19,7 +19,7 @@ export default function Results() {
   }, []);
 
   return (
-    <div className={`h-full w-full overflow-auto flex flex-col gap-4 pb-8 rounded-lg relative ${searchStarted && !loadingSearch && "bg-black/60"}`}>
+    <div className={`h-full w-full ${!isMobilePWA ? "overflow-auto" : ""} flex flex-col gap-4 pb-8 rounded-lg relative ${searchStarted && !loadingSearch && "bg-black/60"}`}>
       {searchStarted && (
         <>
           {numberOfPages > 1 && (
