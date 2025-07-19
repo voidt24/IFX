@@ -11,6 +11,7 @@ import { MediaTypeApi } from "@/Types/mediaType";
 import { isReleased } from "@/helpers/isReleased";
 import PlayButton from "../MediaDetails/Buttons/PlayButton";
 import TrailerButton from "../MediaDetails/Buttons/TrailerButton";
+import MediaInfoRow from "../MediaDetails/MediaInfoRow";
 
 export const MediaInfoPWA = ({
   state,
@@ -57,8 +58,11 @@ export const MediaInfoPWA = ({
           <div className="flex-col-center gap-2 z-[999999] w-full ">
             <h1 className="title font-semibold text-4xl line-clamp-3 w-full">{state && state.title}</h1>
 
-            <div className="info flex-row-center flex-wrap max-md:text-[85%] gap-2 text-content-secondary "></div>
-            <Overview data={state} />
+            <div className="info flex-row-center flex-wrap max-md:text-[85%] gap-2 text-content-secondary ">
+              <MediaInfoRow data={state} mediaType={mediaType} />
+
+              <Overview data={state} />
+            </div>
 
             <div className="flex-row-center gap-6 w-full">
               <ListsButtonGroup state={state} mediaType={mediaType} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />

@@ -93,7 +93,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
           <div className="lg:hidden to-top-gradient-bg"></div>
 
           <div className="flex-col-center gap-2 z-[999999] lg:items-start lg:text-left  w-full ">
-            <MediaInfoRow data={mediaDetailsData} mediaType={getApiMediaType(currentMediaType)} mediaTypeToCheck={mediaProperties.tv.route} />
+            <MediaInfoRow data={mediaDetailsData} mediaType={getApiMediaType(currentMediaType)} />
             <Overview data={mediaDetailsData} />
 
             <div className="flex-row-center gap-6 w-full lg:justify-start">

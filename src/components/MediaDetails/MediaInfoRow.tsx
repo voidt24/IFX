@@ -2,7 +2,7 @@ import { ImediaDetailsData } from "@/context/Context";
 import { isReleased } from "@/helpers/isReleased";
 import { MediaTypeApi } from "@/Types/mediaType";
 
-function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi; mediaTypeToCheck: string }) {
+function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi }) {
   if (!data) return null;
 
   return (
