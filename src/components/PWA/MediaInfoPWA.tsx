@@ -56,13 +56,9 @@ export const MediaInfoPWA = ({
           <div className="to-top-gradient-bg"></div>
 
           <div className="flex-col-center gap-2 z-[999999] w-full ">
-            <h1 className="title font-semibold text-4xl line-clamp-3 w-full">{state && state.title}</h1>
+            <MediaInfoRow data={state} mediaType={mediaType} />
 
-            <div className="info flex-row-center flex-wrap max-md:text-[85%] gap-2 text-content-secondary ">
-              <MediaInfoRow data={state} mediaType={mediaType} />
-
-              <Overview data={state} />
-            </div>
+            <Overview data={state} />
 
             <div className="flex-row-center gap-6 w-full">
               <ListsButtonGroup state={state} mediaType={mediaType} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
