@@ -88,7 +88,7 @@ export const fetchInitialData = async (
             original_name: element.original_name || undefined, //movie
             overview: element.overview || undefined, //both
             poster_path: element.poster_path || undefined, //both
-            media_type: element.media_type || undefined, //movie
+            media_type: element.media_type || mediaType, //movie
             release_date: element.release_date || undefined,
             first_air_date: element.first_air_date || undefined, //movie
             vote_average: element.vote_average || undefined, //both
