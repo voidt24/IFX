@@ -40,7 +40,7 @@ export default function Settings() {
   useEffect(() => {
     setProfileData({ displayName: auth.currentUser?.displayName, email: auth.currentUser?.email });
   }, [auth.currentUser?.displayName]);
-  
+
   const handleChangeDisplayName = async () => {
     if (!name) {
       setErrorMessage({ active: true, text: "Type your name" });
@@ -233,7 +233,7 @@ export default function Settings() {
                   setName("");
                 }}
               >
-                <p className="settings-btn">Name &gt;</p>
+                <p className="settings-btn text-left">Name &gt;</p>
                 <p className="text-content-muted px-4 py-1">{profileData?.displayName}</p>
               </button>
             </div>
@@ -246,13 +246,13 @@ export default function Settings() {
                   setEmail("");
                 }}
               >
-                <p className="settings-btn">Email address &gt;</p>
+                <p className="settings-btn text-left">Email address &gt;</p>
                 <p className="text-content-muted px-4 py-1">{profileData?.email}</p>
               </button>
             </div>
             <div className="flex justify-start">
               <button
-                className="settings-btn"
+                className="settings-btn text-left"
                 onClick={() => {
                   setPwdModalActive(!pwdModalActive);
                   setUserData({ email: "", password: "" });
