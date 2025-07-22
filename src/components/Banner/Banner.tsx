@@ -1,6 +1,6 @@
 import { banners } from "@/helpers/banners/banners-sources";
 
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "../common/Modal";
 import { Context } from "@/context/Context";
 import { getFieldsFromCollection, updateField } from "@/firebase/fetchMyData";
@@ -58,17 +58,17 @@ export default function Banner() {
   return (
     <>
       {loading ? (
-        <div className="w-full flex items-center justify-center max-sm:h-40 sm:h-72 md:h-80 xl:h-[420px] animate-pulse mx-auto rounded-lg bg-neutral-700/50 overflow-hidden !p-0 xl:max-w-[1400px]">
+        <div className="w-full flex items-center justify-center min-h-[150px] max-h-[275px] mx-auto overflow-hidden !p-0 xl:max-w-[1400px]">
           <CircularProgress color="inherit" size={30} />
         </div>
       ) : (
-        <div className="mx-auto rounded-lg shadow-lg overflow-hidden !p-0 text-white xl:max-w-[1400px] w-[97%] mt-4">
+        <div className="mx-auto rounded-lg shadow-lg overflow-hidden !p-0 text-white xl:max-w-[1400px] w-[97%] max-h-[275px] relative">
           <div className="relative bg-neutral-800/50 max-sm:h-40 sm:h-72 md:h-80 xl:h-[420px] overflow-hidden">
             <div className={`h-full object-contain bg-center bg-cover mx-auto `} style={{ backgroundImage: `url(${banner})` }}></div>
             {/* EDIT BANNER BUTTON */}
             <button
               title="edit-btn"
-              className="absolute top-3 right-3 px-2 py-1 rounded-lg hover:bg-white/30 text-[140%]"
+              className="absolute top-3 right-3 px-2 py-1 rounded-lg hover:bg-white/30 text-[140%] z-[2]"
               onClick={() => {
                 setBannersModal(true);
               }}
@@ -76,6 +76,7 @@ export default function Banner() {
               <i className="bi bi-pencil-square"></i>
             </button>
           </div>
+          <div className="overlay-base bg-gradient-to-t from-black via-black/20"></div>
 
           {/* MODAL TO CHOOSE BANNER */}
           <Modal modalActive={bannersModal} setModalActive={setBannersModal} closeBtnToLeft={true} customClasses="sm:!w-[85%] lg:!w-[65%] 4k:!w-[45%] ">
@@ -105,7 +106,7 @@ export default function Banner() {
                       }}
                       key={index}
                     >
-                      <img src={el.src} alt="" className="" />
+                      <img src={el.src} alt="" className="lg:w-[70%] xl:w-[60%]" />
                       <p>{el.name}</p>
 
                       {el.src == bannerClicked && (

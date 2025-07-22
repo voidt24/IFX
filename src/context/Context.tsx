@@ -140,6 +140,8 @@ interface IContextValues {
   setOpenSearchDrawer: Dispatch<SetStateAction<boolean>>;
   openUserDrawer: boolean;
   setOpenUserDrawer: Dispatch<SetStateAction<boolean>>;
+  profileData: { displayName: string | null | undefined; email: string | null | undefined } | null;
+  setProfileData: Dispatch<SetStateAction<{ displayName: string | null | undefined; email: string | null | undefined } | null>>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
@@ -201,6 +203,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [openDisplayMediaSheet, setOpenDisplayMediaSheet] = useState(false);
   const [openSearchDrawer, setOpenSearchDrawer] = useState(false);
   const [openUserDrawer, setOpenUserDrawer] = useState(false);
+  const [profileData, setProfileData] = useState<{ displayName: string | null | undefined; email: string | null | undefined } | null>(null);
   const isPWA = useIsPWA();
   const isMobile = useIsMobile(768);
   const isMobilePWA = isPWA && isMobile;
@@ -292,6 +295,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setOpenSearchDrawer,
     openUserDrawer,
     setOpenUserDrawer,
+    profileData,
+    setProfileData,
   };
 
   useEffect(() => {
@@ -314,6 +319,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
       if (user) {
         setUserLogged(true);
         setFirebaseActiveUser({ email: user.email, uid: user.uid });
+        setProfileData({ displayName: user.displayName, email: user.email });
       }
     });
 

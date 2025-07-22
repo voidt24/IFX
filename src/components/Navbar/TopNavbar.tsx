@@ -81,8 +81,8 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
 
   const userActions = [
     {
-      name: "Profile",
-      href: "/profile",
+      name: "Account",
+      href: "/account",
       icon: <i className="bi bi-person-fill"></i>,
       actionFunction: null,
     },
@@ -96,12 +96,6 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
       name: "History",
       href: "/history",
       icon: <i className="bi bi-clock-history"></i>,
-      actionFunction: null,
-    },
-    {
-      name: "Settings",
-      href: "/settings",
-      icon: <i className="bi bi-gear"></i>,
       actionFunction: null,
     },
     {

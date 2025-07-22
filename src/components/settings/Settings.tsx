@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import DeleteAccount from "@/firebase/importantActons/DeleteAccount";
 import { auth, authErrors, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE } from "@/firebase/firebase.config";
@@ -12,8 +11,8 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/common/Modal";
 import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";
 import Notification from "@/components/common/Notification";
-import Wrapper from "@/components/common/Wrapper/Wrapper";
 import useVerifyToken from "@/Hooks/useVerifyToken";
+import { APP_NAME } from "@/helpers/api.config";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -21,7 +20,7 @@ export default function Settings() {
   const [emailModalActive, setEmailModalActive] = useState(false);
   const [nameModalActive, setNameModalActive] = useState(false);
   const [loader, setLoader] = useState(true);
-  const { firebaseActiveUser, setFirebaseActiveUser } = useContext(Context);
+  const { setFirebaseActiveUser, profileData, setProfileData } = useContext(Context);
   const [password, setPassword] = useState<string | null>("");
   const [email, setEmail] = useState<string | null>("");
   const [name, setName] = useState<string | null>("");
@@ -38,6 +37,10 @@ export default function Settings() {
 
   useVerifyToken(setLoader);
 
+  useEffect(() => {
+    setProfileData({ displayName: auth.currentUser?.displayName, email: auth.currentUser?.email });
+  }, [auth.currentUser?.displayName]);
+  
   const handleChangeDisplayName = async () => {
     if (!name) {
       setErrorMessage({ active: true, text: "Type your name" });
@@ -216,38 +219,38 @@ export default function Settings() {
   }
 
   return (
-    <Wrapper>
-      <h1 className="title-style">Settings</h1>
-
+    <>
       <div>
         {/* General Section */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">General</h2>
+          <h2 className="text-lg font-semibold mb-4">Account settings</h2>
           <div className="flex flex-col gap-4">
-            <div className="flex justify-between">
+            <div className="flex justify-between sm:justify-start">
               <button
-                className="settings-btn"
+                className="max-sm:w-full flex justify-between sm:justify-start gap-8"
                 onClick={() => {
                   setNameModalActive(!nameModalActive);
                   setName("");
                 }}
               >
-                Name &gt;
+                <p className="settings-btn">Name &gt;</p>
+                <p className="text-content-muted px-4 py-1">{profileData?.displayName}</p>
               </button>
             </div>
-            <div className="flex justify-between">
+            <div className="w-full">
               <button
-                className="settings-btn"
+                className="max-sm:w-full flex justify-between sm:justify-start gap-8"
                 onClick={() => {
                   setEmailModalActive(!emailModalActive);
                   setUserData({ email: "", password: "" });
                   setEmail("");
                 }}
               >
-                Email address &gt;
+                <p className="settings-btn">Email address &gt;</p>
+                <p className="text-content-muted px-4 py-1">{profileData?.email}</p>
               </button>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-start">
               <button
                 className="settings-btn"
                 onClick={() => {
@@ -348,7 +351,7 @@ export default function Settings() {
             setErrorMessage={setErrorMessage}
           >
             <p className="text-left leading-7">
-              Once you delete your account, all your data is permanently removed from Prods. <br />
+              Once you delete your account, all your data is permanently removed from {APP_NAME}. <br />
               *Deleted accounts are not recoverable.
             </p>
           </UserActionModal>
@@ -379,6 +382,6 @@ export default function Settings() {
       </div>
 
       <Notification message={message} setMessage={setMessage} />
-    </Wrapper>
+    </>
   );
 }
