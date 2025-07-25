@@ -35,6 +35,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   useEffect(() => {
     return () => {
       setMediaDetailsData(null);
+      setOpenTrailer(false)
     };
   }, []);
 

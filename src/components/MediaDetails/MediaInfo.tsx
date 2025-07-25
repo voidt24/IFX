@@ -14,6 +14,7 @@ import SeasonList from "./SeasonData/SeasonList";
 import Overview from "./Overview";
 import ListsButtonGroup from "./ListsButtonGroup";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
+import Trailer from "../Trailer";
 
 export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: boolean; loadingWatchlist: boolean }) => {
   const { setCurrentId, currentId, currentMediaType, mediaDetailsData, setEpisodesArray, setActiveSeason, seasonModal, setSeasonModal, containerMargin } = useContext(Context);
@@ -121,6 +122,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
       </div>
 
       <Notification message={message} setMessage={setMessage} />
+      <Trailer/>
 
       {currentMediaType == mediaProperties.tv.route && (
         <Modal modalActive={seasonModal} setModalActive={setSeasonModal} customClasses="max-sm:w-[100%] sm:w-[95%] lg:w-[85%] xl:w-[70%] 2xl:w-[65%] 4k:w-[1300px] !px-2 lg:!px-4 lg:!py-8">
