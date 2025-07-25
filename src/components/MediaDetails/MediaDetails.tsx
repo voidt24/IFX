@@ -35,7 +35,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   useEffect(() => {
     return () => {
       setMediaDetailsData(null);
-      setOpenTrailer(false)
+      setOpenTrailer(false);
     };
   }, []);
 
@@ -127,7 +127,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
                 <button
                   className="px-3 py-2 bg-brand-primary/35 backdrop-blur-lg rounded-full hover:scale-125 transition-all duration-200"
                   onClick={() => {
-                    handleTrailerClick(setOpenTrailer, currentId, getApiMediaType(currentMediaType), setTrailerKey);
+                    handleTrailerClick(setOpenTrailer, isMobilePWA ? mediaId : currentId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType), setTrailerKey);
                   }}
                   title="trailer-button"
                 >

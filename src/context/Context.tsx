@@ -69,8 +69,8 @@ interface IContextValues {
   setCurrentId: Dispatch<SetStateAction<number>>;
   openTrailer: boolean;
   setOpenTrailer: Dispatch<SetStateAction<boolean>>;
-  trailerKey: number | undefined;
-  setTrailerKey: Dispatch<SetStateAction<number | undefined>>;
+  trailerKey: number | null;
+  setTrailerKey: Dispatch<SetStateAction<number | null>>;
   currentMediaType: "movies" | "tvshows";
   setCurrentMediaType: Dispatch<SetStateAction<"movies" | "tvshows">>;
   authModalActive: boolean;
@@ -150,7 +150,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const path = usePathname();
   const [currentId, setCurrentId] = useState<number>(0);
   const [openTrailer, setOpenTrailer] = useState(false);
-  const [trailerKey, setTrailerKey] = useState<number | undefined>();
+  const [trailerKey, setTrailerKey] = useState<number | null>(null);
   const [currentMediaType, setCurrentMediaType] = useState<"movies" | "tvshows">("movies");
   const [authModalActive, setAuthModalActive] = useState(false);
   const [userLogged, setUserLogged] = useState(false);

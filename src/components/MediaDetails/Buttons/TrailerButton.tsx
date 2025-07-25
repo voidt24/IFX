@@ -3,7 +3,7 @@ import { handleTrailerClick } from "@/helpers/getTrailer";
 import { MediaTypeApi } from "@/Types/mediaType";
 import React, { useContext } from "react";
 
-function TrailerButton({ id, mediaType }: { id: number | undefined; mediaType: MediaTypeApi }) {
+function TrailerButton({ id, mediaType }: { id: number | null; mediaType: MediaTypeApi }) {
   const { setOpenTrailer, setTrailerKey } = useContext(Context);
 
   return (
