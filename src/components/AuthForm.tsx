@@ -3,12 +3,14 @@ import { Context } from "@/context/Context";
 import { createUser } from "../firebase/createUser";
 import { authHandler } from "../firebase/authHandler";
 import { loginUser } from "../firebase/loginUser";
-import { authErrors, database } from "../firebase/firebase.config";
+import { database } from "../firebase/firebase.config";
 import Error from "./common/Error";
 import { CircularProgress } from "@mui/material";
 import Input from "./common/Input";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { banners } from "@/helpers/banners/banners-sources";
+import { getAuthError } from "@/lib/firebase/getAuthError";
+import { FirebaseError } from "firebase/app";
 
 export default function AuthForm() {
   const { setLoadingScreen, setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
@@ -69,7 +71,9 @@ export default function AuthForm() {
         setLoadingScreen(false);
       }, 1000);
     } catch (error) {
-      setErrorMessage({ active: true, text: authErrors(error) });
+      if (error instanceof FirebaseError) {
+        setErrorMessage({ active: true, text: getAuthError(error) });
+      }
     } finally {
       setLoadingAuth(false);
     }

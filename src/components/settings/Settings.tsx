@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import DeleteAccount from "@/firebase/importantActons/DeleteAccount";
-import { auth, authErrors, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE } from "@/firebase/firebase.config";
+import { auth, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE } from "@/firebase/firebase.config";
 import changePassword from "@/firebase/importantActons/changePassword";
 import changeEmail from "@/firebase/importantActons/changeEmail";
 import changeDisplayName from "@/firebase/importantActons/changeDisplayName";
@@ -13,6 +13,8 @@ import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";
 import Notification from "@/components/common/Notification";
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import { APP_NAME } from "@/helpers/api.config";
+import { FirebaseError } from "firebase/app";
+import { getAuthError } from "@/lib/firebase/getAuthError";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -55,7 +57,9 @@ export default function Settings() {
       setNameModalActive(false);
       setMessage({ message: `Name changed!`, severity: "success", open: true });
     } catch (error) {
-      setErrorMessage({ active: true, text: authErrors(error) });
+      if (error instanceof FirebaseError) {
+        setErrorMessage({ active: true, text: getAuthError(error) });
+      }
     }
   };
 
@@ -86,7 +90,9 @@ export default function Settings() {
         setShowVerifyEmailModal(true);
       }
     } catch (error) {
-      setErrorMessage({ active: true, text: authErrors(error) });
+      if (error instanceof FirebaseError) {
+        setErrorMessage({ active: true, text: getAuthError(error) });
+      }
     }
   };
 
@@ -113,7 +119,9 @@ export default function Settings() {
       setPwdModalActive(false);
       setMessage({ message: `Password changed!`, severity: "success", open: true });
     } catch (error) {
-      setErrorMessage({ active: true, text: authErrors(error) });
+      if (error instanceof FirebaseError) {
+        setErrorMessage({ active: true, text: getAuthError(error) });
+      }
     }
   };
   const handleDeleteAccount = async () => {
@@ -136,7 +144,9 @@ export default function Settings() {
       document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
       setShowAccountDeletedModal(true);
     } catch (error) {
-      setErrorMessage({ active: true, text: authErrors(error) });
+      if (error instanceof FirebaseError) {
+        setErrorMessage({ active: true, text: getAuthError(error) });
+      }
     }
   };
 
