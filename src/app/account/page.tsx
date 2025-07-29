@@ -3,11 +3,13 @@ import Banner from "@/components/Banner/Banner";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import Settings from "@/components/settings/Settings";
-import { useContext } from "react";
-import { Context } from "@/context/Context";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 export default function Profile() {
+  const auth = useSelector((state: RootState) => state.auth);
+  const { profileData } = auth;
+
   useVerifyToken();
-  const { profileData } = useContext(Context);
 
   return (
     <Wrapper>

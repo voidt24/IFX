@@ -11,9 +11,11 @@ import { IhistoryMedia } from "@/Types/index";
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import ToTop from "@/components/common/ToTop/ToTop";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function History() {
-  const { firebaseActiveUser, setCurrentId, isMobilePWA, setSheetMediaType, setOpenMediaDetailsSheet } = useContext(Context);
+  const { setCurrentId, isMobilePWA, setSheetMediaType, setOpenMediaDetailsSheet } = useContext(Context);
   const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
     message: "",
@@ -27,7 +29,8 @@ function History() {
   const [parentActiveIndex, setParentActiveIndex] = useState<number | undefined>(undefined);
   const [hideElement, setHideElement] = useState<number | undefined>();
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
-
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
   const toggleItem = (id: number) => {
     setExpandedItems((element) => ({
       ...element,

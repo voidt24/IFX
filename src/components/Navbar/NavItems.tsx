@@ -5,25 +5,18 @@ import { menuActions } from "./TopNavbar";
 import { usePathname } from "next/navigation";
 import { auth } from "@/firebase/firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function NavItems() {
-  const {
-    authModalActive,
-    setAuthModalActive,
-    firebaseActiveUser,
-    setNoAccount,
-    showSearchBar,
-    setShowSearchBar,
-    userMenuActive,
-    setUserMenuActive,
-    isMobilePWA,
-    setOpenSearchDrawer,
-    setOpenUserDrawer,
-  } = useContext(Context);
+  const { authModalActive, setAuthModalActive, setNoAccount, showSearchBar, setShowSearchBar, userMenuActive, setUserMenuActive, isMobilePWA, setOpenSearchDrawer, setOpenUserDrawer } =
+    useContext(Context);
 
   const [menuActive, setMenuActive] = useState(false);
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
+  const authState = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = authState;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

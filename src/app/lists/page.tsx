@@ -9,14 +9,19 @@ import Notification from "@/components/common/Notification";
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import { IMediaData } from "@/Types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function Lists() {
-  const { listActive, setListActive, firebaseActiveUser, listChanged, setCheckedMedia, edit, setEdit } = useContext(Context);
+  const { listActive, setListActive, listChanged, setCheckedMedia, edit, setEdit } = useContext(Context);
   const [currentListData, setCurrentListData] = useState<IMediaData[]>([]);
   const [listSelectedChange, setListSelectedChange] = useState(false);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const buttonRef2 = useRef<HTMLButtonElement>(null);
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
+
   useVerifyToken();
 
   useEffect(() => {

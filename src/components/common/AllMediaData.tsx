@@ -11,6 +11,8 @@ import Pagination from "./Pagination";
 import SelectDropdown from "./SelectDropdown";
 import { selectFilterMovieCategories, selectFilterTVCategories, selectFilterProviders } from "@/helpers/constants";
 import Wrapper from "./Wrapper/Wrapper";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -21,7 +23,7 @@ export default function AllMediaData({
   searchCategory: string;
   title: string;
 }) {
-  const { currentMediaType, setCurrentId, firebaseActiveUser } = useContext(Context);
+  const { currentMediaType, setCurrentId } = useContext(Context);
   const [apiData, setApiData] = useState<IMediaData[]>([]);
   const [pageActive, setPageActive] = useState<number>(1);
   const [elementsToShow, setElementsToShow] = useState<number>(8);
@@ -33,6 +35,9 @@ export default function AllMediaData({
   const [initialDataError, setInitialDataError] = useState(false);
   const [startingPage, setStartingPage] = useState(1);
 
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
+  
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
     pageActive: number,

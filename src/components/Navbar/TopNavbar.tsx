@@ -11,6 +11,8 @@ import useIsMobile from "@/Hooks/useIsMobile";
 import MenuDrawer from "../PWA/MenuDrawer";
 import Search from "../Search";
 import NavItems from "./NavItems";
+import { useDispatch } from "react-redux";
+import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
 
 export const menuActions = [
   {
@@ -37,8 +39,6 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
 
   const {
     setLoadingScreen,
-    setUserLogged,
-    setFirebaseActiveUser,
     showSearchBar,
     setShowSearchBar,
     userMenuActive,
@@ -57,6 +57,8 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
     email: auth.currentUser?.email,
   };
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!navRef) return;
 
@@ -66,8 +68,8 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
 
   const handleLogout = async () => {
     auth.signOut().then(() => {
-      setUserLogged(false);
-      setFirebaseActiveUser({ email: null, uid: null });
+      dispatch(setUserLogged(false));
+      dispatch(setFirebaseActiveUser({ email: null, uid: null }));
       setUserMenuActive(false);
       document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
       setLoadingScreen(true);

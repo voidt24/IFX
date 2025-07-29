@@ -1,13 +1,17 @@
 import { Context, ImediaDetailsData } from "@/context/Context";
 import { saveToHistory } from "@/firebase/saveToHistory";
+import { RootState } from "@/store";
 import { IhistoryMedia } from "@/Types";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
 
 function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: MediaTypeApi; data: ImediaDetailsData }) {
-  const { firebaseActiveUser, setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setCurrentId, setSheetMediaType } = useContext(Context);
+  const { setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setCurrentId, setSheetMediaType } = useContext(Context);
   const router = useRouter();
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
 
   return (
     <button
@@ -34,7 +38,7 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
             release_date: data?.releaseDate,
             watchedAt: Date.now(),
           };
-  
+
           if (firebaseActiveUser && mediaId && firebaseActiveUser.uid) {
             try {
               saveToHistory(dataToSave, mediaId, firebaseActiveUser.uid);
@@ -43,7 +47,6 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
             }
           }
         }
-
 
         if (openTrailer) setOpenTrailer(false);
       }}

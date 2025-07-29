@@ -4,6 +4,8 @@ import deleteFromFireStore from "@/firebase/deleteFromFirebase";
 import { Context } from "@/context/Context";
 import { Sheet } from "react-modal-sheet";
 import useIsMobile from "@/Hooks/useIsMobile";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface Props {
   confirmDialog: boolean;
@@ -16,8 +18,10 @@ interface Props {
   setMessage: Dispatch<SetStateAction<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>>;
 }
 function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, setElementsToDelete, displayMessage, setMessage }: Props) {
-  const { firebaseActiveUser, listChanged, setListChanged } = useContext(Context);
-
+  const { listChanged, setListChanged } = useContext(Context);
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
+  
   const isMobile = useIsMobile();
   async function onSubmit() {
     try {

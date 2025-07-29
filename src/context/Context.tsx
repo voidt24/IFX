@@ -10,6 +10,8 @@ import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 import { IMediaData } from "@/Types/index";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 import useIsMobile from "@/Hooks/useIsMobile";
+import { useDispatch } from "react-redux";
+import { setFirebaseActiveUser, setProfileData, setUserLogged } from "@/store/slices/authSlice";
 
 export interface ImediaDetailsData {
   results: [] | null;
@@ -75,16 +77,12 @@ interface IContextValues {
   setCurrentMediaType: Dispatch<SetStateAction<"movies" | "tvshows">>;
   authModalActive: boolean;
   setAuthModalActive: Dispatch<SetStateAction<boolean>>;
-  userLogged: boolean;
-  setUserLogged: Dispatch<SetStateAction<boolean>>;
   noAccount: boolean;
   setNoAccount: Dispatch<SetStateAction<boolean>>;
   addedToFavs: boolean;
   setAddedToFavs: Dispatch<SetStateAction<boolean>>;
   addedtoWatchList: boolean;
   setAddedtoWatchList: Dispatch<SetStateAction<boolean>>;
-  firebaseActiveUser: { email: string | null; uid: string | null } | null;
-  setFirebaseActiveUser: Dispatch<SetStateAction<{ email: string | null; uid: string | null } | null>>;
   loadingAllData: boolean;
   setLoadingAllData: Dispatch<SetStateAction<boolean>>;
   edit: boolean;
@@ -140,8 +138,6 @@ interface IContextValues {
   setOpenSearchDrawer: Dispatch<SetStateAction<boolean>>;
   openUserDrawer: boolean;
   setOpenUserDrawer: Dispatch<SetStateAction<boolean>>;
-  profileData: { displayName: string | null | undefined; email: string | null | undefined } | null;
-  setProfileData: Dispatch<SetStateAction<{ displayName: string | null | undefined; email: string | null | undefined } | null>>;
 }
 
 export const Context = createContext<IContextValues>({} as IContextValues);
@@ -153,11 +149,9 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [trailerKey, setTrailerKey] = useState<number | null>(null);
   const [currentMediaType, setCurrentMediaType] = useState<"movies" | "tvshows">("movies");
   const [authModalActive, setAuthModalActive] = useState(false);
-  const [userLogged, setUserLogged] = useState(false);
   const [noAccount, setNoAccount] = useState(true);
   const [addedToFavs, setAddedToFavs] = useState(false);
   const [addedtoWatchList, setAddedtoWatchList] = useState(false);
-  const [firebaseActiveUser, setFirebaseActiveUser] = useState<{ email: string | null; uid: string | null } | null>(null);
   const [loadingAllData, setLoadingAllData] = useState(true);
   const [edit, setEdit] = useState(false);
   const [checkedMedia, setCheckedMedia] = useState<(number | string)[]>([]);
@@ -203,7 +197,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [openDisplayMediaSheet, setOpenDisplayMediaSheet] = useState(false);
   const [openSearchDrawer, setOpenSearchDrawer] = useState(false);
   const [openUserDrawer, setOpenUserDrawer] = useState(false);
-  const [profileData, setProfileData] = useState<{ displayName: string | null | undefined; email: string | null | undefined } | null>(null);
   const isPWA = useIsPWA();
   const isMobile = useIsMobile(768);
   const isMobilePWA = isPWA && isMobile;
@@ -230,16 +223,12 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
     authModalActive,
     setAuthModalActive,
-    userLogged,
-    setUserLogged,
     noAccount,
     setNoAccount,
     addedToFavs,
     setAddedToFavs,
     addedtoWatchList,
     setAddedtoWatchList,
-    firebaseActiveUser,
-    setFirebaseActiveUser,
     loadingAllData,
     setLoadingAllData,
     edit,
@@ -295,8 +284,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setOpenSearchDrawer,
     openUserDrawer,
     setOpenUserDrawer,
-    profileData,
-    setProfileData,
   };
 
   useEffect(() => {
@@ -314,12 +301,14 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     }
   }, [path]);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        setUserLogged(true);
-        setFirebaseActiveUser({ email: user.email, uid: user.uid });
-        setProfileData({ displayName: user.displayName, email: user.email });
+        dispatch(setUserLogged(true));
+        dispatch(setFirebaseActiveUser({ email: user.email, uid: user.uid }));
+        dispatch(setProfileData({ displayName: user.displayName, email: user.email }));
       }
     });
 

@@ -15,6 +15,9 @@ import useVerifyToken from "@/Hooks/useVerifyToken";
 import { APP_NAME } from "@/helpers/api.config";
 import { FirebaseError } from "firebase/app";
 import { getAuthError } from "@/lib/firebase/getAuthError";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { setFirebaseActiveUser, setProfileData } from "@/store/slices/authSlice";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -22,7 +25,6 @@ export default function Settings() {
   const [emailModalActive, setEmailModalActive] = useState(false);
   const [nameModalActive, setNameModalActive] = useState(false);
   const [loader, setLoader] = useState(true);
-  const { setFirebaseActiveUser, profileData, setProfileData } = useContext(Context);
   const [password, setPassword] = useState<string | null>("");
   const [email, setEmail] = useState<string | null>("");
   const [name, setName] = useState<string | null>("");
@@ -37,10 +39,14 @@ export default function Settings() {
   const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
   const [showAccountDeletedModal, setShowAccountDeletedModal] = useState(false);
 
+  const authState = useSelector((state: RootState) => state.auth);
+  const { profileData } = authState;
+  const dispatch = useDispatch();
+
   useVerifyToken(setLoader);
 
   useEffect(() => {
-    setProfileData({ displayName: auth.currentUser?.displayName, email: auth.currentUser?.email });
+    dispatch(setProfileData({ displayName: auth.currentUser?.displayName || null, email: auth.currentUser?.email || null }));
   }, [auth.currentUser?.displayName]);
 
   const handleChangeDisplayName = async () => {
@@ -139,7 +145,7 @@ export default function Settings() {
     }
     try {
       await DeleteAccount(userData);
-      setFirebaseActiveUser({ email: "", uid: "" });
+      dispatch(setFirebaseActiveUser({ email: "", uid: "" }));
       setDeleteModalActive(false);
       document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
       setShowAccountDeletedModal(true);

@@ -1,16 +1,19 @@
 import { banners } from "@/helpers/banners/banners-sources";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../common/Modal";
-import { Context } from "@/context/Context";
 import { getFieldsFromCollection, updateField } from "@/firebase/fetchMyData";
 import { CircularProgress } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function Banner() {
   const [bannersModal, setBannersModal] = useState(false);
   const [bannerClicked, setBannerClicked] = useState("");
   const [selectedBanner, setSelectedBanner] = useState("");
-  const { firebaseActiveUser } = useContext(Context);
+
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
 
   const [loading, setLoading] = useState(true);
 

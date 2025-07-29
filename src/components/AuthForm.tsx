@@ -11,12 +11,15 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { banners } from "@/helpers/banners/banners-sources";
 import { getAuthError } from "@/lib/firebase/getAuthError";
 import { FirebaseError } from "firebase/app";
+import { useDispatch } from "react-redux";
+import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
 
 export default function AuthForm() {
-  const { setLoadingScreen, setAuthModalActive, setUserLogged, noAccount, setNoAccount, setFirebaseActiveUser } = useContext(Context);
+  const { setLoadingScreen, setAuthModalActive, noAccount, setNoAccount } = useContext(Context);
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const [loadingAuth, setLoadingAuth] = useState(false);
+  const dispatch = useDispatch();
 
   const authInputFields = [
     {
@@ -42,8 +45,8 @@ export default function AuthForm() {
 
     try {
       resultFromAuth = await authHandler(methodToUseForAuth, userData);
-      setFirebaseActiveUser({ email: resultFromAuth.user.email, uid: resultFromAuth.user.uid });
-      setUserLogged(true);
+      dispatch(setFirebaseActiveUser({ email: resultFromAuth.user.email, uid: resultFromAuth.user.uid }));
+      dispatch(setUserLogged(true));
       setAuthModalActive(false);
       setErrorMessage({ active: false, text: "" });
       setUserData({ username: "", email: "", password: "" });
@@ -107,11 +110,7 @@ export default function AuthForm() {
 
         {errorMessage.active && <Error errorMessage={errorMessage} />}
 
-        <button
-          className={`btn-primary  hover:bg-brand-hover  w-full py-3 ${loadingAuth && "btn-secondary cursor-wait "}`}
-          type="submit"
-          onClick={() => {}}
-        >
+        <button className={`btn-primary  hover:bg-brand-hover  w-full py-3 ${loadingAuth && "btn-secondary cursor-wait "}`} type="submit" onClick={() => {}}>
           {loadingAuth ? (
             <span className="flex gap-1 items-center justify-center">
               <CircularProgress size={15} color="primary" />

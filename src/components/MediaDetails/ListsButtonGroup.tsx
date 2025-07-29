@@ -5,12 +5,17 @@ import { Context, ImediaDetailsData } from "@/context/Context";
 import { DBLists } from "@/firebase/firebase.config";
 import { handle_favs_watchlists } from "@/firebase/handle_favs_watchlists";
 import { MediaTypeApi } from "@/Types/mediaType";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: { state: ImediaDetailsData | null; mediaType: MediaTypeApi; loadingFavs: boolean; loadingWatchlist: boolean }) {
-  const { currentId, setAuthModalActive, userLogged, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList, firebaseActiveUser } = useContext(Context);
+  const { currentId, setAuthModalActive, addedToFavs, setAddedToFavs, addedtoWatchList, setAddedtoWatchList } = useContext(Context);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
   const mediaTypeRef = useRef<HTMLDivElement>(null);
   const mediaTypeRef2 = useRef<HTMLDivElement>(null);
+  
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser, userLogged } = auth;
 
   const handleLists = async (list: string) => {
     if (userLogged) {

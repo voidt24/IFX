@@ -2,10 +2,12 @@ import { Context, ImediaDetailsData } from "@/context/Context";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { API_KEY, apiUrl, image } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
+import { RootState } from "@/store";
 import { IhistoryMedia, MediaTypeApi } from "@/Types/index";
 import { Season } from "@/Types/season";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
 function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi; mediaId: number }) {
   const router = useRouter();
@@ -14,7 +16,6 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
     episodesArray,
     setEpisodesArray,
     activeSeason,
-    firebaseActiveUser,
     setActiveSeason,
     setActiveEpisode,
     setSeasonModal,
@@ -26,6 +27,9 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
   const seasonBtnRef = useRef<HTMLButtonElement | null>(null);
   const path = usePathname();
 
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
+  
   async function getSeasonData(season: number) {
     try {
       const seasonResponse = await fetch(`${apiUrl}${mediaType}/${mediaId}/season/${season}?api_key=${API_KEY}`);

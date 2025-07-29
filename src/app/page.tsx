@@ -12,6 +12,8 @@ import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton
 import HeroSkeleton from "@/components/common/Skeletons/HeroSkeleton";
 import SignUpBanner from "@/components/common/SignUpBanner";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const Slider = dynamic(() => import("@/components/Slider/Slider"), {
   loading: () => <SliderSkeleton />,
@@ -24,11 +26,14 @@ const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
 });
 export default function Home() {
-  const { firebaseActiveUser, initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError, containerMargin } = useContext(Context);
+  const { initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError, containerMargin } = useContext(Context);
   const [moviesApiData, setMoviesApiData] = useState<IMediaData[]>([]);
   const [tvApiData, setTvApiData] = useState<IMediaData[]>([]);
   const [moviesHeroApiData, setMoviesHeroApiData] = useState<IMediaData[]>([]);
 
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
+  
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
     MethodThatSavesInMovies?: Dispatch<SetStateAction<IMediaData[]>>,

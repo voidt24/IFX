@@ -16,6 +16,8 @@ import { IhistoryMedia, ISeasonArray } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { MediaTypeApi, MediaTypeUrl } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function paramIsValid(param: string | null) {
   if (!param || Number(param) < 1) return false;
@@ -36,7 +38,6 @@ export async function getInfo(mediaType: MediaTypeApi, mediaId: number | undefin
 function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const {
     currentId,
-    firebaseActiveUser,
     currentMediaType,
     setCurrentMediaType,
     mediaDetailsData,
@@ -74,6 +75,9 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const params = new URLSearchParams(searchParams.toString());
   params.set("season", "1");
   params.set("episode", "1");
+
+  const auth = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser } = auth;
 
   useEffect(() => {
     return () => {
