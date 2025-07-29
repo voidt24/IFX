@@ -1,7 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useState, createContext, useEffect, Dispatch, SetStateAction, useRef, RefObject } from "react";
-import { auth, ID_TOKEN_COOKIE_NAME } from "../firebase/firebase.config";
 import { useParams } from "next/navigation";
 import Modal from "@/components/common/Modal";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
@@ -10,8 +9,6 @@ import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 import { IMediaData } from "@/Types/index";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 import useIsMobile from "@/Hooks/useIsMobile";
-import { useDispatch } from "react-redux";
-import { setFirebaseActiveUser, setProfileData, setUserLogged } from "@/store/slices/authSlice";
 
 export interface ImediaDetailsData {
   results: [] | null;
@@ -300,28 +297,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
       setCurrentMediaType("movies");
     }
   }, [path]);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        dispatch(setUserLogged(true));
-        dispatch(setFirebaseActiveUser({ email: user.email, uid: user.uid }));
-        dispatch(setProfileData({ displayName: user.displayName, email: user.email }));
-      }
-    });
-
-    auth.onIdTokenChanged((user) => {
-      async function saveTokenToCookies() {
-        const token = await auth?.currentUser?.getIdToken();
-        document.cookie = `${ID_TOKEN_COOKIE_NAME}=${token};path=/`;
-      }
-      if (user) {
-        saveTokenToCookies();
-      }
-    });
-  }, []);
 
   if (loadingScreen) return <LoadingScreen />;
   return (
