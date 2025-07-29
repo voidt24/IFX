@@ -5,6 +5,7 @@ import ContextWrapper from "../context/Context";
 import DefaultLayout from "@/components/layout/DefaultLayout";
 import DisplayMediaSheet from "@/components/Sheet/DisplayMediaSheet";
 import MediaDetailsSheet from "@/components/Sheet/MediaDetailsSheet";
+import StoreProvider from "@/store/StoreProvider";
 export const metadata: Metadata = {
   title: "IFX",
   description: "Watch and save your favorite films and series, discover new productions and save them into your watchlists!",
@@ -45,14 +46,16 @@ export default function RootLayout({ children, modal }: Readonly<{ children: Rea
         />
       </head>
       <body>
-        <ContextWrapper>
-          <DefaultLayout>
-            {children}
-            {modal}
-          </DefaultLayout>
-          <MediaDetailsSheet />
-          <DisplayMediaSheet />
-        </ContextWrapper>
+        <StoreProvider>
+          <ContextWrapper>
+            <DefaultLayout>
+              {children}
+              {modal}
+            </DefaultLayout>
+            <MediaDetailsSheet />
+            <DisplayMediaSheet />
+          </ContextWrapper>
+        </StoreProvider>
       </body>
     </html>
   );
