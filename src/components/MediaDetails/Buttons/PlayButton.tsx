@@ -6,13 +6,15 @@ import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 
 function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: MediaTypeApi; data: ImediaDetailsData }) {
-  const { setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setCurrentId, setSheetMediaType } = useContext(Context);
+  const { setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setSheetMediaType } = useContext(Context);
   const router = useRouter();
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
+  const dispatch = useDispatch();
 
   return (
     <button
@@ -24,7 +26,7 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
         } else {
           if (isMobilePWA) {
             setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-            setCurrentId(mediaId);
+            dispatch(setCurrentId(mediaId));
             setOpenDisplayMediaSheet(true);
           } else {
             router.push(`${mediaId}/watch?name=${data?.title}`);

@@ -13,6 +13,7 @@ import PlayButton from "../MediaDetails/Buttons/PlayButton";
 import TrailerButton from "../MediaDetails/Buttons/TrailerButton";
 import MediaInfoRow from "../MediaDetails/MediaInfoRow";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
+import { setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
 
 export const MediaInfoPWA = ({
   state,
@@ -27,7 +28,7 @@ export const MediaInfoPWA = ({
   loadingFavs: boolean;
   loadingWatchlist: boolean;
 }) => {
-  const { setEpisodesArray, setActiveSeason, seasonModal, setSeasonModal } = useContext(Context);
+  const { seasonModal, setSeasonModal } = useContext(Context);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 

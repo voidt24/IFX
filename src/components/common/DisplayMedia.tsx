@@ -16,8 +16,9 @@ import { IhistoryMedia, ISeasonArray } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { MediaTypeApi, MediaTypeUrl } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { setCurrentMediaType, setMediaDetailsData, setCurrentId, setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
 
 function paramIsValid(param: string | null) {
   if (!param || Number(param) < 1) return false;
@@ -36,19 +37,7 @@ export async function getInfo(mediaType: MediaTypeApi, mediaId: number | undefin
   }
 }
 function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
-  const {
-    currentId,
-    currentMediaType,
-    setCurrentMediaType,
-    mediaDetailsData,
-    setMediaDetailsData,
-    setCurrentId,
-    episodesArray,
-    setEpisodesArray,
-    setSeasonModal,
-    setActiveSeason,
-    containerMargin,
-  } = useContext(Context);
+  const { setSeasonModal, containerMargin } = useContext(Context);
   const path = usePathname();
 
   const { id: idFromUrl } = useParams();
@@ -78,10 +67,12 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
 
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
+  const { currentId, mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     return () => {
-      setMediaDetailsData(null);
+      dispatch(setMediaDetailsData(null));
     };
   }, []);
 
@@ -117,14 +108,14 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   //2.establish mediaTypeReady to advance to other requests in order to get correct data
   useEffect(() => {
     const mediaTypeFromUrl = setMedia(path);
-    setCurrentMediaType(isValidMediatype(mediaTypeFromUrl) ? mediaTypeFromUrl : "movies");
+    dispatch(setCurrentMediaType(isValidMediatype(mediaTypeFromUrl) ? mediaTypeFromUrl : "movies"));
     setMediaTypeReady(true);
   }, [path]);
 
   //set currentId to url value (if url changes)
   useEffect(() => {
     if (Number(idFromUrl) != currentId && currentId == undefined) {
-      setCurrentId(Number(idFromUrl));
+      dispatch(setCurrentId(Number(idFromUrl)));
     }
   }, [idFromUrl]);
 
@@ -136,21 +127,23 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
       const inf = await getInfo(getApiMediaType(mediaType), currentId);
       const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = inf;
 
-      setMediaDetailsData({
-        results: [],
-        heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
-        bigHeroBackground: `${image}${backdrop_path}`,
-        title: title || name,
-        poster: `${imageWithSize("500")}${poster_path}`,
-        overview,
-        releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
-        vote: String(vote_average).slice(0, 3),
-        genres: genres && genres.map((genre: { name: string }) => genre.name),
-        loadingAllData: false,
-        runtime: runtime ? getRunTime(runtime) : "",
-        seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
-        seasonsArray: seasons,
-      });
+      dispatch(
+        setMediaDetailsData({
+          results: [],
+          heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
+          bigHeroBackground: `${image}${backdrop_path}`,
+          title: title || name,
+          poster: `${imageWithSize("500")}${poster_path}`,
+          overview,
+          releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
+          vote: String(vote_average).slice(0, 3),
+          genres: genres && genres.map((genre: { name: string }) => genre.name),
+          loadingAllData: false,
+          runtime: runtime ? getRunTime(runtime) : "",
+          seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
+          seasonsArray: seasons,
+        })
+      );
     }
 
     setInitialData();
@@ -178,7 +171,7 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
         if (currentId != undefined) {
           const seasonResponse = await fetch(`${apiUrl}${mediaType}/${currentId}/season/${Number(season)}?api_key=${API_KEY}`);
           const json = await seasonResponse.json();
-          setEpisodesArray([json]);
+          dispatch(setEpisodesArray([json]));
         }
       } catch (error) {
         console.error("Error fetching season data:", error);

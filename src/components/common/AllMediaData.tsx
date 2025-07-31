@@ -13,6 +13,7 @@ import { selectFilterMovieCategories, selectFilterTVCategories, selectFilterProv
 import Wrapper from "./Wrapper/Wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -23,7 +24,7 @@ export default function AllMediaData({
   searchCategory: string;
   title: string;
 }) {
-  const { currentMediaType, setCurrentId } = useContext(Context);
+  
   const [apiData, setApiData] = useState<IMediaData[]>([]);
   const [pageActive, setPageActive] = useState<number>(1);
   const [elementsToShow, setElementsToShow] = useState<number>(8);
@@ -34,10 +35,11 @@ export default function AllMediaData({
   const [DataIsLoading, setDataIsLoading] = useState(true);
   const [initialDataError, setInitialDataError] = useState(false);
   const [startingPage, setStartingPage] = useState(1);
-
+  
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
-  
+  const { currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
+
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
     pageActive: number,

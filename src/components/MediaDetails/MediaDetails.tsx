@@ -19,11 +19,13 @@ import MediaInfoPWA from "../PWA/MediaInfoPWA";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
+import { RootState } from "@/store";
+import { setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
-  const { currentId, setCastError, setReviewsError, mediaDetailsData, setMediaDetailsData, setOpenTrailer, setTrailerKey, currentMediaType, isMobilePWA } = useContext(Context);
+  const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);
 
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -34,11 +36,12 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
+  const { currentId, mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
 
   useEffect(() => {
     return () => {
-      setMediaDetailsData(null);
+      dispatch(setMediaDetailsData(null));
       setOpenTrailer(false);
     };
   }, []);
@@ -69,8 +72,9 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             seasons: number_of_seasons ? (number_of_seasons === 1 ? "1 Season" : `${number_of_seasons} Seasons`) : "",
             seasonsArray: seasons,
           };
+          console.log("esto ese ejecuta");
 
-          (isMobilePWA ? setmediaDetailsPWA : setMediaDetailsData)(mediaDetails);
+          isMobilePWA ? setmediaDetailsPWA(mediaDetails) : dispatch(setMediaDetailsData(mediaDetails));
 
           castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
           reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);

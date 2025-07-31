@@ -15,9 +15,12 @@ import Overview from "./Overview";
 import ListsButtonGroup from "./ListsButtonGroup";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import Trailer from "../Trailer";
+import { setCurrentId, setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: boolean; loadingWatchlist: boolean }) => {
-  const { setCurrentId, currentId, currentMediaType, mediaDetailsData, setEpisodesArray, setActiveSeason, seasonModal, setSeasonModal, containerMargin } = useContext(Context);
+  const { seasonModal, setSeasonModal, containerMargin } = useContext(Context);
 
   const router = useRouter();
 
@@ -27,14 +30,16 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
 
   const isMobile = useIsMobile(1024);
 
+  const { currentId, mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
   const [backdrop, setBackdrop] = useState(isMobile && mediaDetailsData ? mediaDetailsData.poster : mediaDetailsData && mediaDetailsData.bigHeroBackground ? mediaDetailsData.bigHeroBackground : "");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setBackdrop(isMobile && mediaDetailsData ? mediaDetailsData.poster : mediaDetailsData && mediaDetailsData.bigHeroBackground ? mediaDetailsData.bigHeroBackground : "");
   }, [params.id, mediaDetailsData]);
   useEffect(() => {
     if (String(currentId) != params.id) {
-      setCurrentId(Number(params.id));
+      dispatch(setCurrentId(Number(params.id)));
     }
   }, [params.id]);
 
@@ -44,8 +49,8 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
 
   useEffect(() => {
     return () => {
-      setEpisodesArray(null);
-      setActiveSeason(0);
+      dispatch(setEpisodesArray(null));
+      dispatch(setActiveSeason(0));
     };
   }, []);
 
@@ -122,7 +127,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
       </div>
 
       <Notification message={message} setMessage={setMessage} />
-      <Trailer/>
+      <Trailer />
 
       {currentMediaType == mediaProperties.tv.route && (
         <Modal modalActive={seasonModal} setModalActive={setSeasonModal} customClasses="max-sm:w-[100%] sm:w-[95%] lg:w-[85%] xl:w-[70%] 2xl:w-[65%] 4k:w-[1300px] !px-2 lg:!px-4 lg:!py-8">

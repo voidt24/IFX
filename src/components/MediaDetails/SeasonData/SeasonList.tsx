@@ -8,34 +8,25 @@ import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { Season } from "@/Types/season";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentId, setEpisodesArray, setActiveSeason, setActiveEpisode } from "@/store/slices/mediaDetailsSlice";
 
 function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi; mediaId: number }) {
   const router = useRouter();
-  const {
-    seasonModal,
-    episodesArray,
-    setEpisodesArray,
-    activeSeason,
-    setActiveSeason,
-    setActiveEpisode,
-    setSeasonModal,
-    isMobilePWA,
-    setSheetMediaType,
-    setOpenDisplayMediaSheet,
-    setCurrentId,
-  } = useContext(Context);
+  const { seasonModal, setSeasonModal, isMobilePWA, setSheetMediaType, setOpenDisplayMediaSheet } = useContext(Context);
   const seasonBtnRef = useRef<HTMLButtonElement | null>(null);
   const path = usePathname();
 
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
-  
+  const { episodesArray, activeSeason } = useSelector((state: RootState) => state.mediaDetails);
+  const dispatch = useDispatch();
+
   async function getSeasonData(season: number) {
     try {
       const seasonResponse = await fetch(`${apiUrl}${mediaType}/${mediaId}/season/${season}?api_key=${API_KEY}`);
       const json = await seasonResponse.json();
-      setEpisodesArray([json]);
+      dispatch(setEpisodesArray([json]));
 
       setTimeout(() => {
         if (seasonBtnRef.current) {
@@ -71,10 +62,10 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                   } flex  items-center justify-center `}
                   onClick={async () => {
                     if (activeSeason === season_number) {
-                      setActiveSeason(null);
+                      dispatch(setActiveSeason(null));
                     } else {
-                      setEpisodesArray(null);
-                      setActiveSeason(season_number);
+                      dispatch(setEpisodesArray(null));
+                      dispatch(setActiveSeason(season_number));
                     }
                     await getSeasonData(season_number);
                     if (seasonBtnRef.current) {
@@ -94,10 +85,10 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                           key={index}
                           className="bg-zinc-900 px-2 hover:bg-zinc-700 py-2 lg:py-3 rounded-lg w-full"
                           onClick={() => {
-                            setActiveEpisode(index + 1);
+                            dispatch(setActiveEpisode(index + 1));
                             if (isMobilePWA) {
                               setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-                              setCurrentId(mediaId);
+                              dispatch(setCurrentId(mediaId));
                               setOpenDisplayMediaSheet(true);
                             } else {
                               setSeasonModal(false);

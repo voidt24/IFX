@@ -10,6 +10,9 @@ import Slider from "../Slider/Slider";
 import CollapsibleElement from "../common/CollapsibleElement";
 import { ISeasonArray, MediaTypeApi } from "@/Types";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
+import {  setEpisodesArray } from "@/store/slices/mediaDetailsSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export async function getInfo(mediaType: string | undefined, mediaId: number) {
   try {
@@ -20,7 +23,7 @@ export async function getInfo(mediaType: string | undefined, mediaId: number) {
   }
 }
 function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) {
-  const { episodesArray, setEpisodesArray, activeEpisode, sheetMediaType, activeSeason } = useContext(Context);
+  const { sheetMediaType } = useContext(Context);
   const [mediaDetailsData, setMediaDetailsData] = useState<ImediaDetailsData | null>(null);
 
   const [mediaURL, setMediaURL] = useState<string | undefined>("");
@@ -37,6 +40,8 @@ function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; medi
       vote_average: number;
     }[]
   >();
+
+  const { episodesArray, activeEpisode, activeSeason } = useSelector((state: RootState) => state.mediaDetails);
 
   useEffect(() => {
     async function setInitialMediaInfo() {

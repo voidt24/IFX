@@ -5,9 +5,10 @@ import Link from "next/link";
 import { Context } from "@/context/Context";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { IMediaData, MediaTypeApi } from "@/Types";
+import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
-  const { setCurrentId, setSheetMediaType, setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
+  const { setSheetMediaType, setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);

@@ -9,6 +9,8 @@ import { MediaTypeApi, IMediaData } from "@/Types/index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
+import { setCurrentId, setCurrentMediaType } from "@/store/slices/mediaDetailsSlice";
+
 interface ISliderCardProps {
   result: IMediaData;
   canBeEdited?: boolean;
@@ -20,7 +22,7 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
   const [poster, setPoster] = useState("");
   const [vote, setVote] = useState<string | undefined>();
 
-  const { setOpenMediaDetailsSheet, setCurrentId, setCurrentMediaType, showSearchBar, setShowSearchBar, setSheetMediaType, isMobilePWA } = useContext(Context);
+  const { setOpenMediaDetailsSheet, showSearchBar, setShowSearchBar, setSheetMediaType, isMobilePWA } = useContext(Context);
   const dispatch = useDispatch();
   const { checkedMedia, edit } = useSelector((state: RootState) => state.listsManagement);
 
@@ -64,11 +66,11 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
           <button
             onClick={() => {
               setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-              setCurrentId(result.id);
+              dispatch(setCurrentId(result.id));
               setOpenMediaDetailsSheet(true);
 
               if (canBeEdited) {
-                setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows");
+                dispatch(setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows"));
               } else {
                 setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
               }
@@ -112,9 +114,9 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
             onClick={() => {
               sessionStorage.setItem("navigatingFromApp", "1");
 
-              setCurrentId(result.id ?? undefined);
+              dispatch(setCurrentId(result.id ?? undefined));
               if (canBeEdited) {
-                setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows");
+                dispatch(setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows"));
               }
               if (showSearchBar) {
                 setShowSearchBar(false);

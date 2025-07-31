@@ -13,9 +13,10 @@ import ToTop from "@/components/common/ToTop/ToTop";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 
 function History() {
-  const { setCurrentId, isMobilePWA, setSheetMediaType, setOpenMediaDetailsSheet } = useContext(Context);
+  const { isMobilePWA, setSheetMediaType, setOpenMediaDetailsSheet } = useContext(Context);
   const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
     message: "",

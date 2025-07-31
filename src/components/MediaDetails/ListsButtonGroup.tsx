@@ -11,7 +11,7 @@ import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagem
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: { state: ImediaDetailsData | null; mediaType: MediaTypeApi; loadingFavs: boolean; loadingWatchlist: boolean }) {
-  const { currentId, setAuthModalActive } = useContext(Context);
+  const { setAuthModalActive } = useContext(Context);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
   const mediaTypeRef = useRef<HTMLDivElement>(null);
   const mediaTypeRef2 = useRef<HTMLDivElement>(null);
@@ -21,6 +21,7 @@ function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: {
 
   const { addedToFavs, addedToWatchList } = useSelector((state: RootState) => state.listsManagement);
   const dispatch = useDispatch();
+  const { currentId } = useSelector((state: RootState) => state.mediaDetails);
 
   const handleLists = async (list: string) => {
     if (userLogged) {
