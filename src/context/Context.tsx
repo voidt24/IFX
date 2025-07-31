@@ -8,34 +8,8 @@ import AuthForm from "@/components/AuthForm";
 import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 import useIsMobile from "@/Hooks/useIsMobile";
-import { ImediaDetailsData } from "@/Types/mediaDetails";
-
-interface Iepisode {
-  air_date: string;
-  episode_number: number;
-  episode_type: string;
-  id: number;
-  name: string;
-  overview: string;
-  production_code: string;
-  runtime: number;
-  season_number: number;
-  show_id: number;
-  still_path: string;
-  vote_average: number;
-  vote_count: number;
-}
-interface IepisodesArray {
-  air_date: string | null;
-  episodes: Iepisode[] | null;
-  id: number | null;
-  name: string | null;
-  overview: string | null;
-  poster_path: string | null;
-  season_number: number | null;
-  vote_average: number | null;
-  _id: string | null;
-}
+import { ImediaDetailsData,  } from "@/Types/mediaDetails";
+import { IepisodesArray } from "@/Types/episodeArray";
 
 interface IContextValues {
   numberOfPages: number;
