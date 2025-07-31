@@ -1,6 +1,6 @@
 "use client";
 import { useState, useContext, useEffect } from "react";
-import { Context, ImediaDetailsData } from "../../context/Context";
+import { Context } from "../../context/Context";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Modal from "../common/Modal";
 import Notification from "../common/Notification";
@@ -12,6 +12,7 @@ import { isReleased } from "@/helpers/isReleased";
 import PlayButton from "../MediaDetails/Buttons/PlayButton";
 import TrailerButton from "../MediaDetails/Buttons/TrailerButton";
 import MediaInfoRow from "../MediaDetails/MediaInfoRow";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 export const MediaInfoPWA = ({
   state,

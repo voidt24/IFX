@@ -1,4 +1,4 @@
-import { ImediaDetailsData } from "@/context/Context";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 import React, { useLayoutEffect, useRef, useState } from "react";
 
 function Overview({ data }: { data: ImediaDetailsData | null }) {

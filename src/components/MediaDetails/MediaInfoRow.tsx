@@ -1,5 +1,5 @@
-import { ImediaDetailsData } from "@/context/Context";
 import { isReleased } from "@/helpers/isReleased";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { MediaTypeApi } from "@/Types/mediaType";
 
 function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi }) {

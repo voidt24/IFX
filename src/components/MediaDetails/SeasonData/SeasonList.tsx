@@ -1,9 +1,10 @@
-import { Context, ImediaDetailsData } from "@/context/Context";
+import { Context } from "@/context/Context";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { API_KEY, apiUrl, image } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
 import { RootState } from "@/store";
 import { IhistoryMedia, MediaTypeApi } from "@/Types/index";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { Season } from "@/Types/season";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useRef } from "react";

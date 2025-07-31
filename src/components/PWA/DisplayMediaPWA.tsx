@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { Context, ImediaDetailsData } from "@/context/Context";
+import { Context } from "@/context/Context";
 import { API_KEY, apiUrl, image, imageWithSize, MEDIA_URL_RESOLVER, srcOptions } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
@@ -9,6 +9,7 @@ import { CircularProgress } from "@mui/material";
 import Slider from "../Slider/Slider";
 import CollapsibleElement from "../common/CollapsibleElement";
 import { ISeasonArray, MediaTypeApi } from "@/Types";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 export async function getInfo(mediaType: string | undefined, mediaId: number) {
   try {

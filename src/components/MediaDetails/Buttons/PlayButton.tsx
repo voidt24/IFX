@@ -1,7 +1,8 @@
-import { Context, ImediaDetailsData } from "@/context/Context";
+import { Context } from "@/context/Context";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { RootState } from "@/store";
 import { IhistoryMedia } from "@/Types";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";

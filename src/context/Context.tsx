@@ -8,22 +8,7 @@ import AuthForm from "@/components/AuthForm";
 import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 import useIsMobile from "@/Hooks/useIsMobile";
-
-export interface ImediaDetailsData {
-  results: [] | null;
-  heroBackground: string | null;
-  bigHeroBackground: string | null; //to get the backdrop even in smaller size devices
-  title: string | null;
-  poster: string | null;
-  overview: string | null;
-  releaseDate: string | null;
-  vote: string | null;
-  genres: { id: number; name: string }[];
-  loadingAllData: boolean | null;
-  runtime: string | null;
-  seasons: string | null;
-  seasonsArray: [] | null;
-}
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 interface Iepisode {
   air_date: string;

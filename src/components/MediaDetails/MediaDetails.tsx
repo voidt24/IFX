@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
-import { Context, ImediaDetailsData } from "../../context/Context";
+import { Context } from "../../context/Context";
 import NotFound from "../common/NotFound";
 import Cast from "./Cast";
 import { Reviews } from "./Reviews/Reviews";
@@ -20,6 +20,7 @@ import { MediaTypeApi } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
 import { useDispatch } from "react-redux";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
   const { currentId, setCastError, setReviewsError, mediaDetailsData, setMediaDetailsData, setOpenTrailer, setTrailerKey, currentMediaType, isMobilePWA } = useContext(Context);

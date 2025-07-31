@@ -1,13 +1,14 @@
 import React, { useContext, useRef, useState } from "react";
 import Loader from "../common/Loader";
 import AddToListButton from "../common/AddToListButton/AddToListButton";
-import { Context, ImediaDetailsData } from "@/context/Context";
+import { Context } from "@/context/Context";
 import { DBLists } from "@/firebase/firebase.config";
 import { handle_favs_watchlists } from "@/firebase/handle_favs_watchlists";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: { state: ImediaDetailsData | null; mediaType: MediaTypeApi; loadingFavs: boolean; loadingWatchlist: boolean }) {
   const { currentId, setAuthModalActive } = useContext(Context);
