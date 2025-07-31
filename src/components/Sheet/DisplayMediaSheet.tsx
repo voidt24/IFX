@@ -5,9 +5,12 @@ import { Context } from "@/context/Context";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import SheetWrapper from "./SheetWrapper";
 import DisplayMediaPWA from "../PWA/DisplayMediaPWA";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function DisplayMediaSheet() {
-  const { currentId, openDisplayMediaSheet, setOpenDisplayMediaSheet, sheetMediaType } = useContext(Context);
+  const { openDisplayMediaSheet, setOpenDisplayMediaSheet, sheetMediaType } = useContext(Context);
+  const { currentId } = useSelector((state: RootState) => state.mediaDetails);
 
   return (
     <>

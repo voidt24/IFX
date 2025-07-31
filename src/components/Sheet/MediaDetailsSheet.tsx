@@ -5,9 +5,12 @@ import { Context } from "@/context/Context";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import SheetWrapper from "./SheetWrapper";
 import Trailer from "../Trailer";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function MediaDetailsSheet() {
-  const { currentId, openMediaDetailsSheet, setOpenMediaDetailsSheet, sheetMediaType } = useContext(Context);
+  const { openMediaDetailsSheet, setOpenMediaDetailsSheet, sheetMediaType } = useContext(Context);
+  const { currentId } = useSelector((state: RootState) => state.mediaDetails);
 
   return (
     <>

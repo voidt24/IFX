@@ -10,8 +10,8 @@ import Slider from "../Slider/Slider";
 import CollapsibleElement from "../common/CollapsibleElement";
 import { ISeasonArray, MediaTypeApi } from "@/Types";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
-import {  setEpisodesArray } from "@/store/slices/mediaDetailsSlice";
-import { useSelector } from "react-redux";
+import { setEpisodesArray } from "@/store/slices/mediaDetailsSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 export async function getInfo(mediaType: string | undefined, mediaId: number) {
@@ -42,6 +42,7 @@ function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; medi
   >();
 
   const { episodesArray, activeEpisode, activeSeason } = useSelector((state: RootState) => state.mediaDetails);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function setInitialMediaInfo() {
@@ -89,7 +90,7 @@ function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; medi
         if (mediaId != undefined) {
           const seasonResponse = await fetch(`${apiUrl}${mediaType}/${mediaId}/season/${Number(activeSeason)}?api_key=${API_KEY}`);
           const json = await seasonResponse.json();
-          setEpisodesArray([json]);
+          dispatch(setEpisodesArray([json]));
         }
       } catch (error) {
         console.error("Error fetching season data:", error);

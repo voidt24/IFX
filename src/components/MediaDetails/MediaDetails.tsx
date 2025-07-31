@@ -72,7 +72,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             seasons: number_of_seasons ? (number_of_seasons === 1 ? "1 Season" : `${number_of_seasons} Seasons`) : "",
             seasonsArray: seasons,
           };
-          console.log("esto ese ejecuta");
 
           isMobilePWA ? setmediaDetailsPWA(mediaDetails) : dispatch(setMediaDetailsData(mediaDetails));
 
