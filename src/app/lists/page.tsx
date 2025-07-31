@@ -1,19 +1,20 @@
 "use client";
-import { Context } from "@/context/Context";
 import Slider from "@/components/Slider/Slider";
 import { ListsResults } from "@/components/ListsResults";
 import { database, usersCollectionName } from "@/firebase/firebase.config";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import Notification from "@/components/common/Notification";
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import { IMediaData } from "@/Types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-
+import { setListActive, setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
 export default function Lists() {
-  const { listActive, setListActive, listChanged, setCheckedMedia, edit, setEdit } = useContext(Context);
+  const dispatch = useDispatch();
+  const { listActive, listChanged, edit } = useSelector((state: RootState) => state.listsManagement);
+
   const [currentListData, setCurrentListData] = useState<IMediaData[]>([]);
   const [listSelectedChange, setListSelectedChange] = useState(false);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
@@ -83,7 +84,7 @@ export default function Lists() {
                   className={`hover:scale-100 ${listActive === name ? " btn-primary " : "btn-secondary !bg-white/15 !text-content-primary"} `}
                   onClick={(evt) => {
                     if (edit && listActive != name) {
-                      setEdit(false);
+                      dispatch(setEdit(false));
                       const card = document.querySelectorAll(".card");
                       card.forEach((card) => {
                         if (card instanceof HTMLElement) {
@@ -95,9 +96,9 @@ export default function Lists() {
                           }
                         }
                       });
-                      setCheckedMedia([]);
+                      dispatch(setCheckedMedia([]));
                     }
-                    setListActive(name);
+                    dispatch(setListActive(name));
                   }}
                 >
                   {name}

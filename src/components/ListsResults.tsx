@@ -10,6 +10,9 @@ import ListOptionsBar from "./common/ListOptionsBar";
 import { selectFilterCategories } from "@/helpers/constants";
 import ToTop from "./common/ToTop/ToTop";
 import { IMediaData } from "@/Types/index";
+import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export const ListsResults = ({
   listName,
@@ -22,12 +25,15 @@ export const ListsResults = ({
   setCurrentListData: Dispatch<SetStateAction<IMediaData[]>>;
   listSelectedChange: boolean;
 }) => {
-  const { setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
+  // const { setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [originalListData, setOriginalListData] = useState<IMediaData[] | null>([]);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
+
+  const dispatch = useDispatch();
+  const { checkedMedia } = useSelector((state: RootState) => state.listsManagement);
 
   useEffect(() => {
     if (currentListData) {
@@ -39,35 +45,35 @@ export const ListsResults = ({
 
   useEffect(() => {
     return () => {
-      setCheckedMedia([]);
-      setEdit(false);
+      dispatch(setCheckedMedia([]));
+      dispatch(setEdit(false));
     };
   }, []);
 
   return (
     <div className="flex flex-col gap-2 h-full relative">
       <div className="options flex justify-between items-center w-full bg-none">
-          <SelectDropdown
-            listSelectedChange={listSelectedChange}
-            selectDefaultName="Filter by"
-            selectOptions={selectFilterCategories}
-            actionWhenSelectChange={(selected) => {
-              if (!originalListData?.length) return;
-              switch (selected) {
-                case "All":
-                  setCurrentListData(originalListData);
-                  break;
-                case selectFilterCategories[0]:
-                  setCurrentListData(originalListData.filter((obj) => obj.media_type === "movie"));
-                  break;
-                case selectFilterCategories[1]:
-                  setCurrentListData(originalListData.filter((obj) => obj.media_type === "tv"));
-                  break;
-                default:
-                  setCurrentListData(originalListData);
-              }
-            }}
-          />
+        <SelectDropdown
+          listSelectedChange={listSelectedChange}
+          selectDefaultName="Filter by"
+          selectOptions={selectFilterCategories}
+          actionWhenSelectChange={(selected) => {
+            if (!originalListData?.length) return;
+            switch (selected) {
+              case "All":
+                setCurrentListData(originalListData);
+                break;
+              case selectFilterCategories[0]:
+                setCurrentListData(originalListData.filter((obj) => obj.media_type === "movie"));
+                break;
+              case selectFilterCategories[1]:
+                setCurrentListData(originalListData.filter((obj) => obj.media_type === "tv"));
+                break;
+              default:
+                setCurrentListData(originalListData);
+            }
+          }}
+        />
         {currentListData && currentListData.length > 0 && (
           <div className="my-4">
             <ListOptionsBar setConfirmDialog={setConfirmDialog} />
@@ -77,10 +83,10 @@ export const ListsResults = ({
                 setConfirmDialog={setConfirmDialog}
                 listName={listName}
                 extraActions={() => {
-                  setEdit(false);
+                  dispatch(setEdit(false));
+                  dispatch(setCheckedMedia([]));
                 }}
                 elementsToDelete={checkedMedia}
-                setElementsToDelete={setCheckedMedia}
                 setMessage={setMessage}
               />
             )}

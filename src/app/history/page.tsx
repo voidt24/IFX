@@ -154,7 +154,6 @@ function History() {
                                 setOpenMediaDetailsSheet(true);
                               }}
                             >
-                              
                               {data.title}
                             </button>
                           ) : (
@@ -237,7 +236,9 @@ function History() {
               setConfirmDialog={setConfirmDialog}
               listName={[`history`, activeHistoryEntry ?? "", "content"]}
               elementsToDelete={elementsToDelete}
-              setElementsToDelete={setElementsToDelete}
+              extraActions={() => {
+                setElementsToDelete([]);
+              }}
               displayMessage={"history"}
               setMessage={setMessage}
             />

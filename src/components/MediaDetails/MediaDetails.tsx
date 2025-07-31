@@ -18,10 +18,11 @@ import { handleTrailerClick } from "@/helpers/getTrailer";
 import MediaInfoPWA from "../PWA/MediaInfoPWA";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
+import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
+import { useDispatch } from "react-redux";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
-  const { currentId, setAddedToFavs, setAddedtoWatchList, setCastError, setReviewsError, mediaDetailsData, setMediaDetailsData, setOpenTrailer, setTrailerKey, currentMediaType, isMobilePWA } =
-    useContext(Context);
+  const { currentId, setCastError, setReviewsError, mediaDetailsData, setMediaDetailsData, setOpenTrailer, setTrailerKey, currentMediaType, isMobilePWA } = useContext(Context);
 
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -31,6 +32,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const [mediaDetailsPWA, setmediaDetailsPWA] = useState<ImediaDetailsData | null>(null);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     return () => {
@@ -81,8 +84,10 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
           const isInFavs = await getFromDB(auth.currentUser.uid, "favorites", isMobilePWA ? mediaId : currentId);
           const isInWatchlist = await getFromDB(auth.currentUser.uid, "watchlist", isMobilePWA ? mediaId : currentId);
 
-          isInFavs ? setAddedToFavs(true) : setAddedToFavs(false);
-          isInWatchlist ? setAddedtoWatchList(true) : setAddedtoWatchList(false);
+          dispatch(setAddedToFavs(Boolean(isInFavs)));
+          dispatch(setAddedToWatchList(Boolean(isInWatchlist)));
+          // isInFavs ? setAddedToFavs(true) : setAddedToFavs(false);
+          // isInWatchlist ? setAddedToWatchList(true) : setAddedToWatchList(false);
         } catch (er) {
           setMessage({ message: "Error finding if this element was saved", severity: "error", open: true });
         } finally {

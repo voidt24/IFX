@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction } from "react";
 import Modal from "./Modal";
 import deleteFromFireStore from "@/firebase/deleteFromFirebase";
-import { Context } from "@/context/Context";
 import { Sheet } from "react-modal-sheet";
 import useIsMobile from "@/Hooks/useIsMobile";
-import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { setListChanged } from "@/store/slices/listsManagementSlice";
+import { useSelector } from "react-redux";
 
 interface Props {
   confirmDialog: boolean;
@@ -13,21 +13,19 @@ interface Props {
   listName: string | string[];
   extraActions?: () => void | null;
   elementsToDelete: (number | string)[];
-  setElementsToDelete?: Dispatch<SetStateAction<(number | string)[]>> | null;
   displayMessage?: string;
   setMessage: Dispatch<SetStateAction<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>>;
 }
-function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, setElementsToDelete, displayMessage, setMessage }: Props) {
-  const { listChanged, setListChanged } = useContext(Context);
+function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, displayMessage, setMessage }: Props) {
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
-  
+  const { listChanged } = useSelector((state: RootState) => state.listsManagement);
+
   const isMobile = useIsMobile();
   async function onSubmit() {
     try {
       await deleteFromFireStore(firebaseActiveUser, listName, elementsToDelete);
       extraActions && extraActions();
-      setElementsToDelete && setElementsToDelete([]);
       setMessage({ message: "List updated!", severity: "success", open: true });
       setListChanged(!listChanged);
     } catch (err) {

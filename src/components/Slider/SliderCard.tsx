@@ -6,6 +6,9 @@ import Link from "next/link";
 import Checkbox from "@mui/material/Checkbox";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { MediaTypeApi, IMediaData } from "@/Types/index";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
 interface ISliderCardProps {
   result: IMediaData;
   canBeEdited?: boolean;
@@ -17,23 +20,25 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
   const [poster, setPoster] = useState("");
   const [vote, setVote] = useState<string | undefined>();
 
-  const { setOpenMediaDetailsSheet, setCurrentId, setCurrentMediaType, edit, setEdit, checkedMedia, setCheckedMedia, showSearchBar, setShowSearchBar, setSheetMediaType, isMobilePWA } =
-    useContext(Context);
+  const { setOpenMediaDetailsSheet, setCurrentId, setCurrentMediaType, showSearchBar, setShowSearchBar, setSheetMediaType, isMobilePWA } = useContext(Context);
+  const dispatch = useDispatch();
+  const { checkedMedia, edit } = useSelector((state: RootState) => state.listsManagement);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       if (!checkedMedia?.includes(event.target.id)) {
-        setCheckedMedia([...checkedMedia, event.target.id]);
+        dispatch(setCheckedMedia([...checkedMedia, event.target.id]));
       }
     } else {
       if (checkedMedia?.includes(event.target?.id)) {
-        setCheckedMedia(checkedMedia.filter((element) => element !== event.target.id));
+        dispatch(setCheckedMedia(checkedMedia.filter((element) => element !== event.target.id)));
       }
     }
   };
 
   useEffect(() => {
     return () => {
-      setEdit(false);
+      dispatch(setEdit(false));
     };
   }, []);
 

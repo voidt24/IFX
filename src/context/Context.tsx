@@ -76,16 +76,8 @@ interface IContextValues {
   setAuthModalActive: Dispatch<SetStateAction<boolean>>;
   noAccount: boolean;
   setNoAccount: Dispatch<SetStateAction<boolean>>;
-  addedToFavs: boolean;
-  setAddedToFavs: Dispatch<SetStateAction<boolean>>;
-  addedtoWatchList: boolean;
-  setAddedtoWatchList: Dispatch<SetStateAction<boolean>>;
   loadingAllData: boolean;
   setLoadingAllData: Dispatch<SetStateAction<boolean>>;
-  edit: boolean;
-  setEdit: Dispatch<SetStateAction<boolean>>;
-  checkedMedia: (number | string)[];
-  setCheckedMedia: Dispatch<SetStateAction<(number | string)[]>>;
   initialDataIsLoading: boolean;
   setInitialDataIsLoading: Dispatch<SetStateAction<boolean>>;
   initialDataError: boolean;
@@ -96,8 +88,6 @@ interface IContextValues {
   setReviewsError: Dispatch<SetStateAction<boolean>>;
   loadingScreen: boolean;
   setLoadingScreen: Dispatch<SetStateAction<boolean>>;
-  listActive: string;
-  setListActive: Dispatch<SetStateAction<string>>;
   searchResults: IMediaData[] | null;
   setSearchResults: Dispatch<SetStateAction<IMediaData[] | null>>;
   mediaDetailsData: ImediaDetailsData | null;
@@ -110,8 +100,6 @@ interface IContextValues {
   setActiveEpisode: Dispatch<SetStateAction<number | null>>;
   seasonModal: boolean;
   setSeasonModal: Dispatch<SetStateAction<boolean>>;
-  listChanged: boolean;
-  setListChanged: Dispatch<SetStateAction<boolean>>;
   showSearchBar: boolean;
   setShowSearchBar: Dispatch<SetStateAction<boolean>>;
   userMenuActive: boolean;
@@ -147,11 +135,7 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [currentMediaType, setCurrentMediaType] = useState<"movies" | "tvshows">("movies");
   const [authModalActive, setAuthModalActive] = useState(false);
   const [noAccount, setNoAccount] = useState(true);
-  const [addedToFavs, setAddedToFavs] = useState(false);
-  const [addedtoWatchList, setAddedtoWatchList] = useState(false);
   const [loadingAllData, setLoadingAllData] = useState(true);
-  const [edit, setEdit] = useState(false);
-  const [checkedMedia, setCheckedMedia] = useState<(number | string)[]>([]);
 
   const [initialDataIsLoading, setInitialDataIsLoading] = useState(true);
 
@@ -161,7 +145,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
   const [reviewsError, setReviewsError] = useState(false);
 
-  const [listActive, setListActive] = useState<string>("favorites");
 
   const [searchResults, setSearchResults] = useState<IMediaData[] | null>([]);
 
@@ -181,7 +164,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [activeSeason, setActiveSeason] = useState<number | null>(0);
   const [activeEpisode, setActiveEpisode] = useState<number | null>(0);
   const [seasonModal, setSeasonModal] = useState(false);
-  const [listChanged, setListChanged] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [containerMargin, setContainerMargin] = useState<number | undefined>();
@@ -222,16 +204,8 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setAuthModalActive,
     noAccount,
     setNoAccount,
-    addedToFavs,
-    setAddedToFavs,
-    addedtoWatchList,
-    setAddedtoWatchList,
     loadingAllData,
     setLoadingAllData,
-    edit,
-    setEdit,
-    checkedMedia,
-    setCheckedMedia,
     initialDataIsLoading,
     setInitialDataIsLoading,
     initialDataError,
@@ -240,8 +214,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setCastError,
     reviewsError,
     setReviewsError,
-    listActive,
-    setListActive,
     searchResults,
     setSearchResults,
     loadingScreen,
@@ -256,8 +228,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setActiveEpisode,
     seasonModal,
     setSeasonModal,
-    listChanged,
-    setListChanged,
     showSearchBar,
     setShowSearchBar,
     userMenuActive,

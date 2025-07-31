@@ -1,10 +1,15 @@
-import { Context } from "@/context/Context";
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
+
 interface Props {
   setConfirmDialog: Dispatch<SetStateAction<boolean>>;
 }
 function ListOptionsBar({ setConfirmDialog }: Props) {
-  const { edit, setEdit, checkedMedia, setCheckedMedia } = useContext(Context);
+  // const { edit, checkedMedia } = useContext(Context);
+  const { edit, checkedMedia } = useSelector((state: RootState) => state.listsManagement);
+  const dispatch = useDispatch();
 
   return (
     <div className="options-btns flex-col-center gap-1 max-md:text-[85%]">
@@ -12,8 +17,8 @@ function ListOptionsBar({ setConfirmDialog }: Props) {
         <button
           className="border-0 bg-none hover:bg-transparent"
           onClick={() => {
-            setEdit(!edit);
-            setCheckedMedia([]);
+            dispatch(setEdit(!edit));
+            dispatch(setCheckedMedia([]));
           }}
         >
           <i className="bi bi-pencil-square"></i> {edit ? "Cancel" : "Edit"}

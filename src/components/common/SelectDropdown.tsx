@@ -1,5 +1,7 @@
-import { Context } from "@/context/Context";
-import { useContext, useEffect, useState } from "react";
+import { RootState } from "@/store";
+import {  useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
 
 interface Props {
   listSelectedChange?: boolean;
@@ -9,9 +11,11 @@ interface Props {
 }
 
 export default function SelectDropdown({ listSelectedChange, selectDefaultName, selectOptions, actionWhenSelectChange }: Props) {
-  const { edit, setEdit, setCheckedMedia } = useContext(Context);
+  // const {  setEdit, setCheckedMedia } = useContext(Context);
 
   const [selected, setSelected] = useState(selectDefaultName);
+
+  const { edit } = useSelector((state: RootState) => state.listsManagement);
 
   useEffect(() => {
     //applicable to /lists only when selecting a new list: "favorites to watchlist" or vice versa
