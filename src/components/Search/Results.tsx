@@ -6,15 +6,23 @@ import SliderCard from "../Slider/SliderCard";
 import Loader from "../common/Loader";
 import Pagination from "../common/Pagination";
 import { IMediaData } from "@/Types/index";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { setSearchStarted } from "@/store/slices/searchSlice";
 
 export default function Results() {
-  const { searchResults, loadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, numberOfPages, searchQuery, setNumberOfPages, isMobilePWA } = useContext(Context);
+  const { pageActive, setPageActive, numberOfPages, setNumberOfPages, isMobilePWA } = useContext(Context);
+
   const [startingPage, setStartingPage] = useState(1);
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const { searchResults, loadingSearch, searchStarted, searchQuery } = useSelector((state: RootState) => state.search);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     return () => {
-      setSearchStarted(false);
+      dispatch(setSearchStarted(false));
     };
   }, []);
 

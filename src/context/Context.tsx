@@ -6,7 +6,6 @@ import Modal from "@/components/common/Modal";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import AuthForm from "@/components/AuthForm";
 import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
-import { IMediaData } from "@/Types/index";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 import useIsMobile from "@/Hooks/useIsMobile";
 
@@ -58,12 +57,6 @@ interface IContextValues {
   setNumberOfPages: Dispatch<SetStateAction<number>>;
   pageActive: number;
   setPageActive: Dispatch<SetStateAction<number>>;
-  searchQuery: string;
-  setSearchQuery: Dispatch<SetStateAction<string>>;
-  loadingSearch: boolean;
-  setLoadingSearch: Dispatch<SetStateAction<boolean>>;
-  searchStarted: boolean;
-  setSearchStarted: Dispatch<SetStateAction<boolean>>;
   currentId: number;
   setCurrentId: Dispatch<SetStateAction<number>>;
   openTrailer: boolean;
@@ -88,8 +81,6 @@ interface IContextValues {
   setReviewsError: Dispatch<SetStateAction<boolean>>;
   loadingScreen: boolean;
   setLoadingScreen: Dispatch<SetStateAction<boolean>>;
-  searchResults: IMediaData[] | null;
-  setSearchResults: Dispatch<SetStateAction<IMediaData[] | null>>;
   mediaDetailsData: ImediaDetailsData | null;
   setMediaDetailsData: Dispatch<SetStateAction<ImediaDetailsData | null>>;
   episodesArray: IepisodesArray[] | null;
@@ -145,15 +136,9 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
 
   const [reviewsError, setReviewsError] = useState(false);
 
-
-  const [searchResults, setSearchResults] = useState<IMediaData[] | null>([]);
-
-  const [loadingSearch, setLoadingSearch] = useState(false);
-  const [searchStarted, setSearchStarted] = useState(false);
   const [loadingScreen, setLoadingScreen] = useState(false);
   const [numberOfPages, setNumberOfPages] = useState(0);
   const [pageActive, setPageActive] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const { id: idFromUrl } = useParams();
 
@@ -185,12 +170,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setNumberOfPages,
     pageActive,
     setPageActive,
-    searchQuery,
-    setSearchQuery,
-    loadingSearch,
-    setLoadingSearch,
-    searchStarted,
-    setSearchStarted,
     currentId,
     setCurrentId,
     openTrailer,
@@ -214,8 +193,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setCastError,
     reviewsError,
     setReviewsError,
-    searchResults,
-    setSearchResults,
     loadingScreen,
     setLoadingScreen,
     mediaDetailsData,

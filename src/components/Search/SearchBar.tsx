@@ -4,24 +4,29 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import { search } from "../../helpers/search";
 import Input from "../common/Input";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { setLoadingSearch, setSearchQuery, setSearchResults, setSearchStarted } from "@/store/slices/searchSlice";
 export default function SearchBar() {
-  const { setSearchResults, setLoadingSearch, searchStarted, setSearchStarted, pageActive, setPageActive, setNumberOfPages, searchQuery, setSearchQuery } = useContext(Context);
+  const { pageActive, setPageActive, setNumberOfPages } = useContext(Context);
 
   const [inputValue, setInputValue] = useState("");
+  const { searchStarted, searchQuery } = useSelector((state: RootState) => state.search);
+  const dispatch = useDispatch();
 
   function handleSearch(value: string) {
     if (value.trim().length === 0) {
       return;
     }
-    setSearchStarted(true);
-    setSearchResults([]);
-    setLoadingSearch(true);
+    dispatch(setSearchStarted(true));
+    dispatch(setSearchResults([]));
+    dispatch(setLoadingSearch(true));
 
     search(value, pageActive).then((data) => {
       if (data.page === pageActive) {
-        setSearchResults(data.results);
+        dispatch(setSearchResults(data.results));
       }
-      setLoadingSearch(false);
+      dispatch(setLoadingSearch(false));
 
       data.total_pages >= 5 ? setNumberOfPages(5) : setNumberOfPages(data.total_pages);
     });
@@ -48,7 +53,7 @@ export default function SearchBar() {
           setPageActive(1);
 
           if (inputValue.trim().length !== 0) {
-            setSearchQuery(inputValue);
+            dispatch(setSearchQuery(inputValue));
           }
         }}
       >
