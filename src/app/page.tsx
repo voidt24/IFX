@@ -26,7 +26,7 @@ const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
 });
 export default function Home() {
-  const { initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, searchStarted, currentId, setCurrentId, initialDataError, containerMargin } = useContext(Context);
+  const { initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, setCurrentId, initialDataError, containerMargin } = useContext(Context);
   const [moviesApiData, setMoviesApiData] = useState<IMediaData[]>([]);
   const [tvApiData, setTvApiData] = useState<IMediaData[]>([]);
   const [moviesHeroApiData, setMoviesHeroApiData] = useState<IMediaData[]>([]);
