@@ -8,10 +8,6 @@ export const middleware = async (req: NextRequest) => {
     return getTvURLParamsMiddleware(req);
   }
 
-  if (path.startsWith("/movies/") && path.includes("/watch")) {
-    return getMovieURLParamsMiddleware(req);
-  }
-
   if (["/account", "/lists", "/history"].includes(path)) {
     if (!req.cookies.has(ID_TOKEN_COOKIE_NAME)) {
       return NextResponse.redirect(new URL("/", req.url));
@@ -31,23 +27,12 @@ export const middleware = async (req: NextRequest) => {
 
 export function getTvURLParamsMiddleware(req: NextRequest) {
   const url = new URL(req.url);
-  const name = url.searchParams.get("name") || "";
   const season = url.searchParams.get("season") || "";
   const episode = url.searchParams.get("episode") || "";
 
   const res = NextResponse.next();
-  res.headers.set("x-name", name);
   res.headers.set("x-season", season);
   res.headers.set("x-episode", episode);
-
-  return res;
-}
-export function getMovieURLParamsMiddleware(req: NextRequest) {
-  const url = new URL(req.url);
-  const name = url.searchParams.get("name") || "";
-
-  const res = NextResponse.next();
-  res.headers.set("x-name", name);
 
   return res;
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
-import { API_KEY, apiUrl, image, imageWithSize, MEDIA_URL_RESOLVER, srcOptions } from "@/helpers/api.config";
+import { API_KEY, apiUrl, image, imageWithSize } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
@@ -9,8 +9,6 @@ import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CircularProgress } from "@mui/material";
-import Slider from "../Slider/Slider";
 import CollapsibleElement from "../common/CollapsibleElement";
 import { IhistoryMedia, ISeasonArray } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
@@ -19,6 +17,7 @@ import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCurrentMediaType, setMediaDetailsData, setCurrentId, setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
+import PlayMedia from "./PlayMedia";
 
 function paramIsValid(param: string | null) {
   if (!param || Number(param) < 1) return false;
@@ -45,9 +44,8 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const searchParams = useSearchParams();
   const season = searchParams.get("season");
   const episode = searchParams.get("episode");
-  const name = searchParams.get("name");
+  const option = searchParams.get("option");
   const [mediaURL, setMediaURL] = useState<string | undefined>("");
-  const [selectedSrc, setSelectedSrc] = useState(0);
   const [seasonArray, setSeasonArray] = useState<
     {
       air_date: string;
@@ -85,25 +83,6 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
     }
   }, [season, episode]);
 
-  useEffect(() => {
-    if (!mediaTypeReady || !currentId || !mediaDetailsData) return;
-
-    if (name == null || (name != null && name != mediaDetailsData.title?.trim())) {
-      const params = new URLSearchParams();
-      if (season == null || episode == null || !paramIsValid(season) || !paramIsValid(episode)) {
-        params.set("season", "1");
-        params.set("episode", "1");
-        router.push(`?${params.toString()}`);
-      } else {
-        params.set("name", mediaDetailsData.title ?? "");
-        params.set("season", season);
-        params.set("episode", episode);
-      }
-
-      router.push(`?${params.toString()}`);
-    }
-  }, [mediaTypeReady, currentId, season, episode, path, name, mediaDetailsData]);
-
   //1.set mediatype always to a valid value or to 'movies' by  default
   //2.establish mediaTypeReady to advance to other requests in order to get correct data
   useEffect(() => {
@@ -114,14 +93,14 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
 
   //set currentId to url value (if url changes)
   useEffect(() => {
-    if (Number(idFromUrl) != currentId && currentId == undefined) {
+    if (Number(idFromUrl) != currentId && currentId == 0) {
       dispatch(setCurrentId(Number(idFromUrl)));
     }
   }, [idFromUrl]);
 
   // if mediatype is set and currentId is valid, get  general info of movie or tvshow
   useEffect(() => {
-    if (!mediaTypeReady || !currentId) return;
+    if (!mediaTypeReady || !currentId || currentId == 0) return;
 
     async function setInitialData() {
       const inf = await getInfo(getApiMediaType(mediaType), currentId);
@@ -147,8 +126,6 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
     }
 
     setInitialData();
-
-    setMediaURL(mediaType == "movies" ? MEDIA_URL_RESOLVER(0, currentId, "movie") : MEDIA_URL_RESOLVER(0, currentId, "tv", Number(season), Number(episode)));
   }, [mediaTypeReady, currentId, season, episode, path]);
 
   useEffect(() => {
@@ -234,37 +211,9 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
       <div className="wrapper relative z-[2]">
         <div className="h-full w-full m-auto flex flex-col items-center justify-center">
           <div className="bg-black/35 backdrop-blur-lg flex flex-col items-center justify-center gap-2 xl:gap-4 h-auto w-full px-2 md:px-4 max-sm:py-12 py-4 rounded-xl xl:px-10">
-            <div className="src-options p-0 w-full max-sm:text-[80%]">
-              <Slider sideControls padding="px-7">
-                {srcOptions.map((option, index) => {
-                  return (
-                    <button
-                      key={index}
-                      className={`border bg-black rounded-full py-[4px]  ${selectedSrc == index ? "bg-zinc-300 text-black" : "text-content-secondary hover:text-content-primary hover:bg-zinc-800"}`}
-                      onClick={() => {
-                        if (selectedSrc != index) {
-                          setSelectedSrc(index);
-                          setMediaURL("");
-                          setMediaURL(mediaType == "movies" ? MEDIA_URL_RESOLVER(index, currentId, "movie") : MEDIA_URL_RESOLVER(index, currentId, "tv", Number(season), Number(episode)));
-                        }
-                      }}
-                    >
-                      Option {index + 1}
-                    </button>
-                  );
-                })}
-              </Slider>
-            </div>
-
-            {mediaURL == "" ? (
-              <div className="h-[20rem] lg:h-[40rem] xl:h-[40rem]  w-full flex items-center justify-center">
-                {" "}
-                <CircularProgress color="inherit" size={30} />
-              </div>
-            ) : (
-              <iframe src={mediaURL} className="h-[20rem] lg:h-[40rem] xl:h-[40rem] w-full  rounded-lg" title="media" referrerPolicy="origin" allowFullScreen></iframe>
+            {mediaTypeReady && currentId != 0 && (
+              <PlayMedia option={option} season={season} episode={episode} mediaType={mediaType} currentId={currentId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
             )}
-
             <div className="flex-col-center md:items-start md:justify-start gap-6 xl:gap-10 w-full mt-6 px-1">
               <div className="flex justify-center items-start  md:items-start  gap-3.5 xl:gap-6">
                 <img src={mediaDetailsData?.poster || ""} alt="poster" className="w-32 md:w-40 xl:w-56 h-auto min-h-40 rounded-lg" />

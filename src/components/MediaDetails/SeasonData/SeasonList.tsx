@@ -93,7 +93,7 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                             } else {
                               setSeasonModal(false);
 
-                              router.push(`${path}/watch?name=${data.title}&season=${season_number}&episode=${index + 1}`);
+                              router.push(`${path}/watch?season=${season_number}&episode=${index + 1}&option=1`);
                             }
 
                             const dataToSave: IhistoryMedia = {

@@ -29,7 +29,7 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
             dispatch(setCurrentId(mediaId));
             setOpenDisplayMediaSheet(true);
           } else {
-            router.push(`${mediaId}/watch?name=${data?.title}`);
+            router.push(`${mediaId}/watch?option=1`);
           }
           const dataToSave: IhistoryMedia = {
             id: mediaId,
