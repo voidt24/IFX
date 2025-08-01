@@ -151,8 +151,8 @@ function DisplayInfo({
 
     async function getEpisodes() {
       try {
-        if (currentId != undefined) {
-          const seasonResponse = await fetch(`${apiUrl}${mediaType}/${currentId}/season/${Number(season)}?api_key=${API_KEY}`);
+        if (currentId && currentId != 0) {
+          const seasonResponse = await fetch(`${apiUrl}${getApiMediaType(mediaType)}/${currentId}/season/${Number(season)}?api_key=${API_KEY}`);
           const json = await seasonResponse.json();
           dispatch(setEpisodesArray([json]));
         }
@@ -177,7 +177,7 @@ function DisplayInfo({
                 {mediaDetailsData?.title}
               </Link>
 
-              {mediaType == mediaProperties.tv.mediaType && (
+              {mediaType == mediaProperties.tv.route && (
                 <p className="text-content-secondary text-left max-lg:text-[88%]">
                   {season && season != "0" && `Season ${season} - `}
                   {episode && episode != "0" && `Episode ${episode} `}
@@ -189,7 +189,7 @@ function DisplayInfo({
             </div>
             <div className="text-left text-content-third text-[80%] md:text-[90%] flex flex-col gap-2">
               <div>
-                {mediaType == mediaProperties.tv.mediaType ? (
+                {mediaType == mediaProperties.tv.route ? (
                   episodesArray == null ? (
                     ""
                   ) : episodesArray?.[0]?.episodes ? (
@@ -202,7 +202,7 @@ function DisplayInfo({
                 )}
               </div>
               <div>
-                {mediaType == mediaProperties.tv.mediaType ? (
+                {mediaType == mediaProperties.tv.route ? (
                   episodesArray == null ? (
                     ""
                   ) : episodesArray?.[0]?.episodes ? (
@@ -215,14 +215,14 @@ function DisplayInfo({
                 )}
               </div>
               <div>
-                <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.mediaType ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
+                <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.route ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
               </div>
               <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0].name}</p>
             </div>
 
             <div className=" info max-md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
               <CollapsibleElement customClassesForParent={" md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-                {mediaType == mediaProperties.tv.mediaType ? (
+                {mediaType == mediaProperties.tv.route ? (
                   episodesArray == null ? (
                     ""
                   ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
@@ -237,11 +237,10 @@ function DisplayInfo({
             </div>
           </div>
         </div>
-
         {/* MOBILE */}
         <div className="info md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
           <CollapsibleElement customClassesForParent={"md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-            {mediaType == mediaProperties.tv.mediaType ? (
+            {mediaType == mediaProperties.tv.route ? (
               episodesArray == null ? (
                 ""
               ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
@@ -256,7 +255,7 @@ function DisplayInfo({
         </div>
       </div>
 
-      {mediaType == mediaProperties.tv.mediaType && (
+      {mediaType == mediaProperties.tv.route && (
         <div className=" w-full z-20 py-4">
           <div className="flex gap-6  ">
             <nav className="flex items-center justify-center w-full px-4 ">
