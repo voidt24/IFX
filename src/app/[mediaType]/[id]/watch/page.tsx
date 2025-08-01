@@ -1,4 +1,4 @@
-import DisplayMedia from "@/components/common/DisplayMedia";
+import DisplayMedia from "@/components/DisplayMedia/DisplayMedia";
 import { APP_NAME } from "@/helpers/api.config";
 import { MediaTypeUrl } from "@/Types/mediaType";
 import { Metadata } from "next";

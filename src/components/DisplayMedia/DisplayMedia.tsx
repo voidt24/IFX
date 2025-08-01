@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CircularProgress } from "@mui/material";
 import Slider from "../Slider/Slider";
-import CollapsibleElement from "./CollapsibleElement";
+import CollapsibleElement from "../common/CollapsibleElement";
 import { IhistoryMedia, ISeasonArray } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { MediaTypeApi, MediaTypeUrl } from "@/Types/mediaType";
