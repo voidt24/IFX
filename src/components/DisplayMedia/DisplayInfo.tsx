@@ -1,9 +1,8 @@
 "use client";
-import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
 import CollapsibleElement from "../common/CollapsibleElement";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
-import { Context } from "@/context/Context";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { ISeasonArray, MediaTypeApi, MediaTypeUrl } from "@/Types";
@@ -11,9 +10,10 @@ import { useParams, usePathname, useRouter, useSearchParams } from "next/navigat
 import { getRunTime } from "@/helpers/getRunTime";
 import { API_KEY, apiUrl, image, imageWithSize } from "@/helpers/api.config";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
-import { setCurrentMediaType, setMediaDetailsData, setCurrentId, setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
+import { setCurrentMediaType, setMediaDetailsData, setCurrentId, setEpisodesArray } from "@/store/slices/mediaDetailsSlice";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
+import EpisodeNavigation from "./EpisodeNavigation";
 
 function paramIsValid(param: string | null) {
   if (!param || Number(param) < 1) return false;
@@ -48,19 +48,7 @@ function DisplayInfo({
     overflow: "hidden ",
     display: "-webkit-box ",
   };
-  const [seasonArray, setSeasonArray] = useState<
-    {
-      air_date: string;
-      episode_count: number;
-      id: number;
-      name: string;
-      overview: string;
-      poster_path: string;
-      season_number: number;
-      vote_average: number;
-    }[]
-  >();
-  const { setSeasonModal } = useContext(Context);
+  const [seasonArray, setSeasonArray] = useState<ISeasonArray[]>([]);
   const { currentId, mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
@@ -256,69 +244,7 @@ function DisplayInfo({
       </div>
 
       {mediaType == mediaProperties.tv.route && (
-        <div className=" w-full z-20 py-4">
-          <div className="flex gap-6  ">
-            <nav className="flex items-center justify-center w-full px-4 ">
-              <ul className="flex text-[75%] self-center bg-surface-modal rounded-full">
-                <li>
-                  <button
-                    className={`flex items-center justify-center max-md:px-6 px-8 h-8 ms-0  leading-tight border  border-content-muted rounded-s-full ${
-                      episode == "1" ? " pointer-events-none text-content-muted" : "pointer-events-auto text-content-primary hover:bg-surface-hover"
-                    }`}
-                    onClick={() => {
-                      if (episode && Number(episode) > 1) {
-                        const newEpisode = (Number(episode) - 1).toString();
-
-                        const params = new URLSearchParams(searchParams.toString());
-                        params.set("episode", newEpisode);
-
-                        window.location.search = params.toString();
-                      }
-                    }}
-                  >
-                    <i className={`bi bi-chevron-left font-bold`}></i>
-                    Previous
-                  </button>
-                </li>
-
-                <li>
-                  <Link
-                    href={`/${currentMediaType}/${currentId}`}
-                    onClick={() => {
-                      setActiveSeason(Number(season));
-                      setSeasonModal(true);
-                    }}
-                    className={`flex items-center justify-center max-md:px-3 px-6 h-8 leading-tight  border border-content-muted  hover:bg-surface-hover`}
-                  >
-                    <i className="bi bi-list"></i>
-                  </Link>
-                </li>
-
-                <li>
-                  <button
-                    className={`flex items-center justify-center max-md:px-6 px-8 h-8 ms-0  leading-tight border  border-content-muted rounded-e-full ${
-                      seasonArray && seasonArray[Number(season) - 1] && Number(episode) == seasonArray[Number(season) - 1].episode_count
-                        ? " pointer-events-none text-zinc-600"
-                        : "pointer-events-auto text-gray-200   hover:bg-surface-hover hover:text-white"
-                    }`}
-                    onClick={() => {
-                      if (episode && seasonArray && Number(episode) < seasonArray[Number(season) - 1].episode_count) {
-                        const newEpisode = (Number(episode) + 1).toString();
-
-                        const params = new URLSearchParams(searchParams.toString());
-                        params.set("episode", newEpisode);
-
-                        window.location.search = params.toString();
-                      }
-                    }}
-                  >
-                    Next <i className={`bi bi-chevron-right font-bold`}></i>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
+        <EpisodeNavigation season={season} episode={episode} searchParams={searchParams} currentMediaType={currentMediaType} currentId={currentId} seasonArray={seasonArray} />
       )}
     </>
   );
