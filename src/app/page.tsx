@@ -1,9 +1,7 @@
 "use client";
-import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Context } from "@/context/Context";
-import { mediaProperties } from "@/helpers/mediaProperties.config";
-import { fetchInitialData } from "@/helpers/fetchInitialData";
 import Link from "next/link";
 import { IMediaData } from "@/Types";
 import HomeSkeleton from "@/components/common/Skeletons/HomeSkeleton";
@@ -15,6 +13,7 @@ import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
+import useInitialMediaData from "@/Hooks/useInitialMediaData";
 
 const Slider = dynamic(() => import("@/components/Slider/Slider"), {
   loading: () => <SliderSkeleton />,
@@ -27,42 +26,15 @@ const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
 });
 export default function Home() {
-  const { initialDataIsLoading, setInitialDataIsLoading, setInitialDataError, initialDataError, containerMargin } = useContext(Context);
-  const [moviesApiData, setMoviesApiData] = useState<IMediaData[]>([]);
-  const [tvApiData, setTvApiData] = useState<IMediaData[]>([]);
-  const [moviesHeroApiData, setMoviesHeroApiData] = useState<IMediaData[]>([]);
+  const { initialDataIsLoading,initialDataError,containerMargin } = useContext(Context);
+  const { moviesHeroApiData, moviesApiData, tvApiData } = useInitialMediaData();
 
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
-   const { currentId } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
-
-  const fetchAndSetData = (
-    mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
-    MethodThatSavesInMovies?: Dispatch<SetStateAction<IMediaData[]>>,
-    MethodThatSavesInTV?: Dispatch<SetStateAction<IMediaData[]>>,
-    categoryForMovie?: string
-  ) => {
-    fetchInitialData(mediaTypeObj, null, null, categoryForMovie)
-      .then((data: [IMediaData[], number]) => {
-        mediaTypeObj.route == mediaProperties.movie.route ? MethodThatSavesInMovies && MethodThatSavesInMovies(data[0]) : MethodThatSavesInTV && MethodThatSavesInTV(data[0]);
-      })
-      .catch((e) => {
-        setInitialDataError(true);
-      })
-      .finally(() => {
-        setInitialDataIsLoading(false);
-      });
-  };
 
   useEffect(() => {
     dispatch(setCurrentId(0));
-  }, []);
-
-  useEffect(() => {
-    fetchAndSetData(mediaProperties.movie, setMoviesHeroApiData, undefined, mediaProperties.movie.searchCategory[0]);
-    fetchAndSetData(mediaProperties.movie, setMoviesApiData, undefined, mediaProperties.movie.searchCategory[0]);
-    fetchAndSetData(mediaProperties.tv, undefined, setTvApiData);
   }, []);
 
   if (initialDataError) {
