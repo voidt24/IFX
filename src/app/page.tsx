@@ -11,6 +11,7 @@ import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 import useInitialMediaData from "@/Hooks/useInitialMediaData";
 import useIsMobile from "@/Hooks/useIsMobile";
 import SectionWithSlider from "@/components/common/SectionWithSlider";
+import Footer from "@/components/common/Footer/Footer";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
@@ -61,14 +62,7 @@ export default function Home() {
         <SectionWithSlider title="Popular TV Shows" link="/tvshows" data={tvApiData} mediaType="tv" />
       </div>
 
-      <footer className="max-sm:hidden bg-black/50 shadow-sm text-content-muted py-4 text-center mt-10 relative">
-        <span className="text-[70%] ">
-          © {new Date().getFullYear().toString()}{" "}
-          <a href="/" className="hover:underline">
-            IFX
-          </a>
-        </span>
-      </footer>
+      <Footer />
     </div>
   );
 }
