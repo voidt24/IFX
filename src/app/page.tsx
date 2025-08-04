@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 import useInitialMediaData from "@/Hooks/useInitialMediaData";
+import useIsMobile from "@/Hooks/useIsMobile";
 
 const Slider = dynamic(() => import("@/components/Slider/Slider"), {
   loading: () => <SliderSkeleton />,
@@ -33,6 +34,8 @@ export default function Home() {
   const { firebaseActiveUser } = auth;
   const dispatch = useDispatch();
 
+  const isMobile = useIsMobile(640);
+
   useEffect(() => {
     dispatch(setCurrentId(0));
   }, []);
@@ -51,7 +54,7 @@ export default function Home() {
 
   return (
     <div className="relative" style={{ marginTop: containerMargin ? `${containerMargin}px` : undefined }}>
-      <Hero results={moviesHeroApiData} type="Movies" hasTitle={window.innerWidth < 640} mediaType="movie" />
+      <Hero results={moviesHeroApiData} type="Movies" hasTitle={isMobile} mediaType="movie" />
       <div className=" mt-6 pb-0">
         <div className=" flex-col-center gap-4 lg:gap-6 ">
           <div className="w-full ">
