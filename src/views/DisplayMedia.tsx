@@ -8,8 +8,8 @@ import { saveToHistory } from "@/firebase/saveToHistory";
 import { MediaTypeUrl } from "@/Types/mediaType";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import PlayMedia from "./PlayMedia";
-import DisplayInfo from "./DisplayInfo";
+import PlayMedia from "@/components/DisplayMedia/PlayMedia";
+import DisplayInfo from "@/components/DisplayMedia/DisplayInfo";
 
 function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const { containerMargin } = useContext(Context);

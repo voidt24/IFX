@@ -1,4 +1,4 @@
-import AllMediaData from "@/components/common/AllMediaData";
+import AllMediaData from "@/views/AllMediaData";
 import { APP_NAME } from "@/helpers/api.config";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { Metadata } from "next";

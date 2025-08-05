@@ -1,7 +1,7 @@
-import DisplayMedia from "@/components/DisplayMedia/DisplayMedia";
 import { APP_NAME } from "@/helpers/api.config";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { MediaTypeUrl } from "@/Types/mediaType";
+import DisplayMedia from "@/views/DisplayMedia";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 interface Params {

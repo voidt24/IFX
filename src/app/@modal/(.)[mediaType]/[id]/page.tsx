@@ -1,4 +1,4 @@
-import MediaDetails from "@/components/MediaDetails/MediaDetails";
+import MediaDetails from "@/views/MediaDetails";
 import NextModal from "../../NextModal";
 
 interface Params {

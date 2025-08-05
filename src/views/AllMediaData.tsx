@@ -4,13 +4,13 @@ import { IMediaData } from "@/Types/index";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
-import AllMediaDataSkeleton from "./Skeletons/AllMediaDataSkeleton";
+import AllMediaDataSkeleton from "../components/common/Skeletons/AllMediaDataSkeleton";
 import { Context } from "@/context/Context";
-import SignUpBanner from "./SignUpBanner";
-import Pagination from "./Pagination";
-import SelectDropdown from "./SelectDropdown";
+import SignUpBanner from "../components/common/SignUpBanner";
+import Pagination from "../components/common/Pagination";
+import SelectDropdown from "../components/common/SelectDropdown";
 import { selectFilterMovieCategories, selectFilterTVCategories, selectFilterProviders } from "@/helpers/constants";
-import Wrapper from "./Wrapper/Wrapper";
+import Wrapper from "../components/common/Wrapper/Wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
@@ -24,7 +24,6 @@ export default function AllMediaData({
   searchCategory: string;
   title: string;
 }) {
-  
   const [apiData, setApiData] = useState<IMediaData[]>([]);
   const [pageActive, setPageActive] = useState<number>(1);
   const [elementsToShow, setElementsToShow] = useState<number>(8);
@@ -35,7 +34,7 @@ export default function AllMediaData({
   const [DataIsLoading, setDataIsLoading] = useState(true);
   const [initialDataError, setInitialDataError] = useState(false);
   const [startingPage, setStartingPage] = useState(1);
-  
+
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
   const { currentMediaType } = useSelector((state: RootState) => state.mediaDetails);

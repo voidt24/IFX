@@ -1,21 +1,12 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
-import { Context } from "../../context/Context";
-import NotFound from "../common/NotFound";
-import Cast from "./Cast";
-import { Reviews } from "./Reviews/Reviews";
-import MediaInfo from "./MediaInfo";
 import { getRunTime } from "@/helpers/getRunTime";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { auth } from "@/firebase/firebase.config";
 import { getFromDB } from "@/firebase/getFromDB";
 import { image } from "@/helpers/api.config";
-import Notification from "../common/Notification";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
-import Tabs from "../common/Tabs/Tabs";
-import { Tab } from "../common/Tabs/Tab";
 import { handleTrailerClick } from "@/helpers/getTrailer";
-import MediaInfoPWA from "../PWA/MediaInfoPWA";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
@@ -23,6 +14,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { RootState } from "@/store";
 import { setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
+import { Context } from "@/context/Context";
+import MediaInfoPWA from "@/components/PWA/MediaInfoPWA";
+import MediaInfo from "@/components/MediaDetails/MediaInfo";
+import Tabs from "@/components/common/Tabs/Tabs";
+import { Tab } from "@/components/common/Tabs/Tab";
+import { Cast } from "@/components/MediaDetails/Cast";
+import { Reviews } from "@/components/MediaDetails/Reviews/Reviews";
+import Notification from "@/components/common/Notification";
+import NotFound from "@/components/common/NotFound";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
   const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);

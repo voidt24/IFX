@@ -1,6 +1,6 @@
-import MediaDetails from "@/components/MediaDetails/MediaDetails";
 import { APP_NAME } from "@/helpers/api.config";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
+import MediaDetails from "@/views/MediaDetails";
 import { Metadata } from "next";
 
 interface Params {
