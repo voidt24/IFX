@@ -22,7 +22,7 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
   const [poster, setPoster] = useState("");
   const [vote, setVote] = useState<string | undefined>();
 
-  const { setOpenMediaDetailsSheet, showSearchBar, setShowSearchBar, setSheetMediaType, isMobilePWA } = useContext(Context);
+  const { setOpenMediaDetailsSheet, setSheetMediaType, isMobilePWA } = useContext(Context);
   const dispatch = useDispatch();
   const { checkedMedia, edit } = useSelector((state: RootState) => state.listsManagement);
 
@@ -113,13 +113,9 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
             href={canBeEdited ? `/${result.media_type === "movie" ? "movies" : "tvshows"}/${result.id}` : `/${mediaType === "movie" ? "movies" : "tvshows"}/${result.id}`}
             onClick={() => {
               sessionStorage.setItem("navigatingFromApp", "1");
-
               dispatch(setCurrentId(result.id ?? undefined));
               if (canBeEdited) {
                 dispatch(setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows"));
-              }
-              if (showSearchBar) {
-                setShowSearchBar(false);
               }
             }}
           >

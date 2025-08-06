@@ -25,7 +25,7 @@ import Notification from "@/components/common/Notification";
 import NotFound from "@/components/common/NotFound";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
-  const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);
+  const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA, showSearchBar, setShowSearchBar } = useContext(Context);
 
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -40,6 +40,9 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (showSearchBar) {
+      setShowSearchBar(false);
+    }
     return () => {
       dispatch(setMediaDetailsData(null));
       setOpenTrailer(false);
