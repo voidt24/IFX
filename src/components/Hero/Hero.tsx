@@ -6,12 +6,15 @@ import { Context } from "@/context/Context";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { IMediaData, MediaTypeApi } from "@/Types";
 import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
+import { useDispatch } from "react-redux";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
   const { setSheetMediaType, setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);
+
+  const dispatch = useDispatch();
 
   return (
     <div className="slider-test max-w-full relative px-2 mx-auto w-full h-full overflow-hidden">
@@ -62,7 +65,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                     className="btn-primary text-[40%] !py-0 !px-6"
                     href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
                     onClick={() => {
-                      setCurrentId(sliderData.id);
+                      dispatch(setCurrentId(sliderData.id));
                       sessionStorage.setItem("navigatingFromApp", "1");
                     }}
                   >
@@ -85,7 +88,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                       className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
                       onClick={() => {
                         setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-                        setCurrentId(sliderData.id);
+                        dispatch(setCurrentId(sliderData.id));
                         setOpenMediaDetailsSheet(true);
                       }}
                       title="media-details-button"
@@ -97,7 +100,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                       className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
                       href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
                       onClick={() => {
-                        setCurrentId(sliderData.id);
+                        dispatch(setCurrentId(sliderData.id));
                         sessionStorage.setItem("navigatingFromApp", "1");
                       }}
                     >
