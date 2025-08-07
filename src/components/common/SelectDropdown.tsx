@@ -1,42 +1,37 @@
-import { RootState } from "@/store";
-import {  useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
-  listSelectedChange?: boolean;
+  type: string;
+  selected: string | null;
   selectDefaultName: string;
   selectOptions: string[];
-  actionWhenSelectChange: (selected: string) => void;
 }
 
-export default function SelectDropdown({ listSelectedChange, selectDefaultName, selectOptions, actionWhenSelectChange }: Props) {
-  // const {  setEdit, setCheckedMedia } = useContext(Context);
+export default function SelectDropdown({ type, selected, selectDefaultName, selectOptions }: Props) {
 
-  const [selected, setSelected] = useState(selectDefaultName);
+  const router = useRouter();
 
-  const { edit } = useSelector((state: RootState) => state.listsManagement);
-
-  useEffect(() => {
-    //applicable to /lists only when selecting a new list: "favorites to watchlist" or vice versa
-    setSelected(selectDefaultName);
-  }, [listSelectedChange]);
-
-  useEffect(() => {
-    actionWhenSelectChange(selected);
-  }, [selected]);
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
   return (
     <div className="relative inline-block text-left">
       <select
         title="select"
-        value={selected}
+        value={selected || selectDefaultName}
         onChange={(e) => {
-          setSelected(e.target.value);
-          if (edit) {
-            setEdit(false);
-            setCheckedMedia([]);
+          switch (type) {
+            case "platform":
+              params.set("platform", e.target.value);
+              break;
+            case "genre":
+              params.set("genre", e.target.value);
+              break;
+            case "listMediaType":
+              params.set("media", e.target.value);
+              break;
           }
+          router.replace(`?${params.toString()}`);
         }}
         className="px-4 rounded-lg py-1.5 border border-zinc-500 bg-surface-modal text-content-primary outline-none w-full"
       >

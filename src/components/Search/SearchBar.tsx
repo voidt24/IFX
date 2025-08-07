@@ -7,12 +7,20 @@ import Input from "../common/Input";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setLoadingSearch, setSearchQuery, setSearchResults, setSearchStarted } from "@/store/slices/searchSlice";
+import { useRouter, useSearchParams } from "next/navigation";
 export default function SearchBar() {
-  const { pageActive, setPageActive, setNumberOfPages } = useContext(Context);
+  const { setPageActive, setNumberOfPages } = useContext(Context);
 
   const [inputValue, setInputValue] = useState("");
   const { searchStarted, searchQuery } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
+
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
+
+  const searchPage = searchParams.get("searchPage");
 
   function handleSearch(value: string) {
     if (value.trim().length === 0) {
@@ -22,8 +30,8 @@ export default function SearchBar() {
     dispatch(setSearchResults([]));
     dispatch(setLoadingSearch(true));
 
-    search(value, pageActive).then((data) => {
-      if (data.page === pageActive) {
+    search(value, Number(searchPage || 1)).then((data) => {
+      if (data.page === Number(searchPage)) {
         dispatch(setSearchResults(data.results));
       }
       dispatch(setLoadingSearch(false));
@@ -32,6 +40,12 @@ export default function SearchBar() {
     });
   }
 
+  useEffect(() => {
+    return () => {
+      params.delete("searchPage");
+      router.push(`?${params.toString()}`, { scroll: false });
+    };
+  }, []);
   useEffect(() => {
     if (!searchStarted) {
       setInputValue("");
@@ -42,13 +56,15 @@ export default function SearchBar() {
     if (searchStarted) {
       handleSearch(searchQuery);
     }
-  }, [pageActive]);
+  }, [searchPage]);
   return (
     <>
       <form
         className="flex justify-between  bg-black/40 backdrop-blur-lg z-50  w-full rounded-full border border-zinc-600 focus-within:border focus-within:border-blue-500 "
         onSubmit={(event) => {
           event.preventDefault();
+          params.set("searchPage", `1`);
+          router.push(`?${params.toString()}`);
           handleSearch(inputValue);
           setPageActive(1);
 

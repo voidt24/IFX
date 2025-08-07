@@ -2,18 +2,18 @@
 import SliderCard from "@/components/Slider/SliderCard";
 import { IMediaData } from "@/Types/index";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
-import { mediaProperties } from "@/helpers/mediaProperties.config";
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import AllMediaDataSkeleton from "../components/common/Skeletons/AllMediaDataSkeleton";
-import { Context } from "@/context/Context";
 import SignUpBanner from "../components/common/SignUpBanner";
 import Pagination from "../components/common/Pagination";
-import SelectDropdown from "../components/common/SelectDropdown";
-import { selectFilterMovieCategories, selectFilterTVCategories, selectFilterProviders } from "@/helpers/constants";
 import Wrapper from "../components/common/Wrapper/Wrapper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
+import PlatformSelect from "@/features/contentFilter/PlatformSelect";
+import { useRouter, useSearchParams } from "next/navigation";
+import GenreSelect from "@/features/contentFilter/GenreSelect";
+import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -25,20 +25,24 @@ export default function AllMediaData({
   title: string;
 }) {
   const [apiData, setApiData] = useState<IMediaData[]>([]);
-  const [pageActive, setPageActive] = useState<number>(1);
   const [elementsToShow, setElementsToShow] = useState<number>(8);
   const [pageIsLoading, setPageIsLoading] = useState(true);
-  const [newProvider, setNewProvider] = useState(true);
-  const [provider, setProvider] = useState<string | null>(null);
-  const [genre, setGenre] = useState<string | null>(null);
   const [DataIsLoading, setDataIsLoading] = useState(true);
   const [initialDataError, setInitialDataError] = useState(false);
-  const [startingPage, setStartingPage] = useState(1);
 
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
-  const { currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+
+  const platform = searchParams.get("platform");
+  const genre = searchParams.get("genre");
+  const page = searchParams.get("page");
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  const dispatch = useDispatch();
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
     pageActive: number,
@@ -67,13 +71,31 @@ export default function AllMediaData({
   };
 
   useEffect(() => {
-    setCurrentId(0);
+    if (!Number(page) || (Number(page) && elementsToShow && Number(page) > elementsToShow)) {
+      params.set("page", "1");
+      router.replace(`?${params.toString()}`);
+    }
+  }, [page, elementsToShow]);
+  useEffect(() => {
+    dispatch(setCurrentId(0));
   }, []);
 
   useEffect(() => {
+    if (isFirstRender) {
+      //to avoid restarting page if it's > 1 on 1st render
+      setIsFirstRender(false);
+      return;
+    }
+    if (Number(page) > 1) {
+      params.set("page", `1`);
+      router.push(`?${params.toString()}`);
+    }
+  }, [platform, genre]);
+
+  useEffect(() => {
     setDataIsLoading(true);
-    fetchAndSetData(mediaTypeObj, pageActive, provider, genre, setApiData, searchCategory);
-  }, [pageActive, newProvider, genre]);
+    fetchAndSetData(mediaTypeObj, Number(page), platform, genre, setApiData, searchCategory);
+  }, [page, platform, genre]);
 
   if (initialDataError) {
     return (
@@ -86,46 +108,38 @@ export default function AllMediaData({
   if (pageIsLoading) {
     return <AllMediaDataSkeleton />;
   }
+
   return (
-    <Wrapper customClasses="relative">
-      <div className="flex-col-center lists w-full gap-8">
-        <div className=" flex flex-col gap-4 ">
+    <Wrapper customClasses="relative ">
+      <div className="flex-col-center lists w-full gap-8 ">
+        <div className=" flex flex-col gap-4 w-full">
           <div className=" w-full z-20 bg-none  ">
             <h1 className="title-style">{title}</h1>
             <div className="flex gap-6  flex-col">
               <div className="flex gap-4">
-                <SelectDropdown
-                  selectDefaultName="Platform"
-                  selectOptions={selectFilterProviders}
-                  actionWhenSelectChange={(selected) => {
-                    if (pageActive !== 1) setPageActive(1);
-                    if (startingPage !== 1) setStartingPage(1);
-                    setProvider(selected);
-                    setNewProvider(!newProvider);
-                  }}
-                />
-                <SelectDropdown
-                  selectDefaultName="Genre"
-                  selectOptions={currentMediaType == mediaProperties.movie.route ? selectFilterMovieCategories : selectFilterTVCategories}
-                  actionWhenSelectChange={(selected) => {
-                    if (pageActive !== 1) setPageActive(1);
-                    if (startingPage !== 1) setStartingPage(1);
-                    if (selected !== "Genre") {
-                      setGenre(selected);
-                    }
-                  }}
-                />
+                <PlatformSelect selected={platform} />
+                <GenreSelect selected={genre} />
               </div>
             </div>
           </div>
 
-          <div className="media-lists ">
-            {apiData.map((sliderData) => {
-              return <SliderCard key={sliderData.id} result={sliderData} mediaType={sliderData.media_type} />;
-            })}
-          </div>
+          {DataIsLoading ? (
+            <div className="lists flex flex-col items-center gap-4 text-center animate-pulse w-full">
+              <div className="media-lists flex flex-col gap-4 xl:max-w-[1400px] w-full ">
+                {Array.from({ length: 20 }).map((_, index) => (
+                  <SliderCardSkeleton key={index} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="media-lists">
+              {apiData.map((sliderData) => {
+                return <SliderCard key={sliderData.id} result={sliderData} mediaType={sliderData.media_type} />;
+              })}
+            </div>
+          )}
         </div>
-        <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={elementsToShow} startingPage={startingPage} setStartingPage={setStartingPage} />
+        <Pagination queryName="page" pageActive={Number(page) || 1} numberOfPages={elementsToShow} />
 
         {!firebaseActiveUser?.uid ? <SignUpBanner /> : null}
       </div>

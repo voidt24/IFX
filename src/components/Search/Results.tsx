@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useContext } from "react";
 import { Context } from "@/context/Context";
 import SliderCard from "../Slider/SliderCard";
@@ -9,16 +9,18 @@ import { IMediaData } from "@/Types/index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setSearchStarted } from "@/store/slices/searchSlice";
+import { useSearchParams } from "next/navigation";
 
 export default function Results() {
-  const { pageActive, setPageActive, numberOfPages, setNumberOfPages, isMobilePWA } = useContext(Context);
-
-  const [startingPage, setStartingPage] = useState(1);
+  const { numberOfPages, isMobilePWA } = useContext(Context);
 
   const ref = useRef<HTMLDivElement>(null);
 
   const { searchResults, loadingSearch, searchStarted, searchQuery } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
+
+  const searchParams = useSearchParams();
+  const searchPage = searchParams.get("searchPage");
 
   useEffect(() => {
     return () => {
@@ -32,7 +34,7 @@ export default function Results() {
         <>
           {numberOfPages > 1 && (
             <p className=" md:text-xl text-center sticky top-0 z-50 bg-black/70 p-2">
-              Results for "{searchQuery}" page: {pageActive}
+              Results for "{searchQuery}" page: {searchPage}
             </p>
           )}
           {loadingSearch ? (
@@ -46,15 +48,7 @@ export default function Results() {
                     })
                   : searchStarted && <p className="col-span-full mt-4">no results</p>}
               </div>
-              {searchStarted && !loadingSearch && (
-                <div className="w-full ">
-                  <div className="flex gap-2  flex-col">
-                    {numberOfPages > 1 && (
-                      <Pagination pageActive={pageActive} setPageActive={setPageActive} numberOfPages={numberOfPages} startingPage={startingPage} setStartingPage={setStartingPage} />
-                    )}
-                  </div>
-                </div>
-              )}
+              {searchStarted && !loadingSearch && <div className="flex-row-center w-full">{numberOfPages > 1 && <Pagination queryName="searchPage" pageActive={Number(searchPage) || 1} numberOfPages={numberOfPages} />}</div>}
             </div>
           )}
         </>
