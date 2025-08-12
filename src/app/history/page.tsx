@@ -104,7 +104,7 @@ function History() {
             {currentListData
               .sort((a: [string, IhistoryMedia[]], b: [string, IhistoryMedia[]]) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
               .map((result: [string, IhistoryMedia[]], index) => (
-                <div className="flex flex-col items-center justify-center gap-12 p-6 rounded-lg bg-surface-modal " key={`date-${result[0]}`}>
+                <div className="flex flex-col items-center justify-center gap-12 p-6 rounded-lg bg-surface-modal w-full" key={`date-${result[0]}`}>
                   <header className="flex-row-between w-full bg-slate-500/20 m-auto rounded-lg px-4 py-2">
                     <p className="date lg:text-lg   text-content-secondary font-semibold ">
                       {(() => {
