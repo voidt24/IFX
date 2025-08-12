@@ -1,13 +1,13 @@
 
-<img src="public/apple-icon-180.png" alt="Descripción">
+<img src="public/apple-icon-180.png" alt="IFX logo">
 
 ## API Based streaming platform
 ### Users can:
 - Watch movies and TV Shows
 - Create accounts.
-- Save media to favorites and watchlists.
+- Create lists such as favorites and watchlists.
 - Get reviews, casts and trailers about latest movies and TV Shows.
-- Customize their profiles with banners and their favorite media.
+- Customize their profiles with banners.
 - Change personal information such as name, email, password and delete their accounts.
 
 ### Technical feautures:
@@ -24,7 +24,8 @@
 
 ### Tech Stack
 - Nextjs
-- TypeScript/JavaScript
+- TypeScript
+- Redux Toolkit
 - Firebase
 - Tailwind
 - SASS
