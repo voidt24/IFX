@@ -40,7 +40,6 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
   const {
     setLoadingScreen,
     showSearchBar,
-    setShowSearchBar,
     userMenuActive,
     setUserMenuActive,
     setContainerMargin,
@@ -150,7 +149,6 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
                         element.name == "Log out" ? "!text-red-500 mt-2" : "text-white"
                       }`}
                       onClick={async () => {
-                        if (openUserDrawer) setOpenUserDrawer(false);
                         if (element.actionFunction) await element.actionFunction();
                       }}
                     >
@@ -187,8 +185,6 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
                           element.name == "Log out" ? "!text-red-500 mt-2" : "text-white"
                         }`}
                         onClick={async () => {
-                          if (showSearchBar) setShowSearchBar(false);
-                          if (userMenuActive) setUserMenuActive(false);
                           if (element.actionFunction) await element.actionFunction();
                         }}
                       >

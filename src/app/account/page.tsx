@@ -5,11 +5,14 @@ import useVerifyToken from "@/Hooks/useVerifyToken";
 import Settings from "@/components/settings/Settings";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import useHideDrawers from "@/Hooks/useHideDrawers";
+
 export default function Profile() {
   const auth = useSelector((state: RootState) => state.auth);
   const { profileData } = auth;
 
   useVerifyToken();
+  useHideDrawers();
 
   return (
     <Wrapper>

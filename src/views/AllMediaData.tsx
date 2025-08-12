@@ -14,6 +14,7 @@ import PlatformSelect from "@/features/contentFilter/PlatformSelect";
 import { useRouter, useSearchParams } from "next/navigation";
 import GenreSelect from "@/features/contentFilter/GenreSelect";
 import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
+import useHideDrawers from "@/Hooks/useHideDrawers";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -41,6 +42,8 @@ export default function AllMediaData({
   const genre = searchParams.get("genre");
   const page = searchParams.get("page");
   const [isFirstRender, setIsFirstRender] = useState(true);
+
+  useHideDrawers();
 
   const dispatch = useDispatch();
   const fetchAndSetData = (

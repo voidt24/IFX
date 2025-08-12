@@ -23,6 +23,7 @@ import { Cast } from "@/components/MediaDetails/Cast";
 import { Reviews } from "@/components/MediaDetails/Reviews/Reviews";
 import Notification from "@/components/common/Notification";
 import NotFound from "@/components/common/NotFound";
+import useHideDrawers from "@/Hooks/useHideDrawers";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
   const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA, showSearchBar, setShowSearchBar } = useContext(Context);
@@ -39,10 +40,9 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const { currentId, mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
 
+  useHideDrawers(true);
+
   useEffect(() => {
-    if (showSearchBar) {
-      setShowSearchBar(false);
-    }
     return () => {
       dispatch(setMediaDetailsData(null));
       setOpenTrailer(false);

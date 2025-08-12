@@ -12,13 +12,14 @@ import useInitialMediaData from "@/Hooks/useInitialMediaData";
 import useIsMobile from "@/Hooks/useIsMobile";
 import SectionWithSlider from "@/components/common/SectionWithSlider";
 import Footer from "@/components/common/Footer/Footer";
+import useHideDrawers from "@/Hooks/useHideDrawers";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
 });
 
 export default function Home() {
-  const { initialDataIsLoading,initialDataError,containerMargin } = useContext(Context);
+  const { initialDataIsLoading, initialDataError, containerMargin } = useContext(Context);
   const { moviesHeroApiData, moviesApiData, tvApiData } = useInitialMediaData();
 
   const auth = useSelector((state: RootState) => state.auth);
@@ -30,6 +31,8 @@ export default function Home() {
   useEffect(() => {
     dispatch(setCurrentId(0));
   }, []);
+
+  useHideDrawers();
 
   if (initialDataError) {
     return (

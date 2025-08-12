@@ -4,9 +4,11 @@ import useVerifyToken from "@/Hooks/useVerifyToken";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import SavedListOptions from "../../features/contentFilter/savedListsSelection";
 import { Suspense } from "react";
+import useHideDrawers from "@/Hooks/useHideDrawers";
 
 export default function Lists() {
   useVerifyToken();
+  useHideDrawers();
 
   return (
     <Wrapper>

@@ -14,6 +14,7 @@ import Wrapper from "@/components/common/Wrapper/Wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
+import useHideDrawers from "@/Hooks/useHideDrawers";
 
 function History() {
   const { isMobilePWA, setSheetMediaType, setOpenMediaDetailsSheet } = useContext(Context);
@@ -39,6 +40,7 @@ function History() {
     }));
   };
   useVerifyToken();
+  useHideDrawers();
 
   async function getData() {
     if (!database && !usersCollectionName && !firebaseActiveUser?.uid) {

@@ -1,6 +1,5 @@
-import { Context } from "@/context/Context";
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/firebase.config";
 import { menuActions } from "./TopNavbar";
@@ -8,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 
 function TopNavbar() {
-  const { showSearchBar, setShowSearchBar, userMenuActive, setUserMenuActive } = useContext(Context);
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
 
@@ -41,10 +39,6 @@ function TopNavbar() {
                   } nav-item-box max-sm:text-[90%]   border-b border-transparent transition-all duration-200`}
                   key={index}
                   href={element.href}
-                  onClick={() => {
-                    if (showSearchBar) setShowSearchBar(false);
-                    if (userMenuActive) setUserMenuActive(false);
-                  }}
                 >
                   {element.icon}
                   <span className={`text-[85%]`}>{element.name}</span>

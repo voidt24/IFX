@@ -12,7 +12,6 @@ function NavItems() {
   const { authModalActive, setAuthModalActive, setNoAccount, showSearchBar, setShowSearchBar, userMenuActive, setUserMenuActive, isMobilePWA, setOpenSearchDrawer, setOpenUserDrawer } =
     useContext(Context);
 
-  const [menuActive, setMenuActive] = useState(false);
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
   const authState = useSelector((state: RootState) => state.auth);
@@ -35,13 +34,7 @@ function NavItems() {
     <div className={`links relative flex-row-between gap-2 w-full `}>
       <ul className="">
         <li id="logo" className="">
-          <Link
-            href="/"
-            onClick={() => {
-              if (showSearchBar) setShowSearchBar(false);
-              if (userMenuActive) setUserMenuActive(false);
-            }}
-          >
+          <Link href="/">
             <img src="/logo.png" className="w-[3.5rem]" alt="" />
           </Link>
         </li>
@@ -58,10 +51,6 @@ function NavItems() {
                 } nav-item-box max-sm:text-[80%]   border-b border-transparent transition-all duration-200`}
                 key={index}
                 href={element.href}
-                onClick={() => {
-                  if (showSearchBar) setShowSearchBar(false);
-                  if (userMenuActive) setUserMenuActive(false);
-                }}
               >
                 {element.icon}
                 {element.name}
@@ -111,7 +100,6 @@ function NavItems() {
                 } else {
                   if (showSearchBar) setShowSearchBar(false);
                   setUserMenuActive(!userMenuActive);
-                  setMenuActive(false);
                 }
               }}
               title="user-option"
