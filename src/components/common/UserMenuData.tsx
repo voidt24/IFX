@@ -7,7 +7,7 @@ import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
 import Link from "next/link";
 
 function UserMenuData() {
-  const { setLoadingScreen, setUserMenuActive } = useContext(Context);
+  const { setLoadingScreen, setUserMenuActive, setOpenUserDrawer } = useContext(Context);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -17,6 +17,7 @@ function UserMenuData() {
       dispatch(setUserLogged(false));
       dispatch(setFirebaseActiveUser({ email: null, uid: null }));
       setUserMenuActive(false);
+      setOpenUserDrawer(false);
       document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
       setLoadingScreen(true);
 
