@@ -7,7 +7,6 @@ import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import { useRouter } from "next/navigation";
 import SearchSlideOver from "../common/SearchSlideOver";
 import SlideOver from "../common/SlideOver";
-import useIsMobile from "@/Hooks/useIsMobile";
 import MenuDrawer from "../PWA/MenuDrawer";
 import Search from "../Search";
 import NavItems from "./NavItems";
@@ -37,19 +36,8 @@ export const menuActions = [
 export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }) {
   const router = useRouter();
 
-  const {
-    setLoadingScreen,
-    showSearchBar,
-    userMenuActive,
-    setUserMenuActive,
-    setContainerMargin,
-    isMobilePWA,
-    openSearchDrawer,
-    setOpenSearchDrawer,
-    openUserDrawer,
-    setOpenUserDrawer,
-  } = useContext(Context);
-  const isMobile = useIsMobile(640);
+  const { setLoadingScreen, showSearchBar, userMenuActive, setUserMenuActive, setContainerMargin, isMobilePWA, openSearchDrawer, setOpenSearchDrawer, openUserDrawer, setOpenUserDrawer } =
+    useContext(Context);
 
   const profileData = {
     displayName: auth.currentUser?.displayName,
@@ -109,19 +97,13 @@ export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }
 
   return (
     <>
-      {isMobile ? (
-        <div className=" fixed top-0 w-full max-lg:z-[99] z-[999]" ref={navRef}>
-          <Headroom className="transition-all duration-500">
-            <nav className="nav ">
-              <NavItems />
-            </nav>
-          </Headroom>
-        </div>
-      ) : (
-        <nav className="nav fixed top-0 " ref={navRef}>
-          <NavItems />
-        </nav>
-      )}
+      <div className=" fixed top-0 w-full max-lg:z-[99] z-[999]" ref={navRef}>
+        <Headroom className="transition-all duration-500">
+          <nav className="nav ">
+            <NavItems />
+          </nav>
+        </Headroom>
+      </div>
 
       {isMobilePWA ? (
         <>
