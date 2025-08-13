@@ -1,29 +1,14 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/firebase/firebase.config";
 import { menuActions } from "./TopNavbar";
 import { usePathname } from "next/navigation";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 
 function BottomNavbar() {
-  const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
 
   const isPWA = useIsPWA();
   const isIOS = () => /iphone/.test(window.navigator.userAgent.toLowerCase());
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setLoadingAuth({ state: "on" });
-      } else {
-        setLoadingAuth({ state: "off" });
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
   return (
     <nav className={`nav fixed bottom-0 sm:hidden  ${isPWA && isIOS() ? "max-lg:!pb-6" : ""} `}>
       <div className={`links relative flex-row-between gap-2 w-full max-sm:justify-center`}>
