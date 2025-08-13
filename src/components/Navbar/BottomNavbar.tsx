@@ -6,7 +6,7 @@ import { menuActions } from "./TopNavbar";
 import { usePathname } from "next/navigation";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 
-function TopNavbar() {
+function BottomNavbar() {
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
 
@@ -52,4 +52,4 @@ function TopNavbar() {
   );
 }
 
-export default TopNavbar;
+export default BottomNavbar;

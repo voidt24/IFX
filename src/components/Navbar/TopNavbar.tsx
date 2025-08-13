@@ -25,7 +25,7 @@ export const menuActions = [
     actionFunction: null,
   },
 ];
-export default function Navbar({ navRef }: { navRef: RefObject<HTMLDivElement> }) {
+export default function TopNavbar({ navRef }: { navRef: RefObject<HTMLDivElement> }) {
   const { setContainerMargin } = useContext(Context);
 
   useEffect(() => {
