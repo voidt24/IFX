@@ -1,21 +1,16 @@
-import { Context } from "@/context/Context";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { menuActions } from "./TopNavbar";
 import { usePathname } from "next/navigation";
 import { auth } from "@/firebase/firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import SearchButton from "./SearchButton";
+import LoginButton from "./LoginButton";
+import UserMenuButton from "./UserMenuButton";
 
 function NavItems() {
-  const { authModalActive, setAuthModalActive, setNoAccount, showSearchBar, setShowSearchBar, userMenuActive, setUserMenuActive, isMobilePWA, setOpenSearchDrawer, setOpenUserDrawer } =
-    useContext(Context);
-
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
-  const authState = useSelector((state: RootState) => state.auth);
-  const { firebaseActiveUser } = authState;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -62,51 +57,10 @@ function NavItems() {
 
       <ul className="flex gap-2 items-center justify-center">
         <li>
-          <button
-            className="w-[2rem] h-[2rem] sm:hover:bg-gray-800 rounded-full"
-            id="main-search-btn"
-            onClick={() => {
-              if (isMobilePWA) {
-                setOpenSearchDrawer(true);
-              } else {
-                if (userMenuActive) setUserMenuActive(false);
-                setShowSearchBar(!showSearchBar);
-              }
-            }}
-            title="search-button"
-          >
-            <i className={`bi ${!showSearchBar ? "bi-search" : "bi-x-lg"}  text-lg`}></i>
-          </button>
+          <SearchButton />
         </li>
         <li className="">
-          {loadingAuth.state === "unknown" ? (
-            <div className="py-2 px-4 bg-zinc-800 rounded-full animate-pulse"></div>
-          ) : loadingAuth.state === "off" ? (
-            <button
-              className=" btn-primary px-2.5 py-1 shadow-none "
-              onClick={() => {
-                setNoAccount(false);
-                setAuthModalActive(!authModalActive);
-              }}
-            >
-              <p className="font-semibold">Log in</p>
-            </button>
-          ) : (
-            <button
-              className={`w-[2rem] h-[2rem] rounded-full font-semibold  ${userMenuActive ? "bg-brand-primary/80" : "bg-gray-800"} lg:hover:bg-brand-primary/80`}
-              onClick={() => {
-                if (isMobilePWA) {
-                  setOpenUserDrawer(true);
-                } else {
-                  if (showSearchBar) setShowSearchBar(false);
-                  setUserMenuActive(!userMenuActive);
-                }
-              }}
-              title="user-option"
-            >
-              <span className="text-xl">{auth.currentUser?.displayName?.slice(0, 1).toUpperCase() || firebaseActiveUser?.email?.slice(0, 1).toUpperCase()}</span>
-            </button>
-          )}
+          {loadingAuth.state === "unknown" ? <div className="py-2 px-4 bg-zinc-800 rounded-full animate-pulse"></div> : loadingAuth.state === "off" ? <LoginButton /> : <UserMenuButton />}
         </li>
       </ul>
     </div>
