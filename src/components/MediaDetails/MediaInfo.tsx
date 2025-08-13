@@ -6,9 +6,6 @@ import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Modal from "../common/Modal";
 import Notification from "../common/Notification";
 import useIsMobile from "@/Hooks/useIsMobile";
-import PlayButton from "./Buttons/PlayButton";
-import { isReleased } from "@/helpers/isReleased";
-import TrailerButton from "./Buttons/TrailerButton";
 import MediaInfoRow from "./MediaInfoRow";
 import SeasonList from "./SeasonData/SeasonList";
 import Overview from "./Overview";
@@ -18,6 +15,7 @@ import Trailer from "../Trailer";
 import { setCurrentId, setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import PlayOrTrailerButton from "./PlayOrTrailerButton";
 
 export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: boolean; loadingWatchlist: boolean }) => {
   const { seasonModal, setSeasonModal, containerMargin } = useContext(Context);
@@ -104,11 +102,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
 
             <div className="flex-row-center gap-6 w-full lg:justify-start">
               <span className="max-lg:hidden">
-                {isReleased(mediaDetailsData.releaseDate) ? (
-                  <PlayButton mediaId={currentId} mediaType={getApiMediaType(currentMediaType)} data={mediaDetailsData} />
-                ) : (
-                  <TrailerButton id={currentId} mediaType={getApiMediaType(currentMediaType)} />
-                )}
+                <PlayOrTrailerButton mediaId={currentId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
               </span>
               <ListsButtonGroup state={mediaDetailsData} mediaType={getApiMediaType(currentMediaType)} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
             </div>
@@ -118,11 +112,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
         {/* MOBILE BUTTONS */}
         <div className="lg:hidden w-full fixed bottom-0 px-6 pb-6 pt-20 left-[50%] translate-x-[-50%] z-[4] pointer-events-none">
           <div className="to-top-gradient-bg h-full z-[2]"></div>
-          {isReleased(mediaDetailsData.releaseDate) ? (
-            <PlayButton mediaId={currentId} mediaType={getApiMediaType(currentMediaType)} data={mediaDetailsData} />
-          ) : (
-            <TrailerButton id={currentId} mediaType={getApiMediaType(currentMediaType)} />
-          )}
+          <PlayOrTrailerButton mediaId={currentId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
         </div>
       </div>
 

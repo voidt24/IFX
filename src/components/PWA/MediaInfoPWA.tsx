@@ -8,12 +8,10 @@ import Overview from "../MediaDetails/Overview";
 import SeasonList from "../MediaDetails/SeasonData/SeasonList";
 import ListsButtonGroup from "../MediaDetails/ListsButtonGroup";
 import { MediaTypeApi } from "@/Types/mediaType";
-import { isReleased } from "@/helpers/isReleased";
-import PlayButton from "../MediaDetails/Buttons/PlayButton";
-import TrailerButton from "../MediaDetails/Buttons/TrailerButton";
 import MediaInfoRow from "../MediaDetails/MediaInfoRow";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
+import PlayOrTrailerButton from "../MediaDetails/PlayOrTrailerButton";
 
 export const MediaInfoPWA = ({
   state,
@@ -70,7 +68,7 @@ export const MediaInfoPWA = ({
 
         <div className=" w-full fixed bottom-0 px-6 pb-6 pt-20 left-[50%] translate-x-[-50%] z-[4] pointer-events-none">
           <div className="to-top-gradient-bg h-full z-[2]"></div>
-          {state && isReleased(state.releaseDate) ? <PlayButton mediaId={mediaId} mediaType={mediaType} data={state} /> : <TrailerButton id={mediaId} mediaType={mediaType} />}
+          {state && <PlayOrTrailerButton mediaId={mediaId} mediaType={mediaType} mediaData={state} />}
         </div>
       </div>
 
