@@ -13,6 +13,7 @@ import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { setEpisodesArray } from "@/store/slices/mediaDetailsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import PlayMedia from "../DisplayMedia/PlayMedia";
 
 export async function getInfo(mediaType: string | undefined, mediaId: number) {
   try {
@@ -27,7 +28,7 @@ function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; medi
   const [mediaDetailsData, setMediaDetailsData] = useState<ImediaDetailsData | null>(null);
 
   const [mediaURL, setMediaURL] = useState<string | undefined>("");
-  const [selectedSrc, setSelectedSrc] = useState(0);
+  const [selectedSrc, setSelectedSrc] = useState<string | null>(null);
   const [seasonArray, setSeasonArray] = useState<
     {
       air_date: string;
@@ -115,36 +116,17 @@ function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; medi
       <div className="wrapper relative z-[2]">
         <div className="h-full w-full m-auto flex flex-col items-center justify-center">
           <div className="bg-black/35 backdrop-blur-lg flex flex-col items-center justify-center gap-2 xl:gap-4 h-auto w-full px-2 md:px-4 max-sm:py-12 py-4 rounded-xl xl:px-10">
-            <div className="src-options p-0 w-full max-sm:text-[80%]">
-              <Slider sideControls padding="px-7">
-                {srcOptions.map((option, index) => {
-                  return (
-                    <button
-                      key={index}
-                      className={`border bg-black rounded-full py-[4px]  ${selectedSrc == index ? "bg-zinc-300 text-black" : "text-content-secondary hover:text-content-primary hover:bg-zinc-800"}`}
-                      onClick={() => {
-                        if (selectedSrc != index) {
-                          setSelectedSrc(index);
-                          setMediaURL("");
-                          setMediaURL(mediaType == "movie" ? MEDIA_URL_RESOLVER(index, mediaId, "movie") : MEDIA_URL_RESOLVER(index, mediaId, "tv", Number(activeSeason), Number(activeEpisode)));
-                        }
-                      }}
-                    >
-                      Option {index + 1}
-                    </button>
-                  );
-                })}
-              </Slider>
-            </div>
-
-            {mediaURL == "" ? (
-              <div className="h-[20rem] lg:h-[40rem] xl:h-[40rem]  w-full flex items-center justify-center">
-                {" "}
-                <CircularProgress color="inherit" size={30} />
-              </div>
-            ) : (
-              <iframe src={mediaURL} className="h-[20rem] lg:h-[40rem] xl:h-[40rem] w-full  rounded-lg" title="media" referrerPolicy="origin" allowFullScreen></iframe>
-            )}
+ 
+            <PlayMedia
+              option={selectedSrc?.toString() || null}
+              setOption={setSelectedSrc}
+              season={activeSeason?.toString() || null}
+              episode={activeEpisode?.toString() || null}
+              mediaType={mediaType}
+              currentId={mediaId}
+              mediaURL={mediaURL}
+              setMediaURL={setMediaURL}
+            />
 
             <div className="flex-col-center md:items-start md:justify-start gap-6 xl:gap-10 w-full mt-6 px-1">
               <div className="flex justify-center items-start  md:items-start  gap-3.5 xl:gap-6">

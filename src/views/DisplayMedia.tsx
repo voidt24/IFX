@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PlayMedia from "@/components/DisplayMedia/PlayMedia";
 import DisplayInfo from "@/components/DisplayMedia/DisplayInfo";
+import { getApiMediaType } from "@/helpers/getApiMediaType";
 
 function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const { containerMargin } = useContext(Context);
@@ -72,7 +73,7 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
         <div className="h-full w-full m-auto flex flex-col items-center justify-center">
           <div className="bg-black/35 backdrop-blur-lg flex flex-col items-center justify-center gap-2 xl:gap-4 h-auto w-full px-2 md:px-4 max-sm:py-12 py-4 rounded-xl xl:px-10">
             {mediaTypeReady && currentId != 0 && (
-              <PlayMedia option={option} season={season} episode={episode} mediaType={mediaType} currentId={currentId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
+              <PlayMedia option={option} season={season} episode={episode} mediaType={getApiMediaType(mediaType)} currentId={currentId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
             )}
             <DisplayInfo mediaType={mediaType} mediaTypeReady={mediaTypeReady} setMediaTypeReady={setMediaTypeReady} />
           </div>

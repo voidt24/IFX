@@ -1,9 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import Slider from "../Slider/Slider";
 import { MEDIA_URL_RESOLVER, srcOptions } from "@/helpers/api.config";
 import { usePathname, useRouter } from "next/navigation";
-import { MediaTypeUrl } from "@/Types";
+import { MediaTypeApi } from "@/Types";
 import { CircularProgress } from "@mui/material";
+import { Context } from "@/context/Context";
 
 const optionResolver = (option: string | null) => {
   if (Number(option) <= 0 || Number(option) > srcOptions.length || !option) return 0;
@@ -13,6 +14,7 @@ const optionResolver = (option: string | null) => {
 
 function PlayMedia({
   option,
+  setOption,
   season,
   episode,
   mediaType,
@@ -21,9 +23,10 @@ function PlayMedia({
   setMediaURL,
 }: {
   option: string | null;
+  setOption?: Dispatch<SetStateAction<string | null>>;
   season: string | null;
   episode: string | null;
-  mediaType: MediaTypeUrl;
+  mediaType: MediaTypeApi;
   currentId: number;
   mediaURL: string | undefined;
   setMediaURL: Dispatch<SetStateAction<string | undefined>>;
@@ -31,8 +34,12 @@ function PlayMedia({
   const router = useRouter();
   const path = usePathname();
 
+  const { isMobilePWA } = useContext(Context);
+
   useEffect(() => {
-    setMediaURL(mediaType == "movies" ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, "movie") : MEDIA_URL_RESOLVER(optionResolver(option), currentId, "tv", Number(season), Number(episode)));
+    setMediaURL(
+      mediaType == "movie" ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType) : MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType, Number(season), Number(episode))
+    );
   }, [mediaType, option, currentId, season, episode, path]);
   return (
     <>
@@ -47,19 +54,25 @@ function PlayMedia({
                 }`}
                 onClick={() => {
                   if (optionResolver(option) != index) {
-                    const params = new URLSearchParams();
+                    if (!isMobilePWA) {
+                      const params = new URLSearchParams();
 
-                    if (mediaType == "tvshows") {
-                      params.set("season", season || "");
-                      params.set("episode", episode || "");
+                      if (mediaType == "tv") {
+                        params.set("season", season || "");
+                        params.set("episode", episode || "");
+                      }
+                      params.set("option", String(index + 1) || "");
+
+                      router.replace(`?${params.toString()}`);
+                    } else {
+                      if (setOption) {
+                        setOption((index + 1).toString());
+                      }
                     }
-                    params.set("option", String(index + 1) || "");
-                    
-                    router.replace(`?${params.toString()}`);
 
                     setMediaURL("");
                     setMediaURL(
-                      mediaType == "movies"
+                      mediaType == "movie"
                         ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, "movie")
                         : MEDIA_URL_RESOLVER(optionResolver(option), currentId, "tv", Number(season), Number(episode))
                     );
