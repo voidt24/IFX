@@ -11,7 +11,7 @@ import { IhistoryMedia } from "@/Types/index";
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import ToTop from "@/components/common/ToTop/ToTop";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
 import useHideDrawers from "@/Hooks/useHideDrawers";
@@ -41,6 +41,8 @@ function History() {
   };
   useVerifyToken();
   useHideDrawers();
+
+  const dispatch = useDispatch();
 
   async function getData() {
     if (!database && !usersCollectionName && !firebaseActiveUser?.uid) {
@@ -152,7 +154,7 @@ function History() {
                           {isMobilePWA ? (
                             <button
                               onClick={() => {
-                                setMediaIdPWA(data.id);
+                                dispatch(setMediaIdPWA(data.id));
                                 setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows");
                                 setOpenMediaDetailsSheet(true);
                               }}
@@ -160,13 +162,7 @@ function History() {
                               {data.title}
                             </button>
                           ) : (
-                            <Link
-                              onClick={() => {
-                                setMediaIdPWA(data.id);
-                              }}
-                              href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`}
-                              className="text-xl font-semibold hover:underline"
-                            >
+                            <Link href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`} className="text-xl font-semibold hover:underline">
                               {data.title}
                             </Link>
                           )}
@@ -208,7 +204,7 @@ function History() {
                                 data.media_type == "tv" ? `&season=${data.season}&episode=${data.episode_number}` : ``
                               } `}
                               onClick={() => {
-                                setMediaIdPWA(data.id ?? 0);
+                                dispatch(setMediaIdPWA(data.id ?? 0));
                               }}
                             >
                               <i className="bi bi-eye"></i> Watch again
