@@ -33,7 +33,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const [loadingFavs, setLoadingFavs] = useState(true);
   const [loadingWatchlist, setLoadingWatchlist] = useState(true);
   const [loadingAllData, setLoadingAllData] = useState(true);
-  const [mediaDetailsPWA, setmediaDetailsPWA] = useState<ImediaDetailsData | null>(null);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
@@ -62,7 +61,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
           const mediaDetails: ImediaDetailsData = {
             results: [],
-            heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
+            heroBackground: !isMobilePWA ? (window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`) : `${image}${backdrop_path}`,
             bigHeroBackground: `${image}${backdrop_path}`,
             title: title || name,
             poster: `${image}${poster_path}` || "",
@@ -76,7 +75,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             seasonsArray: seasons,
           };
 
-          isMobilePWA ? setmediaDetailsPWA(mediaDetails) : dispatch(setMediaDetailsData(mediaDetails));
+          dispatch(setMediaDetailsData(mediaDetails));
 
           castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
           reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
@@ -93,8 +92,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
           dispatch(setAddedToFavs(Boolean(isInFavs)));
           dispatch(setAddedToWatchList(Boolean(isInWatchlist)));
-          // isInFavs ? setAddedToFavs(true) : setAddedToFavs(false);
-          // isInWatchlist ? setAddedToWatchList(true) : setAddedToWatchList(false);
         } catch (er) {
           setMessage({ message: "Error finding if this element was saved", severity: "error", open: true });
         } finally {
@@ -110,17 +107,10 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
     isElementSaved();
   }, [currentId]);
 
-  if ((!loadingAllData && !isMobilePWA && !mediaDetailsData) || (!loadingAllData && isMobilePWA && !mediaDetailsPWA)) {
-    return (
-      <div className="flex-col-center p-20">
-        <NotFound />
-      </div>
-    );
-  }
   return (
     <div className="media-details bg-[#000005] max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-4 w-full relative">
       {isMobilePWA ? (
-        <MediaInfoPWA state={mediaDetailsPWA} mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+        <MediaInfoPWA state={mediaDetailsData} mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
       ) : (
         <MediaInfo loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
       )}
@@ -133,7 +123,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
           <Tab title="Trailer">
             <div
               className="trailer-preview border border-content-third rounded-lg overflow-hidden bg-cover bg-center aspect-video bg-no-repeat w-full md:w-[40%] mx-auto relative"
-              style={{ backgroundImage: `url(${isMobilePWA ? mediaDetailsPWA?.bigHeroBackground : mediaDetailsData?.bigHeroBackground})` }}
+              style={{ backgroundImage: `url(${mediaDetailsData?.bigHeroBackground})` }}
             >
               <div className="overlay-base bg-black/70 flex-col-center ">
                 <button

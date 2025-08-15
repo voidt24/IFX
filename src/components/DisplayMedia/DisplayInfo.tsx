@@ -1,46 +1,31 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useContext } from "react";
 import Link from "next/link";
 import CollapsibleElement from "../common/CollapsibleElement";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { ISeasonArray, MediaTypeApi, MediaTypeUrl } from "@/Types";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { MediaTypeApi } from "@/Types";
+import { ReadonlyURLSearchParams } from "next/navigation";
 import { getRunTime } from "@/helpers/getRunTime";
-import { API_KEY, apiUrl, image, imageWithSize } from "@/helpers/api.config";
-import { fetchDetailsData } from "@/helpers/fetchDetailsData";
-import { setCurrentMediaType, setMediaDetailsData, setCurrentId, setEpisodesArray } from "@/store/slices/mediaDetailsSlice";
-import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
-import { getApiMediaType } from "@/helpers/getApiMediaType";
 import EpisodeNavigation from "./EpisodeNavigation";
-
-function paramIsValid(param: string | null) {
-  if (!param || Number(param) < 1) return false;
-
-  if (Number.isSafeInteger(Number(param))) {
-    return true;
-  }
-}
-
-export async function getInfo(mediaType: MediaTypeApi, mediaId: number | undefined) {
-  try {
-    const data = await fetchDetailsData("byId", mediaType, mediaId);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
+import useMediaDetails from "@/Hooks/useMediaDetails";
+import { Context } from "@/context/Context";
 
 function DisplayInfo({
   mediaType,
-
   mediaTypeReady,
-  setMediaTypeReady,
+  season,
+  episode,
+  path,
+  searchParams,
 }: {
-  mediaType: MediaTypeUrl;
-  mediaTypeReady: boolean;
-  setMediaTypeReady: Dispatch<SetStateAction<boolean>>;
+  mediaType: MediaTypeApi;
+  mediaTypeReady?: boolean;
+  season: string | null;
+  episode: string | null;
+  path?: string;
+  searchParams?: ReadonlyURLSearchParams;
 }) {
   const truncatedTextStyle: React.CSSProperties & { WebkitLineClamp: string; WebkitBoxOrient: "horizontal" | "vertical" | "inline-axis" | "block-axis" } = {
     WebkitLineClamp: "3 ",
@@ -48,111 +33,12 @@ function DisplayInfo({
     overflow: "hidden ",
     display: "-webkit-box ",
   };
-  const [seasonArray, setSeasonArray] = useState<ISeasonArray[]>([]);
   const { currentId, mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
-  const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams.toString());
-  params.set("season", "1");
-  params.set("episode", "1");
-  const season = searchParams.get("season");
-  const episode = searchParams.get("episode");
-  const path = usePathname();
 
-  const { id: idFromUrl } = useParams();
-  const router = useRouter();
+  const { seasonArray } = useMediaDetails({ mediaId: currentId, season, episode, mediaTypeReady, mediaType, path });
+  const { isMobilePWA } = useContext(Context);
 
-  useEffect(() => {
-    return () => {
-      dispatch(setMediaDetailsData(null));
-    };
-  }, []);
-
-  useEffect(() => {
-    if (mediaType == "movies" && (season == null || episode == null)) return;
-    if (mediaType == "tvshows") {
-      if (season == null || episode == null || !paramIsValid(season) || !paramIsValid(episode)) {
-        router.push(`?${params.toString()}`);
-      }
-    }
-  }, [season, episode]);
-
-  //1.set mediatype always to a valid value or to 'movies' by  default
-  //2.establish mediaTypeReady to advance to other requests in order to get correct data
-  useEffect(() => {
-    const mediaTypeFromUrl = setMedia(path);
-    dispatch(setCurrentMediaType(isValidMediatype(mediaTypeFromUrl) ? mediaTypeFromUrl : "movies"));
-    setMediaTypeReady(true);
-  }, [path]);
-
-  //set currentId to url value (if url changes)
-  useEffect(() => {
-    if (Number(idFromUrl) != currentId && currentId == 0) {
-      dispatch(setCurrentId(Number(idFromUrl)));
-    }
-  }, [idFromUrl]);
-
-  // if mediatype is set and currentId is valid, get  general info of movie or tvshow
-  useEffect(() => {
-    if (!mediaTypeReady || !currentId || currentId == 0) return;
-
-    async function setInitialData() {
-      const inf = await getInfo(getApiMediaType(mediaType), currentId);
-      const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = inf;
-
-      dispatch(
-        setMediaDetailsData({
-          results: [],
-          heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
-          bigHeroBackground: `${image}${backdrop_path}`,
-          title: title || name,
-          poster: `${imageWithSize("500")}${poster_path}`,
-          overview,
-          releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
-          vote: String(vote_average).slice(0, 3),
-          genres: genres && genres.map((genre: { name: string }) => genre.name),
-          loadingAllData: false,
-          runtime: runtime ? getRunTime(runtime) : "",
-          seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
-          seasonsArray: seasons,
-        })
-      );
-    }
-
-    setInitialData();
-  }, [mediaTypeReady, currentId, season, episode, path]);
-
-  useEffect(() => {
-    if (!mediaDetailsData) return;
-
-    if (mediaDetailsData.seasonsArray && Array.isArray(mediaDetailsData.seasonsArray)) {
-      const seasonInfo: ISeasonArray[] | null = [];
-
-      let seasonA: ISeasonArray;
-      for (seasonA of mediaDetailsData.seasonsArray) {
-        if (seasonA.name != "Specials") {
-          seasonInfo.push(seasonA);
-        }
-      }
-      setSeasonArray(seasonInfo);
-    }
-
-    async function getEpisodes() {
-      try {
-        if (currentId && currentId != 0) {
-          const seasonResponse = await fetch(`${apiUrl}${getApiMediaType(mediaType)}/${currentId}/season/${Number(season)}?api_key=${API_KEY}`);
-          const json = await seasonResponse.json();
-          dispatch(setEpisodesArray([json]));
-        }
-      } catch (error) {
-        console.error("Error fetching season data:", error);
-      }
-    }
-    if (mediaType == "tvshows") {
-      getEpisodes();
-    }
-  }, [mediaDetailsData]);
-
+  const isTV = mediaType == mediaProperties.tv.mediaType;
   return (
     <>
       <div className="flex-col-center md:items-start md:justify-start gap-6 xl:gap-10 w-full mt-6 px-1">
@@ -165,7 +51,7 @@ function DisplayInfo({
                 {mediaDetailsData?.title}
               </Link>
 
-              {mediaType == mediaProperties.tv.route && (
+              {isTV && (
                 <p className="text-content-secondary text-left max-lg:text-[88%]">
                   {season && season != "0" && `Season ${season} - `}
                   {episode && episode != "0" && `Episode ${episode} `}
@@ -177,7 +63,7 @@ function DisplayInfo({
             </div>
             <div className="text-left text-content-third text-[80%] md:text-[90%] flex flex-col gap-2">
               <div>
-                {mediaType == mediaProperties.tv.route ? (
+                {isTV ? (
                   episodesArray == null ? (
                     ""
                   ) : episodesArray?.[0]?.episodes ? (
@@ -190,7 +76,7 @@ function DisplayInfo({
                 )}
               </div>
               <div>
-                {mediaType == mediaProperties.tv.route ? (
+                {isTV ? (
                   episodesArray == null ? (
                     ""
                   ) : episodesArray?.[0]?.episodes ? (
@@ -210,7 +96,7 @@ function DisplayInfo({
 
             <div className=" info max-md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
               <CollapsibleElement customClassesForParent={" md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-                {mediaType == mediaProperties.tv.route ? (
+                {isTV ? (
                   episodesArray == null ? (
                     ""
                   ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
@@ -228,7 +114,7 @@ function DisplayInfo({
         {/* MOBILE */}
         <div className="info md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
           <CollapsibleElement customClassesForParent={"md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-            {mediaType == mediaProperties.tv.route ? (
+            {isTV ? (
               episodesArray == null ? (
                 ""
               ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
@@ -243,7 +129,7 @@ function DisplayInfo({
         </div>
       </div>
 
-      {mediaType == mediaProperties.tv.route && (
+      {!isMobilePWA && searchParams && isTV && (
         <EpisodeNavigation season={season} episode={episode} searchParams={searchParams} currentMediaType={currentMediaType} currentId={currentId} seasonArray={seasonArray} />
       )}
     </>

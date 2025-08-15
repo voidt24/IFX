@@ -2,30 +2,70 @@
 import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import { image } from "@/helpers/api.config";
-import { useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IhistoryMedia } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { MediaTypeUrl } from "@/Types/mediaType";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PlayMedia from "@/components/DisplayMedia/PlayMedia";
 import DisplayInfo from "@/components/DisplayMedia/DisplayInfo";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
+import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
+import { setCurrentMediaType, setCurrentId, setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
+import paramIsValid from "@/helpers/isParamValid";
 
 function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const { containerMargin } = useContext(Context);
+  const [mediaTypeReady, setMediaTypeReady] = useState(false);
+  const [mediaURL, setMediaURL] = useState<string | undefined>("");
+
+  const path = usePathname();
+  const { id: idFromUrl } = useParams();
+
+  const router = useRouter();
 
   const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
   const season = searchParams.get("season");
   const episode = searchParams.get("episode");
   const option = searchParams.get("option");
-  const [mediaURL, setMediaURL] = useState<string | undefined>("");
 
-  const [mediaTypeReady, setMediaTypeReady] = useState(false);
-
-  const auth = useSelector((state: RootState) => state.auth);
-  const { firebaseActiveUser } = auth;
+  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
   const { currentId, mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
+  const dispatch = useDispatch();
+
+  params.set("season", "1");
+  params.set("episode", "1");
+
+  useEffect(() => {
+    return () => {
+      dispatch(setMediaDetailsData(null));
+    };
+  }, []);
+  useEffect(() => {
+    if (mediaType == "movies" && (season == null || episode == null)) return;
+    if (mediaType == "tvshows") {
+      if (season == null || episode == null || !paramIsValid(season) || !paramIsValid(episode)) {
+        router.push(`?${params.toString()}`);
+      }
+    }
+  }, [season, episode]);
+
+  //1.set mediatype always to a valid value or to 'movies' by  default
+  //2.establish mediaTypeReady to advance to other requests in order to get correct data
+  useEffect(() => {
+    const mediaTypeFromUrl = setMedia(path);
+    dispatch(setCurrentMediaType(isValidMediatype(mediaTypeFromUrl) ? mediaTypeFromUrl : "movies"));
+    setMediaTypeReady(true);
+  }, [path]);
+
+  //set currentId to url value (if url changes)
+  useEffect(() => {
+    if (Number(idFromUrl) != currentId && currentId == 0) {
+      dispatch(setCurrentId(Number(idFromUrl)));
+    }
+  }, [idFromUrl]);
 
   useEffect(() => {
     if (!mediaDetailsData || (mediaTypeReady && currentMediaType === "tvshows" && !episodesArray)) return;
@@ -75,7 +115,7 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
             {mediaTypeReady && currentId != 0 && (
               <PlayMedia option={option} season={season} episode={episode} mediaType={getApiMediaType(mediaType)} currentId={currentId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
             )}
-            <DisplayInfo mediaType={mediaType} mediaTypeReady={mediaTypeReady} setMediaTypeReady={setMediaTypeReady} />
+            <DisplayInfo mediaType={getApiMediaType(mediaType)} mediaTypeReady={mediaTypeReady} season={season} episode={episode} searchParams={searchParams} />
           </div>
         </div>
       </div>
