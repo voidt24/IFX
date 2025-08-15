@@ -12,6 +12,7 @@ import MediaInfoRow from "../MediaDetails/MediaInfoRow";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
 import PlayOrTrailerButton from "../MediaDetails/PlayOrTrailerButton";
+import { useDispatch } from "react-redux";
 
 export const MediaInfoPWA = ({
   state,
@@ -30,10 +31,12 @@ export const MediaInfoPWA = ({
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     return () => {
-      setEpisodesArray(null);
-      setActiveSeason(0);
+      dispatch(setEpisodesArray(null));
+      dispatch(setActiveSeason(0));
     };
   }, []);
 
