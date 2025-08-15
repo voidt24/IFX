@@ -110,7 +110,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   return (
     <div className="media-details bg-[#000005] max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-4 w-full relative">
       {isMobilePWA ? (
-        <MediaInfoPWA state={mediaDetailsData} mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+        <MediaInfoPWA mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
       ) : (
         <MediaInfo loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
       )}
