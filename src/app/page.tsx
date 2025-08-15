@@ -1,13 +1,12 @@
 "use client";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import dynamic from "next/dynamic";
 import { Context } from "@/context/Context";
 import HomeSkeleton from "@/components/common/Skeletons/HomeSkeleton";
 import HeroSkeleton from "@/components/common/Skeletons/HeroSkeleton";
 import SignUpBanner from "@/components/common/SignUpBanner";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 import useInitialMediaData from "@/Hooks/useInitialMediaData";
 import useIsMobile from "@/Hooks/useIsMobile";
 import SectionWithSlider from "@/components/common/SectionWithSlider";
@@ -24,13 +23,8 @@ export default function Home() {
 
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
-  const dispatch = useDispatch();
 
   const isMobile = useIsMobile(640);
-
-  useEffect(() => {
-    dispatch(setCurrentId(0));
-  }, []);
 
   useHideDrawers();
 

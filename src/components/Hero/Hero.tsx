@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Context } from "@/context/Context";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { IMediaData, MediaTypeApi } from "@/Types";
-import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
 import { useDispatch } from "react-redux";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
@@ -65,7 +65,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                     className="btn-primary text-[40%] !py-0 !px-6"
                     href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
                     onClick={() => {
-                      dispatch(setCurrentId(sliderData.id));
+                      dispatch(setMediaIdPWA(sliderData.id));
                       sessionStorage.setItem("navigatingFromApp", "1");
                     }}
                   >
@@ -88,7 +88,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                       className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
                       onClick={() => {
                         setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-                        dispatch(setCurrentId(sliderData.id));
+                        dispatch(setMediaIdPWA(sliderData.id));
                         setOpenMediaDetailsSheet(true);
                       }}
                       title="media-details-button"
@@ -100,7 +100,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                       className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
                       href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
                       onClick={() => {
-                        dispatch(setCurrentId(sliderData.id));
+                        dispatch(setMediaIdPWA(sliderData.id));
                         sessionStorage.setItem("navigatingFromApp", "1");
                       }}
                     >

@@ -10,12 +10,12 @@ import { RootState } from "@/store";
 
 export default function DisplayMediaSheet() {
   const { openDisplayMediaSheet, setOpenDisplayMediaSheet, sheetMediaType } = useContext(Context);
-  const { currentId } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaIdPWA } = useSelector((state: RootState) => state.mediaDetails);
 
   return (
     <>
       <SheetWrapper isOpen={openDisplayMediaSheet} setIsOpen={setOpenDisplayMediaSheet}>
-        <DisplayMediaPWA mediaType={getApiMediaType(sheetMediaType)} mediaId={currentId} />
+        <DisplayMediaPWA mediaType={getApiMediaType(sheetMediaType)} mediaId={mediaIdPWA} />
       </SheetWrapper>
     </>
   );

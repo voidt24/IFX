@@ -54,7 +54,7 @@ export const MediaInfoPWA = ({ mediaType, mediaId, loadingFavs, loadingWatchlist
             <Overview data={mediaDetailsData} />
 
             <div className="flex-row-center gap-6 w-full">
-              <ListsButtonGroup state={mediaDetailsData} mediaType={mediaType} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+              <ListsButtonGroup state={mediaDetailsData} mediaId={mediaId} mediaType={mediaType} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
             </div>
           </div>
         </div>

@@ -10,7 +10,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 
-function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: { state: ImediaDetailsData | null; mediaType: MediaTypeApi; loadingFavs: boolean; loadingWatchlist: boolean }) {
+function ListsButtonGroup({
+  state,
+  mediaId,
+  mediaType,
+  loadingFavs,
+  loadingWatchlist,
+}: {
+  state: ImediaDetailsData | null;
+  mediaId: number;
+  mediaType: MediaTypeApi;
+  loadingFavs: boolean;
+  loadingWatchlist: boolean;
+}) {
   const { setAuthModalActive } = useContext(Context);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
   const mediaTypeRef = useRef<HTMLDivElement>(null);
@@ -21,7 +33,6 @@ function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: {
 
   const { addedToFavs, addedToWatchList } = useSelector((state: RootState) => state.listsManagement);
   const dispatch = useDispatch();
-  const { currentId } = useSelector((state: RootState) => state.mediaDetails);
 
   const handleLists = async (list: string) => {
     if (userLogged) {
@@ -29,7 +40,7 @@ function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: {
       const stateOfButtonToChange = buttonToChange == setAddedToFavs ? addedToFavs : addedToWatchList;
       try {
         dispatch(buttonToChange(Boolean(!stateOfButtonToChange)));
-        await handle_favs_watchlists(firebaseActiveUser?.uid, mediaTypeRef, state, list, currentId);
+        await handle_favs_watchlists(firebaseActiveUser?.uid, mediaTypeRef, state, list, mediaId);
       } catch (e) {
         dispatch(buttonToChange(Boolean(stateOfButtonToChange)));
 
@@ -44,13 +55,13 @@ function ListsButtonGroup({ state, mediaType, loadingFavs, loadingWatchlist }: {
       {loadingFavs ? (
         <Loader />
       ) : (
-        <AddToListButton type="Favorites" wasAdded={addedToFavs} currentId={currentId} mediaType={mediaType} mediaTypeRef={mediaTypeRef} onClick={() => handleLists(DBLists.favs)} />
+        <AddToListButton type="Favorites" wasAdded={addedToFavs} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef} onClick={() => handleLists(DBLists.favs)} />
       )}
 
       {loadingWatchlist ? (
         <Loader />
       ) : (
-        <AddToListButton type="Watchlist" wasAdded={addedToWatchList} currentId={currentId} mediaType={mediaType} mediaTypeRef={mediaTypeRef2} onClick={() => handleLists(DBLists.watchs)} />
+        <AddToListButton type="Watchlist" wasAdded={addedToWatchList} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef2} onClick={() => handleLists(DBLists.watchs)} />
       )}
     </>
   );

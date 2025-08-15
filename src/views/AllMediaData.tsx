@@ -7,9 +7,8 @@ import AllMediaDataSkeleton from "../components/common/Skeletons/AllMediaDataSke
 import SignUpBanner from "../components/common/SignUpBanner";
 import Pagination from "../components/common/Pagination";
 import Wrapper from "../components/common/Wrapper/Wrapper";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
 import PlatformSelect from "@/features/contentFilter/PlatformSelect";
 import { useRouter, useSearchParams } from "next/navigation";
 import GenreSelect from "@/features/contentFilter/GenreSelect";
@@ -45,7 +44,6 @@ export default function AllMediaData({
 
   useHideDrawers();
 
-  const dispatch = useDispatch();
   const fetchAndSetData = (
     mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
     pageActive: number,
@@ -79,9 +77,6 @@ export default function AllMediaData({
       router.replace(`?${params.toString()}`);
     }
   }, [page, elementsToShow]);
-  useEffect(() => {
-    dispatch(setCurrentId(0));
-  }, []);
 
   useEffect(() => {
     if (isFirstRender) {

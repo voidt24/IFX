@@ -36,7 +36,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
-  const { currentId, mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
 
   useHideDrawers(true);
@@ -49,12 +49,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   }, []);
 
   useEffect(() => {
-    if ((!isMobilePWA && currentId != undefined) || (isMobilePWA && mediaId != undefined)) {
-      Promise.allSettled([
-        fetchDetailsData("byId", mediaType, isMobilePWA ? mediaId : currentId),
-        fetchDetailsData("cast", mediaType, isMobilePWA ? mediaId : currentId),
-        fetchDetailsData("reviews", mediaType, isMobilePWA ? mediaId : currentId),
-      ]).then((result) => {
+    if ((!isMobilePWA && mediaId != undefined) || (isMobilePWA && mediaId != undefined)) {
+      Promise.allSettled([fetchDetailsData("byId", mediaType, mediaId), fetchDetailsData("cast", mediaType, mediaId), fetchDetailsData("reviews", mediaType, mediaId)]).then((result) => {
         const [byIdPromise, castPromise, reviewsPromise] = result;
         if (byIdPromise.status == "fulfilled") {
           const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
@@ -87,8 +83,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
     async function isElementSaved() {
       if (auth.currentUser?.uid) {
         try {
-          const isInFavs = await getFromDB(auth.currentUser.uid, "favorites", isMobilePWA ? mediaId : currentId);
-          const isInWatchlist = await getFromDB(auth.currentUser.uid, "watchlist", isMobilePWA ? mediaId : currentId);
+          const isInFavs = await getFromDB(auth.currentUser.uid, "favorites", mediaId);
+          const isInWatchlist = await getFromDB(auth.currentUser.uid, "watchlist", mediaId);
 
           dispatch(setAddedToFavs(Boolean(isInFavs)));
           dispatch(setAddedToWatchList(Boolean(isInWatchlist)));
@@ -105,14 +101,14 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
     }
 
     isElementSaved();
-  }, [currentId]);
+  }, [mediaId]);
 
   return (
     <div className="media-details bg-[#000005] max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-4 w-full relative">
       {isMobilePWA ? (
         <MediaInfoPWA mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
       ) : (
-        <MediaInfo loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+        <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
       )}
 
       <div className="w-full px-[0.8rem] lg:max-w-[85%] xxl:max-w-[70%] 4k:max-w-[60%] relative  mx-auto  mt-10">
@@ -129,7 +125,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
                 <button
                   className="px-3 py-2 bg-brand-primary/35 backdrop-blur-lg rounded-full hover:scale-125 transition-all duration-200"
                   onClick={() => {
-                    handleTrailerClick(setOpenTrailer, isMobilePWA ? mediaId : currentId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType), setTrailerKey);
+                    handleTrailerClick(setOpenTrailer, mediaId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType), setTrailerKey);
                   }}
                   title="trailer-button"
                 >

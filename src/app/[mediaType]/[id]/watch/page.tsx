@@ -45,5 +45,5 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default function Watch({ params }: Params) {
-  return <DisplayMedia mediaType={params.mediaType} />;
+  return <DisplayMedia mediaId={Number(params.id)} mediaType={params.mediaType} />;
 }

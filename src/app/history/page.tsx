@@ -13,7 +13,7 @@ import ToTop from "@/components/common/ToTop/ToTop";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 
 function History() {
@@ -152,7 +152,7 @@ function History() {
                           {isMobilePWA ? (
                             <button
                               onClick={() => {
-                                setCurrentId(data.id);
+                                setMediaIdPWA(data.id);
                                 setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows");
                                 setOpenMediaDetailsSheet(true);
                               }}
@@ -162,7 +162,7 @@ function History() {
                           ) : (
                             <Link
                               onClick={() => {
-                                setCurrentId(data.id);
+                                setMediaIdPWA(data.id);
                               }}
                               href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`}
                               className="text-xl font-semibold hover:underline"
@@ -208,7 +208,7 @@ function History() {
                                 data.media_type == "tv" ? `&season=${data.season}&episode=${data.episode_number}` : ``
                               } `}
                               onClick={() => {
-                                setCurrentId(data.id ?? 0);
+                                setMediaIdPWA(data.id ?? 0);
                               }}
                             >
                               <i className="bi bi-eye"></i> Watch again

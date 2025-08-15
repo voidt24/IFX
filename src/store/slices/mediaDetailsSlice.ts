@@ -3,7 +3,7 @@ import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
  interface MediaDetailsState{
-    currentId: number,    
+    mediaIdPWA: number,    
     currentMediaType: "movies" | "tvshows"; 
     mediaDetailsData: ImediaDetailsData | null;
     episodesArray: IepisodesArray[] | null;
@@ -12,7 +12,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 }
 
 export const initialState: MediaDetailsState = {
-    currentId: 0,
+    mediaIdPWA: 0,
     currentMediaType: "movies",
     mediaDetailsData: null,
     episodesArray: null,
@@ -23,8 +23,8 @@ export const MediaDetailsSlice = createSlice({
     name:"mediaDetails",
     initialState,
     reducers:{
-        setCurrentId: (state, action:PayloadAction<number> ) => {
-            state.currentId = action.payload;
+        setMediaIdPWA: (state, action:PayloadAction<number> ) => {
+            state.mediaIdPWA = action.payload;
         },
         setCurrentMediaType: (state, action:PayloadAction<"movies" | "tvshows"> ) => {
             state.currentMediaType = action.payload;
@@ -44,5 +44,5 @@ export const MediaDetailsSlice = createSlice({
     }
 })
 
-export const {setCurrentId, setCurrentMediaType, setMediaDetailsData, setEpisodesArray, setActiveSeason, setActiveEpisode} = MediaDetailsSlice.actions
+export const {setMediaIdPWA, setCurrentMediaType, setMediaDetailsData, setEpisodesArray, setActiveSeason, setActiveEpisode} = MediaDetailsSlice.actions
  export default MediaDetailsSlice.reducer

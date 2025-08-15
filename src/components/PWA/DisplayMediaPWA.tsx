@@ -38,7 +38,7 @@ function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; medi
               mediaURL={mediaURL}
               setMediaURL={setMediaURL}
             />
-            <DisplayInfo mediaType={mediaType} season={activeSeason?.toString() || null} episode={activeEpisode?.toString() || null} />
+            <DisplayInfo mediaId={mediaId} mediaType={mediaType} season={activeSeason?.toString() || null} episode={activeEpisode?.toString() || null} />
           </div>
         </div>
       </div>

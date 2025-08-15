@@ -9,7 +9,7 @@ import { MediaTypeApi, IMediaData } from "@/Types/index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
-import { setCurrentId, setCurrentMediaType } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA, setCurrentMediaType } from "@/store/slices/mediaDetailsSlice";
 
 interface ISliderCardProps {
   result: IMediaData;
@@ -66,7 +66,7 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
           <button
             onClick={() => {
               setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-              dispatch(setCurrentId(result.id));
+              dispatch(setMediaIdPWA(result.id));
               setOpenMediaDetailsSheet(true);
 
               if (canBeEdited) {
@@ -113,7 +113,7 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
             href={canBeEdited ? `/${result.media_type === "movie" ? "movies" : "tvshows"}/${result.id}` : `/${mediaType === "movie" ? "movies" : "tvshows"}/${result.id}`}
             onClick={() => {
               sessionStorage.setItem("navigatingFromApp", "1");
-              dispatch(setCurrentId(result.id ?? undefined));
+              dispatch(setMediaIdPWA(result.id ?? undefined));
               if (canBeEdited) {
                 dispatch(setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows"));
               }

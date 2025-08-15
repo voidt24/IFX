@@ -13,6 +13,7 @@ import useMediaDetails from "@/Hooks/useMediaDetails";
 import { Context } from "@/context/Context";
 
 function DisplayInfo({
+  mediaId,
   mediaType,
   mediaTypeReady,
   season,
@@ -20,6 +21,7 @@ function DisplayInfo({
   path,
   searchParams,
 }: {
+  mediaId: number;
   mediaType: MediaTypeApi;
   mediaTypeReady?: boolean;
   season: string | null;
@@ -33,9 +35,9 @@ function DisplayInfo({
     overflow: "hidden ",
     display: "-webkit-box ",
   };
-  const { currentId, mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
 
-  const { seasonArray } = useMediaDetails({ mediaId: currentId, season, episode, mediaTypeReady, mediaType, path });
+  const { seasonArray } = useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, path });
   const { isMobilePWA } = useContext(Context);
 
   const isTV = mediaType == mediaProperties.tv.mediaType;
@@ -47,7 +49,7 @@ function DisplayInfo({
 
           <div className="flex flex-col items-start justify-center gap-2">
             <div className="flex flex-col gap-2 md:flex-row md:items-center">
-              <Link className="font-bold text-xl md:text-2xl xl:text-3xl text-left hover:underline" href={`/${currentMediaType}/${currentId}`}>
+              <Link className="font-bold text-xl md:text-2xl xl:text-3xl text-left hover:underline" href={`/${currentMediaType}/${mediaId}`}>
                 {mediaDetailsData?.title}
               </Link>
 
@@ -130,7 +132,7 @@ function DisplayInfo({
       </div>
 
       {!isMobilePWA && searchParams && isTV && (
-        <EpisodeNavigation season={season} episode={episode} searchParams={searchParams} currentMediaType={currentMediaType} currentId={currentId} seasonArray={seasonArray} />
+        <EpisodeNavigation season={season} episode={episode} searchParams={searchParams} currentMediaType={currentMediaType} currentId={mediaId} seasonArray={seasonArray} />
       )}
     </>
   );

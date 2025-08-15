@@ -12,13 +12,13 @@ import Overview from "./Overview";
 import ListsButtonGroup from "./ListsButtonGroup";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import Trailer from "../Trailer";
-import { setCurrentId, setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
+import { setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PlayOrTrailerButton from "./PlayOrTrailerButton";
 import MobileCloseButton from "./Buttons/MobileCloseButton";
 
-export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: boolean; loadingWatchlist: boolean }) => {
+export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist }: { mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean }) => {
   const { seasonModal, setSeasonModal, containerMargin } = useContext(Context);
 
   const params = useParams();
@@ -27,18 +27,13 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
 
   const isMobile = useIsMobile(1024);
 
-  const { currentId, mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
   const [backdrop, setBackdrop] = useState(isMobile && mediaDetailsData ? mediaDetailsData.poster : mediaDetailsData && mediaDetailsData.bigHeroBackground ? mediaDetailsData.bigHeroBackground : "");
   const dispatch = useDispatch();
 
   useEffect(() => {
     setBackdrop(isMobile && mediaDetailsData ? mediaDetailsData.poster : mediaDetailsData && mediaDetailsData.bigHeroBackground ? mediaDetailsData.bigHeroBackground : "");
   }, [params.id, mediaDetailsData]);
-  useEffect(() => {
-    if (String(currentId) != params.id) {
-      dispatch(setCurrentId(Number(params.id)));
-    }
-  }, [params.id]);
 
   useEffect(() => {
     setBackdrop(isMobile ? mediaDetailsData && mediaDetailsData?.poster : mediaDetailsData && mediaDetailsData?.bigHeroBackground);
@@ -88,9 +83,9 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
 
             <div className="flex-row-center gap-6 w-full lg:justify-start">
               <span className="max-lg:hidden">
-                <PlayOrTrailerButton mediaId={currentId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
+                <PlayOrTrailerButton mediaId={mediaId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
               </span>
-              <ListsButtonGroup state={mediaDetailsData} mediaType={getApiMediaType(currentMediaType)} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+              <ListsButtonGroup state={mediaDetailsData} mediaId={mediaId} mediaType={getApiMediaType(currentMediaType)} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
             </div>
           </div>
         </div>
@@ -98,7 +93,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
         {/* MOBILE BUTTONS */}
         <div className="lg:hidden w-full fixed bottom-0 px-6 pb-6 pt-20 left-[50%] translate-x-[-50%] z-[4] pointer-events-none">
           <div className="to-top-gradient-bg h-full z-[2]"></div>
-          <PlayOrTrailerButton mediaId={currentId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
+          <PlayOrTrailerButton mediaId={mediaId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
         </div>
       </div>
 
@@ -107,7 +102,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
 
       {currentMediaType == mediaProperties.tv.route && (
         <Modal modalActive={seasonModal} setModalActive={setSeasonModal} customClasses="max-sm:w-[100%] sm:w-[95%] lg:w-[85%] xl:w-[70%] 2xl:w-[65%] 4k:w-[1300px] !px-2 lg:!px-4 lg:!py-8">
-          <SeasonList data={mediaDetailsData} mediaType={getApiMediaType(currentMediaType)} mediaId={currentId} />
+          <SeasonList data={mediaDetailsData} mediaType={getApiMediaType(currentMediaType)} mediaId={mediaId} />
         </Modal>
       )}
     </div>

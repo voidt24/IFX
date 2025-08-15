@@ -7,7 +7,7 @@ import { MediaTypeApi } from "@/Types/mediaType";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentId } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
 
 function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: MediaTypeApi; data: ImediaDetailsData }) {
   const { setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setSheetMediaType } = useContext(Context);
@@ -26,7 +26,7 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
         } else {
           if (isMobilePWA) {
             setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-            dispatch(setCurrentId(mediaId));
+            dispatch(setMediaIdPWA(mediaId));
             setOpenDisplayMediaSheet(true);
           } else {
             router.push(`${mediaId}/watch?option=1`);

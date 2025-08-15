@@ -10,12 +10,12 @@ import MediaDetails from "@/views/MediaDetails";
 
 export default function MediaDetailsSheet() {
   const { openMediaDetailsSheet, setOpenMediaDetailsSheet, sheetMediaType } = useContext(Context);
-  const { currentId } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaIdPWA } = useSelector((state: RootState) => state.mediaDetails);
 
   return (
     <>
       <SheetWrapper isOpen={openMediaDetailsSheet} setIsOpen={setOpenMediaDetailsSheet}>
-        <MediaDetails mediaType={getApiMediaType(sheetMediaType)} mediaId={currentId} />
+        <MediaDetails mediaType={getApiMediaType(sheetMediaType)} mediaId={mediaIdPWA} />
         <Trailer />
       </SheetWrapper>
     </>

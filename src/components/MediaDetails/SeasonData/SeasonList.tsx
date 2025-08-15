@@ -9,7 +9,7 @@ import { Season } from "@/Types/season";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentId, setEpisodesArray, setActiveSeason, setActiveEpisode } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA, setEpisodesArray, setActiveSeason, setActiveEpisode } from "@/store/slices/mediaDetailsSlice";
 
 function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi; mediaId: number }) {
   const router = useRouter();
@@ -88,7 +88,7 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                             dispatch(setActiveEpisode(index + 1));
                             if (isMobilePWA) {
                               setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-                              dispatch(setCurrentId(mediaId));
+                              dispatch(setMediaIdPWA(mediaId));
                               setOpenDisplayMediaSheet(true);
                             } else {
                               setSeasonModal(false);

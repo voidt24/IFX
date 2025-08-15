@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
 import { image } from "@/helpers/api.config";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IhistoryMedia } from "@/Types/index";
 import { saveToHistory } from "@/firebase/saveToHistory";
 import { MediaTypeUrl } from "@/Types/mediaType";
@@ -12,16 +12,15 @@ import PlayMedia from "@/components/DisplayMedia/PlayMedia";
 import DisplayInfo from "@/components/DisplayMedia/DisplayInfo";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
-import { setCurrentMediaType, setCurrentId, setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
+import { setCurrentMediaType, setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import paramIsValid from "@/helpers/isParamValid";
 
-function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
+function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId: number }) {
   const { containerMargin } = useContext(Context);
   const [mediaTypeReady, setMediaTypeReady] = useState(false);
   const [mediaURL, setMediaURL] = useState<string | undefined>("");
 
   const path = usePathname();
-  const { id: idFromUrl } = useParams();
 
   const router = useRouter();
 
@@ -32,7 +31,7 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
   const option = searchParams.get("option");
 
   const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
-  const { currentId, mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
 
   params.set("season", "1");
@@ -60,18 +59,11 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
     setMediaTypeReady(true);
   }, [path]);
 
-  //set currentId to url value (if url changes)
-  useEffect(() => {
-    if (Number(idFromUrl) != currentId && currentId == 0) {
-      dispatch(setCurrentId(Number(idFromUrl)));
-    }
-  }, [idFromUrl]);
-
   useEffect(() => {
     if (!mediaDetailsData || (mediaTypeReady && currentMediaType === "tvshows" && !episodesArray)) return;
 
     const dataToSave: IhistoryMedia = {
-      id: currentId,
+      id: mediaId,
       media_type: currentMediaType === "tvshows" ? "tv" : "movie",
       ...(currentMediaType === "tvshows" &&
         episodesArray &&
@@ -92,8 +84,8 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
     };
 
     if (firebaseActiveUser && firebaseActiveUser.uid && dataToSave) {
-      if (dataToSave.media_type === "movie" && currentId) {
-        saveToHistory(dataToSave, currentId, firebaseActiveUser.uid);
+      if (dataToSave.media_type === "movie" && mediaId) {
+        saveToHistory(dataToSave, mediaId, firebaseActiveUser.uid);
       } else {
         if (dataToSave.episodeId) {
           saveToHistory(dataToSave, dataToSave.episodeId, firebaseActiveUser.uid);
@@ -112,10 +104,10 @@ function DisplayMedia({ mediaType }: { mediaType: MediaTypeUrl }) {
       <div className="wrapper relative z-[2]">
         <div className="h-full w-full m-auto flex flex-col items-center justify-center">
           <div className="bg-black/35 backdrop-blur-lg flex flex-col items-center justify-center gap-2 xl:gap-4 h-auto w-full px-2 md:px-4 max-sm:py-12 py-4 rounded-xl xl:px-10">
-            {mediaTypeReady && currentId != 0 && (
-              <PlayMedia option={option} season={season} episode={episode} mediaType={getApiMediaType(mediaType)} currentId={currentId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
+            {mediaTypeReady && mediaId != 0 && (
+              <PlayMedia option={option} season={season} episode={episode} mediaType={getApiMediaType(mediaType)} currentId={mediaId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
             )}
-            <DisplayInfo mediaType={getApiMediaType(mediaType)} mediaTypeReady={mediaTypeReady} season={season} episode={episode} searchParams={searchParams} />
+            <DisplayInfo mediaId={mediaId} mediaType={getApiMediaType(mediaType)} mediaTypeReady={mediaTypeReady} season={season} episode={episode} searchParams={searchParams} />
           </div>
         </div>
       </div>
