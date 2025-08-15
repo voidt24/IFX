@@ -1,9 +1,8 @@
 import { Context } from "@/context/Context";
-import { saveToHistory } from "@/firebase/saveToHistory";
 import { API_KEY, apiUrl, image } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
 import { RootState } from "@/store";
-import { IhistoryMedia, MediaTypeApi } from "@/Types/index";
+import { MediaTypeApi } from "@/Types/index";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { Season } from "@/Types/season";
 import { usePathname, useRouter } from "next/navigation";
@@ -17,8 +16,6 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
   const seasonBtnRef = useRef<HTMLButtonElement | null>(null);
   const path = usePathname();
 
-  const auth = useSelector((state: RootState) => state.auth);
-  const { firebaseActiveUser } = auth;
   const { episodesArray, activeSeason } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
 
@@ -94,24 +91,6 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                               setSeasonModal(false);
 
                               router.push(`${path}/watch?season=${season_number}&episode=${index + 1}&option=1`);
-                            }
-
-                            const dataToSave: IhistoryMedia = {
-                              id: mediaId,
-                              media_type: mediaType,
-                              title: data?.title,
-                              vote_average: data?.vote,
-                              poster_path: data?.poster,
-                              backdrop_path: data?.bigHeroBackground,
-                              release_date: data?.releaseDate,
-                              watchedAt: Date.now(),
-                            };
-                            if (firebaseActiveUser && firebaseActiveUser.uid && dataToSave.episodeId) {
-                              try {
-                                saveToHistory(dataToSave, episodesArray?.[0].episodes?.[index].id || 0, firebaseActiveUser.uid);
-                              } catch (error) {
-                                console.log(error);
-                              }
                             }
                           }}
                         >

@@ -5,7 +5,7 @@ import { MediaTypeApi } from "@/Types";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 function PlayOrTrailerButton({ mediaId, mediaType, mediaData }: { mediaId: number; mediaType: MediaTypeApi; mediaData: ImediaDetailsData }) {
-  return isReleased(mediaData.releaseDate) ? <PlayButton mediaId={mediaId} mediaType={mediaType} data={mediaData} /> : <TrailerButton id={mediaId} mediaType={mediaType} />;
+  return isReleased(mediaData.releaseDate) ? <PlayButton mediaId={mediaId} mediaType={mediaType} /> : <TrailerButton id={mediaId} mediaType={mediaType} />;
 }
 
 export default PlayOrTrailerButton;

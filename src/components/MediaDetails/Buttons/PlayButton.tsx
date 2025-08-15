@@ -1,19 +1,13 @@
 import { Context } from "@/context/Context";
-import { saveToHistory } from "@/firebase/saveToHistory";
-import { RootState } from "@/store";
-import { IhistoryMedia } from "@/Types";
-import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
 
-function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: MediaTypeApi; data: ImediaDetailsData }) {
+function PlayButton({ mediaId, mediaType }: { mediaId: number; mediaType: MediaTypeApi }) {
   const { setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setSheetMediaType } = useContext(Context);
   const router = useRouter();
-  const auth = useSelector((state: RootState) => state.auth);
-  const { firebaseActiveUser } = auth;
   const dispatch = useDispatch();
 
   return (
@@ -30,24 +24,6 @@ function PlayButton({ mediaId, mediaType, data }: { mediaId: number; mediaType: 
             setOpenDisplayMediaSheet(true);
           } else {
             router.push(`${mediaId}/watch?option=1`);
-          }
-          const dataToSave: IhistoryMedia = {
-            id: mediaId,
-            media_type: mediaType,
-            title: data?.title,
-            vote_average: data?.vote,
-            poster_path: data?.poster,
-            backdrop_path: data?.bigHeroBackground,
-            release_date: data?.releaseDate,
-            watchedAt: Date.now(),
-          };
-
-          if (firebaseActiveUser && mediaId && firebaseActiveUser.uid) {
-            try {
-              saveToHistory(dataToSave, mediaId, firebaseActiveUser.uid);
-            } catch (error) {
-              console.log(error);
-            }
           }
         }
 

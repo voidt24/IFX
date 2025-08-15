@@ -1,10 +1,7 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context/Context";
-import { image } from "@/helpers/api.config";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { IhistoryMedia } from "@/Types/index";
-import { saveToHistory } from "@/firebase/saveToHistory";
 import { MediaTypeUrl } from "@/Types/mediaType";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -14,6 +11,7 @@ import { getApiMediaType } from "@/helpers/getApiMediaType";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { setCurrentMediaType, setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import paramIsValid from "@/helpers/isParamValid";
+import addToHistory from "@/helpers/addToHistory";
 
 function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId: number }) {
   const { containerMargin } = useContext(Context);
@@ -62,37 +60,8 @@ function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId
   useEffect(() => {
     if (!mediaDetailsData || (mediaTypeReady && currentMediaType === "tvshows" && !episodesArray)) return;
 
-    const dataToSave: IhistoryMedia = {
-      id: mediaId,
-      media_type: currentMediaType === "tvshows" ? "tv" : "movie",
-      ...(currentMediaType === "tvshows" &&
-        episodesArray &&
-        episodesArray[0].episodes?.[Number(episode) - 1] && {
-          episodeId: episodesArray[0].episodes?.[Number(episode) - 1].id,
-          season: Number(season),
-          episode: episodesArray[0].episodes?.[Number(episode) - 1].name,
-          episode_number: Number(episode),
-          episode_image: `${image}${episodesArray[0].episodes?.[Number(episode) - 1].still_path}`,
-        }),
-      title: mediaDetailsData?.title,
-      vote_average:
-        currentMediaType === "tvshows" && episodesArray && episodesArray[0].episodes?.[Number(episode) - 1] ? episodesArray[0].episodes?.[Number(episode) - 1].vote_average : mediaDetailsData.vote,
-      poster_path: mediaDetailsData?.poster,
-      backdrop_path: mediaDetailsData?.bigHeroBackground,
-      release_date: mediaDetailsData?.releaseDate,
-      watchedAt: Date.now(),
-    };
-
-    if (firebaseActiveUser && firebaseActiveUser.uid && dataToSave) {
-      if (dataToSave.media_type === "movie" && mediaId) {
-        saveToHistory(dataToSave, mediaId, firebaseActiveUser.uid);
-      } else {
-        if (dataToSave.episodeId) {
-          saveToHistory(dataToSave, dataToSave.episodeId, firebaseActiveUser.uid);
-        }
-      }
-    }
-  }, [mediaDetailsData, episodesArray, firebaseActiveUser]);
+    addToHistory(getApiMediaType(mediaType), mediaDetailsData, firebaseActiveUser, mediaId, episodesArray, season, episode);
+  }, [mediaDetailsData, episodesArray, mediaTypeReady, currentMediaType, firebaseActiveUser, mediaType, mediaId, episodesArray, season, episode]);
 
   return (
     <div

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PlayMedia from "../DisplayMedia/PlayMedia";
 import DisplayInfo from "../DisplayMedia/DisplayInfo";
+import addToHistory from "@/helpers/addToHistory";
 
 function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) {
   const { sheetMediaType } = useContext(Context);
@@ -15,11 +16,16 @@ function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; medi
   const [selectedSrc, setSelectedSrc] = useState<string | null>(null);
 
   const { activeEpisode, activeSeason } = useSelector((state: RootState) => state.mediaDetails);
-  const { mediaDetailsData } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaDetailsData, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
+  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setMediaURL(sheetMediaType == "movies" ? MEDIA_URL_RESOLVER(0, mediaId, "movie") : MEDIA_URL_RESOLVER(0, mediaId, "tv", Number(activeSeason), Number(activeEpisode)));
   }, [mediaId]);
+
+  useEffect(() => {
+    addToHistory(mediaType, mediaDetailsData, firebaseActiveUser, mediaId, episodesArray, episodesArray?.toString(), activeEpisode?.toString());
+  }, [mediaType, mediaDetailsData, firebaseActiveUser, mediaId, episodesArray, episodesArray, activeEpisode]);
 
   return (
     <div className=" relative text-center bg-cover bg-top bg-no-repeat overflow-hidden" style={{ backgroundImage: `url(${mediaDetailsData?.heroBackground})` }}>
