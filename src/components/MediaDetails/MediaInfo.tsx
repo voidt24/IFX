@@ -1,7 +1,7 @@
 "use client";
 import { useState, useContext, useEffect } from "react";
 import { Context } from "../../context/Context";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Modal from "../common/Modal";
 import Notification from "../common/Notification";
@@ -16,11 +16,10 @@ import { setCurrentId, setEpisodesArray, setActiveSeason } from "@/store/slices/
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PlayOrTrailerButton from "./PlayOrTrailerButton";
+import MobileCloseButton from "./Buttons/MobileCloseButton";
 
 export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: boolean; loadingWatchlist: boolean }) => {
   const { seasonModal, setSeasonModal, containerMargin } = useContext(Context);
-
-  const router = useRouter();
 
   const params = useParams();
 
@@ -63,20 +62,7 @@ export const MediaInfo = ({ loadingFavs, loadingWatchlist }: { loadingFavs: bool
           ...(!isMobile ? { marginTop: containerMargin ? `${containerMargin}px` : undefined } : {}),
         }}
       >
-        {/* close btn for mobile */}
-        <button className="lg:hidden text-content-primary text-2xl font-semibold fixed top-6 right-3 bg-black/50 backdrop-blur-lg rounded-full px-1.5 py-0.5 z-[9999]" title="close-btn">
-          <i
-            className="bi bi-x"
-            onClick={() => {
-              if (sessionStorage.getItem("navigatingFromApp") === "1") {
-                router.back();
-              } else {
-                router.push("/");
-              }
-            }}
-          ></i>
-        </button>
-        {/* --- */}
+        <MobileCloseButton />
 
         {/* overlay for desk */}
         <div className="max-lg:hidden side-hero-overlay"></div>
