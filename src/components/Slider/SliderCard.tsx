@@ -26,6 +26,8 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
   const dispatch = useDispatch();
   const { checkedMedia, edit } = useSelector((state: RootState) => state.listsManagement);
 
+  const { media_type, release_date, id, first_air_date, poster_path, vote_average } = result;
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       if (!checkedMedia?.includes(event.target.id)) {
@@ -45,11 +47,11 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
   }, []);
 
   useEffect(() => {
-    if (result.poster_path != null) {
-      setPoster(`${imageWithSize("780")}${result.poster_path}`);
+    if (poster_path != null) {
+      setPoster(`${imageWithSize("780")}${poster_path}`);
     }
-    if (result.vote_average != null) {
-      const voteResult = result.vote_average;
+    if (vote_average != null) {
+      const voteResult = vote_average;
       setVote(voteResult.toString().slice(0, 3));
     }
   }, [result]);
@@ -60,23 +62,23 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
         className={`card relative rounded-md border-[3px] border-transparent z-[1] lg:hover:border lg:hover:border-brand-primary transition-all duration-200 ${
           isChecked ? " !border-[3px] !border-brand-primary hover:!border-[3px] hover:!border-brand-primary " : " border-[3px] border-transparent"
         }`}
-        data-id={result.id}
+        data-id={id}
       >
         {isMobilePWA ? (
           <button
             onClick={() => {
               setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
-              dispatch(setMediaIdPWA(result.id));
+              dispatch(setMediaIdPWA(id));
               setOpenMediaDetailsSheet(true);
 
               if (canBeEdited) {
-                dispatch(setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows"));
+                dispatch(setCurrentMediaType(media_type == "movie" ? "movies" : "tvshows"));
               } else {
                 setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
               }
             }}
           >
-            <div className="content " key={result.id}>
+            <div className="content " key={id}>
               <div
                 className={`absolute top-[13px] left-[5px] flex-row-center gap-1 z-[2] font-semibold rounded-full bg-surface-modal pl-[0.3rem] pr-[0.4rem]
           vote`}
@@ -89,37 +91,37 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
                 )}
               </div>
               <span className="year absolute top-[13px] right-[5px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">
-                {result.release_date
-                  ? result.release_date && new Date(result.release_date).getTime() > Date.now()
-                    ? new Date(result.release_date).getFullYear()
-                    : result?.release_date?.slice(0, 4)
-                  : result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()
-                  ? new Date(result.first_air_date).getFullYear()
-                  : result?.first_air_date?.slice(0, 4)}
+                {release_date
+                  ? release_date && new Date(release_date).getTime() > Date.now()
+                    ? new Date(release_date).getFullYear()
+                    : release_date.slice(0, 4)
+                  : first_air_date && new Date(first_air_date).getTime() > Date.now()
+                  ? new Date(first_air_date).getFullYear()
+                  : first_air_date?.slice(0, 4)}
               </span>
-              {canBeEdited ? <span className="mediatype absolute left-[5px] bottom-[12px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">{result.media_type}</span> : null}
+              {canBeEdited ? <span className="mediatype absolute left-[5px] bottom-[12px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">{media_type}</span> : null}
 
               <img src={poster} alt="" className={`rounded-md`} width={780} height={1170} />
-              {(result.release_date && new Date(result.release_date).getTime() > Date.now()) || (result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()) ? (
+              {(release_date && new Date(release_date).getTime() > Date.now()) || (first_air_date && new Date(first_air_date).getTime() > Date.now()) ? (
                 <span className="cooming-soon block uppercase absolute bottom-10 text-center w-full left-0 right-0 z-[2] backdrop-blur-xl bg-brand-primary/20 [text-shadow:1px_1px_3px_black] py-1 text-content-primary font-bold text-[70%] lg:text-[80%]">
                   coming soon
-                  <span className="block text-[85%]">{formatReleaseDate(result.release_date || result.first_air_date || "")}</span>
+                  <span className="block text-[85%]">{formatReleaseDate(release_date || first_air_date || "")}</span>
                 </span>
               ) : null}
             </div>
           </button>
         ) : (
           <Link
-            href={canBeEdited ? `/${result.media_type === "movie" ? "movies" : "tvshows"}/${result.id}` : `/${mediaType === "movie" ? "movies" : "tvshows"}/${result.id}`}
+            href={canBeEdited ? `/${media_type === "movie" ? "movies" : "tvshows"}/${id}` : `/${mediaType === "movie" ? "movies" : "tvshows"}/${id}`}
             onClick={() => {
               sessionStorage.setItem("navigatingFromApp", "1");
-              dispatch(setMediaIdPWA(result.id ?? undefined));
+              dispatch(setMediaIdPWA(id ?? undefined));
               if (canBeEdited) {
-                dispatch(setCurrentMediaType(result.media_type == "movie" ? "movies" : "tvshows"));
+                dispatch(setCurrentMediaType(media_type == "movie" ? "movies" : "tvshows"));
               }
             }}
           >
-            <div className="content " key={result.id}>
+            <div className="content " key={id}>
               <div
                 className={`absolute top-[13px] left-[5px] flex-row-center gap-1 z-[2] font-semibold rounded-full bg-surface-modal pl-[0.3rem] pr-[0.4rem]
           vote`}
@@ -132,21 +134,21 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
                 )}
               </div>
               <span className="year absolute top-[13px] right-[5px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">
-                {result.release_date
-                  ? result.release_date && new Date(result.release_date).getTime() > Date.now()
-                    ? new Date(result.release_date).getFullYear()
-                    : result?.release_date?.slice(0, 4)
-                  : result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()
-                  ? new Date(result.first_air_date).getFullYear()
-                  : result?.first_air_date?.slice(0, 4)}
+                {release_date
+                  ? release_date && new Date(release_date).getTime() > Date.now()
+                    ? new Date(release_date).getFullYear()
+                    : release_date?.slice(0, 4)
+                  : first_air_date && new Date(first_air_date).getTime() > Date.now()
+                  ? new Date(first_air_date).getFullYear()
+                  : first_air_date?.slice(0, 4)}
               </span>
-              {canBeEdited ? <span className="mediatype absolute left-[5px] bottom-[12px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">{result.media_type}</span> : null}
+              {canBeEdited ? <span className="mediatype absolute left-[5px] bottom-[12px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">{media_type}</span> : null}
 
               <img src={poster} alt="" className={`rounded-md`} width={780} height={1170} />
-              {(result.release_date && new Date(result.release_date).getTime() > Date.now()) || (result.first_air_date && new Date(result.first_air_date).getTime() > Date.now()) ? (
+              {(release_date && new Date(release_date).getTime() > Date.now()) || (first_air_date && new Date(first_air_date).getTime() > Date.now()) ? (
                 <span className="cooming-soon block uppercase absolute bottom-10 text-center w-full left-0 right-0 z-[2] backdrop-blur-xl bg-brand-primary/20 [text-shadow:1px_1px_3px_black] py-1 text-content-primary font-bold text-[70%] lg:text-[80%]">
                   coming soon
-                  <span className="block text-[85%]">{formatReleaseDate(result.release_date || result.first_air_date || "")}</span>
+                  <span className="block text-[85%]">{formatReleaseDate(release_date || first_air_date || "")}</span>
                 </span>
               ) : null}
             </div>
@@ -159,7 +161,7 @@ const SliderCard = ({ result, canBeEdited = false, mediaType, isChecked }: ISlid
                 handleChange(evt);
               }}
               inputProps={{ "aria-label": "controlled" }}
-              id={result?.id?.toString()}
+              id={id.toString()}
               sx={{
                 height: "100%",
                 width: "100%",
