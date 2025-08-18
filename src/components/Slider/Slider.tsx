@@ -3,7 +3,6 @@ import { useRef } from "react";
 import SliderControl from "./SliderControl";
 
 interface ISliderProps {
-  controls?: boolean;
   sideControls?: boolean;
   expectingCards?: boolean;
   XPosition?: string;
@@ -11,7 +10,7 @@ interface ISliderProps {
   children: React.ReactNode;
 }
 
-export const Slider = ({ controls = false, sideControls = false, expectingCards = false, XPosition, padding, children }: ISliderProps) => {
+export const Slider = ({ sideControls = false, expectingCards = false, XPosition, padding, children }: ISliderProps) => {
   const sliderRef = useRef<HTMLDivElement>(null);
 
   return (
