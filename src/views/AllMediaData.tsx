@@ -1,5 +1,4 @@
 "use client";
-import MediaCardContainer from "@/components/MediaCard/MediaCardContainer";
 import { IMediaData } from "@/Types/index";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -14,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import GenreSelect from "@/features/contentFilter/GenreSelect";
 import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
 import useHideDrawers from "@/Hooks/useHideDrawers";
+import MediaGrid from "@/components/MediaGrid/MediaGrid";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -130,11 +130,7 @@ export default function AllMediaData({
               </div>
             </div>
           ) : (
-            <div className="media-lists">
-              {apiData.map((sliderData) => {
-                return <MediaCardContainer key={sliderData.id} result={sliderData} mediaType={sliderData.media_type} />;
-              })}
-            </div>
+            <MediaGrid mediaData={apiData} />
           )}
         </div>
         <Pagination queryName="page" pageActive={Number(page) || 1} numberOfPages={elementsToShow} />

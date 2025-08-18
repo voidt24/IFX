@@ -1,4 +1,3 @@
-import MediaCardContainer from "./MediaCard/MediaCardContainer";
 import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import Notification from "@/components/common/Notification";
@@ -14,6 +13,7 @@ import MediaTypeSelect from "@/features/contentFilter/MediaTypeSelect";
 import { database, usersCollectionName } from "@/firebase/firebase.config";
 
 import { collection, onSnapshot } from "firebase/firestore";
+import MediaGrid from "./MediaGrid/MediaGrid";
 
 export const ListsResults = () => {
   const [currentListData, setCurrentListData] = useState<IMediaData[]>([]);
@@ -118,13 +118,10 @@ export const ListsResults = () => {
           <CircularProgress color="inherit" size={100} />
         </div>
       ) : currentListData && currentListData.length > 0 ? (
-        <div className="media-lists">
-          {currentListData.map((result) => (
-            <MediaCardContainer key={result.id} result={result} mediaType={result.media_type} canBeEdited={true} isChecked={checkedMedia.includes(result.id?.toString() ?? "")} />
-          ))}
-
+        <>
+          <MediaGrid mediaData={currentListData} />
           {currentListData.length > 35 && <ToTop />}
-        </div>
+        </>
       ) : (
         <div className="w-full h-full mt-2 text-center">You will see your saved data here...</div>
       )}
