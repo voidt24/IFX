@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { moveSlider } from "../../helpers/moveSlider";
+import SliderControl from "./SliderControl";
 
 interface ISliderProps {
   controls?: boolean;
@@ -18,19 +18,9 @@ export const Slider = ({ controls = false, sideControls = false, expectingCards 
     <div className={`relative ${expectingCards ? "slider-with-cards" : "slider"} ${padding}`}>
       {sideControls && (
         <>
-          <i
-            className={`bi bi-chevron-left left slider-arrow  left-${XPosition || 0}`}
-            onClick={(event) => {
-              moveSlider(event, sliderRef, expectingCards);
-            }}
-          ></i>
+          <SliderControl side="left" sliderRef={sliderRef} expectingCards={expectingCards} XPosition={XPosition} />
 
-          <i
-            className={`bi bi-chevron-right right slider-arrow right-${XPosition || 0}`}
-            onClick={(event) => {
-              moveSlider(event, sliderRef, expectingCards);
-            }}
-          ></i>
+          <SliderControl side="right" sliderRef={sliderRef} expectingCards={expectingCards} XPosition={XPosition} />
         </>
       )}
 
