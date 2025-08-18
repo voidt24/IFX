@@ -1,5 +1,5 @@
 "use client";
-import SliderCard from "@/components/Slider/SliderCard";
+import MediaCardContainer from "@/components/MediaCard/MediaCardContainer";
 import { IMediaData } from "@/Types/index";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -132,7 +132,7 @@ export default function AllMediaData({
           ) : (
             <div className="media-lists">
               {apiData.map((sliderData) => {
-                return <SliderCard key={sliderData.id} result={sliderData} mediaType={sliderData.media_type} />;
+                return <MediaCardContainer key={sliderData.id} result={sliderData} mediaType={sliderData.media_type} />;
               })}
             </div>
           )}

@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import { useContext } from "react";
 import { Context } from "@/context/Context";
-import SliderCard from "../Slider/SliderCard";
+import MediaCardContainer from "../MediaCard/MediaCardContainer";
 import Loader from "../common/Loader";
 import Pagination from "../common/Pagination";
 import { IMediaData } from "@/Types/index";
@@ -44,11 +44,13 @@ export default function Results() {
               <div className="media-lists h-full">
                 {searchResults?.length && searchResults.length > 0
                   ? searchResults?.map((result: IMediaData) => {
-                      return <SliderCard key={result.id} result={result} canBeEdited={true} mediaType={result.media_type} />;
+                      return <MediaCardContainer key={result.id} result={result} canBeEdited={true} mediaType={result.media_type} />;
                     })
                   : searchStarted && <p className="col-span-full mt-4">no results</p>}
               </div>
-              {searchStarted && !loadingSearch && <div className="flex-row-center w-full">{numberOfPages > 1 && <Pagination queryName="searchPage" pageActive={Number(searchPage) || 1} numberOfPages={numberOfPages} />}</div>}
+              {searchStarted && !loadingSearch && (
+                <div className="flex-row-center w-full">{numberOfPages > 1 && <Pagination queryName="searchPage" pageActive={Number(searchPage) || 1} numberOfPages={numberOfPages} />}</div>
+              )}
             </div>
           )}
         </>

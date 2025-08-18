@@ -1,4 +1,4 @@
-import SliderCard from "./Slider/SliderCard";
+import MediaCardContainer from "./MediaCard/MediaCardContainer";
 import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import Notification from "@/components/common/Notification";
@@ -120,7 +120,7 @@ export const ListsResults = () => {
       ) : currentListData && currentListData.length > 0 ? (
         <div className="media-lists">
           {currentListData.map((result) => (
-            <SliderCard key={result.id} result={result} mediaType={result.media_type} canBeEdited={true} isChecked={checkedMedia.includes(result.id?.toString() ?? "")} />
+            <MediaCardContainer key={result.id} result={result} mediaType={result.media_type} canBeEdited={true} isChecked={checkedMedia.includes(result.id?.toString() ?? "")} />
           ))}
 
           {currentListData.length > 35 && <ToTop />}
