@@ -6,10 +6,6 @@ import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 import { useIsPWA } from "@/Hooks/useIsPWA";
 import useIsMobile from "@/Hooks/useIsMobile";
 interface IContextValues {
-  numberOfPages: number;
-  setNumberOfPages: Dispatch<SetStateAction<number>>;
-  pageActive: number;
-  setPageActive: Dispatch<SetStateAction<number>>;
   openTrailer: boolean;
   setOpenTrailer: Dispatch<SetStateAction<boolean>>;
   trailerKey: number | null;
@@ -75,9 +71,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [reviewsError, setReviewsError] = useState(false);  
 
   const [loadingScreen, setLoadingScreen] = useState(false);
-  const [numberOfPages, setNumberOfPages] = useState(0);
-  const [pageActive, setPageActive] = useState(1);
-
   const [seasonModal, setSeasonModal] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
@@ -96,10 +89,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const isMobilePWA = isPWA && isMobile;
 
   const contextValues = {
-    numberOfPages,
-    setNumberOfPages,
-    pageActive,
-    setPageActive,
     openTrailer,
     setOpenTrailer,
     trailerKey,

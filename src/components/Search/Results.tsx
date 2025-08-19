@@ -11,11 +11,13 @@ import { useSearchParams } from "next/navigation";
 import MediaGrid from "../MediaGrid/MediaGrid";
 
 export default function Results() {
-  const { numberOfPages, isMobilePWA } = useContext(Context);
+  const { isMobilePWA } = useContext(Context);
 
   const ref = useRef<HTMLDivElement>(null);
 
   const { searchResults, loadingSearch, searchStarted, searchQuery } = useSelector((state: RootState) => state.search);
+  const { numberOfPages } = useSelector((state: RootState) => state.pagination);
+
   const dispatch = useDispatch();
 
   const searchParams = useSearchParams();

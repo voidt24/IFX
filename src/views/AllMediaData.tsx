@@ -25,7 +25,7 @@ export default function AllMediaData({
   title: string;
 }) {
   const [apiData, setApiData] = useState<IMediaData[]>([]);
-  const [elementsToShow, setElementsToShow] = useState<number>(8);
+  const [elementsToShow, setElementsToShow] = useState<number>(20);
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [DataIsLoading, setDataIsLoading] = useState(true);
   const [initialDataError, setInitialDataError] = useState(false);

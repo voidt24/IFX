@@ -1,5 +1,5 @@
 import { useRouter, useSearchParams } from "next/navigation";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PaginationMUI from "@mui/material/Pagination";
 
 const MAX_NUMBER_OF_PAGES = 20;
@@ -18,7 +18,7 @@ function Pagination({ queryName, pageActive, numberOfPages }: { queryName: strin
   }, [pageActive]);
 
   useEffect(() => {
-    setLengthOfPag(numberOfPages > MAX_NUMBER_OF_PAGES ? MAX_NUMBER_OF_PAGES : numberOfPages < MAX_NUMBER_OF_PAGES ? numberOfPages : numberOfPages);
+    setLengthOfPag(numberOfPages > MAX_NUMBER_OF_PAGES ? MAX_NUMBER_OF_PAGES : numberOfPages);
   }, [numberOfPages]);
 
   return (

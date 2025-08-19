@@ -1,16 +1,15 @@
 "use client";
 import React from "react";
-import { useContext, useEffect, useState } from "react";
-import { Context } from "@/context/Context";
+import { useEffect, useState } from "react";
 import { search } from "../../helpers/search";
 import Input from "../common/Input";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setLoadingSearch, setSearchQuery, setSearchResults, setSearchStarted } from "@/store/slices/searchSlice";
 import { useRouter, useSearchParams } from "next/navigation";
-export default function SearchBar() {
-  const { setPageActive, setNumberOfPages } = useContext(Context);
+import { setPageActive, setNumberOfPages } from "@/store/slices/paginationSlice";
 
+export default function SearchBar() {
   const [inputValue, setInputValue] = useState("");
   const { searchStarted, searchQuery } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
@@ -36,7 +35,7 @@ export default function SearchBar() {
       }
       dispatch(setLoadingSearch(false));
 
-      data.total_pages >= 5 ? setNumberOfPages(5) : setNumberOfPages(data.total_pages);
+      dispatch(setNumberOfPages(data.total_pages >= 5 ? 5 : data.total_pages));
     });
   }
 
@@ -66,7 +65,7 @@ export default function SearchBar() {
           params.set("searchPage", `1`);
           router.push(`?${params.toString()}`);
           handleSearch(inputValue);
-          setPageActive(1);
+          dispatch(setPageActive(1));
 
           if (inputValue.trim().length !== 0) {
             dispatch(setSearchQuery(inputValue));
