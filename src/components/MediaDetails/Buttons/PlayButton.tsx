@@ -3,10 +3,10 @@ import { MediaTypeApi } from "@/Types/mediaType";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
-import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
 
 function PlayButton({ mediaId, mediaType }: { mediaId: number; mediaType: MediaTypeApi }) {
-  const { setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet, setSheetMediaType } = useContext(Context);
+  const { setSeasonModal, openTrailer, setOpenTrailer, isMobilePWA, setOpenDisplayMediaSheet } = useContext(Context);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -19,7 +19,7 @@ function PlayButton({ mediaId, mediaType }: { mediaId: number; mediaType: MediaT
           setSeasonModal(true);
         } else {
           if (isMobilePWA) {
-            setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
+           dispatch(setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows"));
             dispatch(setMediaIdPWA(mediaId));
             setOpenDisplayMediaSheet(true);
           } else {

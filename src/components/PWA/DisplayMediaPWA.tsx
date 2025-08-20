@@ -10,13 +10,10 @@ import DisplayInfo from "../DisplayMedia/DisplayInfo";
 import addToHistory from "@/helpers/addToHistory";
 
 function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) {
-  const { sheetMediaType } = useContext(Context);
-
   const [mediaURL, setMediaURL] = useState<string | undefined>("");
   const [selectedSrc, setSelectedSrc] = useState<string | null>(null);
 
-  const { activeEpisode, activeSeason } = useSelector((state: RootState) => state.mediaDetails);
-  const { mediaDetailsData, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
+  const { sheetMediaType, activeEpisode, activeSeason, mediaDetailsData, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
   const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {

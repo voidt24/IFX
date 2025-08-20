@@ -9,8 +9,8 @@ import { RootState } from "@/store";
 import MediaDetails from "@/views/MediaDetails";
 
 export default function MediaDetailsSheet() {
-  const { openMediaDetailsSheet, setOpenMediaDetailsSheet, sheetMediaType } = useContext(Context);
-  const { mediaIdPWA } = useSelector((state: RootState) => state.mediaDetails);
+  const { openMediaDetailsSheet, setOpenMediaDetailsSheet } = useContext(Context);
+  const { mediaIdPWA,sheetMediaType } = useSelector((state: RootState) => state.mediaDetails);
 
   return (
     <>

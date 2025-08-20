@@ -34,12 +34,6 @@ interface IContextValues {
   setUserMenuActive: Dispatch<SetStateAction<boolean>>;
   containerMargin: number | undefined;
   setContainerMargin: Dispatch<SetStateAction<number | undefined>>;
-  sheetMediaType: "movies" | "tvshows";
-  setSheetMediaType: Dispatch<SetStateAction<"movies" | "tvshows">>;
-  sheetSeason: number | undefined;
-  setSheetSeason: Dispatch<SetStateAction<number | undefined>>;
-  sheetEpisode: number | undefined;
-  setSheetEpisode: Dispatch<SetStateAction<number | undefined>>;
   isPWA: boolean;
   isMobilePWA: boolean;
   sheetsRef: RefObject<HTMLDivElement>;
@@ -75,9 +69,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [containerMargin, setContainerMargin] = useState<number | undefined>();
-  const [sheetMediaType, setSheetMediaType] = useState<"movies" | "tvshows">("movies");
-  const [sheetSeason, setSheetSeason] = useState<number | undefined>();
-  const [sheetEpisode, setSheetEpisode] = useState<number | undefined>();
 
   const sheetsRef = useRef<HTMLDivElement>(null);
   const [openMediaDetailsSheet, setOpenMediaDetailsSheet] = useState(false);
@@ -117,12 +108,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setUserMenuActive,
     containerMargin,
     setContainerMargin,
-    sheetMediaType,
-    setSheetMediaType,
-    sheetSeason,
-    setSheetSeason,
-    sheetEpisode,
-    setSheetEpisode,
     isPWA,
     sheetsRef,
     isMobilePWA,

@@ -13,11 +13,11 @@ import ToTop from "@/components/common/ToTop/ToTop";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 
 function History() {
-  const { isMobilePWA, setSheetMediaType, setOpenMediaDetailsSheet } = useContext(Context);
+  const { isMobilePWA, setOpenMediaDetailsSheet } = useContext(Context);
   const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
     message: "",
@@ -155,7 +155,7 @@ function History() {
                             <button
                               onClick={() => {
                                 dispatch(setMediaIdPWA(data.id));
-                                setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows");
+                                dispatch(setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows"));
                                 setOpenMediaDetailsSheet(true);
                               }}
                             >

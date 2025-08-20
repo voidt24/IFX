@@ -9,8 +9,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 export default function DisplayMediaSheet() {
-  const { openDisplayMediaSheet, setOpenDisplayMediaSheet, sheetMediaType } = useContext(Context);
-  const { mediaIdPWA } = useSelector((state: RootState) => state.mediaDetails);
+  const { openDisplayMediaSheet, setOpenDisplayMediaSheet } = useContext(Context);
+  const { mediaIdPWA, sheetMediaType } = useSelector((state: RootState) => state.mediaDetails);
 
   return (
     <>

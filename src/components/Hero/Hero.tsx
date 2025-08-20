@@ -5,11 +5,11 @@ import Link from "next/link";
 import { Context } from "@/context/Context";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { IMediaData, MediaTypeApi } from "@/Types";
-import { setMediaIdPWA } from "@/store/slices/mediaDetailsSlice";
+import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
 import { useDispatch } from "react-redux";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
-  const { setSheetMediaType, setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
+  const { setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);
@@ -87,7 +87,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                     <button
                       className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
                       onClick={() => {
-                        setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows");
+                        dispatch(setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows"));
                         dispatch(setMediaIdPWA(sliderData.id));
                         setOpenMediaDetailsSheet(true);
                       }}
