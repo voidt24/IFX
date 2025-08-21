@@ -119,7 +119,7 @@ export const ListsResults = () => {
         </div>
       ) : currentListData && currentListData.length > 0 ? (
         <>
-          <MediaGrid mediaData={currentListData} />
+          <MediaGrid mediaData={currentListData} canBeEdited={true} />
           {currentListData.length > 35 && <ToTop />}
         </>
       ) : (
