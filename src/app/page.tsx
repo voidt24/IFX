@@ -18,11 +18,11 @@ const Hero = dynamic(() => import("@/components/Hero/Hero"), {
 });
 
 export default function Home() {
-  const { initialDataIsLoading, initialDataError, containerMargin } = useContext(Context);
+  const { initialDataIsLoading, initialDataError } = useContext(Context);
   const { moviesHeroApiData, moviesApiData, tvApiData } = useInitialMediaData();
-
-  const auth = useSelector((state: RootState) => state.auth);
-  const { firebaseActiveUser } = auth;
+  
+  const { containerMargin } = useSelector((state: RootState) => state.ui);
+  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
 
   const isMobile = useIsMobile(640);
 

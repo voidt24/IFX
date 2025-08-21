@@ -1,6 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { Context } from "@/context/Context";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MediaTypeUrl } from "@/Types/mediaType";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +13,8 @@ import paramIsValid from "@/helpers/isParamValid";
 import addToHistory from "@/helpers/addToHistory";
 
 function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId: number }) {
-  const { containerMargin } = useContext(Context);
+  const { containerMargin } = useSelector((state: RootState) => state.ui);
+
   const [mediaTypeReady, setMediaTypeReady] = useState(false);
   const [mediaURL, setMediaURL] = useState<string | undefined>("");
 

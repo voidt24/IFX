@@ -1,8 +1,14 @@
 import { Context } from "@/context/Context";
 import { useContext } from "react";
+import { setShowSearchBar, setUserMenuActive, setOpenSearchDrawer } from "@/store/slices/UISlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function SearchButton() {
-  const { showSearchBar, setShowSearchBar, userMenuActive, setUserMenuActive, isMobilePWA, setOpenSearchDrawer } = useContext(Context);
+  const { isMobilePWA } = useContext(Context);
+  const { showSearchBar, userMenuActive } = useSelector((state: RootState) => state.ui);
+
+  const dispatch = useDispatch();
 
   return (
     <button
@@ -10,10 +16,10 @@ function SearchButton() {
       id="main-search-btn"
       onClick={() => {
         if (isMobilePWA) {
-          setOpenSearchDrawer(true);
+          dispatch(setOpenSearchDrawer(true));
         } else {
           if (userMenuActive) setUserMenuActive(false);
-          setShowSearchBar(!showSearchBar);
+          dispatch(setShowSearchBar(!showSearchBar));
         }
       }}
       title="search-button"

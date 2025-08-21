@@ -9,10 +9,13 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMediaIdPWA, setSheetMediaType, setEpisodesArray, setActiveSeason, setActiveEpisode } from "@/store/slices/mediaDetailsSlice";
+import { setSeasonModal, setOpenDisplayMediaSheet } from "@/store/slices/UISlice";
 
 function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi; mediaId: number }) {
   const router = useRouter();
-  const { seasonModal, setSeasonModal, isMobilePWA, setOpenDisplayMediaSheet } = useContext(Context);
+  const { isMobilePWA } = useContext(Context);
+  const { seasonModal } = useSelector((state: RootState) => state.ui);
+
   const seasonBtnRef = useRef<HTMLButtonElement | null>(null);
   const path = usePathname();
 
@@ -86,9 +89,9 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                             if (isMobilePWA) {
                               dispatch(setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows"));
                               dispatch(setMediaIdPWA(mediaId));
-                              setOpenDisplayMediaSheet(true);
+                              dispatch(setOpenDisplayMediaSheet(true));
                             } else {
-                              setSeasonModal(false);
+                              dispatch(setSeasonModal(false));
 
                               router.push(`${path}/watch?season=${season_number}&episode=${index + 1}&option=1`);
                             }

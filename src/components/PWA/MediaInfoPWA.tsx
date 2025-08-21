@@ -1,6 +1,5 @@
 "use client";
-import { useState, useContext, useEffect } from "react";
-import { Context } from "../../context/Context";
+import { useState, useEffect } from "react";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Modal from "../common/Modal";
 import Notification from "../common/Notification";
@@ -13,9 +12,10 @@ import { setEpisodesArray, setActiveSeason } from "@/store/slices/mediaDetailsSl
 import PlayOrTrailerButton from "../MediaDetails/PlayOrTrailerButton";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { setSeasonModal } from "@/store/slices/UISlice";
 
 export const MediaInfoPWA = ({ mediaType, mediaId, loadingFavs, loadingWatchlist }: { mediaType: MediaTypeApi; mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean }) => {
-  const { seasonModal, setSeasonModal } = useContext(Context);
+  const { seasonModal } = useSelector((state: RootState) => state.ui);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 

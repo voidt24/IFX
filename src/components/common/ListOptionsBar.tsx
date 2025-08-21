@@ -7,7 +7,6 @@ interface Props {
   setConfirmDialog: Dispatch<SetStateAction<boolean>>;
 }
 function ListOptionsBar({ setConfirmDialog }: Props) {
-  // const { edit, checkedMedia } = useContext(Context);
   const { edit, checkedMedia } = useSelector((state: RootState) => state.listsManagement);
   const dispatch = useDispatch();
 

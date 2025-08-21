@@ -1,11 +1,15 @@
 "use client";
 import { ReactNode, useEffect } from "react";
-import { Provider, useDispatch } from "react-redux";
-import { AppDispatch, store } from "./index";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState, store } from "./index";
 import { initializeAuthListener } from "./slices/authSlice";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { usePathname } from "next/navigation";
 import { setCurrentMediaType } from "./slices/mediaDetailsSlice";
+import Modal from "@/components/common/Modal";
+import AuthForm from "@/components/AuthForm";
+import { setAuthModalActive } from "@/store/slices/UISlice";
+import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 
 export function AuthListener() {
   const dispatch: AppDispatch = useDispatch();
@@ -29,12 +33,26 @@ export function ParamsListener() {
   }, [path]);
   return null;
 }
+export function GlobalOverlays() {
+  const { loadingScreen, authModalActive } = useSelector((state: RootState) => state.ui);
+
+  return (
+    <>
+      {loadingScreen && <LoadingScreen />}
+
+      <Modal modalActive={authModalActive} setModalActive={setAuthModalActive}>
+        <AuthForm />
+      </Modal>
+    </>
+  );
+}
 export default function StoreProvider({ children }: { children: ReactNode }) {
   return (
     <Provider store={store}>
       <AuthListener />
       <ParamsListener />
       {children}
+      <GlobalOverlays />
     </Provider>
   );
 }

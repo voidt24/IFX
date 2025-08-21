@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { setActiveSeason } from "@/store/slices/mediaDetailsSlice";
-import { useContext } from "react";
-import { Context } from "@/context/Context";
 import { ISeasonArray, MediaTypeUrl } from "@/Types";
+import { setSeasonModal } from "@/store/slices/UISlice";
+import { useDispatch } from "react-redux";
 
 function EpisodeNavigation({
   season,
@@ -20,7 +20,7 @@ function EpisodeNavigation({
   currentId: number;
   seasonArray: ISeasonArray[];
 }) {
-  const { setSeasonModal } = useContext(Context);
+  const dispatch = useDispatch();
   return (
     <div className=" w-full z-20 py-4">
       <div className="flex gap-6  ">
@@ -51,8 +51,8 @@ function EpisodeNavigation({
               <Link
                 href={`/${currentMediaType}/${currentId}`}
                 onClick={() => {
-                  setActiveSeason(Number(season));
-                  setSeasonModal(true);
+                  dispatch(setActiveSeason(Number(season)));
+                  dispatch(setSeasonModal(true));
                 }}
                 className={`flex items-center justify-center max-md:px-3 px-6 h-8 leading-tight  border border-content-muted  hover:bg-surface-hover`}
               >

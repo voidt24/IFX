@@ -15,9 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
 import useHideDrawers from "@/Hooks/useHideDrawers";
+import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
 
 function History() {
-  const { isMobilePWA, setOpenMediaDetailsSheet } = useContext(Context);
+  const { isMobilePWA } = useContext(Context);
   const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
     message: "",
@@ -156,7 +157,7 @@ function History() {
                               onClick={() => {
                                 dispatch(setMediaIdPWA(data.id));
                                 dispatch(setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows"));
-                                setOpenMediaDetailsSheet(true);
+                                dispatch(setOpenMediaDetailsSheet(true));
                               }}
                             >
                               {data.title}

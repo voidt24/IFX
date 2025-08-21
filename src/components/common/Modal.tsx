@@ -1,17 +1,20 @@
 "use client";
 import { Context } from "@/context/Context";
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import { UnknownAction } from "@reduxjs/toolkit";
+import { useContext } from "react";
+import { useDispatch } from "react-redux";
 import { RemoveScroll } from "react-remove-scroll";
 
 interface ModalProps {
   modalActive: boolean;
-  setModalActive: Dispatch<SetStateAction<boolean>>;
+  setModalActive: (value: boolean) => UnknownAction;
   children: React.ReactNode;
   customClasses?: string;
   closeBtnToLeft?: boolean;
 }
 const Modal = ({ modalActive, setModalActive, children, customClasses, closeBtnToLeft = false }: ModalProps) => {
   const { sheetsRef } = useContext(Context);
+  const dispatch = useDispatch();
   return modalActive ? (
     <>
       <RemoveScroll shards={[sheetsRef]}>
@@ -19,7 +22,7 @@ const Modal = ({ modalActive, setModalActive, children, customClasses, closeBtnT
           <div
             className="overlay"
             onClick={() => {
-              setModalActive(false);
+              dispatch(setModalActive(false));
             }}
           ></div>
 
@@ -28,7 +31,7 @@ const Modal = ({ modalActive, setModalActive, children, customClasses, closeBtnT
           >
             <button
               onClick={() => {
-                setModalActive(false);
+                dispatch(setModalActive(false));
               }}
               className={` rounded-full bg-[#0f1118] leading-1 hover:bg-surface-hover z-20 absolute top-2 ${closeBtnToLeft ? "left-2 " : "right-2"} px-2 py-1`}
               type="button"

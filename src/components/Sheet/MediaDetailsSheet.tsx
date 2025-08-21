@@ -7,10 +7,11 @@ import Trailer from "../Trailer";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MediaDetails from "@/views/MediaDetails";
+import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
 
 export default function MediaDetailsSheet() {
-  const { openMediaDetailsSheet, setOpenMediaDetailsSheet } = useContext(Context);
-  const { mediaIdPWA,sheetMediaType } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaIdPWA, sheetMediaType } = useSelector((state: RootState) => state.mediaDetails);
+  const { openMediaDetailsSheet } = useSelector((state: RootState) => state.ui);
 
   return (
     <>

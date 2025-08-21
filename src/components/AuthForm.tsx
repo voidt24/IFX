@@ -1,5 +1,4 @@
-import { useState, useContext } from "react";
-import { Context } from "@/context/Context";
+import { useState } from "react";
 import { createUser } from "../firebase/createUser";
 import { authHandler } from "../firebase/authHandler";
 import { loginUser } from "../firebase/loginUser";
@@ -11,11 +10,14 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { banners } from "@/helpers/banners/banners-sources";
 import { getAuthError } from "@/lib/firebase/getAuthError";
 import { FirebaseError } from "firebase/app";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
+import { setLoadingScreen, setAuthModalActive, setNoAccount } from "@/store/slices/UISlice";
+import { RootState } from "@/store";
 
 export default function AuthForm() {
-  const { setLoadingScreen, setAuthModalActive, noAccount, setNoAccount } = useContext(Context);
+  const { noAccount } = useSelector((state: RootState) => state.ui);
+
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
   const [loadingAuth, setLoadingAuth] = useState(false);
@@ -47,10 +49,10 @@ export default function AuthForm() {
       resultFromAuth = await authHandler(methodToUseForAuth, userData);
       dispatch(setFirebaseActiveUser({ email: resultFromAuth.user.email, uid: resultFromAuth.user.uid }));
       dispatch(setUserLogged(true));
-      setAuthModalActive(false);
+      dispatch(setAuthModalActive(false));
       setErrorMessage({ active: false, text: "" });
       setUserData({ username: "", email: "", password: "" });
-      setLoadingScreen(true);
+      dispatch(setLoadingScreen(true));
 
       if (methodToUseForAuth == createUser) {
         try {
@@ -71,7 +73,7 @@ export default function AuthForm() {
       }
 
       setTimeout(() => {
-        setLoadingScreen(false);
+        dispatch(setLoadingScreen(false));
       }, 1000);
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -130,7 +132,7 @@ export default function AuthForm() {
           data-testid="changeText"
           className=" border-none mt-2 text-brand-primary hover:text-brand-hover hover:underline "
           onClick={() => {
-            noAccount ? setNoAccount(false) : setNoAccount(true);
+            noAccount ? dispatch(setNoAccount(false)) : dispatch(setNoAccount(true));
 
             setErrorMessage({ active: false, text: "" });
           }}

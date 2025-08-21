@@ -9,6 +9,7 @@ import { setEdit } from "@/store/slices/listsManagementSlice";
 import { setMediaIdPWA, setSheetMediaType, setCurrentMediaType } from "@/store/slices/mediaDetailsSlice";
 import MediaCard from "./MediaCard";
 import EditCheckbox from "./EditCheckbox";
+import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
 
 interface MediaCardContainerProps {
   result: IMediaData;
@@ -18,7 +19,7 @@ interface MediaCardContainerProps {
 }
 
 const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked }: MediaCardContainerProps) => {
-  const { setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
+  const { isMobilePWA } = useContext(Context);
   const dispatch = useDispatch();
 
   const { media_type, id, poster_path, vote_average } = result;
@@ -39,7 +40,7 @@ const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked 
   function handleCardClickPWA() {
     dispatch(setSheetMediaType(isMovieOrTV));
     dispatch(setMediaIdPWA(id));
-    setOpenMediaDetailsSheet(true);
+    dispatch(setOpenMediaDetailsSheet(true));
 
     if (canBeEdited) {
       dispatch(setCurrentMediaType(isMovieOrTV));

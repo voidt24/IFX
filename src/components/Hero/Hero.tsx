@@ -7,9 +7,10 @@ import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { IMediaData, MediaTypeApi } from "@/Types";
 import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
 import { useDispatch } from "react-redux";
+import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
-  const { setOpenMediaDetailsSheet, isMobilePWA } = useContext(Context);
+  const { isMobilePWA } = useContext(Context);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);
@@ -89,7 +90,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                       onClick={() => {
                         dispatch(setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows"));
                         dispatch(setMediaIdPWA(sliderData.id));
-                        setOpenMediaDetailsSheet(true);
+                        dispatch(setOpenMediaDetailsSheet(true));
                       }}
                       title="media-details-button"
                     >

@@ -26,7 +26,7 @@ import NotFound from "@/components/common/NotFound";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
-  const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA, showSearchBar, setShowSearchBar } = useContext(Context);
+  const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);
 
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);

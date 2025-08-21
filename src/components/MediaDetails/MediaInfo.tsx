@@ -1,6 +1,5 @@
 "use client";
-import { useState, useContext, useEffect } from "react";
-import { Context } from "../../context/Context";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import Modal from "../common/Modal";
@@ -17,9 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PlayOrTrailerButton from "./PlayOrTrailerButton";
 import MobileCloseButton from "./Buttons/MobileCloseButton";
+import { setSeasonModal } from "@/store/slices/UISlice";
 
 export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist }: { mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean }) => {
-  const { seasonModal, setSeasonModal, containerMargin } = useContext(Context);
+  const { seasonModal, containerMargin } = useSelector((state: RootState) => state.ui);
 
   const params = useParams();
 

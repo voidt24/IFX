@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useContext, RefObject } from "react";
+import { useEffect, RefObject } from "react";
 import Headroom from "react-headroom";
-import { Context } from "@/context/Context";
 import NavItems from "./NavItems";
 import NavDrawers from "./NavDrawers";
+import { setContainerMargin } from "@/store/slices/UISlice";
+import { useDispatch } from "react-redux";
 
 export const menuActions = [
   {
@@ -26,13 +27,13 @@ export const menuActions = [
   },
 ];
 export default function TopNavbar({ navRef }: { navRef: RefObject<HTMLDivElement> }) {
-  const { setContainerMargin } = useContext(Context);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!navRef) return;
 
-    const height = navRef.current?.offsetHeight;
-    setContainerMargin(height);
+    const height = navRef.current?.offsetHeight || 0;
+    dispatch(setContainerMargin(height));
   }, [navRef]);
 
   return (

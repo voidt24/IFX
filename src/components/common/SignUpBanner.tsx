@@ -1,9 +1,7 @@
-import { Context } from "@/context/Context";
-import { useContext } from "react";
-
+import { setNoAccount, setAuthModalActive } from "@/store/slices/UISlice";
+import { useDispatch } from "react-redux";
 export default function SignUpBanner() {
-  const { setNoAccount, setAuthModalActive } = useContext(Context);
-
+  const dispatch = useDispatch();
   return (
     <>
       <div className="w-full flex justify-center py-12 px-4">
@@ -22,8 +20,8 @@ export default function SignUpBanner() {
           <button
             className="btn-primary text-[85%] md:text-sm"
             onClick={() => {
-              setNoAccount(true);
-              setAuthModalActive(true);
+              dispatch(setNoAccount(true));
+              dispatch(setAuthModalActive(true));
             }}
           >
             Sign up

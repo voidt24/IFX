@@ -1,14 +1,11 @@
-import { Context } from "@/context/Context";
 import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
 import { useDispatch } from "react-redux";
 import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
 import Link from "next/link";
+import { setLoadingScreen, setUserMenuActive, setOpenUserDrawer } from "@/store/slices/UISlice";
 
 function UserMenuData() {
-  const { setLoadingScreen, setUserMenuActive, setOpenUserDrawer } = useContext(Context);
-
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -16,13 +13,13 @@ function UserMenuData() {
     auth.signOut().then(() => {
       dispatch(setUserLogged(false));
       dispatch(setFirebaseActiveUser({ email: null, uid: null }));
-      setUserMenuActive(false);
-      setOpenUserDrawer(false);
+      dispatch(setUserMenuActive(false));
+      dispatch(setOpenUserDrawer(false));
       document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
-      setLoadingScreen(true);
+      dispatch(setLoadingScreen(true));
 
       setTimeout(() => {
-        setLoadingScreen(false);
+        dispatch(setLoadingScreen(false));
       }, 1000);
       router.push("/");
     });

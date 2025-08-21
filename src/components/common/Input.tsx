@@ -1,5 +1,6 @@
-import { Context } from "@/context/Context";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { RootState } from "@/store";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 interface inputProps {
   id?: string;
@@ -15,8 +16,8 @@ interface inputProps {
 export default function Input({ id, type, placeholder, value, onChange, hasPassword, customClassesForWrapper, customClassesForInput }: inputProps) {
   const [passwordType, setPasswordType] = useState<"password" | "text">("password");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { showSearchBar, openSearchDrawer } = useContext(Context);
-  
+  const { showSearchBar, openSearchDrawer } = useSelector((state: RootState) => state.ui);
+
   useEffect(() => {
     if (showSearchBar || openSearchDrawer) {
       inputRef.current?.focus();

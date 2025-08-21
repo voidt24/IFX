@@ -1,8 +1,8 @@
 "use client";
 import { SwipeableDrawer } from "@mui/material";
-import React, { Dispatch, ReactNode, SetStateAction } from "react";
+import { ReactNode } from "react";
 
-function MenuDrawer({ isOpen, setIsOpen, children }: { isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; children: ReactNode }) {
+function MenuDrawer({ isOpen, setIsOpen, children }: { isOpen: boolean; setIsOpen: (value: boolean) => void; children: ReactNode }) {
   return (
     <SwipeableDrawer
       PaperProps={{
