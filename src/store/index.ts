@@ -4,6 +4,7 @@ import listsManagementReducer from "./slices/listsManagementSlice"
 import searchReducer from "./slices/searchSlice"
 import mediaDetailsReducer from "./slices/mediaDetailsSlice"
 import paginationReducer from "./slices/paginationSlice"
+import UIReducer from "./slices/UISlice"
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
         listsManagement: listsManagementReducer,
         search: searchReducer,
         mediaDetails: mediaDetailsReducer,
-        pagination: paginationReducer
+        pagination: paginationReducer,
+        ui: UIReducer,
     }
 })
 
