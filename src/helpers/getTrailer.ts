@@ -1,6 +1,5 @@
 import { MediaTypeApi } from "@/Types";
 import { apiUrl, API_KEY } from "./api.config";
-import { Dispatch, SetStateAction } from "react";
 
 export const getTrailer = async (id: number | null, mediaType: MediaTypeApi) => {
   const data = await fetch(`${apiUrl}${mediaType}/${id}/videos?api_key=${API_KEY}`);
@@ -9,20 +8,21 @@ export const getTrailer = async (id: number | null, mediaType: MediaTypeApi) => 
   return json;
 };
 
-// TO-DO: delete react params -> separate data logic from state
-export function handleTrailerClick(setOpenTrailer:Dispatch<SetStateAction<boolean>>,id:number | null, mediaType:MediaTypeApi,setTrailerKey:Dispatch<SetStateAction<number | null>>) {
-  getTrailer(id, mediaType).then((data) => {
-    if (data.results.length < 1) {
-      setTrailerKey(null);
-    } else {
-      data.results.forEach((element:unknown) => {
-        if (typeof element === 'object' && element !== null && 'type' in element && 'name' in element && 'key' in element) {
-          if ((element as { type: string }).type === 'Trailer' ){
-            setTrailerKey((element as { key: number }).key);
-          }
-        }
-      });
+export async function handleTrailerClick(id:number | null, mediaType:MediaTypeApi) {
+
+  const trailer = await getTrailer(id, mediaType)
+  
+  if(trailer && trailer.results && trailer.results.length < 1){
+    return null;
+  }
+
+  const trailerKey =  trailer && trailer.results && trailer.results.find((element: unknown)=>{
+    if (typeof element === 'object' && element !== null && 'type' in element && 'name' in element && 'key' in element) {
+      if ((element as { type: string }).type === 'Trailer' ){
+        return (element as { key: string }).key
+      }
     }
-    setOpenTrailer(true);
-  });
+  })
+
+  return trailerKey ? trailerKey.key : null;
 }

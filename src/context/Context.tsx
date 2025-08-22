@@ -5,8 +5,8 @@ import useIsMobile from "@/Hooks/useIsMobile";
 interface IContextValues {
   openTrailer: boolean;
   setOpenTrailer: Dispatch<SetStateAction<boolean>>;
-  trailerKey: number | null;
-  setTrailerKey: Dispatch<SetStateAction<number | null>>;
+  trailerKey: string | null;
+  setTrailerKey: Dispatch<SetStateAction<string | null>>;
 
   loadingAllData: boolean;
   setLoadingAllData: Dispatch<SetStateAction<boolean>>;
@@ -28,7 +28,7 @@ export const Context = createContext<IContextValues>({} as IContextValues);
 
 export default function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [openTrailer, setOpenTrailer] = useState(false);
-  const [trailerKey, setTrailerKey] = useState<number | null>(null);
+  const [trailerKey, setTrailerKey] = useState<string | null>(null);
   const [loadingAllData, setLoadingAllData] = useState(true);
 
   const [initialDataIsLoading, setInitialDataIsLoading] = useState(true);

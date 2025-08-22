@@ -124,8 +124,10 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
               <div className="overlay-base bg-black/70 flex-col-center ">
                 <button
                   className="px-3 py-2 bg-brand-primary/35 backdrop-blur-lg rounded-full hover:scale-125 transition-all duration-200"
-                  onClick={() => {
-                    handleTrailerClick(setOpenTrailer, mediaId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType), setTrailerKey);
+                  onClick={async () => {
+                    const trailer = await handleTrailerClick(mediaId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType));
+                    setTrailerKey(trailer);
+                    setOpenTrailer(true);
                   }}
                   title="trailer-button"
                 >

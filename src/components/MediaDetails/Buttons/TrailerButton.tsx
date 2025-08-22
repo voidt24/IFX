@@ -1,7 +1,7 @@
 import { Context } from "@/context/Context";
 import { handleTrailerClick } from "@/helpers/getTrailer";
 import { MediaTypeApi } from "@/Types/mediaType";
-import React, { useContext } from "react";
+import { useContext } from "react";
 
 function TrailerButton({ id, mediaType }: { id: number | null; mediaType: MediaTypeApi }) {
   const { setOpenTrailer, setTrailerKey } = useContext(Context);
@@ -10,8 +10,10 @@ function TrailerButton({ id, mediaType }: { id: number | null; mediaType: MediaT
     <button
       className="btn-primary w-full relative pointer-events-auto z-[4]"
       data-id={id}
-      onClick={() => {
-        handleTrailerClick(setOpenTrailer, id, mediaType, setTrailerKey);
+      onClick={async () => {
+        const trailer = await handleTrailerClick(id, mediaType);
+        setTrailerKey(trailer);
+        setOpenTrailer(true);
       }}
     >
       <i className="bi bi-play "></i> Watch trailer
