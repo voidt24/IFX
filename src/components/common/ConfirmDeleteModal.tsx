@@ -67,7 +67,12 @@ function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraAc
       <Sheet.Backdrop onTap={() => setConfirmDialog(false)} style={{ background: "rgba(0, 0, 0, 0.7)" }} />
     </Sheet>
   ) : (
-    <Modal modalActive={confirmDialog} setModalActive={setConfirmDialog}>
+    <Modal
+      modalActive={confirmDialog}
+      setModalActive={(value) => {
+        setConfirmDialog(value);
+      }}
+    >
       <div className="flex flex-col gap-4 max-md:text-sm py-4">
         <p className="">{`Do you really you want to delete this data from ${Array.isArray(listName) ? displayMessage : listName} ?`}</p>
 

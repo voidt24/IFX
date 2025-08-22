@@ -35,12 +35,17 @@ export function ParamsListener() {
 }
 export function GlobalOverlays() {
   const { loadingScreen, authModalActive } = useSelector((state: RootState) => state.ui);
-
+  const dispatch = useDispatch();
   return (
     <>
       {loadingScreen && <LoadingScreen />}
 
-      <Modal modalActive={authModalActive} setModalActive={setAuthModalActive}>
+      <Modal
+        modalActive={authModalActive}
+        setModalActive={(value) => {
+          dispatch(setAuthModalActive(value));
+        }}
+      >
         <AuthForm />
       </Modal>
     </>

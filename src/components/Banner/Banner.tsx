@@ -82,7 +82,14 @@ export default function Banner() {
           <div className="overlay-base bg-gradient-to-t from-black via-black/20"></div>
 
           {/* MODAL TO CHOOSE BANNER */}
-          <Modal modalActive={bannersModal} setModalActive={setBannersModal} closeBtnToLeft={true} customClasses="sm:!w-[85%] lg:!w-[65%] 4k:!w-[45%] ">
+          <Modal
+            modalActive={bannersModal}
+            setModalActive={(value) => {
+              setBannersModal(value);
+            }}
+            closeBtnToLeft={true}
+            customClasses="sm:!w-[85%] lg:!w-[65%] 4k:!w-[45%] "
+          >
             <div className="w-full flex flex-col gap-4 items-center justify-center h-[50vh] lg:h-[70vh]">
               <h2 className="lg:text-xl ">Select a banner for your profile</h2>
               <button

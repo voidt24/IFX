@@ -1,13 +1,12 @@
 "use client";
 import { Context } from "@/context/Context";
-import { UnknownAction } from "@reduxjs/toolkit";
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
 import { RemoveScroll } from "react-remove-scroll";
 
 interface ModalProps {
   modalActive: boolean;
-  setModalActive: (value: boolean) => UnknownAction;
+  setModalActive: (value: boolean) => void;
   children: React.ReactNode;
   customClasses?: string;
   closeBtnToLeft?: boolean;
@@ -22,7 +21,7 @@ const Modal = ({ modalActive, setModalActive, children, customClasses, closeBtnT
           <div
             className="overlay"
             onClick={() => {
-              dispatch(setModalActive(false));
+              setModalActive(false);
             }}
           ></div>
 
@@ -31,7 +30,7 @@ const Modal = ({ modalActive, setModalActive, children, customClasses, closeBtnT
           >
             <button
               onClick={() => {
-                dispatch(setModalActive(false));
+                setModalActive(false);
               }}
               className={` rounded-full bg-[#0f1118] leading-1 hover:bg-surface-hover z-20 absolute top-2 ${closeBtnToLeft ? "left-2 " : "right-2"} px-2 py-1`}
               type="button"

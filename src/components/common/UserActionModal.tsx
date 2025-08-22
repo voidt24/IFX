@@ -20,9 +20,13 @@ interface props {
 }
 
 export default function UserActionModal({ children, title, fieldsToAdd, modalActive, setModalActive, onSubmitHandler, errorMessage, setErrorMessage }: props) {
-
   return (
-    <Modal modalActive={modalActive} setModalActive={setModalActive}>
+    <Modal
+      modalActive={modalActive}
+      setModalActive={(value) => {
+        setModalActive(value);
+      }}
+    >
       <>
         <h2 className=" mb-4 font-semibold text-2xl">{title}</h2>
         {children}
