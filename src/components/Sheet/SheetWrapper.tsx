@@ -1,9 +1,9 @@
 "use client";
 import { Sheet } from "react-modal-sheet";
-import { Dispatch, ReactNode, SetStateAction, useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { Context } from "@/context/Context";
 
-export default function SheetWrapper({ children, isOpen, setIsOpen }: { children: ReactNode; isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>> }) {
+export default function SheetWrapper({ children, isOpen, setIsOpen }: { children: ReactNode; isOpen: boolean; setIsOpen: (value: boolean) => void }) {
   const { sheetsRef } = useContext(Context);
 
   return (
