@@ -1,22 +1,18 @@
 "use client";
 import { useContext, useRef } from "react";
 import { image } from "../../helpers/api.config";
-import Link from "next/link";
 import { Context } from "@/context/Context";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { IMediaData, MediaTypeApi } from "@/Types";
-import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
-import { useDispatch } from "react-redux";
-import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
 import HeroControls from "./HeroControls";
+import PWADetailsButton from "./PWADetailsButton";
+import DetailsButton from "./DetailsButton";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
   const { isMobilePWA } = useContext(Context);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);
-
-  const dispatch = useDispatch();
 
   return (
     <div className="slider-test max-w-full relative px-2 mx-auto w-full h-full overflow-hidden">
@@ -51,16 +47,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                   ) : null}
                   <p className="text-content-secondary text-[40%] text-left leading-6 max-w-[55%] line-clamp-4 ">{sliderData.overview}</p>
 
-                  <Link
-                    className="btn-primary text-[40%] !py-0 !px-6"
-                    href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
-                    onClick={() => {
-                      dispatch(setMediaIdPWA(sliderData.id));
-                      sessionStorage.setItem("navigatingFromApp", "1");
-                    }}
-                  >
-                    Details
-                  </Link>
+                  <DetailsButton variant="desktop" sliderData={sliderData} type={type} />
                 </div>
 
                 {/* MOBILE */}
@@ -73,32 +60,8 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                       <span className=" text-content-secondary text-[75%]">Available on {formatReleaseDate(sliderData.release_date || sliderData.first_air_date || "")}</span>
                     ) : null}
                   </div>
-                  {isMobilePWA ? (
-                    <button
-                      className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
-                      onClick={() => {
-                        dispatch(setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows"));
-                        dispatch(setMediaIdPWA(sliderData.id));
-                        dispatch(setOpenMediaDetailsSheet(true));
-                      }}
-                      title="media-details-button"
-                    >
-                      <i className="bi bi-caret-right-fill leading-none text-[90%]"></i>
-                    </button>
-                  ) : (
-                    <Link
-                      className="bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6"
-                      href={`${type.toLowerCase().split(" ").join("")}/${sliderData.id}`}
-                      onClick={() => {
-                        dispatch(setMediaIdPWA(sliderData.id));
-                        sessionStorage.setItem("navigatingFromApp", "1");
-                      }}
-                    >
-                      <i className="bi bi-caret-right-fill leading-none text-[90%]"></i>
-                    </Link>
-                  )}
+                  {isMobilePWA ? <PWADetailsButton sliderData={sliderData} mediaType={mediaType} /> : <DetailsButton variant="mobile" sliderData={sliderData} type={type} />}
                 </div>
-                {/*  */}
               </div>
             );
           })}
