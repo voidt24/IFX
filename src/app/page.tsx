@@ -10,6 +10,7 @@ import useIsMobile from "@/Hooks/useIsMobile";
 import SectionWithSlider from "@/components/common/SectionWithSlider";
 import Footer from "@/components/common/Footer/Footer";
 import useHideDrawers from "@/Hooks/useHideDrawers";
+import PageError from "@/components/common/Error/PageError";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
@@ -27,12 +28,7 @@ export default function Home() {
   useHideDrawers();
 
   if (error) {
-    return (
-      <div className="error not-found">
-        <h1>ERROR</h1>
-        <p>Please try again</p>
-      </div>
-    );
+    return <PageError containerMargin={containerMargin}></PageError>;
   }
   if (isLoading) {
     return <HomeSkeleton />;
