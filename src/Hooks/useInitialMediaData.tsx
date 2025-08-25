@@ -1,40 +1,41 @@
-import { Context } from "@/context/Context";
 import { fetchInitialData } from "@/helpers/fetchInitialData";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { IMediaData } from "@/Types";
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function useInitialMediaData() {
-  const { setInitialDataIsLoading, setInitialDataError } = useContext(Context);
-  const [moviesApiData, setMoviesApiData] = useState<IMediaData[]>([]);
-  const [tvApiData, setTvApiData] = useState<IMediaData[]>([]);
-  const [moviesHeroApiData, setMoviesHeroApiData] = useState<IMediaData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchAndSetData = (
-    mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
-    MethodThatSavesInMovies?: Dispatch<SetStateAction<IMediaData[]>>,
-    MethodThatSavesInTV?: Dispatch<SetStateAction<IMediaData[]>>,
-    categoryForMovie?: string
-  ) => {
-    fetchInitialData(mediaTypeObj, null, null, categoryForMovie)
-      .then((data: [IMediaData[], number]) => {
-        mediaTypeObj.route == mediaProperties.movie.route ? MethodThatSavesInMovies && MethodThatSavesInMovies(data[0]) : MethodThatSavesInTV && MethodThatSavesInTV(data[0]);
-      })
-      .catch((e) => {
-        setInitialDataError(true);
-      })
-      .finally(() => {
-        setInitialDataIsLoading(false);
-      });
+  const [error, setError] = useState(false);
+
+  const [data, setData] = useState<{ moviesHero: IMediaData[]; tv: IMediaData[]; movies: IMediaData[] }>({
+    moviesHero: [],
+    tv: [],
+    movies: [],
+  });
+
+  const fetchAndSetData = async (mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string }, categoryForMovie?: string) => {
+    try {
+      const results = await fetchInitialData(mediaTypeObj, null, null, categoryForMovie);
+      return results[0];
+    } catch (error) {
+      setError(true);
+    }
   };
 
   useEffect(() => {
-    fetchAndSetData(mediaProperties.movie, setMoviesHeroApiData, undefined, mediaProperties.movie.searchCategory[0]);
-    fetchAndSetData(mediaProperties.movie, setMoviesApiData, undefined, mediaProperties.movie.searchCategory[0]);
-    fetchAndSetData(mediaProperties.tv, undefined, setTvApiData);
+    async function fetchAll() {
+      const moviesHero = await fetchAndSetData(mediaProperties.movie, mediaProperties.movie.searchCategory[0]);
+      const movies = await fetchAndSetData(mediaProperties.movie, mediaProperties.movie.searchCategory[0]);
+      const tv = await fetchAndSetData(mediaProperties.tv);
+      setData({ moviesHero, tv, movies });
+      setIsLoading(false);
+    }
+
+    fetchAll();
   }, []);
 
-  return { moviesHeroApiData, moviesApiData, tvApiData };
+  return { data, isLoading, error };
 }
 
 export default useInitialMediaData;
