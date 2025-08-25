@@ -8,6 +8,7 @@ import { IMediaData, MediaTypeApi } from "@/Types";
 import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
 import { useDispatch } from "react-redux";
 import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
+import HeroControls from "./HeroControls";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
   const { isMobilePWA } = useContext(Context);
@@ -19,27 +20,15 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
 
   return (
     <div className="slider-test max-w-full relative px-2 mx-auto w-full h-full overflow-hidden">
+      <HeroControls sliderRef={sliderRef} side="left" />
+      <HeroControls sliderRef={sliderRef} side="right" />
+
       {hasTitle && (
         <span className="flex-row-between w-full px-3 sm:px-6 pb-2">
           <h1 className="text-lg lg:text-2xl font-medium">What's trending in {type}</h1>
         </span>
       )}
-      <i
-        className="bi bi-chevron-left slider-arrow left-5"
-        onClick={() => {
-          if (sliderRef && sliderRef.current) {
-            if ((sliderRef.current.children[0] as HTMLElement).offsetWidth) sliderRef.current.scrollLeft -= (sliderRef.current.children[0] as HTMLElement).offsetWidth + 10;
-          }
-        }}
-      ></i>
-      <i
-        className="bi bi-chevron-right slider-arrow right-5"
-        onClick={() => {
-          if (sliderRef && sliderRef.current) {
-            if ((sliderRef.current.children[0] as HTMLElement).offsetWidth) sliderRef.current.scrollLeft += (sliderRef.current.children[0] as HTMLElement).offsetWidth + 10;
-          }
-        }}
-      ></i>
+
       <div
         className="slider-test__content grid grid-flow-col auto-cols-[92%] md:auto-cols-[85%] lg:auto-cols-[100%] overflow-x-scroll scroll-smooth snap-x snap-mandatory gap-3 xl:gap-6 no-scrollbar"
         ref={sliderRef}
