@@ -5,7 +5,7 @@ import Search from "../Search";
 import SlideOver from "../common/SlideOver";
 import SearchSlideOver from "../common/SearchSlideOver";
 import UserMenuData from "../common/UserMenuData";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setOpenSearchDrawer, setOpenUserDrawer } from "@/store/slices/UISlice";
 
@@ -13,14 +13,25 @@ function NavDrawers() {
   const { isMobilePWA } = useContext(Context);
   const { showSearchBar, userMenuActive, openSearchDrawer, openUserDrawer } = useSelector((state: RootState) => state.ui);
 
+  const dispatch = useDispatch();
   return (
     <>
       {isMobilePWA ? (
         <>
-          <MenuDrawer isOpen={openSearchDrawer} setIsOpen={setOpenSearchDrawer}>
+          <MenuDrawer
+            isOpen={openSearchDrawer}
+            setIsOpen={(value: boolean) => {
+              dispatch(setOpenSearchDrawer(value));
+            }}
+          >
             <Search />
           </MenuDrawer>
-          <MenuDrawer isOpen={openUserDrawer} setIsOpen={setOpenUserDrawer}>
+          <MenuDrawer
+            isOpen={openUserDrawer}
+            setIsOpen={(value: boolean) => {
+              dispatch(setOpenUserDrawer(value));
+            }}
+          >
             <UserMenuData />
           </MenuDrawer>
         </>
