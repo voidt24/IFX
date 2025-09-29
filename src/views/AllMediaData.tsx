@@ -1,6 +1,6 @@
 "use client";
-import { IMediaData } from "@/Types/index";
-import { fetchInitialData } from "@/helpers/fetchInitialData";
+import { IMediaData, MediaTypeApi } from "@/Types/index";
+import { fetchFilteredData } from "@/helpers/fetchInitialData";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import AllMediaDataSkeleton from "../components/common/Skeletons/AllMediaDataSkeleton";
 import SignUpBanner from "../components/common/SignUpBanner";
@@ -20,7 +20,12 @@ export default function AllMediaData({
   searchCategory,
   title,
 }: {
-  mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string };
+  mediaTypeObj: {
+    mediaType: MediaTypeApi;
+    searchCategory: string[];
+    limit: number[];
+    route: string;
+  };
   searchCategory: string;
   title: string;
 }) {
@@ -45,14 +50,18 @@ export default function AllMediaData({
   useHideDrawers();
 
   const fetchAndSetData = (
-    mediaTypeObj: { mediaType: string; searchCategory: string[]; limit: number[]; route: string },
+    mediaTypeObj: {
+      mediaType: MediaTypeApi;
+      searchCategory: string[];
+      limit: number[];
+      route: string;
+    },
     pageActive: number,
     provider: string | null = null,
     genre: string | null = null,
     MethodThatSavesInState?: Dispatch<SetStateAction<IMediaData[]>>,
-    categoryForMovie?: string
   ) => {
-    fetchInitialData(mediaTypeObj, provider, genre, categoryForMovie, pageActive)
+    fetchFilteredData(mediaTypeObj, provider, genre, pageActive)
       .then((data: [IMediaData[], number]) => {
         const [results, total_pages] = data;
         if (MethodThatSavesInState) {
@@ -92,7 +101,7 @@ export default function AllMediaData({
 
   useEffect(() => {
     setDataIsLoading(true);
-    fetchAndSetData(mediaTypeObj, Number(page), platform, genre, setApiData, searchCategory);
+    fetchAndSetData(mediaTypeObj, Number(page), platform, genre, setApiData);
   }, [page, platform, genre]);
 
   if (initialDataError) {
