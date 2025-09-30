@@ -1,7 +1,7 @@
 import SelectDropdown from "@/components/common/SelectDropdown";
 import { selectFilterProviders } from "@/helpers/constants";
 import { useRouter, useSearchParams } from "next/navigation";
-import {  useEffect } from "react";
+import { useEffect } from "react";
 
 function PlatformSelect({ selected }: { selected: string | null }) {
   const router = useRouter();

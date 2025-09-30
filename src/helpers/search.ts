@@ -24,7 +24,7 @@ export const search = async (query: string, page: number) => {
       searchDataResults.total_pages = json.total_pages;
 
       results.forEach((result: IMediaData) => {
-        if ( result.media_type && result.media_type == "tv" || result.media_type =="movie") {
+        if ((result.media_type && result.media_type == "tv") || result.media_type == "movie") {
           const searchDataObj: IMediaData = {
             id: result.id,
             name: result.name ?? result.title,

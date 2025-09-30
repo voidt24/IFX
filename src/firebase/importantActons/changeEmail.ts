@@ -1,8 +1,8 @@
-import { updateEmail, verifyBeforeUpdateEmail } from "firebase/auth";
+import { verifyBeforeUpdateEmail } from "firebase/auth";
 import { auth } from "../firebase.config";
 import reauthenticateUser from "./reautheticateUser";
 
-export default async function changeEmail( userData: { email: string; password: string }, email: string) {
+export default async function changeEmail(userData: { email: string; password: string }, email: string) {
   if (auth.currentUser) {
     try {
       await reauthenticateUser(userData);

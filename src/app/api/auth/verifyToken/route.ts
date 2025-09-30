@@ -7,6 +7,6 @@ export const POST = async (req: Request) => {
     const token = await verifyToken(body);
     return NextResponse.json({ token });
   } catch (err) {
-    throw err
+    throw err;
   }
 };

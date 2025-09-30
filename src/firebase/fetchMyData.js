@@ -50,7 +50,7 @@ export const updateField = async (documentName, fieldName, newField) => {
     const document = doc(database, usersCollectionName, documentName);
     //reference of document 'documentName'(uid from activeUser) within 'users' colection
     const documentResult = await getDoc(document);
-    
+
     if (documentResult.exists()) {
       //if we found the uid within users collection
       await updateDoc(document, {

@@ -9,7 +9,7 @@ export async function saveToHistory(dataToSave: IhistoryMedia, id: number, userU
     const month = date.getMonth();
     const day = date.getDate();
     const dateId = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-   
+
     const userDocRef = doc(database, usersCollectionName, userUid);
     const userDocResults = await getDoc(userDocRef);
 
@@ -18,7 +18,7 @@ export async function saveToHistory(dataToSave: IhistoryMedia, id: number, userU
       const mediaDocRef = doc(database, usersCollectionName, userUid, "history", dateId, "content", id.toString());
 
       const historySnapshot = await getDoc(historyDocRef);
-      
+
       if (!historySnapshot.exists()) {
         await setDoc(historyDocRef, { createdAt: serverTimestamp() }, { merge: true });
         await setDoc(mediaDocRef, dataToSave, { merge: true });

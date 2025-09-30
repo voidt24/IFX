@@ -8,21 +8,23 @@ export const getTrailer = async (id: number | null, mediaType: MediaTypeApi) => 
   return json;
 };
 
-export async function handleTrailerClick(id:number | null, mediaType:MediaTypeApi) {
+export async function handleTrailerClick(id: number | null, mediaType: MediaTypeApi) {
+  const trailer = await getTrailer(id, mediaType);
 
-  const trailer = await getTrailer(id, mediaType)
-  
-  if(trailer && trailer.results && trailer.results.length < 1){
+  if (trailer && trailer.results && trailer.results.length < 1) {
     return null;
   }
 
-  const trailerKey =  trailer && trailer.results && trailer.results.find((element: unknown)=>{
-    if (typeof element === 'object' && element !== null && 'type' in element && 'name' in element && 'key' in element) {
-      if ((element as { type: string }).type === 'Trailer' ){
-        return (element as { key: string }).key
+  const trailerKey =
+    trailer &&
+    trailer.results &&
+    trailer.results.find((element: unknown) => {
+      if (typeof element === "object" && element !== null && "type" in element && "name" in element && "key" in element) {
+        if ((element as { type: string }).type === "Trailer") {
+          return (element as { key: string }).key;
+        }
       }
-    }
-  })
+    });
 
   return trailerKey ? trailerKey.key : null;
 }

@@ -1,6 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { Context } from "@/context/Context";
+import { useEffect, useState } from "react";
 import { MEDIA_URL_RESOLVER } from "@/helpers/api.config";
 import { MediaTypeApi } from "@/Types";
 import { useSelector } from "react-redux";

@@ -38,7 +38,7 @@ function PlayMedia({
 
   useEffect(() => {
     setMediaURL(
-      mediaType == "movie" ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType) : MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType, Number(season), Number(episode))
+      mediaType == "movie" ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType) : MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType, Number(season), Number(episode)),
     );
   }, [mediaType, option, currentId, season, episode, path]);
   return (
@@ -74,7 +74,7 @@ function PlayMedia({
                     setMediaURL(
                       mediaType == "movie"
                         ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, "movie")
-                        : MEDIA_URL_RESOLVER(optionResolver(option), currentId, "tv", Number(season), Number(episode))
+                        : MEDIA_URL_RESOLVER(optionResolver(option), currentId, "tv", Number(season), Number(episode)),
                     );
                   }
                 }}

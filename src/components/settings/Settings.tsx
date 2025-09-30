@@ -1,6 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
-import { Context } from "@/context/Context";
+import { useEffect, useState } from "react";
 import DeleteAccount from "@/firebase/importantActons/DeleteAccount";
 import { auth, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE } from "@/firebase/firebase.config";
 import changePassword from "@/firebase/importantActons/changePassword";

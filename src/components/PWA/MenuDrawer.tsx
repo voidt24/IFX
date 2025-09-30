@@ -11,7 +11,6 @@ function MenuDrawer({ isOpen, setIsOpen, children }: { isOpen: boolean; setIsOpe
           bgcolor: "black",
           background: "rgba(0, 0, 0, 0.659)",
           backdropFilter: "blur(16px)",
-          
           WebkitBackdropFilter: "blur(16px)",
           color: "white",
         },

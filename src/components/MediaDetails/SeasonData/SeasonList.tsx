@@ -112,7 +112,7 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                             </>
                           </div>
                         </button>
-                      )
+                      ),
                   )}
                 </div>
               </div>

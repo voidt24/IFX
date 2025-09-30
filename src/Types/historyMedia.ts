@@ -1,7 +1,7 @@
 import { MediaTypeApi } from "./mediaType";
 
 export interface IhistoryMedia {
-  id: number ;
+  id: number;
   title?: string | null;
   media_type: MediaTypeApi;
   poster_path?: string | null;

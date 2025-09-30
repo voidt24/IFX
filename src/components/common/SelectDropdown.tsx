@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function SelectDropdown({ type, selected, selectDefaultName, selectOptions }: Props) {
-
   const router = useRouter();
 
   const searchParams = useSearchParams();

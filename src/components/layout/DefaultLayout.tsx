@@ -1,5 +1,5 @@
 "use client";
-import React, { RefObject, useRef } from "react";
+import { useRef } from "react";
 import TopNavbar from "@/components/Navbar/TopNavbar";
 import BottomNavbar from "../Navbar/BottomNavbar";
 

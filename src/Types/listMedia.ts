@@ -1,5 +1,5 @@
 export interface IListMedia {
-  id: number ;
+  id: number;
   media_type: "tv" | "movie";
   poster_path: string;
   title: string;

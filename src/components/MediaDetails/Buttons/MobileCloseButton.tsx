@@ -1,5 +1,4 @@
 import { useRouter } from "next/navigation";
-import React from "react";
 
 function MobileCloseButton() {
   const router = useRouter();

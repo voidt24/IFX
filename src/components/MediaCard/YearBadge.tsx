@@ -1,5 +1,3 @@
-import React from "react";
-
 function YearBadge({ release_date, first_air_date }: { release_date: string | undefined; first_air_date: string | undefined }) {
   const isMovie = release_date && !first_air_date;
   const isMovieNotReleasedYet = release_date && new Date(release_date).getTime() > Date.now();

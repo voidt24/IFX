@@ -33,11 +33,12 @@ export default function Player({ openPlayer, setOpenPlayer, mediaURL }: { openPl
         onClick={() => {
           setOpenPlayer(false);
         }}
+        title="close-trailer-btn"
       >
         <i className="bi bi-x-lg"></i>
       </button>
 
-      <button className="trailer-btn min-btn" onClick={handleMin}>
+      <button className="trailer-btn min-btn" onClick={handleMin} title="minimize-trailer-btn">
         <i className={minBtnClass}></i>
       </button>
 

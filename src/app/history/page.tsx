@@ -214,7 +214,7 @@ function History() {
                               className=" w-full hover:bg-slate-500/20 py-3 text-red-600 "
                               onClick={() => {
                                 if (firebaseActiveUser && firebaseActiveUser.uid) {
-                                  setElementsToDelete([data.media_type == "tv" ? data.episodeId?.toString() ?? "" : data.id?.toString() ?? ""]);
+                                  setElementsToDelete([data.media_type == "tv" ? (data.episodeId?.toString() ?? "") : (data.id?.toString() ?? "")]);
                                   setConfirmDialog(true);
                                   setActiveIndex(undefined);
                                 }

@@ -1,5 +1,5 @@
 import { RootState } from "@/store";
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCheckedMedia } from "@/store/slices/listsManagementSlice";
 import { Checkbox } from "@mui/material";

@@ -1,5 +1,5 @@
 import { ImediaDetailsData } from "@/Types/mediaDetails";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 function Overview({ data }: { data: ImediaDetailsData | null }) {
   const [isOpen, setIsOpen] = useState(false);

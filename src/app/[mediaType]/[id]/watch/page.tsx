@@ -9,7 +9,6 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  
   // queryParams injected from middleware to headers
   const headersList = headers();
   const season = headersList.get("x-season") || "N/A";

@@ -91,7 +91,7 @@ function DisplayInfo({
                 )}
               </div>
               <div>
-                <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.route ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
+                <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.mediaType ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
               </div>
               <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0].name}</p>
             </div>

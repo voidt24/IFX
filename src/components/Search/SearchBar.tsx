@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useEffect, useState } from "react";
 import { search } from "../../helpers/search";
 import Input from "../common/Input";

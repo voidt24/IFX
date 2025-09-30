@@ -1,5 +1,5 @@
-declare module 'react-headroom' {
-  import * as React from 'react';
+declare module "react-headroom" {
+  import * as React from "react";
 
   interface HeadroomProps extends React.HTMLAttributes<HTMLElement> {
     // Tiempo en ms que tarda en hacer el "pin" (scroll up) para mostrar la cabecera (default: 200)

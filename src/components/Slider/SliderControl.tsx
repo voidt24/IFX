@@ -1,5 +1,5 @@
 import { moveSlider } from "@/helpers/moveSlider";
-import React, { RefObject } from "react";
+import { RefObject } from "react";
 
 function SliderControl({ side, sliderRef, expectingCards, XPosition }: { side: "right" | "left"; sliderRef: RefObject<HTMLDivElement>; expectingCards: boolean; XPosition?: string }) {
   return (

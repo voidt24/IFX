@@ -56,7 +56,7 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
           runtime: runtime ? getRunTime(runtime) : "",
           seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
           seasonsArray: seasons,
-        })
+        }),
       );
     }
 

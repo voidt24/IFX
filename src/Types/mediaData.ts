@@ -2,7 +2,7 @@ import { MediaTypeApi } from "./mediaType";
 
 export interface IMediaData {
   backdrop_path?: string | undefined;
-  id: number ;
+  id: number;
   title?: string | undefined; //show 1st for movies
   original_title?: string | undefined;
   name?: string | undefined; //show 1st for TV
