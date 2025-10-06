@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
 import { useRouter, useSearchParams } from "next/navigation";
-const defaultListButtons = ["favorites", "watchlist"];
+export const defaultListButtons = ["favorites", "watchlist", "watched"];
 
 function SavedListOptions() {
   const { edit } = useSelector((state: RootState) => state.listsManagement);
@@ -17,23 +17,6 @@ function SavedListOptions() {
   const list = searchParams.get("selected");
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (buttonRef.current && buttonRef.current.classList.contains("active")) {
-      buttonRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "start",
-      });
-    }
-    if (buttonRef2.current && buttonRef2.current.classList.contains("active")) {
-      buttonRef2.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "start",
-      });
-    }
-  }, [buttonRef.current, buttonRef2.current]);
-
   return (
     <Slider>
       {defaultListButtons &&
@@ -42,9 +25,11 @@ function SavedListOptions() {
             <button
               key={index}
               type="button"
-              ref={buttonRef2}
-              className={`hover:scale-100 ${list === name ? " btn-primary " : "btn-secondary !bg-white/15 !text-content-primary"} `}
+              className={`rounded-full ${list == name ? "bg-brand-primary py-1 px-4" : ""}`}
               onClick={(evt) => {
+                params.set("selected", name);
+                router.replace(`?${params.toString()}`);
+
                 if (edit && list != name) {
                   dispatch(setEdit(false));
                   const card = document.querySelectorAll(".card");
@@ -60,8 +45,6 @@ function SavedListOptions() {
                   });
                   dispatch(setCheckedMedia([]));
                 }
-                params.set("selected", name);
-                router.replace(`?${params.toString()}`);
               }}
             >
               {name}

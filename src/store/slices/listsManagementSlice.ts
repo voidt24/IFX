@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ListsState {
   addedToFavs: boolean;
   addedToWatchList: boolean;
+  addedToWatched: boolean;
   listActive: string;
   checkedMedia: (number | string)[];
   edit: boolean;
@@ -12,6 +13,7 @@ interface ListsState {
 export const initialState: ListsState = {
   addedToFavs: false,
   addedToWatchList: false,
+  addedToWatched: false,
   listActive: "favorites",
   checkedMedia: [],
   edit: false,
@@ -26,6 +28,9 @@ export const listsManagementSlice = createSlice({
     },
     setAddedToWatchList: (state, action: PayloadAction<boolean>) => {
       state.addedToWatchList = action.payload;
+    },
+    setAddedToWatched: (state, action: PayloadAction<boolean>) => {
+      state.addedToWatched = action.payload;
     },
     setListActive: (state, action: PayloadAction<string>) => {
       state.listActive = action.payload;
@@ -42,5 +47,5 @@ export const listsManagementSlice = createSlice({
   },
 });
 
-export const { setAddedToFavs, setAddedToWatchList, setListActive, setCheckedMedia, setEdit, setListChanged } = listsManagementSlice.actions;
+export const { setAddedToFavs, setAddedToWatchList, setAddedToWatched, setListActive, setCheckedMedia, setEdit, setListChanged } = listsManagementSlice.actions;
 export default listsManagementSlice.reducer;

@@ -18,7 +18,7 @@ import PlayOrTrailerButton from "./PlayOrTrailerButton";
 import MobileCloseButton from "./Buttons/MobileCloseButton";
 import { setSeasonModal } from "@/store/slices/UISlice";
 
-export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist }: { mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean }) => {
+export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatched }: { mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean; loadingWatched: boolean }) => {
   const { seasonModal, containerMargin } = useSelector((state: RootState) => state.ui);
 
   const params = useParams();
@@ -85,7 +85,14 @@ export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist }: { mediaId:
               <span className="max-lg:hidden">
                 <PlayOrTrailerButton mediaId={mediaId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
               </span>
-              <ListsButtonGroup state={mediaDetailsData} mediaId={mediaId} mediaType={getApiMediaType(currentMediaType)} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+              <ListsButtonGroup
+                state={mediaDetailsData}
+                mediaId={mediaId}
+                mediaType={getApiMediaType(currentMediaType)}
+                loadingFavs={loadingFavs}
+                loadingWatchlist={loadingWatchlist}
+                loadingWatched={loadingWatched}
+              />
             </div>
           </div>
         </div>

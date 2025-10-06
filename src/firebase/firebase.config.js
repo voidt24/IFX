@@ -26,4 +26,5 @@ export const usersCollectionName = "users";
 export const DBLists = {
   favs: "favorites",
   watchs: "watchlist",
+  watched: "watched",
 };

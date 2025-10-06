@@ -14,7 +14,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setSeasonModal } from "@/store/slices/UISlice";
 
-export const MediaInfoPWA = ({ mediaType, mediaId, loadingFavs, loadingWatchlist }: { mediaType: MediaTypeApi; mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean }) => {
+export const MediaInfoPWA = ({
+  mediaType,
+  mediaId,
+  loadingFavs,
+  loadingWatchlist,
+  loadingWatched,
+}: {
+  mediaType: MediaTypeApi;
+  mediaId: number;
+  loadingFavs: boolean;
+  loadingWatchlist: boolean;
+  loadingWatched: boolean;
+}) => {
   const { seasonModal } = useSelector((state: RootState) => state.ui);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
@@ -54,7 +66,7 @@ export const MediaInfoPWA = ({ mediaType, mediaId, loadingFavs, loadingWatchlist
             <Overview data={mediaDetailsData} />
 
             <div className="flex-row-center gap-6 w-full">
-              <ListsButtonGroup state={mediaDetailsData} mediaId={mediaId} mediaType={mediaType} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+              <ListsButtonGroup state={mediaDetailsData} mediaId={mediaId} mediaType={mediaType} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
             </div>
           </div>
         </div>

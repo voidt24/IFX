@@ -9,7 +9,7 @@ import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { handleTrailerClick } from "@/helpers/getTrailer";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
-import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
+import { setAddedToFavs, setAddedToWatchList, setAddedToWatched } from "@/store/slices/listsManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { RootState } from "@/store";
@@ -32,6 +32,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const [reviews, setReviews] = useState([]);
   const [loadingFavs, setLoadingFavs] = useState(true);
   const [loadingWatchlist, setLoadingWatchlist] = useState(true);
+  const [loadingWatched, setLoadingWatched] = useState(true);
   const [loadingAllData, setLoadingAllData] = useState(true);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
@@ -85,18 +86,22 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
         try {
           const isInFavs = await getFromDB(auth.currentUser.uid, "favorites", mediaId);
           const isInWatchlist = await getFromDB(auth.currentUser.uid, "watchlist", mediaId);
+          const isInWatched = await getFromDB(auth.currentUser.uid, "watched", mediaId);
 
           dispatch(setAddedToFavs(Boolean(isInFavs)));
           dispatch(setAddedToWatchList(Boolean(isInWatchlist)));
+          dispatch(setAddedToWatched(Boolean(isInWatched)));
         } catch (er) {
           setMessage({ message: "Error finding if this element was saved", severity: "error", open: true });
         } finally {
           setLoadingFavs(false);
           setLoadingWatchlist(false);
+          setLoadingWatched(false);
         }
       } else {
         setLoadingFavs(false);
         setLoadingWatchlist(false);
+        setLoadingWatched(false);
       }
     }
 
@@ -106,9 +111,9 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   return (
     <div className="media-details bg-[#000005] max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-4 w-full relative">
       {isMobilePWA ? (
-        <MediaInfoPWA mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+        <MediaInfoPWA mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
       ) : (
-        <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} />
+        <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
       )}
 
       <div className="w-full px-[0.8rem] lg:max-w-[85%] xxl:max-w-[70%] 4k:max-w-[60%] relative  mx-auto  mt-10">

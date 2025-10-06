@@ -14,6 +14,7 @@ import { database, usersCollectionName } from "@/firebase/firebase.config";
 
 import { collection, onSnapshot } from "firebase/firestore";
 import MediaGrid from "./MediaGrid/MediaGrid";
+import { defaultListButtons } from "@/features/contentFilter/savedListsSelection";
 
 export const ListsResults = () => {
   const [currentListData, setCurrentListData] = useState<IMediaData[]>([]);
@@ -72,7 +73,7 @@ export const ListsResults = () => {
   }, [firebaseActiveUser?.uid, list, listChanged]);
 
   useEffect(() => {
-    if (!list || !["favorites", "watchlist"].includes(list)) {
+    if (!list || !defaultListButtons.includes(list)) {
       params.set("selected", "favorites");
       router.replace(`?${params.toString()}`);
     }

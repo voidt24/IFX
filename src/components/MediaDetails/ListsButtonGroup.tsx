@@ -6,7 +6,7 @@ import { handle_favs_watchlists } from "@/firebase/handle_favs_watchlists";
 import { MediaTypeApi } from "@/Types/mediaType";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setAddedToFavs, setAddedToWatchList } from "@/store/slices/listsManagementSlice";
+import { setAddedToFavs, setAddedToWatchList, setAddedToWatched } from "@/store/slices/listsManagementSlice";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { setAuthModalActive } from "@/store/slices/UISlice";
 
@@ -16,27 +16,30 @@ function ListsButtonGroup({
   mediaType,
   loadingFavs,
   loadingWatchlist,
+  loadingWatched,
 }: {
   state: ImediaDetailsData | null;
   mediaId: number;
   mediaType: MediaTypeApi;
   loadingFavs: boolean;
   loadingWatchlist: boolean;
+  loadingWatched: boolean;
 }) {
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
   const mediaTypeRef = useRef<HTMLDivElement>(null);
   const mediaTypeRef2 = useRef<HTMLDivElement>(null);
+  const mediaTypeRef3 = useRef<HTMLDivElement>(null);
 
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser, userLogged } = auth;
 
-  const { addedToFavs, addedToWatchList } = useSelector((state: RootState) => state.listsManagement);
+  const { addedToFavs, addedToWatchList, addedToWatched } = useSelector((state: RootState) => state.listsManagement);
   const dispatch = useDispatch();
 
   const handleLists = async (list: string) => {
     if (userLogged) {
-      const buttonToChange = list == DBLists.favs ? setAddedToFavs : setAddedToWatchList;
-      const stateOfButtonToChange = buttonToChange == setAddedToFavs ? addedToFavs : addedToWatchList;
+      const buttonToChange = list == DBLists.favs ? setAddedToFavs : list == DBLists.watchs ? setAddedToWatchList : setAddedToWatched;
+      const stateOfButtonToChange = buttonToChange == setAddedToFavs ? addedToFavs : buttonToChange == setAddedToWatchList ? addedToWatchList : addedToWatched;
       try {
         dispatch(buttonToChange(Boolean(!stateOfButtonToChange)));
         await handle_favs_watchlists(firebaseActiveUser?.uid, mediaTypeRef, state, list, mediaId);
@@ -61,6 +64,11 @@ function ListsButtonGroup({
         <Loader />
       ) : (
         <AddToListButton type="Watchlist" wasAdded={addedToWatchList} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef2} onClick={() => handleLists(DBLists.watchs)} />
+      )}
+      {loadingWatchlist ? (
+        <Loader />
+      ) : (
+        <AddToListButton type="Watched" wasAdded={addedToWatched} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef3} onClick={() => handleLists(DBLists.watched)} />
       )}
     </>
   );

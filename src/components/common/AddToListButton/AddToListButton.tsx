@@ -18,7 +18,19 @@ function AddToListButton({
   onClick: () => void;
 }) {
   const iconClass =
-    type === "Watchlist" ? (wasAdded ? "bi bi-eye-slash text-brand-primary" : "bi bi-eye") : wasAdded && type === "Favorites" ? "bi bi-check2-all text-brand-primary" : "bi bi-check-lg";
+    type === "Watchlist"
+      ? wasAdded
+        ? "bi bi-eye-slash text-brand-primary"
+        : "bi bi-eye"
+      : type === "Watched"
+        ? wasAdded
+          ? "bi bi-check2-all text-brand-primary"
+          : "bi bi-check-lg"
+        : type === "Favorites"
+          ? wasAdded
+            ? "bi bi-heart-fill text-brand-primary"
+            : "bi bi-heart"
+          : "";
 
   return (
     <Tooltip title={wasAdded ? `Delete from ${type}` : `Add to ${type}`} placement="bottom">
