@@ -60,7 +60,12 @@ const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked 
           <MediaCard {...mediaCardProps} />
         </button>
       ) : (
-        <Link href={`/${isMovieOrTV}/${id}`}>
+        <Link
+          href={`/${isMovieOrTV}/${id}`}
+          onClick={() => {
+            sessionStorage.setItem("navigatingFromApp", "1");
+          }}
+        >
           <MediaCard {...mediaCardProps} />
         </Link>
       )}
