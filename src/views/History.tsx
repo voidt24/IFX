@@ -1,43 +1,23 @@
 "use client";
-import { RootState } from "@/store";
+import { useEffect, useState } from "react";
 import { IhistoryMedia } from "@/Types";
-import { useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
+import { CircularProgress } from "@mui/material";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 import { database, usersCollectionName } from "@/firebase/firebase.config";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
-import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
-import { Context } from "@/context/Context";
-import Link from "next/link";
-import ConfirmDeleteModal from "../components/common/ConfirmDeleteModal";
-import ToTop from "../components/common/ToTop/ToTop";
-import { CircularProgress } from "@mui/material";
-import Notification from "../components/common/Notification";
-
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import useHideDrawers from "@/Hooks/useHideDrawers";
+import ToTop from "../components/common/ToTop/ToTop";
 import Wrapper from "../components/common/Wrapper/Wrapper";
+import HistoryCard from "@/components/History/HistoryCard";
 
 function History() {
   useVerifyToken();
   useHideDrawers();
   const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
   const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
-  const { isMobilePWA } = useContext(Context);
-
-  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
-  const [activeHistoryEntry, setActiveHistoryEntry] = useState<string | null>(null);
-  const [parentActiveIndex, setParentActiveIndex] = useState<number | undefined>(undefined);
-  const [hideElement, setHideElement] = useState<number | undefined>();
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
-  const [confirmDialog, setConfirmDialog] = useState(false);
-  const [elementsToDelete, setElementsToDelete] = useState<(number | string)[]>([]);
-  const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
-    message: "",
-    severity: "info",
-    open: false,
-  });
 
   const toggleItem = (id: number) => {
     setExpandedItems((element) => ({
@@ -143,117 +123,21 @@ function History() {
                     <i className={`bi bi-caret-${expandedItems[index] ? "down" : "up"}  leading-none`}></i>
                   </button>
                 </header>
+
                 <div
                   className={`${
                     expandedItems[index] ? " max-h-0 opacity-0 p-0" : " opacity-1 p-2"
                   } transition-all duration-200 flex items-center  justify-center gap-6 h-auto flex-col rounded-lg sm:w-[85%] lg:w-[80%] m-auto overflow-auto`}
                 >
                   {result[1].map((data, childIndex) => (
-                    <div
-                      className={`  hover:scale-105 hover:bg-slate-500/10 transition duration-200 ease-in-out relative flex-col-center lg:flex-row w-[95%] lg:w-[95%] gap-4 rounded-lg border border-white/10 p-4`}
-                      key={`${result[0]}-${data.id}-${data.season}-${data.episode}`}
-                    >
-                      <div className="relative  rounded-md md:w-[80%] lg:w-[140%] xl:w-[55%] 2xl:w-[45%] ">
-                        <img className=" block w-full rounded-md " src={data.media_type === "movie" ? `${data.backdrop_path}` : `${data.episode_image}`} alt="" />
-
-                        <span className="absolute left-2 bottom-2 text-[65%] xl:text-[75%] rounded-full px-3 lg:py-1 border bg-surface-modal border-zinc-700 text-zinc-300 ">{data.media_type}</span>
-                      </div>
-
-                      <div className="w-full p-4 text-center sm:w-[75%]  lg:w-[95%] xl:w-[80%] 2xl:w-[50%] 4k:w-[40%] m-auto flex-col-center gap-2">
-                        {isMobilePWA ? (
-                          <button
-                            onClick={() => {
-                              dispatch(setMediaIdPWA(data.id));
-                              dispatch(setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows"));
-                              dispatch(setOpenMediaDetailsSheet(true));
-                            }}
-                          >
-                            {data.title}
-                          </button>
-                        ) : (
-                          <Link href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`} className="text-xl font-semibold hover:underline">
-                            {data.title}
-                          </Link>
-                        )}
-                        {data.media_type === "tv" && (
-                          <span className="text-[85%] text-content-secondary ">
-                            <span>Season: {data.season}</span>
-                            <span> - </span>
-                            <span>Episode: {data.episode}</span>
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="options-menu absolute right-2 bottom-2 flex-row-between text-center self-end">
-                        <button
-                          className=" rounded-full text-zinc-400 hover:text-zinc-100 hover:bg-slate-500/20 bg-red px-4"
-                          onClick={() => {
-                            if (parentActiveIndex === index && activeIndex === childIndex) {
-                              setParentActiveIndex(undefined);
-                              setActiveIndex(undefined);
-                              return;
-                            }
-                            setParentActiveIndex(index);
-                            setActiveIndex(childIndex);
-                            setActiveHistoryEntry(result[0]);
-                          }}
-                          title="options"
-                        >
-                          <i className="bi bi-three-dots lg:text-[120%]"></i>
-                        </button>
-
-                        <div
-                          className={`${
-                            parentActiveIndex === index && activeIndex === childIndex ? `flex` : "hidden"
-                          } absolute right-6 rounded-lg bottom-7 flex-col items-center justify-between gap-2 w-36 bg-[#0f1118] border border-zinc-700`}
-                        >
-                          <Link
-                            className="w-full hover:bg-slate-500/20 py-3 "
-                            href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/watch?name=${encodeURIComponent(data.title ?? "")}${
-                              data.media_type == "tv" ? `&season=${data.season}&episode=${data.episode_number}` : ``
-                            } `}
-                            onClick={() => {
-                              dispatch(setMediaIdPWA(data.id ?? 0));
-                            }}
-                          >
-                            <i className="bi bi-eye"></i> Watch again
-                          </Link>
-                          <button
-                            className=" w-full hover:bg-slate-500/20 py-3 text-red-600 "
-                            onClick={() => {
-                              if (firebaseActiveUser && firebaseActiveUser.uid) {
-                                setElementsToDelete([data.media_type == "tv" ? (data.episodeId?.toString() ?? "") : (data.id?.toString() ?? "")]);
-                                setConfirmDialog(true);
-                                setActiveIndex(undefined);
-                              }
-                            }}
-                          >
-                            <i className="bi bi-trash"></i> Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <HistoryCard key={index} result={result} data={data} index={index} childIndex={childIndex} />
                   ))}
                 </div>
               </div>
             ))}
       </div>
-      {confirmDialog && (
-        <ConfirmDeleteModal
-          confirmDialog={confirmDialog}
-          setConfirmDialog={setConfirmDialog}
-          listName={[`history`, activeHistoryEntry ?? "", "content"]}
-          elementsToDelete={elementsToDelete}
-          extraActions={() => {
-            setElementsToDelete([]);
-          }}
-          displayMessage={"history"}
-          setMessage={setMessage}
-        />
-      )}
 
       {currentListData && currentListData.length > 5 && <ToTop />}
-      <Notification message={message} setMessage={setMessage} />
     </Wrapper>
   );
 }
