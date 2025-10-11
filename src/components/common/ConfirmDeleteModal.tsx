@@ -14,7 +14,7 @@ interface Props {
   extraActions?: () => void | null;
   elementsToDelete: (number | string)[];
   displayMessage?: string;
-  setMessage: Dispatch<SetStateAction<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>>;
+  setMessage: (message: { message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }) => void;
 }
 function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, displayMessage, setMessage }: Props) {
   const auth = useSelector((state: RootState) => state.auth);
