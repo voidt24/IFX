@@ -79,7 +79,7 @@ function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraAc
         <div className="delete-options flex gap-4">
           <button
             type="submit"
-            className="w-full btn-secondary"
+            className="w-full border border-gray-600 rounded-full "
             onClick={() => {
               setConfirmDialog(false);
             }}
@@ -90,13 +90,13 @@ function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraAc
 
           <button
             type="submit"
-            className="w-full btn-primary"
+            className="w-full btn-primary !bg-brand-primary !text-white"
             onClick={() => {
               onSubmit();
             }}
             autoFocus
           >
-            Confirm
+            Delete
           </button>
         </div>
       </div>
