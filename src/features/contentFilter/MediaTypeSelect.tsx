@@ -3,25 +3,11 @@ import { selectFilterCategories } from "@/helpers/constants";
 import { RootState } from "@/store";
 import { IMediaData } from "@/Types";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
 
-function MediaTypeSelect({
-  originalListData,
-  setOriginalListData,
-  currentListData,
-  setCurrentListData,
-  listSelectedChange,
-  setLoading,
-}: {
-  originalListData: IMediaData[];
-  setOriginalListData: Dispatch<SetStateAction<IMediaData[]>>;
-  currentListData: IMediaData[];
-  setCurrentListData: Dispatch<SetStateAction<IMediaData[]>>;
-  listSelectedChange: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}) {
+function MediaTypeSelect({ originalListData, setCurrentListData }: { originalListData: IMediaData[]; setCurrentListData: (state: IMediaData[]) => void }) {
   const dispatch = useDispatch();
   const { edit } = useSelector((state: RootState) => state.listsManagement);
 
@@ -30,13 +16,6 @@ function MediaTypeSelect({
   const params = new URLSearchParams(searchParams);
 
   const media = searchParams.get("media");
-
-  useEffect(() => {
-    if (currentListData) {
-      setOriginalListData(currentListData);
-    }
-    setLoading(false);
-  }, [listSelectedChange]);
 
   useEffect(() => {
     if (!media || !["Filter by", "TV Shows", "Movies", "All"].includes(media)) {
@@ -57,8 +36,6 @@ function MediaTypeSelect({
       case selectFilterCategories[1]:
         setCurrentListData(originalListData.filter((obj) => obj.media_type === "tv"));
         break;
-      default:
-        setCurrentListData(originalListData);
     }
 
     if (edit) {

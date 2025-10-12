@@ -5,7 +5,7 @@ import { Sheet } from "react-modal-sheet";
 import useIsMobile from "@/Hooks/useIsMobile";
 import { RootState } from "@/store";
 import { setListChanged } from "@/store/slices/listsManagementSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   confirmDialog: boolean;
@@ -17,17 +17,17 @@ interface Props {
   setMessage: (message: { message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }) => void;
 }
 function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, displayMessage, setMessage }: Props) {
-  const auth = useSelector((state: RootState) => state.auth);
-  const { firebaseActiveUser } = auth;
+  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
   const { listChanged } = useSelector((state: RootState) => state.listsManagement);
 
   const isMobile = useIsMobile();
+  const dispatch = useDispatch();
   async function onSubmit() {
     try {
       await deleteFromFireStore(firebaseActiveUser, listName, elementsToDelete);
       extraActions && extraActions();
       setMessage({ message: "List updated!", severity: "success", open: true });
-      setListChanged(!listChanged);
+      dispatch(setListChanged(!listChanged));
     } catch (err) {
       setMessage({ message: "Error deleting data, try again later", severity: "error", open: true });
     } finally {
