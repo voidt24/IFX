@@ -24,6 +24,7 @@ import { Reviews } from "@/components/MediaDetails/Reviews/Reviews";
 import Notification from "@/components/common/Notification";
 import NotFound from "@/components/common/NotFound";
 import useHideDrawers from "@/Hooks/useHideDrawers";
+import MediaDetailsSkeleton from "@/components/common/Skeletons/MediaDetailsSkeleton";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
   const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);
@@ -110,44 +111,50 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
   return (
     <div className="media-details bg-[#000005] max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-4 w-full relative">
-      {isMobilePWA ? (
-        <MediaInfoPWA mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
+      {mediaDetailsData === null ? (
+        <MediaDetailsSkeleton />
       ) : (
-        <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
-      )}
+        <>
+          {isMobilePWA ? (
+            <MediaInfoPWA mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
+          ) : (
+            <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
+          )}
 
-      <div className="w-full px-[0.8rem] lg:max-w-[85%] xxl:max-w-[70%] 4k:max-w-[60%] relative  mx-auto  mt-10">
-        <Tabs>
-          <Tab title="Cast">
-            <Cast cast={cast} />
-          </Tab>
-          <Tab title="Trailer">
-            <div
-              className="trailer-preview border border-content-third rounded-lg overflow-hidden bg-cover bg-center aspect-video bg-no-repeat w-full md:w-[40%] mx-auto relative"
-              style={{ backgroundImage: `url(${mediaDetailsData?.bigHeroBackground})` }}
-            >
-              <div className="overlay-base bg-black/70 flex-col-center ">
-                <button
-                  className="px-3 py-2 bg-brand-primary/35 backdrop-blur-lg rounded-full hover:scale-125 transition-all duration-200"
-                  onClick={async () => {
-                    const trailer = await handleTrailerClick(mediaId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType));
-                    setTrailerKey(trailer);
-                    setOpenTrailer(true);
-                  }}
-                  title="trailer-button"
+          <div className="w-full px-[0.8rem] lg:max-w-[85%] xxl:max-w-[70%] 4k:max-w-[60%] relative  mx-auto  mt-10">
+            <Tabs>
+              <Tab title="Cast">
+                <Cast cast={cast} />
+              </Tab>
+              <Tab title="Trailer">
+                <div
+                  className="trailer-preview border border-content-third rounded-lg overflow-hidden bg-cover bg-center aspect-video bg-no-repeat w-full md:w-[40%] mx-auto relative"
+                  style={{ backgroundImage: `url(${mediaDetailsData?.bigHeroBackground})` }}
                 >
-                  <i className="bi bi-play text-2xl"></i>
-                </button>
-              </div>
-            </div>
-          </Tab>
-          <Tab title={`Reviews (${reviews.length})`}>
-            <Reviews reviews={reviews} />
-          </Tab>
-        </Tabs>
-      </div>
+                  <div className="overlay-base bg-black/70 flex-col-center ">
+                    <button
+                      className="px-3 py-2 bg-brand-primary/35 backdrop-blur-lg rounded-full hover:scale-125 transition-all duration-200"
+                      onClick={async () => {
+                        const trailer = await handleTrailerClick(mediaId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType));
+                        setTrailerKey(trailer);
+                        setOpenTrailer(true);
+                      }}
+                      title="trailer-button"
+                    >
+                      <i className="bi bi-play text-2xl"></i>
+                    </button>
+                  </div>
+                </div>
+              </Tab>
+              <Tab title={`Reviews (${reviews.length})`}>
+                <Reviews reviews={reviews} />
+              </Tab>
+            </Tabs>
+          </div>
 
-      <Notification message={message} setMessage={setMessage} />
+          <Notification message={message} setMessage={setMessage} />
+        </>
+      )}
     </div>
   );
 };
