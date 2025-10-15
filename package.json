@@ -17,10 +17,15 @@
     "@emotion/styled": "^11.13.0",
     "@mui/base": "^5.0.0-beta.58",
     "@mui/material": "^6.1.1",
+    "@radix-ui/react-slot": "^1.2.3",
     "@reduxjs/toolkit": "^2.8.2",
     "bootstrap-icons": "^1.11.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
     "firebase": "^10.13.2",
     "firebase-admin": "^13.0.1",
+    "lucide-react": "^0.545.0",
     "motion": "^12.18.1",
     "next": "14.2.13",
     "react": "^18",
@@ -29,7 +34,9 @@
     "react-modal-sheet": "^4.4.0",
     "react-redux": "^9.2.0",
     "react-remove-scroll": "^2.7.1",
-    "sass": "^1.79.4"
+    "sass": "^1.79.4",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@babel/plugin-transform-private-methods": "^7.25.9",

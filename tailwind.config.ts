@@ -1,49 +1,91 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 const config: Config = {
-  content: ["./src/pages/**/*.{js,ts,jsx,tsx,mdx}", "./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}", "./src/layout/**/*.{js,ts,jsx,tsx,mdx}","./src/views/**/*.{js,ts,jsx,tsx,mdx}"],
+  darkMode: ["class"],
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/layout/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/views/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
     extend: {
       colors: {
-        brand:{
+        brand: {
           primary: "#0d75ff",
           light: "#5688F2",
         },
-
-        content:{
-          primary:"#fff",
-          secondary:"#d4d4d8",
-          third:"#a3a3a3",
-          muted:"#686767",
+        content: {
+          primary: "#fff",
+          secondary: "#d4d4d8",
+          third: "#a3a3a3",
+          muted: "#686767",
         },
-
-        surface:{
-          modal:"#0f1118cb",
-          hover:"#181b26d9"
-        }
+        surface: {
+          modal: "#0f1118cb",
+          hover: "#181b26d9",
+        },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
+        },
       },
-
-      spacing:{
-      }
-    
+      spacing: {},
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
     },
     screens: {
-      // => @media (min-width: 480px) { ... }
       xs: "480px",
-      // => @media (min-width: 640px) { ... }
       sm: "640px",
-      // => @media (min-width: 768px) { ... }
       md: "768px",
-      // => @media (min-width: 1024px) { ... }
       lg: "1024px",
-      // => @media (min-width: 1280px) { ... }
       xl: "1280px",
-      // => @media (min-width: 1536px) { ... }
       "2xl": "1536px",
-      // => @media (min-width: 1536px) { ... }
       "4k": "2159px",
     },
   },
-  plugins: [],
+  plugins: [tailwindcssAnimate],
 };
 export default config;
