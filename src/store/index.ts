@@ -5,6 +5,7 @@ import searchReducer from "./slices/searchSlice";
 import mediaDetailsReducer from "./slices/mediaDetailsSlice";
 import paginationReducer from "./slices/paginationSlice";
 import UIReducer from "./slices/UISlice";
+import historyReducer from "./slices/historySlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     mediaDetails: mediaDetailsReducer,
     pagination: paginationReducer,
     ui: UIReducer,
+    history: historyReducer,
   },
 });
 
