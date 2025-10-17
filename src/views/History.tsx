@@ -10,7 +10,7 @@ import useVerifyToken from "@/Hooks/useVerifyToken";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 import ToTop from "../components/common/ToTop/ToTop";
 import Wrapper from "../components/common/Wrapper/Wrapper";
-import HistoryCard from "@/components/History/HistoryCard";
+import HistoryCard from "@/components/History/HistoryCard/HistoryCard";
 
 function History() {
   useVerifyToken();
