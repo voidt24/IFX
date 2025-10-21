@@ -22,7 +22,7 @@ function EditCheckbox({ id }: { id: number }) {
 
   return (
     edit && (
-      <div id="checkbox" className="absolute w-full h-full z-[3] top-0 right-0">
+      <div id="checkbox" className="absolute w-full h-full z-[3] top-0 right-0 bg-black/40">
         <Checkbox
           onChange={(evt) => {
             handleChange(evt);
@@ -34,13 +34,17 @@ function EditCheckbox({ id }: { id: number }) {
             width: "100%",
             bgcolor: "#00000000",
             borderRadius: "8px",
-            color: "black",
+            color: "white",
             "&:hover": {
-              bgcolor: "#00000040",
+              border: {
+                sm: "2px solid #0d75ff",
+              },
             },
             "&.Mui-checked": {
               color: "white",
-              bgcolor: "#000000ad",
+
+              bgcolor: "#00000090",
+              border: "2px solid #0d75ff",
             },
           }}
         />

@@ -20,6 +20,7 @@ import Wrapper from "@/components/common/Wrapper/Wrapper";
 import SavedListOptions from "@/features/contentFilter/savedListsSelection";
 import { Suspense } from "react";
 import useHideDrawers from "@/Hooks/useHideDrawers";
+import DeletionToolbar from "@/components/Lists/DeletionToolbar";
 
 export default function Lists() {
   useVerifyToken();
@@ -34,7 +35,7 @@ export default function Lists() {
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
   const dispatch = useDispatch();
-  const { checkedMedia } = useSelector((state: RootState) => state.listsManagement);
+  const { checkedMedia, edit } = useSelector((state: RootState) => state.listsManagement);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -129,7 +130,7 @@ export default function Lists() {
           <MediaTypeSelect originalListData={originalListData} setCurrentListData={setCurrentListData} />
           {currentListData && currentListData.length > 0 && (
             <div className="my-4">
-              <ListOptionsBar setConfirmDialog={setConfirmDialog} />
+              <ListOptionsBar />
               {confirmDialog && (
                 <ConfirmDeleteModal
                   confirmDialog={confirmDialog}
@@ -157,6 +158,7 @@ export default function Lists() {
           <div className="w-full h-full mt-2 text-center text-content-third">This list is empty...</div>
         )}
       </div>
+      {edit && <DeletionToolbar setConfirmDialog={() => setConfirmDialog(true)} />}
       <Notification message={message} setMessage={setMessage} />
     </Wrapper>
   );
