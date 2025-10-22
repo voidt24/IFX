@@ -45,7 +45,7 @@ function HistoryGroup({ result, index }: { result: [string, IhistoryMedia[]]; in
         } transition-all duration-200 flex items-center  justify-center gap-6 h-auto flex-col rounded-lg sm:w-[85%] lg:w-[80%] m-auto overflow-auto`}
       >
         {[...result[1]].reverse().map((data, childIndex) => (
-          <HistoryCard key={data.id} result={result} data={data} index={index} childIndex={childIndex} />
+          <HistoryCard key={data.media_type == "tv" ? data.episodeId : data.id} result={result} data={data} index={index} childIndex={childIndex} />
         ))}
       </div>
     </div>
