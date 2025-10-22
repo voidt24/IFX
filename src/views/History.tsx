@@ -26,7 +26,9 @@ function History() {
       return;
     }
     //subscription to db to get real time changes
-    if (database && usersCollectionName && firebaseActiveUser?.uid) {
+    if (firebaseActiveUser != null && firebaseActiveUser.uid) {
+      //TS forces to check this conition again
+
       const unsubscribers: (() => void)[] = [];
 
       const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, "history");
