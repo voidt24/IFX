@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { IhistoryMedia } from "@/Types";
-import { CircularProgress } from "@mui/material";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { database, usersCollectionName } from "@/firebase/firebase.config";
@@ -12,6 +11,7 @@ import ToTop from "../components/common/ToTop/ToTop";
 import Wrapper from "../components/common/Wrapper/Wrapper";
 import HistoryCard from "@/components/History/HistoryCard/HistoryCard";
 import { setHistoryMedia } from "@/store/slices/historySlice";
+import HistorySkeleton from "@/components/common/Skeletons/HistorySkeleton";
 
 function History() {
   useVerifyToken();
@@ -59,7 +59,7 @@ function History() {
               content.push([dateId, mediaItems]);
             }
 
-            dispatch(setHistoryMedia([...content]));
+            dispatch(setHistoryMedia([...content].reverse()));
           });
 
           unsubscribers.push(contentUnsub);
@@ -79,65 +79,59 @@ function History() {
     } catch (error) {}
   }, [firebaseActiveUser?.uid]);
 
-  if (historyMedia === null) {
-    return (
-      <div className="flex items-start justify-center h-full w-full ">
-        <CircularProgress color="inherit" size={100} />
-      </div>
-    );
-  }
-
-  if (historyMedia.length === 0) {
-    return <div className="w-full h-full mt-4 text-center">You will see your history here...</div>;
-  }
-
   return (
-    <Wrapper customClasses="relative mt-[300px] rounded-lg">
+    <Wrapper customClasses="relative mt-[300px] rounded-lg min-w-full">
       <h1 className="title-style">History</h1>
-      <div className="flex-col-center gap-8  min-w-full">
-        {historyMedia &&
-          [...historyMedia].reverse().map((result: [string, IhistoryMedia[]], index) => (
-            <div className="flex flex-col items-center justify-center gap-12 p-6 rounded-lg bg-surface-modal w-full" key={`date-${result[0]}`}>
-              <header className="flex-row-between w-full bg-slate-500/20 m-auto rounded-lg px-4 py-2">
-                <p className="date lg:text-lg   text-content-secondary font-semibold ">
-                  {(() => {
-                    const dateString = result[0];
-                    const parts = dateString.split("-");
-                    const year = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const day = parseInt(parts[2], 10);
-                    return new Date(year, month, day).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    });
-                  })()}{" "}
-                  <span className="count text-[80%] font-normal">
-                    ({result[1].length} {result[1].length == 1 ? "item" : "items"})
-                  </span>
-                </p>
+      <div className="flex-col-center gap-8 min-w-full ">
+        {historyMedia === null ? (
+          <HistorySkeleton />
+        ) : historyMedia.length === 0 ? (
+          <div className="w-full h-full mt-4 text-center text-content-third">Your history is empty...</div>
+        ) : (
+          <>
+            {historyMedia.map((result: [string, IhistoryMedia[]], index) => (
+              <div className="flex flex-col items-center justify-center gap-12 p-6 rounded-lg bg-surface-modal w-full" key={`date-${result[0]}`}>
+                <header className="flex-row-between w-full bg-slate-500/20 m-auto rounded-lg px-4 py-2">
+                  <p className="date lg:text-lg   text-content-secondary font-semibold ">
+                    {(() => {
+                      const dateString = result[0];
+                      const parts = dateString.split("-");
+                      const year = parseInt(parts[0], 10);
+                      const month = parseInt(parts[1], 10) - 1;
+                      const day = parseInt(parts[2], 10);
+                      return new Date(year, month, day).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      });
+                    })()}{" "}
+                    <span className="count text-[80%] font-normal">
+                      ({result[1].length} {result[1].length == 1 ? "item" : "items"})
+                    </span>
+                  </p>
 
-                <button onClick={() => toggleItem(index)} className="flex-row-center gap-1 text-[90%] hover:text-content-primary">
-                  <p className="text-[90%] text-white">{expandedItems[index] ? "Expand" : "Minimize"}</p>
+                  <button onClick={() => toggleItem(index)} className="flex-row-center gap-1 text-[90%] hover:text-content-primary">
+                    <p className="text-[90%] text-white">{expandedItems[index] ? "Expand" : "Minimize"}</p>
 
-                  <i className={`bi bi-caret-${expandedItems[index] ? "down" : "up"}  leading-none`}></i>
-                </button>
-              </header>
+                    <i className={`bi bi-caret-${expandedItems[index] ? "down" : "up"}  leading-none`}></i>
+                  </button>
+                </header>
 
-              <div
-                className={`${
-                  expandedItems[index] ? " max-h-0 opacity-0 p-0" : " opacity-1 p-2"
-                } transition-all duration-200 flex items-center  justify-center gap-6 h-auto flex-col rounded-lg sm:w-[85%] lg:w-[80%] m-auto overflow-auto`}
-              >
-                {[...result[1]].reverse().map((data, childIndex) => (
-                  <HistoryCard key={index} result={result} data={data} index={index} childIndex={childIndex} />
-                ))}
+                <div
+                  className={`${
+                    expandedItems[index] ? " max-h-0 opacity-0 p-0" : " opacity-1 p-2"
+                  } transition-all duration-200 flex items-center  justify-center gap-6 h-auto flex-col rounded-lg sm:w-[85%] lg:w-[80%] m-auto overflow-auto`}
+                >
+                  {[...result[1]].reverse().map((data, childIndex) => (
+                    <HistoryCard key={index} result={result} data={data} index={index} childIndex={childIndex} />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+            {historyMedia.length > 5 && <ToTop />}{" "}
+          </>
+        )}
       </div>
-
-      {historyMedia && historyMedia.length > 5 && <ToTop />}
     </Wrapper>
   );
 }
