@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IhistoryMedia } from "@/Types";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,11 +18,11 @@ function History() {
   useHideDrawers();
   const { historyMedia } = useSelector((state: RootState) => state.history);
   const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
-
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
   async function getData() {
-    if (!database && !usersCollectionName && !firebaseActiveUser?.uid) {
-      dispatch(setHistoryMedia([]));
+    if (!database || !usersCollectionName || (firebaseActiveUser != null && !firebaseActiveUser.uid)) {
+      setError(true);
       return;
     }
     //subscription to db to get real time changes
@@ -77,7 +77,11 @@ function History() {
       <h1 className="title-style">History</h1>
       <div className="flex-col-center gap-8 min-w-full ">
         {historyMedia === null ? (
-          <HistorySkeleton />
+          error ? (
+            <p>Error loading history</p>
+          ) : (
+            <HistorySkeleton />
+          )
         ) : historyMedia.length === 0 ? (
           <div className="w-full h-full mt-4 text-center text-content-third">Your history is empty...</div>
         ) : (
