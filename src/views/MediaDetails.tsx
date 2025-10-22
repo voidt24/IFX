@@ -4,7 +4,7 @@ import { getRunTime } from "@/helpers/getRunTime";
 import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { auth } from "@/firebase/firebase.config";
 import { getFromDB } from "@/firebase/getFromDB";
-import { image } from "@/helpers/api.config";
+import { APP_NAME, image } from "@/helpers/api.config";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { handleTrailerClick } from "@/helpers/getTrailer";
 import { MediaTypeApi } from "@/Types/mediaType";
@@ -78,6 +78,52 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
           castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
           reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
           setLoadingAllData(false);
+
+          const recent = localStorage.getItem(`${APP_NAME}-recent`);
+          const recentData = JSON.parse(recent || "[]");
+
+          for (const obj of recentData) {
+            if (mediaId == obj.id) {
+              return;
+            }
+          }
+          if (recentData.length > 12) {
+            localStorage.setItem(
+              `${APP_NAME}-recent`,
+              JSON.stringify([
+                {
+                  backdrop_path,
+                  id: mediaId,
+                  media_type: mediaType,
+                  title,
+                  name,
+                  overview,
+                  poster_path,
+                  release_date,
+                  first_air_date,
+                  vote_average,
+                },
+              ]),
+            );
+            return;
+          }
+
+          const data = [
+            ...recentData,
+            {
+              backdrop_path,
+              id: mediaId,
+              media_type: mediaType,
+              title,
+              name,
+              overview,
+              poster_path,
+              release_date,
+              first_air_date,
+              vote_average,
+            },
+          ];
+          localStorage.setItem(`${APP_NAME}-recent`, JSON.stringify(data));
         }
       });
     }
@@ -146,7 +192,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
                   </div>
                 </div>
               </Tab>
-              <Tab title={`Reviews (${reviews.length})`}>
+              <Tab title={`Reviews (${reviews && reviews.length})`}>
                 <Reviews reviews={reviews} />
               </Tab>
             </Tabs>

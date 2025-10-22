@@ -1,3 +1,4 @@
+import { IMediaData } from "@/Types";
 import { IepisodesArray } from "@/Types/episodeArray";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -8,6 +9,7 @@ interface MediaDetailsState {
   episodesArray: IepisodesArray[] | null;
   activeSeason: number | null;
   activeEpisode: number | null;
+  recentlyBrowsed: IMediaData[];
 
   // PWA
   mediaIdPWA: number;
@@ -22,6 +24,7 @@ export const initialState: MediaDetailsState = {
   episodesArray: null,
   activeSeason: null,
   activeEpisode: null,
+  recentlyBrowsed: [],
 
   // PWA
   mediaIdPWA: 0,
@@ -62,9 +65,12 @@ export const MediaDetailsSlice = createSlice({
     setSheetEpisode: (state, action: PayloadAction<number | null>) => {
       state.sheetEpisode = action.payload;
     },
+    setRecentlyBrowsed: (state, action: PayloadAction<IMediaData[]>) => {
+      state.recentlyBrowsed = action.payload;
+    },
   },
 });
 
-export const { setCurrentMediaType, setMediaDetailsData, setEpisodesArray, setActiveSeason, setActiveEpisode, setMediaIdPWA, setSheetMediaType, setSheetSeason, setSheetEpisode } =
+export const { setCurrentMediaType, setMediaDetailsData, setEpisodesArray, setActiveSeason, setActiveEpisode, setMediaIdPWA, setSheetMediaType, setSheetSeason, setSheetEpisode, setRecentlyBrowsed } =
   MediaDetailsSlice.actions;
 export default MediaDetailsSlice.reducer;
