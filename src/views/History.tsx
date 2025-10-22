@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { IhistoryMedia } from "@/Types";
 import { CircularProgress } from "@mui/material";
 import { RootState } from "@/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { database, usersCollectionName } from "@/firebase/firebase.config";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import useVerifyToken from "@/Hooks/useVerifyToken";
@@ -11,14 +11,16 @@ import useHideDrawers from "@/Hooks/useHideDrawers";
 import ToTop from "../components/common/ToTop/ToTop";
 import Wrapper from "../components/common/Wrapper/Wrapper";
 import HistoryCard from "@/components/History/HistoryCard/HistoryCard";
+import { setHistoryMedia } from "@/store/slices/historySlice";
 
 function History() {
   useVerifyToken();
   useHideDrawers();
-  const [currentListData, setCurrentListData] = useState<[string, IhistoryMedia[]][] | null>(null);
+  const { historyMedia } = useSelector((state: RootState) => state.history);
   const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
 
+  const dispatch = useDispatch();
   const toggleItem = (id: number) => {
     setExpandedItems((element) => ({
       ...element,
@@ -27,7 +29,7 @@ function History() {
   };
   async function getData() {
     if (!database && !usersCollectionName && !firebaseActiveUser?.uid) {
-      setCurrentListData([]);
+      dispatch(setHistoryMedia([]));
       return;
     }
     //subscription to db to get real time changes
@@ -57,7 +59,7 @@ function History() {
               content.push([dateId, mediaItems]);
             }
 
-            setCurrentListData([...content]);
+            dispatch(setHistoryMedia([...content]));
           });
 
           unsubscribers.push(contentUnsub);
@@ -77,7 +79,7 @@ function History() {
     } catch (error) {}
   }, [firebaseActiveUser?.uid]);
 
-  if (currentListData === null) {
+  if (historyMedia === null) {
     return (
       <div className="flex items-start justify-center h-full w-full ">
         <CircularProgress color="inherit" size={100} />
@@ -85,7 +87,7 @@ function History() {
     );
   }
 
-  if (currentListData.length === 0) {
+  if (historyMedia.length === 0) {
     return <div className="w-full h-full mt-4 text-center">You will see your history here...</div>;
   }
 
@@ -93,8 +95,8 @@ function History() {
     <Wrapper customClasses="relative mt-[300px] rounded-lg">
       <h1 className="title-style">History</h1>
       <div className="flex-col-center gap-8  min-w-full">
-        {currentListData &&
-          [...currentListData].reverse().map((result: [string, IhistoryMedia[]], index) => (
+        {historyMedia &&
+          [...historyMedia].reverse().map((result: [string, IhistoryMedia[]], index) => (
             <div className="flex flex-col items-center justify-center gap-12 p-6 rounded-lg bg-surface-modal w-full" key={`date-${result[0]}`}>
               <header className="flex-row-between w-full bg-slate-500/20 m-auto rounded-lg px-4 py-2">
                 <p className="date lg:text-lg   text-content-secondary font-semibold ">
@@ -135,7 +137,7 @@ function History() {
           ))}
       </div>
 
-      {currentListData && currentListData.length > 5 && <ToTop />}
+      {historyMedia && historyMedia.length > 5 && <ToTop />}
     </Wrapper>
   );
 }

@@ -1,3 +1,4 @@
+import { IhistoryMedia } from "@/Types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface historyState {
@@ -5,6 +6,7 @@ interface historyState {
   parentActiveIndex: number | undefined;
   activeHistoryEntry: string | null;
   elementsToDelete: (number | string)[];
+  historyMedia: [string, IhistoryMedia[]][] | null;
 }
 
 const initialState: historyState = {
@@ -12,6 +14,7 @@ const initialState: historyState = {
   parentActiveIndex: undefined,
   activeHistoryEntry: null,
   elementsToDelete: [],
+  historyMedia: null,
 };
 
 export const historySlice = createSlice({
@@ -30,8 +33,11 @@ export const historySlice = createSlice({
     setElementsToDelete: (state, action: PayloadAction<(number | string)[]>) => {
       state.elementsToDelete = action.payload;
     },
+    setHistoryMedia: (state, action: PayloadAction<[string, IhistoryMedia[]][] | null>) => {
+      state.historyMedia = action.payload;
+    },
   },
 });
 
-export const { setActiveIndex, setParentActiveIndex, setActiveHistoryEntry, setElementsToDelete } = historySlice.actions;
+export const { setActiveIndex, setParentActiveIndex, setActiveHistoryEntry, setElementsToDelete, setHistoryMedia } = historySlice.actions;
 export default historySlice.reducer;
