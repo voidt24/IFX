@@ -4,13 +4,13 @@ import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 
 interface AuthState {
   userLogged: boolean;
-  firebaseActiveUser: { email: string | null; uid: string | null };
+  firebaseActiveUser: { email: string | null; uid: string | null } | null;
   profileData: { displayName: string | null; email: string | null };
   authListenerInitialized: boolean;
 }
 const initialState: AuthState = {
   userLogged: false,
-  firebaseActiveUser: { email: null, uid: null },
+  firebaseActiveUser: null,
   profileData: { displayName: null, email: null },
   authListenerInitialized: false,
 };
