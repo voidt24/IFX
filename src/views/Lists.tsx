@@ -144,6 +144,7 @@ export default function Lists() {
                   }}
                   elementsToDelete={checkedMedia}
                   setMessage={setMessage}
+                  isHistory={false}
                 />
               )}
             </div>
