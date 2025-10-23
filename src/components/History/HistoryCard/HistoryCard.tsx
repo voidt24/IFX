@@ -28,7 +28,7 @@ function HistoryCard({ result, data, index, childIndex }: { result: [string, Ihi
   return (
     <>
       <div
-        className={`  hover:scale-105 hover:bg-slate-500/10 transition duration-200 ease-in-out relative flex-col-center lg:flex-row w-[95%] lg:w-[95%] gap-4 rounded-lg border border-white/10 p-4`}
+        className={`hover:bg-slate-500/10 transition duration-200 ease-in-out relative flex-col-center lg:flex-row w-[95%] lg:w-[95%] gap-4 rounded-lg border border-white/10 p-4`}
         key={`${result[0]}-${data.id}-${data.season}-${data.episode}`}
       >
         <div className="relative  rounded-md md:w-[80%] lg:w-[140%] xl:w-[55%] 2xl:w-[45%] ">
