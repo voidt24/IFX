@@ -15,8 +15,9 @@ interface Props {
   elementsToDelete: (number | string)[];
   displayMessage?: string;
   setMessage: (message: { message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }) => void;
+  isHistory: boolean;
 }
-function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, displayMessage, setMessage }: Props) {
+function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraActions, elementsToDelete, displayMessage, setMessage, isHistory = false }: Props) {
   const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
   const { listChanged } = useSelector((state: RootState) => state.listsManagement);
 
@@ -24,7 +25,7 @@ function ConfirmDeleteModal({ confirmDialog, setConfirmDialog, listName, extraAc
   const dispatch = useDispatch();
   async function onSubmit() {
     try {
-      await deleteFromFireStore(firebaseActiveUser, listName, elementsToDelete);
+      await deleteFromFireStore(firebaseActiveUser, listName, elementsToDelete, isHistory);
       extraActions && extraActions();
       setMessage({ message: "List updated!", severity: "success", open: true });
       dispatch(setListChanged(!listChanged));

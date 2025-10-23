@@ -80,6 +80,7 @@ function HistoryCard({ result, data, index, childIndex }: { result: [string, Ihi
           }}
           displayMessage={"history"}
           setMessage={setMessage}
+          isHistory={true}
         />
       )}
       <Notification message={message} setMessage={setMessage} />
