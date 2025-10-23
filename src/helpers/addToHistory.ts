@@ -7,7 +7,7 @@ import { IepisodesArray } from "@/Types/episodeArray";
 export default function addToHistory(
   mediaType: MediaTypeApi,
   mediaDetailsData: ImediaDetailsData | null,
-  firebaseActiveUser: { email: string | null; uid: string | null },
+  firebaseActiveUser: { email: string | null; uid: string | null } | null,
   mediaId: number,
   episodesArray?: IepisodesArray[] | null,
   season?: string | null,
