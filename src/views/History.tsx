@@ -97,7 +97,7 @@ function History() {
 
         setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
 
-        setHasMore(totalLoadedDocs >= totalDocs);
+        setHasMore(totalLoadedDocs < totalDocs);
       });
 
       return () => {
