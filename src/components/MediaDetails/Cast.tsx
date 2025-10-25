@@ -3,6 +3,7 @@ import { Context } from "../../context/Context";
 import { imageWithSize } from "../../helpers/api.config";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/Shadcn/carousel";
 import { ICast } from "@/Types/cast";
+import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
 
 export const Cast = ({ cast }: { cast: ICast[] }) => {
   const { castError } = useContext(Context);
@@ -20,6 +21,7 @@ export const Cast = ({ cast }: { cast: ICast[] }) => {
               loop: true,
               align: "start",
             }}
+            plugins={[WheelGesturesPlugin()]}
           >
             <CarouselContent className=" w-full">
               {cast &&

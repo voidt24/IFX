@@ -5,6 +5,7 @@ import SliderCardSkeleton from "./Skeletons/SliderCardSkeleton";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/Shadcn/carousel";
+import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
 
 const Slider = dynamic(() => import("@/components/Slider/Slider"), {
   loading: () => <SliderSkeleton />,
@@ -34,6 +35,7 @@ function SectionWithSlider({ title, link, data, mediaType }: { title: string; li
           loop: true,
           align: "start",
         }}
+        plugins={[WheelGesturesPlugin()]}
       >
         <CarouselContent className="">
           {data &&

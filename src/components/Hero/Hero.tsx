@@ -7,6 +7,7 @@ import { IMediaData, MediaTypeApi } from "@/Types";
 import PWADetailsButton from "./PWADetailsButton";
 import DetailsButton from "./DetailsButton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/Shadcn/carousel";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
   const { isMobilePWA } = useContext(Context);
@@ -24,6 +25,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
         opts={{
           loop: true,
         }}
+        plugins={[WheelGesturesPlugin()]}
       >
         <CarouselContent>
           {results &&

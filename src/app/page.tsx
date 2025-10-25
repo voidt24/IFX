@@ -17,6 +17,7 @@ import { setRecentlyBrowsed } from "@/store/slices/mediaDetailsSlice";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/Shadcn/carousel";
 import { IMediaData } from "@/Types";
 import MediaCardContainer from "@/components/MediaCard/MediaCardContainer";
+import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
@@ -96,6 +97,7 @@ export default function Home() {
                 loop: true,
                 align: "start",
               }}
+              plugins={[WheelGesturesPlugin()]}
             >
               <CarouselContent className=" ">
                 {recentlyBrowsed &&
