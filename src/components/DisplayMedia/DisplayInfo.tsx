@@ -1,6 +1,5 @@
 "use client";
 import { useContext } from "react";
-import Link from "next/link";
 import CollapsibleElement from "../common/CollapsibleElement";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { useSelector } from "react-redux";
@@ -11,6 +10,7 @@ import { getRunTime } from "@/helpers/getRunTime";
 import EpisodeNavigation from "./EpisodeNavigation";
 import useMediaDetails from "@/Hooks/useMediaDetails";
 import { Context } from "@/context/Context";
+import DisplayInfoTitle from "./DisplayInfoTitle";
 
 function DisplayInfo({
   mediaId,
@@ -48,21 +48,7 @@ function DisplayInfo({
           <img src={mediaDetailsData?.poster || ""} alt="poster" className="w-32 md:w-40 xl:w-56 h-auto min-h-40 rounded-lg" />
 
           <div className="flex flex-col items-start justify-center gap-2">
-            <div className="flex flex-col gap-2 md:flex-row md:items-center">
-              <Link className="font-bold text-xl md:text-2xl xl:text-3xl text-left hover:underline" href={`/${currentMediaType}/${mediaId}`}>
-                {mediaDetailsData?.title}
-              </Link>
-
-              {isTV && (
-                <p className="text-content-secondary text-left max-lg:text-[88%]">
-                  {season && season != "0" && `Season ${season} - `}
-                  {episode && episode != "0" && `Episode ${episode} `}
-                  {episodesArray?.[0]?.episodes &&
-                    episodesArray[0].episodes[Number(episode) - 1]?.name.toLowerCase() != `episode ${Number(episode)}` &&
-                    `- ${episodesArray[0].episodes[Number(episode) - 1]?.name}`}
-                </p>
-              )}
-            </div>
+            <DisplayInfoTitle mediaId={mediaId} title={mediaDetailsData && mediaDetailsData.title} isTV={isTV} season={season} episode={episode} />
             <div className="text-left text-content-third text-[80%] md:text-[90%] flex flex-col gap-2">
               <div>
                 {isTV ? (
@@ -89,7 +75,6 @@ function DisplayInfo({
               </div>
               <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0].name}</p>
             </div>
-
             <div className=" info max-md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
               <CollapsibleElement customClassesForParent={" md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
                 {isTV ? (
