@@ -51,7 +51,7 @@ const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked 
 
   return (
     <div
-      className={`relative ${isChecked ? "!border-[3px] !border-brand-primary hover:!border-[3px] rounded-md hover:!border-brand-primary" : "border-[3px] border-transparent"}`}
+      className={`relative rounded-md lg:hover:border lg:hover:border-brand-primary transition-all duration-200 ${isChecked ? "!border-[3px] !border-brand-primary hover:!border-[3px] rounded-md hover:!border-brand-primary" : "border-[3px] border-transparent"}`}
       key={id}
       data-id={id}
     >
@@ -61,6 +61,7 @@ const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked 
         </button>
       ) : (
         <Link
+          className="block h-full"
           href={`/${isMovieOrTV}/${id}`}
           onClick={() => {
             sessionStorage.setItem("navigatingFromApp", "1");
