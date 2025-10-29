@@ -34,7 +34,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const [loadingFavs, setLoadingFavs] = useState(true);
   const [loadingWatchlist, setLoadingWatchlist] = useState(true);
   const [loadingWatched, setLoadingWatched] = useState(true);
-  const [loadingAllData, setLoadingAllData] = useState(true);
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
@@ -74,10 +73,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
           };
 
           dispatch(setMediaDetailsData(mediaDetails));
-
           castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
           reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
-          setLoadingAllData(false);
 
           const recent = localStorage.getItem(`${APP_NAME}-recent`);
           const recentData = JSON.parse(recent || "[]");

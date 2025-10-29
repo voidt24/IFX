@@ -8,8 +8,6 @@ interface IContextValues {
   trailerKey: string | null;
   setTrailerKey: Dispatch<SetStateAction<string | null>>;
 
-  loadingAllData: boolean;
-  setLoadingAllData: Dispatch<SetStateAction<boolean>>;
   initialDataIsLoading: boolean;
   setInitialDataIsLoading: Dispatch<SetStateAction<boolean>>;
   initialDataError: boolean;
@@ -29,7 +27,6 @@ export const Context = createContext<IContextValues>({} as IContextValues);
 export default function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [openTrailer, setOpenTrailer] = useState(false);
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
-  const [loadingAllData, setLoadingAllData] = useState(true);
 
   const [initialDataIsLoading, setInitialDataIsLoading] = useState(true);
 
@@ -48,9 +45,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     setOpenTrailer,
     trailerKey,
     setTrailerKey,
-
-    loadingAllData,
-    setLoadingAllData,
 
     initialDataIsLoading,
     setInitialDataIsLoading,
