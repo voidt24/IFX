@@ -69,27 +69,21 @@ function DisplayInfo({
                   episodesArray == null ? (
                     ""
                   ) : episodesArray?.[0]?.episodes ? (
-                    <p>{getRunTime(episodesArray[0].episodes?.[Number(episode) - 1]?.runtime)}</p>
+                    <div className="flex flex-col gap-2">
+                      <p>{getRunTime(episodesArray[0].episodes?.[Number(episode) - 1]?.runtime)}</p>
+                      <p>{episodesArray[0].episodes[Number(episode) - 1]?.air_date}</p>
+                    </div>
                   ) : (
-                    "No runtime data available"
+                    "N/A"
                   )
                 ) : (
-                  mediaDetailsData?.runtime
+                  <div className="flex flex-col gap-2">
+                    <p>{mediaDetailsData?.runtime}</p>
+                    <p>{mediaDetailsData?.releaseDate}</p>
+                  </div>
                 )}
               </div>
-              <div>
-                {isTV ? (
-                  episodesArray == null ? (
-                    ""
-                  ) : episodesArray?.[0]?.episodes ? (
-                    <p>{episodesArray[0].episodes[Number(episode) - 1]?.air_date}</p>
-                  ) : (
-                    "No episode data available"
-                  )
-                ) : (
-                  mediaDetailsData?.releaseDate
-                )}
-              </div>
+
               <div>
                 <i className="bi bi-star-fill text-[goldenrod]"></i> {mediaType == mediaProperties.tv.mediaType ? `${seasonArray?.[Number(season)]?.vote_average || 0}` : mediaDetailsData?.vote}
               </div>
