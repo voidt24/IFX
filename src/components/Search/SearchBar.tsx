@@ -4,9 +4,10 @@ import { search } from "../../helpers/search";
 import Input from "../common/Input";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { setLoadingSearch, setSearchQuery, setSearchResults, setSearchStarted } from "@/store/slices/searchSlice";
+import { setLoadingSearch, setRecentlySearched, setSearchQuery, setSearchResults, setSearchStarted } from "@/store/slices/searchSlice";
 import { useRouter, useSearchParams } from "next/navigation";
 import { setPageActive, setNumberOfPages } from "@/store/slices/paginationSlice";
+import { APP_NAME } from "@/helpers/api.config";
 
 export default function SearchBar() {
   const [inputValue, setInputValue] = useState("");
@@ -20,21 +21,46 @@ export default function SearchBar() {
 
   const searchPage = searchParams.get("searchPage");
 
+  // TO-DO: create helper and separate ui states from logic
   function handleSearch(value: string) {
     if (value.trim().length === 0) {
       return;
     }
     dispatch(setSearchStarted(true));
-    dispatch(setSearchResults([]));
+    dispatch(setSearchResults(null));
     dispatch(setLoadingSearch(true));
 
     search(value, Number(searchPage || 1)).then((data) => {
       if (data.page === Number(searchPage)) {
         dispatch(setSearchResults(data.results));
       }
+
       dispatch(setLoadingSearch(false));
 
       dispatch(setNumberOfPages(data.total_pages >= 5 ? 5 : data.total_pages));
+
+      if (data.results.length > 0) {
+        const LSrecentlySearched = localStorage.getItem(`${APP_NAME}-recentlySearched`);
+        const parsedData = JSON.parse(LSrecentlySearched || "[]");
+
+        if (parsedData.length > 0) {
+          let newData: string[];
+
+          if (!parsedData.includes(value)) {
+            if (parsedData.length > 9) {
+              newData = [...parsedData.slice(1), value];
+            } else {
+              newData = [...parsedData, value];
+            }
+
+            localStorage.setItem(`${APP_NAME}-recentlySearched`, JSON.stringify(newData));
+            dispatch(setRecentlySearched([...newData].reverse()));
+          }
+          return;
+        }
+        localStorage.setItem(`${APP_NAME}-recentlySearched`, JSON.stringify([value]));
+        dispatch(setRecentlySearched([value]));
+      }
     });
   }
 
@@ -63,11 +89,11 @@ export default function SearchBar() {
           event.preventDefault();
           params.set("searchPage", `1`);
           router.push(`?${params.toString()}`);
-          handleSearch(inputValue);
           dispatch(setPageActive(1));
 
           if (inputValue.trim().length !== 0) {
             dispatch(setSearchQuery(inputValue));
+            handleSearch(inputValue);
           }
         }}
       >

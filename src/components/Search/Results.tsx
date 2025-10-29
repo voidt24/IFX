@@ -29,29 +29,42 @@ export default function Results() {
     };
   }, []);
 
+  if (searchResults == null) {
+    return searchStarted && <Loader />;
+  }
+
   return (
     <div className={`h-full w-full ${!isMobilePWA ? "overflow-auto" : ""} flex flex-col gap-4 pb-8 rounded-lg relative ${searchStarted && !loadingSearch && "bg-black/60"}`}>
       {searchStarted && (
         <>
-          {numberOfPages > 1 && (
-            <p className=" md:text-xl text-center sticky top-0 z-50 bg-black/70 p-2">
-              Results for "{searchQuery}" page: {searchPage}
+          <div className="md:text-xl flex justify-between items-center text-center sticky top-0 z-50 bg-black/70 p-2">
+            <p className="w-full">
+              Results for
+              <span> "{searchQuery}" </span>
+              page: {searchPage}
             </p>
-          )}
-          {loadingSearch ? (
-            <Loader />
-          ) : (
-            <div ref={ref} className="flex flex-col gap-4 h-!full w-!full z-30">
-              {searchResults?.length && searchResults.length > 0 ? (
+            <button
+              className="w-auto text-right px-4 py-1"
+              onClick={() => {
+                dispatch(setSearchStarted(false));
+              }}
+            >
+              x
+            </button>
+          </div>
+
+          <div ref={ref} className="flex flex-col gap-4 h-!full w-!full z-30">
+            {searchResults.length > 0 ? (
+              <>
                 <MediaGrid mediaData={searchResults} />
-              ) : (
-                searchStarted && searchResults && searchResults.length < 0 && <p className="text-center mt-4">no results</p>
-              )}
-              {searchStarted && !loadingSearch && (
-                <div className="flex-row-center w-full">{numberOfPages > 1 && <Pagination queryName="searchPage" pageActive={Number(searchPage) || 1} numberOfPages={numberOfPages} />}</div>
-              )}
-            </div>
-          )}
+              </>
+            ) : (
+              <>
+                <p className="text-center mt-4 text-content-third text-lg">No media found, try searching again.</p>
+              </>
+            )}
+          </div>
+          <div className="flex-row-center w-full">{<Pagination queryName="searchPage" pageActive={Number(searchPage) || 1} numberOfPages={numberOfPages} />}</div>
         </>
       )}
     </div>
