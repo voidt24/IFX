@@ -57,7 +57,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
           const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
 
           const mediaDetails: ImediaDetailsData = {
-            results: [],
             heroBackground: !isMobilePWA ? (window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`) : `${image}${backdrop_path}`,
             bigHeroBackground: `${image}${backdrop_path}`,
             title: title || name,
@@ -66,7 +65,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             releaseDate: release_date ? formatReleaseDate(release_date) : formatReleaseDate(first_air_date),
             vote: String(vote_average).slice(0, 3),
             genres: genres?.map((genre: string) => genre) || "",
-            loadingAllData: false,
             runtime: runtime ? getRunTime(runtime) : "",
             seasons: number_of_seasons ? (number_of_seasons === 1 ? "1 Season" : `${number_of_seasons} Seasons`) : "",
             seasonsArray: seasons,

@@ -43,7 +43,6 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
 
       dispatch(
         setMediaDetailsData({
-          results: [],
           heroBackground: !isMobilePWA ? (window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`) : `${image}${backdrop_path}`,
           bigHeroBackground: `${image}${backdrop_path}`,
           title: title || name,
@@ -52,7 +51,6 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
           releaseDate: release_date?.slice(0, 4) || first_air_date?.slice(0, 4),
           vote: String(vote_average).slice(0, 3),
           genres: genres && genres.map((genre: { name: string }) => genre.name),
-          loadingAllData: false,
           runtime: runtime ? getRunTime(runtime) : "",
           seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
           seasonsArray: seasons,
