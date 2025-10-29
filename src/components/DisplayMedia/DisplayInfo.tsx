@@ -1,6 +1,5 @@
 "use client";
 import { useContext } from "react";
-import CollapsibleElement from "../common/CollapsibleElement";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -11,6 +10,7 @@ import EpisodeNavigation from "./EpisodeNavigation";
 import useMediaDetails from "@/Hooks/useMediaDetails";
 import { Context } from "@/context/Context";
 import DisplayInfoTitle from "./DisplayInfoTitle";
+import DisplayInfoOverview from "./DisplayInfoOverview";
 
 function DisplayInfo({
   mediaId,
@@ -29,12 +29,6 @@ function DisplayInfo({
   path?: string;
   searchParams?: ReadonlyURLSearchParams;
 }) {
-  const truncatedTextStyle: React.CSSProperties & { WebkitLineClamp: string; WebkitBoxOrient: "horizontal" | "vertical" | "inline-axis" | "block-axis" } = {
-    WebkitLineClamp: "3 ",
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden ",
-    display: "-webkit-box ",
-  };
   const { mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
 
   const { seasonArray } = useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, path });
@@ -75,39 +69,12 @@ function DisplayInfo({
               </div>
               <p>{mediaDetailsData?.genres && mediaDetailsData.genres[0].name}</p>
             </div>
-            <div className=" info max-md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
-              <CollapsibleElement customClassesForParent={" md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-                {isTV ? (
-                  episodesArray == null ? (
-                    ""
-                  ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
-                    <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
-                  ) : (
-                    "No overview"
-                  )
-                ) : (
-                  mediaDetailsData?.overview
-                )}
-              </CollapsibleElement>
-            </div>
+
+            <DisplayInfoOverview variant={"desktop"} isTV={isTV} episode={episode} />
           </div>
         </div>
-        {/* MOBILE */}
-        <div className="info md:hidden flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]">
-          <CollapsibleElement customClassesForParent={"md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
-            {isTV ? (
-              episodesArray == null ? (
-                ""
-              ) : episodesArray?.[0]?.episodes && episodesArray[0].episodes[Number(episode) - 1] ? (
-                <p>{episodesArray[0].episodes[Number(episode) - 1].overview}</p>
-              ) : (
-                "No overview"
-              )
-            ) : (
-              mediaDetailsData?.overview
-            )}
-          </CollapsibleElement>
-        </div>
+
+        <DisplayInfoOverview variant={"mobile"} isTV={isTV} episode={episode} />
       </div>
 
       {!isMobilePWA && searchParams && isTV && (
