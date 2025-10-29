@@ -6,6 +6,7 @@ interface SearchState {
   searchQuery: string;
   searchStarted: boolean;
   searchResults: IMediaData[] | null;
+  recentlySearched: string[] | null;
 }
 
 const initialState: SearchState = {
@@ -13,6 +14,7 @@ const initialState: SearchState = {
   searchQuery: "",
   searchStarted: false,
   searchResults: null,
+  recentlySearched: null,
 };
 
 export const searchSlice = createSlice({
@@ -31,8 +33,11 @@ export const searchSlice = createSlice({
     setSearchResults: (state, action: PayloadAction<IMediaData[] | null>) => {
       state.searchResults = action.payload;
     },
+    setRecentlySearched: (state, action: PayloadAction<string[] | null>) => {
+      state.recentlySearched = action.payload;
+    },
   },
 });
 
-export const { setLoadingSearch, setSearchQuery, setSearchStarted, setSearchResults } = searchSlice.actions;
+export const { setLoadingSearch, setSearchQuery, setSearchStarted, setSearchResults, setRecentlySearched } = searchSlice.actions;
 export default searchSlice.reducer;
