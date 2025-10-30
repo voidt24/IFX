@@ -11,6 +11,8 @@ import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { setCurrentMediaType, setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import paramIsValid from "@/helpers/isParamValid";
 import addToHistory from "@/helpers/addToHistory";
+import useIsMobile from "@/Hooks/useIsMobile";
+import MobileCloseButton from "@/components/MediaDetails/Buttons/MobileCloseButton";
 
 function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId: number }) {
   const { containerMargin } = useSelector((state: RootState) => state.ui);
@@ -34,6 +36,7 @@ function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId
 
   params.set("season", "1");
   params.set("episode", "1");
+  const isMobile = useIsMobile(768);
 
   useEffect(() => {
     return () => {
@@ -65,9 +68,10 @@ function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId
 
   return (
     <div
-      className=" relative text-center bg-cover bg-top bg-no-repeat overflow-hidden"
-      style={{ backgroundImage: `url(${mediaDetailsData?.heroBackground})`, marginTop: containerMargin ? `${containerMargin}px` : undefined }}
+      className=" relative text-center bg-cover bg-top bg-no-repeat overflow-hidden max-lg:z-[999] z-[99]"
+      style={{ backgroundImage: `url(${mediaDetailsData?.heroBackground})`, ...(!isMobile ? { marginTop: containerMargin ? `${containerMargin}px` : undefined } : {}) }}
     >
+      <MobileCloseButton variant="watch" />
       <div className="to-top-gradient-bg z-[1]"></div>
 
       <div className="wrapper relative z-[2]">

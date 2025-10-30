@@ -17,6 +17,7 @@ function PlayButton({ mediaId, mediaType }: { mediaId: number; mediaType: MediaT
       className="btn-primary relative z-[4] w-full pointer-events-auto"
       data-id={mediaId}
       onClick={() => {
+        sessionStorage.setItem("watch/navigatingFromApp", "1");
         if (mediaType == "tv") {
           dispatch(setSeasonModal(true));
         } else {

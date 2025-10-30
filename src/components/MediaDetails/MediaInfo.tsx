@@ -57,7 +57,7 @@ export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatch
           ...(!isMobile ? { marginTop: containerMargin ? `${containerMargin}px` : undefined } : {}),
         }}
       >
-        <MobileCloseButton />
+        <MobileCloseButton variant="details" />
 
         {/* overlay for desk */}
         <div className="max-lg:hidden side-hero-overlay"></div>
