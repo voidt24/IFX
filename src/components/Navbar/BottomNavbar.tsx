@@ -10,7 +10,7 @@ function BottomNavbar() {
   const isIOS = () => /iphone/.test(window.navigator.userAgent.toLowerCase());
 
   return (
-    <nav className={`nav fixed bottom-0 sm:hidden  ${isPWA && isIOS() ? "max-lg:!pb-7 max-lg:!pt-2" : ""} `}>
+    <nav className={`nav fixed bottom-0 sm:hidden !bg-black/60  ${isPWA && isIOS() ? "max-lg:!pb-7 max-lg:!pt-2" : ""} `}>
       <div className={`links relative flex-row-between gap-2 w-full max-sm:justify-center`}>
         <ul className="flex max-sm:gap-10 gap-8 items-center justify-center font-medium">
           {menuActions.map((element, index) => {

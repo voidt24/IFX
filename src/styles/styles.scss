@@ -114,7 +114,8 @@ i {
 }
 
 .nav {
-  @apply flex-row-center py-[0.8rem] lg:py-[0.5rem] w-full px-4  bg-none text-[90%] backdrop-blur-[30px] bg-black/60 max-lg:z-[99] z-[999];
+  background: linear-gradient(-45deg, #000000de, #080b0f5e, #080b0f5e, #000000de);
+  @apply flex-row-center py-[0.8rem] lg:py-[0.5rem] w-full px-4   text-[90%] backdrop-blur-[30px] max-lg:z-[99] z-[999] border-b border-zinc-950;
 }
 
 .nav-item-box {
