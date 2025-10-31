@@ -41,7 +41,7 @@ function SectionWithSlider({ title, link, data, mediaType }: { title: string; li
           {data &&
             data.slice(5, 17).map((sliderData: IMediaData) => {
               return (
-                <CarouselItem key={sliderData.id} className="basis-[45%] md:basis-[23%] lg:basis-1/5 2xl:basis-[10%]">
+                <CarouselItem key={sliderData.id} className="basis-[45%] md:basis-[23%] lg:basis-1/5 2xl:basis-[13%] 4k:basis-[10%]">
                   <MediaCardContainer key={sliderData.id} result={sliderData} mediaType={mediaType} />
                 </CarouselItem>
               );

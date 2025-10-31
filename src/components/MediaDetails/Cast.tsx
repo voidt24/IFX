@@ -16,18 +16,18 @@ export const Cast = ({ cast }: { cast: ICast[] }) => {
       <>
         {cast.length > 0 ? (
           <Carousel
-            className="w-full flex items-center justify-center py-2"
+            className="w-full flex items-center justify-center py-2 sm:w-[55%]  mx-auto"
             opts={{
               loop: true,
               align: "start",
             }}
             plugins={[WheelGesturesPlugin()]}
           >
-            <CarouselContent className=" w-full">
+            <CarouselContent className="w-full">
               {cast &&
                 cast.map((cast: ICast) => {
                   return (
-                    <CarouselItem key={cast.id} className="basis-[40%] lg:basis-[30%] lg:px-4">
+                    <CarouselItem key={cast.id} className="basis-[30%] lg:basis-[25%] lg:px-4">
                       <div className="cast__member flex-col-center text-[65%] text-center" key={cast.id + 543425}>
                         <img
                           src={

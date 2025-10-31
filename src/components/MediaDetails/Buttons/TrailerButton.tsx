@@ -8,7 +8,7 @@ function TrailerButton({ id, mediaType }: { id: number | null; mediaType: MediaT
 
   return (
     <button
-      className="btn-primary w-full relative pointer-events-auto z-[4]"
+      className="btn-primary w-full relative pointer-events-auto z-[4] !px-12"
       data-id={id}
       onClick={async () => {
         const trailer = await handleTrailerClick(id, mediaType);

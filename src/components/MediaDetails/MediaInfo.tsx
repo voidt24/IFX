@@ -77,22 +77,24 @@ export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatch
           </div>
           <div className="lg:hidden to-top-gradient-bg"></div>
 
-          <div className="flex-col-center gap-2 z-[999999] lg:items-start lg:text-left  w-full ">
+          <div className="flex-col-center gap-2 lg:gap-4 z-[999999] lg:items-start lg:text-left  w-full ">
             <MediaInfoRow data={mediaDetailsData} mediaType={getApiMediaType(currentMediaType)} />
             <Overview data={mediaDetailsData} />
 
-            <div className="flex-row-center gap-6 w-full lg:justify-start">
+            <div className="flex-row-center gap-9 w-full lg:justify-start">
               <span className="max-lg:hidden">
                 <PlayOrTrailerButton mediaId={mediaId} mediaType={getApiMediaType(currentMediaType)} mediaData={mediaDetailsData} />
               </span>
-              <ListsButtonGroup
-                state={mediaDetailsData}
-                mediaId={mediaId}
-                mediaType={getApiMediaType(currentMediaType)}
-                loadingFavs={loadingFavs}
-                loadingWatchlist={loadingWatchlist}
-                loadingWatched={loadingWatched}
-              />
+              <div className=" flex-row-center gap-6  p-1">
+                <ListsButtonGroup
+                  state={mediaDetailsData}
+                  mediaId={mediaId}
+                  mediaType={getApiMediaType(currentMediaType)}
+                  loadingFavs={loadingFavs}
+                  loadingWatchlist={loadingWatchlist}
+                  loadingWatched={loadingWatched}
+                />
+              </div>
             </div>
           </div>
         </div>

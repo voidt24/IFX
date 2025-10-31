@@ -14,7 +14,7 @@ function PlayButton({ mediaId, mediaType }: { mediaId: number; mediaType: MediaT
 
   return (
     <button
-      className="btn-primary relative z-[4] w-full pointer-events-auto"
+      className="btn-primary relative z-[4] w-full pointer-events-auto !px-16 !py-2.5"
       data-id={mediaId}
       onClick={() => {
         sessionStorage.setItem("watch/navigatingFromApp", "1");
