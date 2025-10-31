@@ -25,6 +25,7 @@ import Notification from "@/components/common/Notification";
 import NotFound from "@/components/common/NotFound";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 import MediaDetailsSkeleton from "@/components/common/Skeletons/MediaDetailsSkeleton";
+import { onAuthStateChanged } from "firebase/auth";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
   const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);
@@ -147,7 +148,20 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
       }
     }
 
-    isElementSaved();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        isElementSaved();
+      } else {
+        setAddedToFavs(false);
+        setAddedToWatchList(false);
+        setAddedToWatched(false);
+        setLoadingFavs(false);
+        setLoadingWatchlist(false);
+        setLoadingWatched(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, [mediaId]);
 
   return (
