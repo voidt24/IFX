@@ -33,12 +33,15 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
               return (
                 <CarouselItem key={index}>
                   <div
-                    className="relative aspect-[16/9] lg:max-h-[80vh] snap-center h-full w-full object-cover object-center bg-cover bg-center"
+                    className="relative aspect-[16/9] lg:max-h-[87vh] snap-center h-full w-full object-cover object-center bg-cover bg-top"
                     style={{ backgroundImage: `url(${image}${sliderData.backdrop_path})` }}
                     key={index}
                   >
                     <div className="max-lg:hidden side-hero-overlay"></div>
-                    <div className="px-4 max-w-[80%] max-lg:hidden absolute flex flex-col items-start justify-center gap-2 top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-full z-20 text-4xl">
+                    <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-b from-[#000000] to-[#00000000] !top-0 !h-[20%]"></div>
+                    <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-t from-[#000000] via-[#0000007a] to-[#00000000] !bottom-0 !h-[20%]"></div>
+
+                    <div className="px-4 max-w-[80%] max-lg:hidden absolute flex flex-col items-start justify-center gap-2 lg:gap-4 top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-full z-20 text-4xl">
                       <h1 className="title max-w-[80%] font-semibold text-[125%]">{sliderData.title || sliderData.name}</h1>
                       {(sliderData.release_date && new Date(sliderData.release_date).getTime() > Date.now()) ||
                       (sliderData.first_air_date && new Date(sliderData.first_air_date).getTime() > Date.now()) ? (

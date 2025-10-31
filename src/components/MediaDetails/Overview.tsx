@@ -14,7 +14,7 @@ function Overview({ data }: { data: ImediaDetailsData | null }) {
   }, [textRef.current]);
   return (
     <div className="overview ">
-      <p className={`${!isOpen ? "line-clamp-3" : ""} review-text text-content-primary  lg:max-w-[90%] 2xl:max-w-[60%]`} ref={textRef}>
+      <p className={`${!isOpen ? "line-clamp-3" : ""} review-text text-content-secondary  lg:max-w-[90%] 2xl:max-w-[60%]`} ref={textRef}>
         {data?.overview}
       </p>
 

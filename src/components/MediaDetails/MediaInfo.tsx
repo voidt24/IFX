@@ -51,7 +51,7 @@ export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatch
   return (
     <div className=" relative text-center  px-0  bg-cover bg-top bg-no-repeat overflow-hidden">
       <div
-        className="some-animation w-full relative object-cover object-center bg-cover bg-center max-lg:min-h-[90vh] lg:aspect-[16/9] lg:h-[85vh] "
+        className="some-animation w-full relative object-cover object-center bg-cover bg-top max-lg:min-h-[90vh] lg:aspect-[16/9] lg:h-[90vh] "
         style={{
           backgroundImage: `url(${backdrop})`,
           ...(!isMobile ? { marginTop: containerMargin ? `${containerMargin}px` : undefined } : {}),
@@ -61,6 +61,9 @@ export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatch
 
         {/* overlay for desk */}
         <div className="max-lg:hidden side-hero-overlay"></div>
+        <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-b from-[#000005] to-[#0c0e1300] !top-0 !h-[25%]"></div>
+        <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-t from-[#000005] via-[#0000057a] to-[#0c0e1300] !bottom-0 !h-[25%]"></div>
+
         {/* --- */}
 
         {/* main container */}

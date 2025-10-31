@@ -8,7 +8,7 @@ function DetailsButton({ variant, sliderData, type }: { variant: "desktop" | "mo
   const dispatch = useDispatch();
 
   const mobileStyles = "bg-surface-modal hover:bg-white/20 rounded-full  border border-[#ffffff4b] py-[0.5px] px-6";
-  const desktopStyles = "btn-primary text-[40%] !py-0 !px-6";
+  const desktopStyles = "btn-primary text-[40%] !py-0 !px-8";
 
   return (
     <Link

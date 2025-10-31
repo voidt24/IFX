@@ -66,6 +66,11 @@ i {
   @extend .overlay-base;
   background: linear-gradient(to top, #000005, #0c0e13ed, #0c0e13d8, #0c0e1300);
 }
+.to-top-gradient-bg-desktop {
+  @extend .overlay-base;
+  top: auto;
+  bottom: auto;
+}
 .overlay {
   @extend .overlay-base;
   background: #000000a8;
