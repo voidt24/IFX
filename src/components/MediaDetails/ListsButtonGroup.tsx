@@ -1,5 +1,4 @@
-import { useRef, useState } from "react";
-import Loader from "../common/Loader";
+import { RefObject, useRef, useState } from "react";
 import AddToListButton from "../common/AddToListButton/AddToListButton";
 import { DBLists } from "@/firebase/firebase.config";
 import { handle_favs_watchlists } from "@/firebase/handle_favs_watchlists";
@@ -52,24 +51,44 @@ function ListsButtonGroup({
       dispatch(setAuthModalActive(true));
     }
   };
+
+  const listConfigs = [
+    {
+      loading: loadingFavs,
+      type: "Favorites",
+      wasAdded: addedToFavs,
+      mediaTypeRef,
+      onClick: () => handleLists(DBLists.favs),
+    },
+    {
+      loading: loadingWatchlist,
+      type: "Watchlist",
+      wasAdded: addedToWatchList,
+      mediaTypeRef: mediaTypeRef2,
+      onClick: () => handleLists(DBLists.watchs),
+    },
+    {
+      loading: loadingWatched,
+      type: "Watched",
+      wasAdded: addedToWatched,
+      mediaTypeRef: mediaTypeRef3,
+      onClick: () => handleLists(DBLists.watched),
+    },
+  ];
+
+  function renderButton(isLoading: boolean, type: string, wasAdded: boolean, mediaTypeRef: RefObject<HTMLDivElement>, onClick: () => Promise<void>, key: number) {
+    return isLoading ? (
+      <div className="bg-zinc-700 p-4 rounded-full animate-pulse" key={key}></div>
+    ) : (
+      <AddToListButton type={type} wasAdded={wasAdded} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef} onClick={() => onClick()} key={key} />
+    );
+  }
   return (
     <>
-      {loadingFavs ? (
-        <Loader />
-      ) : (
-        <AddToListButton type="Favorites" wasAdded={addedToFavs} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef} onClick={() => handleLists(DBLists.favs)} />
-      )}
-
-      {loadingWatchlist ? (
-        <Loader />
-      ) : (
-        <AddToListButton type="Watchlist" wasAdded={addedToWatchList} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef2} onClick={() => handleLists(DBLists.watchs)} />
-      )}
-      {loadingWatchlist ? (
-        <Loader />
-      ) : (
-        <AddToListButton type="Watched" wasAdded={addedToWatched} currentId={mediaId} mediaType={mediaType} mediaTypeRef={mediaTypeRef3} onClick={() => handleLists(DBLists.watched)} />
-      )}
+      {listConfigs.map((list, index) => {
+        const { loading, type, wasAdded, mediaTypeRef, onClick } = list;
+        return renderButton(loading, type, wasAdded, mediaTypeRef, onClick, index);
+      })}
     </>
   );
 }
