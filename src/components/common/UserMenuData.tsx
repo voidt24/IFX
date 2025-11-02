@@ -30,7 +30,9 @@ function UserMenuData() {
       name: "Account",
       href: "/account",
       icon: <i className="bi bi-person-fill"></i>,
-      actionFunction: null,
+      actionFunction: () => {
+        sessionStorage.setItem("profile/navigatingFromApp", "1");
+      },
     },
     {
       name: "My Lists",

@@ -10,7 +10,7 @@ function MobileCloseButton({ variant }: { variant: "details" | "watch" | "profil
       <i
         className="bi bi-x"
         onClick={() => {
-          if (sessionStorage.getItem(variant === "details" ? "navigatingFromApp" : "watch/navigatingFromApp") === "1") {
+          if (sessionStorage.getItem(variant === "details" ? "navigatingFromApp" : variant === "watch" ? "watch/navigatingFromApp" : "profile/navigatingFromApp") === "1") {
             router.back();
           } else {
             router.push("/");
