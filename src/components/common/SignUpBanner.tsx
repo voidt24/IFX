@@ -1,4 +1,7 @@
+import { APP_NAME } from "@/helpers/api.config";
+import { setTestingInitialized } from "@/store/slices/authSlice";
 import { setNoAccount, setAuthModalActive } from "@/store/slices/UISlice";
+import { Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 export default function SignUpBanner() {
   const dispatch = useDispatch();
@@ -19,7 +22,7 @@ export default function SignUpBanner() {
 
           <div className="flex gap-4 ">
             <button
-              className="btn-primary text-[85%] md:text-sm"
+              className="btn-primary text-[75%] sm:!text-[85%]"
               onClick={() => {
                 dispatch(setNoAccount(true));
                 dispatch(setAuthModalActive(true));
@@ -27,6 +30,32 @@ export default function SignUpBanner() {
             >
               Sign up
             </button>
+
+            <Tooltip
+              slotProps={{
+                popper: {
+                  sx: { zIndex: 20000 },
+                },
+              }}
+              title="Save your favorites, watchlist, and viewing history without providing personal information. Data will be saved in the browser."
+            >
+              <button
+                className="btn-primary !bg-white/85 text-[75%] sm:!text-[85%]"
+                onClick={() => {
+                  function syncTestingFeature() {
+                    localStorage.setItem(`${APP_NAME}-testing-app`, "started");
+                    const testingfeauture = localStorage.getItem(`${APP_NAME}-testing-app`);
+
+                    dispatch(setTestingInitialized(testingfeauture === "started"));
+                    document.cookie = `${APP_NAME}-testing-app=${APP_NAME}-testing-app; path=/; secure; samesite=strict`;
+                  }
+
+                  syncTestingFeature();
+                }}
+              >
+                Test app without credentials
+              </button>
+            </Tooltip>
           </div>
         </div>
       </div>
