@@ -71,7 +71,7 @@ export default function Banner() {
             {/* EDIT BANNER BUTTON */}
             <button
               title="edit-btn"
-              className="absolute top-3 right-3 px-2 py-1 rounded-lg hover:bg-white/30 text-[140%] z-[2]"
+              className="absolute top-3 left-3 px-2 py-1 rounded-lg hover:bg-white/30 text-[140%] z-[2]"
               onClick={() => {
                 setBannersModal(true);
               }}
