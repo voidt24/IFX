@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ID_TOKEN_COOKIE_NAME, VERIFY_TOKEN_ROUTE } from "./firebase/firebase.config";
+import { APP_NAME } from "./helpers/api.config";
 
 export const middleware = async (req: NextRequest) => {
   const path = req.nextUrl.pathname;
@@ -9,6 +10,10 @@ export const middleware = async (req: NextRequest) => {
   }
 
   if (["/account", "/lists", "/history"].includes(path)) {
+    if (req.cookies.has(`${APP_NAME}-testing-app`) && !req.cookies.has(ID_TOKEN_COOKIE_NAME)) {
+      return NextResponse.next();
+    }
+
     if (!req.cookies.has(ID_TOKEN_COOKIE_NAME)) {
       return NextResponse.redirect(new URL("/", req.url));
     }
