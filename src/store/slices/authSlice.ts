@@ -21,7 +21,7 @@ export const authSlice = createSlice({
     setUserLogged: (state, action: PayloadAction<boolean>) => {
       state.userLogged = action.payload;
     },
-    setFirebaseActiveUser: (state, action: PayloadAction<{ email: string | null; uid: string | null }>) => {
+    setFirebaseActiveUser: (state, action: PayloadAction<{ email: string | null; uid: string } | null>) => {
       state.firebaseActiveUser = action.payload;
     },
     setProfileData: (state, action: PayloadAction<{ displayName: string | null; email: string | null }>) => {
@@ -45,7 +45,7 @@ export const initializeAuthListener = () => (dispatch: AppDispatch, getState: ()
       dispatch(setProfileData({ displayName: user.displayName, email: user.email }));
     } else {
       dispatch(setUserLogged(false));
-      dispatch(setFirebaseActiveUser({ email: null, uid: null }));
+      dispatch(setFirebaseActiveUser(null));
       dispatch(setProfileData({ displayName: null, email: null }));
     }
     dispatch(setAuthListenerInitialized(true));

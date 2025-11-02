@@ -11,8 +11,6 @@ function UserMenuData() {
 
   const handleLogout = async () => {
     auth.signOut().then(() => {
-      dispatch(setUserLogged(false));
-      dispatch(setFirebaseActiveUser({ email: null, uid: null }));
       dispatch(setUserMenuActive(false));
       dispatch(setOpenUserDrawer(false));
       document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
