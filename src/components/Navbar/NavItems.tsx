@@ -7,11 +7,18 @@ import { onAuthStateChanged } from "firebase/auth";
 import SearchButton from "./SearchButton";
 import LoginButton from "./LoginButton";
 import UserMenuButton from "./UserMenuButton";
+import { APP_NAME } from "@/helpers/api.config";
+import { useDispatch, useSelector } from "react-redux";
+import { setTestingInitialized } from "@/store/slices/authSlice";
+import { RootState } from "@/store";
 
 function NavItems() {
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
 
+  const { testingInitialized } = useSelector((state: RootState) => state.auth);
+
+  const dispatch = useDispatch();
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -20,6 +27,14 @@ function NavItems() {
         setLoadingAuth({ state: "off" });
       }
     });
+
+    function syncTestingFeature() {
+      const testingfeauture = localStorage.getItem(`${APP_NAME}-testing-app`);
+
+      dispatch(setTestingInitialized(testingfeauture === "started"));
+    }
+
+    syncTestingFeature();
 
     return () => {
       unsubscribe();
@@ -60,7 +75,13 @@ function NavItems() {
           <SearchButton />
         </li>
         <li className="">
-          {loadingAuth.state === "unknown" ? <div className="py-2 px-4 bg-zinc-800 rounded-full animate-pulse"></div> : loadingAuth.state === "off" ? <LoginButton /> : <UserMenuButton />}
+          {loadingAuth.state === "unknown" ? (
+            <div className="py-2 px-4 bg-zinc-800 rounded-full animate-pulse"></div>
+          ) : loadingAuth.state === "off" && !testingInitialized ? (
+            <LoginButton />
+          ) : (
+            <UserMenuButton />
+          )}
         </li>
       </ul>
     </div>
