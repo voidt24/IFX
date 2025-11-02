@@ -7,9 +7,12 @@ import { ID_TOKEN_COOKIE_NAME, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.co
 import getCookie from "@/helpers/getCookie";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function useVerifyToken(setLoader?: Dispatch<SetStateAction<boolean>>) {
   const router = useRouter();
+  const { firebaseActiveUser, testingInitialized } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     async function verifyToken() {
@@ -30,7 +33,9 @@ function useVerifyToken(setLoader?: Dispatch<SetStateAction<boolean>>) {
       }
     }
     try {
-      verifyToken();
+      {
+        !firebaseActiveUser?.uid && testingInitialized ? () => undefined : verifyToken();
+      }
     } catch (e) {
       router.push("/");
     } finally {
