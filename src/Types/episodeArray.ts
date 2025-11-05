@@ -1,5 +1,6 @@
 import { Iepisode } from "./episode";
 
+// this should be named seasonArray
 export interface IepisodesArray {
   air_date: string | null;
   episodes: Iepisode[] | null;

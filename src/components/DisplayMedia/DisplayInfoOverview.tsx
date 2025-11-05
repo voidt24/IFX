@@ -13,7 +13,7 @@ function DisplayInfoOverview({ variant, isTV, episode }: { variant: "mobile" | "
   };
   return (
     <div
-      className={`info ${variant == "mobile" ? "md:hidden" : "max-md:hidden"}  flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]`}
+      className={`info z-[2] ${variant == "mobile" ? "md:hidden" : "max-md:hidden"}  flex flex-col items-center md:items-start justify-center flex-wrap gap-2 text-content-primary text-[85%] md:text-[95%] xl:text-[100%]`}
     >
       <CollapsibleElement customClassesForParent={" md:text-left md:w-[85%] xl:w-[90%]"} truncatedTextStyle={truncatedTextStyle}>
         {isTV ? (
