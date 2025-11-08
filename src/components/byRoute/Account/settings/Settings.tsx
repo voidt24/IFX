@@ -5,7 +5,7 @@ import { auth, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE } from "@/firebase/fireb
 import changePassword from "@/firebase/importantActons/changePassword";
 import changeEmail from "@/firebase/importantActons/changeEmail";
 import changeDisplayName from "@/firebase/importantActons/changeDisplayName";
-import UserActionModal from "@/components/Profile/UserActionModal";
+import UserActionModal from "../UserActionModal";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/common/Modal";
 import SettingsSkeleton from "@/components/common/Skeletons/SettingsSkeleton";

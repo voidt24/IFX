@@ -4,17 +4,17 @@ import { authHandler } from "../../../firebase/authHandler";
 import { loginUser } from "../../../firebase/loginUser";
 import { database } from "../../../firebase/firebase.config";
 import Error from "../Error";
-import { CircularProgress, Tooltip } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import Input from "./Input";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { banners } from "@/helpers/banners/banners-sources";
 import { getAuthError } from "@/lib/firebase/getAuthError";
 import { FirebaseError } from "firebase/app";
 import { useDispatch, useSelector } from "react-redux";
-import { setFirebaseActiveUser, setTestingInitialized, setUserLogged } from "@/store/slices/authSlice";
+import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
 import { setLoadingScreen, setAuthModalActive, setNoAccount } from "@/store/slices/UISlice";
 import { RootState } from "@/store";
-import { APP_NAME } from "@/helpers/api.config";
+import TestAppButton from "../TestAppButton";
 
 export default function AuthForm() {
   const { noAccount } = useSelector((state: RootState) => state.ui);
@@ -143,40 +143,17 @@ export default function AuthForm() {
         </button>
       </p>
 
-      {!testingInitialized && (
+      {/* soon */}
+      {/* {!testingInitialized && (
         <>
           <div className="relative flex flex-col items-center justify-center">
             <span className="bg-white absolute  h-px px-24"></span>
             <p className="bg-[#0c0e13] py-2 px-5 rounded-lg z-[2]">or</p>
           </div>
 
-          <Tooltip
-            slotProps={{
-              popper: {
-                sx: { zIndex: 20000 },
-              },
-            }}
-            title="Save your favorites, watchlist, and viewing history without providing personal information. Data will be saved in the browser."
-          >
-            <button
-              className="btn-secondary text-[75%] sm:text-[85%] "
-              onClick={() => {
-                function syncTestingFeature() {
-                  localStorage.setItem(`${APP_NAME}-testing-app`, "started");
-                  const testingfeauture = localStorage.getItem(`${APP_NAME}-testing-app`);
-
-                  dispatch(setTestingInitialized(testingfeauture === "started"));
-                  document.cookie = `${APP_NAME}-testing-app=${APP_NAME}-testing-app; path=/; secure; samesite=strict`;
-                }
-
-                syncTestingFeature();
-              }}
-            >
-              Test app without credentials
-            </button>
-          </Tooltip>
+          <TestAppButton />
         </>
-      )}
+      )} */}
     </>
   );
 }
