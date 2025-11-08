@@ -80,7 +80,7 @@ export default function Home() {
       <div className=" mt-6 pb-0">
         <div className=" flex-col-center gap-4 lg:gap-6 ">
           <SectionWithSlider title="Popular Movies" link="/movies" data={movies} mediaType="movie" />
-          {userLogged && !testingInitialized ? <SignUpBanner /> : null}
+          {!userLogged && !testingInitialized ? <SignUpBanner /> : null}
         </div>
       </div>
 
