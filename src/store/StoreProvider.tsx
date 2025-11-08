@@ -7,7 +7,7 @@ import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { usePathname } from "next/navigation";
 import { setCurrentMediaType } from "./slices/mediaDetailsSlice";
 import Modal from "@/components/common/Modal";
-import AuthForm from "@/components/AuthForm";
+import AuthForm from "@/components/common/Forms/AuthForm";
 import { setAuthModalActive } from "@/store/slices/UISlice";
 import LoadingScreen from "@/components/common/Loaders/LoadingScreen";
 

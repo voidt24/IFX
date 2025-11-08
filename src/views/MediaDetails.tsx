@@ -6,9 +6,7 @@ import { auth } from "@/firebase/firebase.config";
 import { getFromDB } from "@/firebase/getFromDB";
 import { APP_NAME, image } from "@/helpers/api.config";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
-import { handleTrailerClick } from "@/helpers/getTrailer";
 import { MediaTypeApi } from "@/Types/mediaType";
-import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { setAddedToFavs, setAddedToWatchList, setAddedToWatched } from "@/store/slices/listsManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
@@ -17,18 +15,14 @@ import { setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import { Context } from "@/context/Context";
 import MediaInfoPWA from "@/components/PWA/MediaInfoPWA";
 import MediaInfo from "@/components/byRoute/MediaDetails/MediaInfo";
-import Tabs from "@/components/common/Tabs/Tabs";
-import { Tab } from "@/components/common/Tabs/Tab";
-import { Cast } from "@/components/byRoute/MediaDetails/Cast";
-import { Reviews } from "@/components/byRoute/MediaDetails/Reviews/Reviews";
 import Notification from "@/components/common/Notification";
-import NotFound from "@/components/common/NotFound";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 import MediaDetailsSkeleton from "@/components/common/Skeletons/MediaDetailsSkeleton";
 import { onAuthStateChanged } from "firebase/auth";
+import TabsSection from "@/components/byRoute/MediaDetails/TabsSection/TabsSection";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
-  const { setCastError, setReviewsError, setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);
+  const { setCastError, setReviewsError, setOpenTrailer, isMobilePWA } = useContext(Context);
 
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -38,7 +32,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
-  const { mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
+  const { mediaDetailsData } = useSelector((state: RootState) => state.mediaDetails);
   const { testingInitialized } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
@@ -200,36 +194,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
           )}
 
-          <div className="w-full px-[0.8rem] lg:max-w-[85%] xxl:max-w-[70%] 4k:max-w-[60%] relative  mx-auto  mt-10">
-            <Tabs>
-              <Tab title="Cast">
-                <Cast cast={cast} />
-              </Tab>
-              <Tab title="Trailer">
-                <div
-                  className="trailer-preview border border-content-third rounded-lg overflow-hidden bg-cover bg-center aspect-video bg-no-repeat w-full md:w-[40%] mx-auto relative"
-                  style={{ backgroundImage: `url(${mediaDetailsData?.bigHeroBackground})` }}
-                >
-                  <div className="overlay-base bg-black/70 flex-col-center ">
-                    <button
-                      className="px-3 py-2 bg-brand-primary/35 backdrop-blur-lg rounded-full hover:scale-125 transition-all duration-200"
-                      onClick={async () => {
-                        const trailer = await handleTrailerClick(mediaId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType));
-                        setTrailerKey(trailer);
-                        setOpenTrailer(true);
-                      }}
-                      title="trailer-button"
-                    >
-                      <i className="bi bi-play text-2xl"></i>
-                    </button>
-                  </div>
-                </div>
-              </Tab>
-              <Tab title={`Reviews (${reviews && reviews.length})`}>
-                <Reviews reviews={reviews} />
-              </Tab>
-            </Tabs>
-          </div>
+          <TabsSection mediaType={mediaType} mediaId={mediaId} cast={cast} reviews={reviews} />
 
           <Notification message={message} setMessage={setMessage} />
         </>
