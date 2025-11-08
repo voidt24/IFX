@@ -39,6 +39,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
 
   const { mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
+  const { testingInitialized } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useHideDrawers(true);
@@ -56,7 +57,6 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
         const [byIdPromise, castPromise, reviewsPromise] = result;
         if (byIdPromise.status == "fulfilled") {
           const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
-
           const mediaDetails: ImediaDetailsData = {
             heroBackground: !isMobilePWA ? (window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`) : `${image}${backdrop_path}`,
             bigHeroBackground: `${image}${backdrop_path}`,
@@ -149,9 +149,33 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      function isSavedInTest() {
+        const testingData = localStorage.getItem(`${APP_NAME}-testing-app-data`);
+        const testingDataParsed = JSON.parse(testingData || "[]");
+
+        for (const obj of testingDataParsed) {
+          if (mediaId == obj.id) {
+            return true;
+          }
+        }
+
+        return false;
+      }
       if (user) {
         isElementSaved();
       } else {
+        if (testingInitialized) {
+          // to-do: add function to check if item is in local storage
+          // and stablished following sets based on result
+          setAddedToFavs(false);
+          setAddedToWatchList(false);
+          setAddedToWatched(false);
+          setLoadingFavs(false);
+          setLoadingWatchlist(false);
+          setLoadingWatched(false);
+
+          return;
+        }
         setAddedToFavs(false);
         setAddedToWatchList(false);
         setAddedToWatched(false);

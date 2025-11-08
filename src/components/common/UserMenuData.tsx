@@ -1,28 +1,31 @@
 import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
 import Link from "next/link";
 import { setLoadingScreen, setUserMenuActive, setOpenUserDrawer } from "@/store/slices/UISlice";
+import { RootState } from "@/store";
 
 function UserMenuData() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const handleLogout = async () => {
-    auth.signOut().then(() => {
-      dispatch(setUserLogged(false));
-      dispatch(setFirebaseActiveUser({ email: null, uid: null }));
-      dispatch(setUserMenuActive(false));
-      dispatch(setOpenUserDrawer(false));
-      document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
-      dispatch(setLoadingScreen(true));
+  const { userLogged, testingInitialized } = useSelector((state: RootState) => state.auth);
 
-      setTimeout(() => {
-        dispatch(setLoadingScreen(false));
-      }, 1000);
-      router.push("/");
-    });
+  const handleLogout = async () => {
+    if (userLogged) {
+      auth.signOut().then(() => {
+        dispatch(setUserMenuActive(false));
+        dispatch(setOpenUserDrawer(false));
+        document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+        dispatch(setLoadingScreen(true));
+
+        setTimeout(() => {
+          dispatch(setLoadingScreen(false));
+        }, 1000);
+        router.push("/");
+      });
+    }
   };
 
   const userActions = [
@@ -64,7 +67,7 @@ function UserMenuData() {
         {profileData && (
           <div className="flex gap-2 items-start justify-center pb-4  border-b border-zinc-700 ">
             <div className="flex flex-col gap-1 items-start justify-center ">
-              <h1 className="text-3xl font-semibold">Hi, {profileData.displayName}</h1>
+              <h1 className="text-3xl font-semibold">Hi, {userLogged && !testingInitialized ? profileData.displayName : "Tester"}</h1>
               <p className="text-zinc-400">{profileData.email}</p>
             </div>
           </div>

@@ -7,12 +7,14 @@ interface AuthState {
   firebaseActiveUser: { email: string | null; uid: string | null } | null;
   profileData: { displayName: string | null; email: string | null };
   authListenerInitialized: boolean;
+  testingInitialized: boolean;
 }
 const initialState: AuthState = {
   userLogged: false,
   firebaseActiveUser: null,
   profileData: { displayName: null, email: null },
   authListenerInitialized: false,
+  testingInitialized: false,
 };
 export const authSlice = createSlice({
   name: "auth",
@@ -21,7 +23,7 @@ export const authSlice = createSlice({
     setUserLogged: (state, action: PayloadAction<boolean>) => {
       state.userLogged = action.payload;
     },
-    setFirebaseActiveUser: (state, action: PayloadAction<{ email: string | null; uid: string | null }>) => {
+    setFirebaseActiveUser: (state, action: PayloadAction<{ email: string | null; uid: string } | null>) => {
       state.firebaseActiveUser = action.payload;
     },
     setProfileData: (state, action: PayloadAction<{ displayName: string | null; email: string | null }>) => {
@@ -29,6 +31,9 @@ export const authSlice = createSlice({
     },
     setAuthListenerInitialized: (state, action: PayloadAction<boolean>) => {
       state.authListenerInitialized = action.payload;
+    },
+    setTestingInitialized: (state, action: PayloadAction<boolean>) => {
+      state.testingInitialized = action.payload;
     },
   },
 });
@@ -45,7 +50,7 @@ export const initializeAuthListener = () => (dispatch: AppDispatch, getState: ()
       dispatch(setProfileData({ displayName: user.displayName, email: user.email }));
     } else {
       dispatch(setUserLogged(false));
-      dispatch(setFirebaseActiveUser({ email: null, uid: null }));
+      dispatch(setFirebaseActiveUser(null));
       dispatch(setProfileData({ displayName: null, email: null }));
     }
     dispatch(setAuthListenerInitialized(true));
@@ -59,5 +64,5 @@ export const initializeAuthListener = () => (dispatch: AppDispatch, getState: ()
   });
 };
 
-export const { setUserLogged, setFirebaseActiveUser, setProfileData, setAuthListenerInitialized } = authSlice.actions;
+export const { setUserLogged, setFirebaseActiveUser, setProfileData, setAuthListenerInitialized, setTestingInitialized } = authSlice.actions;
 export default authSlice.reducer;

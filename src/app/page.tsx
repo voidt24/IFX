@@ -18,6 +18,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { IMediaData } from "@/Types";
 import MediaCardContainer from "@/components/MediaCard/MediaCardContainer";
 import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
+import { setTestingInitialized } from "@/store/slices/authSlice";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
@@ -28,7 +29,7 @@ export default function Home() {
   const { moviesHero, tv, movies } = data;
 
   const { containerMargin } = useSelector((state: RootState) => state.ui);
-  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser, testingInitialized, userLogged } = useSelector((state: RootState) => state.auth);
   const { recentlyBrowsed } = useSelector((state: RootState) => state.mediaDetails);
 
   const isMobile = useIsMobile(640);
@@ -45,6 +46,13 @@ export default function Home() {
     }
 
     syncRecentlyBrowsed();
+
+    function syncTestingFeature() {
+      const testingfeauture = localStorage.getItem(`${APP_NAME}-testing-app`);
+      dispatch(setTestingInitialized(testingfeauture === "started"));
+    }
+
+    syncTestingFeature();
 
     const handleStorage = (e: StorageEvent) => {
       if (e.key === `${APP_NAME}-recent`) {
@@ -72,8 +80,7 @@ export default function Home() {
       <div className=" mt-6 pb-0">
         <div className=" flex-col-center gap-4 lg:gap-6 ">
           <SectionWithSlider title="Popular Movies" link="/movies" data={movies} mediaType="movie" />
-
-          {!firebaseActiveUser?.uid ? <SignUpBanner /> : null}
+          {userLogged && !testingInitialized ? <SignUpBanner /> : null}
         </div>
       </div>
 
