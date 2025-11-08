@@ -1,7 +1,7 @@
 "use client";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import SheetWrapper from "./SheetWrapper";
-import Trailer from "../Trailer";
+import Trailer from "../byRoute/MediaDetails/Trailer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MediaDetails from "@/views/MediaDetails";

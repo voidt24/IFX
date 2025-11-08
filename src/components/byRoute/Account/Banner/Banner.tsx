@@ -1,7 +1,7 @@
 import { banners } from "@/helpers/banners/banners-sources";
 
 import { useEffect, useState } from "react";
-import Modal from "../common/Modal";
+import Modal from "@/components/common/Modal";
 import { getFieldsFromCollection, updateField } from "@/firebase/fetchMyData";
 import { CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
-import Modal from "./Modal";
-import DynamicForm from "./DynamicForm";
+import Modal from "@/components/common/Modal";
+import DynamicForm from "@/components/common/Forms/DynamicForm";
 
 interface props {
   children?: React.ReactNode;

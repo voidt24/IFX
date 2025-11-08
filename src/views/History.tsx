@@ -11,7 +11,7 @@ import ToTop from "../components/common/ToTop/ToTop";
 import Wrapper from "../components/common/Wrapper/Wrapper";
 import { setHistoryMedia } from "@/store/slices/historySlice";
 import HistorySkeleton from "@/components/common/Skeletons/HistorySkeleton";
-import HistoryGroup from "@/components/History/HistoryGroup";
+import HistoryGroup from "@/components/byRoute/History/HistoryGroup";
 const PAGE_SIZE = 10;
 
 function History() {

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
 
-function ListOptionsBar() {
+function EditButton() {
   const { edit } = useSelector((state: RootState) => state.listsManagement);
   const dispatch = useDispatch();
 
@@ -23,4 +23,4 @@ function ListOptionsBar() {
   );
 }
 
-export default ListOptionsBar;
+export default EditButton;

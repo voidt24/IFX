@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { MediaTypeApi } from "@/Types";
 import { CircularProgress } from "@mui/material";
 import { Context } from "@/context/Context";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/Shadcn/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/Shadcn/carousel";
 
 const optionResolver = (option: string | null) => {
   if (Number(option) <= 0 || Number(option) > srcOptions.length || !option) return 0;
