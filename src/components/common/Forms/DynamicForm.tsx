@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Error from "./Error";
+import Error from "../Error";
 import Input from "./Input";
 import { CircularProgress } from "@mui/material";
 

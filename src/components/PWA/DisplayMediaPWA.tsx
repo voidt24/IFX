@@ -4,8 +4,8 @@ import { MEDIA_URL_RESOLVER } from "@/helpers/api.config";
 import { MediaTypeApi } from "@/Types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import PlayMedia from "../DisplayMedia/PlayMedia";
-import DisplayInfo from "../DisplayMedia/DisplayInfo";
+import PlayMedia from "../byRoute/DisplayMedia/PlayMedia";
+import DisplayInfo from "../byRoute/DisplayMedia/DisplayInfo";
 import addToHistory from "@/helpers/addToHistory";
 
 function DisplayMediaPWA({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) {

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { createUser } from "../firebase/createUser";
-import { authHandler } from "../firebase/authHandler";
-import { loginUser } from "../firebase/loginUser";
-import { database } from "../firebase/firebase.config";
-import Error from "./common/Error";
+import { createUser } from "../../../firebase/createUser";
+import { authHandler } from "../../../firebase/authHandler";
+import { loginUser } from "../../../firebase/loginUser";
+import { database } from "../../../firebase/firebase.config";
+import Error from "../Error";
 import { CircularProgress, Tooltip } from "@mui/material";
-import Input from "./common/Input";
+import Input from "./Input";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { banners } from "@/helpers/banners/banners-sources";
 import { getAuthError } from "@/lib/firebase/getAuthError";

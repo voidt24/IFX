@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Notification from "@/components/common/Notification";
 import ConfirmDeleteModal from "@/components/common/ConfirmDeleteModal";
-import ListOptionsBar from "@/components/common/ListOptionsBar";
+import EditButton from "@/components/byRoute/Lists/EditButton";
 import ToTop from "@/components/common/ToTop/ToTop";
 import { IMediaData } from "@/Types/index";
 import { setCheckedMedia, setEdit } from "@/store/slices/listsManagementSlice";
@@ -14,13 +14,13 @@ import { database, usersCollectionName } from "@/firebase/firebase.config";
 import { collection, onSnapshot } from "firebase/firestore";
 import { defaultListButtons } from "@/features/contentFilter/savedListsSelection";
 import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
-import { ListsResults } from "@/components/ListsResults";
+import { ListsResults } from "@/components/byRoute/Lists/ListsResults";
 import useVerifyToken from "@/Hooks/useVerifyToken";
 import Wrapper from "@/components/common/Wrapper/Wrapper";
 import SavedListOptions from "@/features/contentFilter/savedListsSelection";
 import { Suspense } from "react";
 import useHideDrawers from "@/Hooks/useHideDrawers";
-import DeletionToolbar from "@/components/Lists/DeletionToolbar";
+import DeletionToolbar from "@/components/byRoute/Lists/DeletionToolbar";
 import { setUserLogged } from "@/store/slices/authSlice";
 
 export default function Lists() {
@@ -136,7 +136,7 @@ export default function Lists() {
           <MediaTypeSelect originalListData={originalListData} setCurrentListData={setCurrentListData} />
           {currentListData && currentListData.length > 0 && (
             <div className="my-4">
-              <ListOptionsBar />
+              <EditButton />
               {confirmDialog && (
                 <ConfirmDeleteModal
                   confirmDialog={confirmDialog}

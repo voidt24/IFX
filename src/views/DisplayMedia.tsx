@@ -4,15 +4,15 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MediaTypeUrl } from "@/Types/mediaType";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import PlayMedia from "@/components/DisplayMedia/PlayMedia";
-import DisplayInfo from "@/components/DisplayMedia/DisplayInfo";
+import PlayMedia from "@/components/byRoute/DisplayMedia/PlayMedia";
+import DisplayInfo from "@/components/byRoute/DisplayMedia/DisplayInfo";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
 import { setCurrentMediaType, setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import paramIsValid from "@/helpers/isParamValid";
 import addToHistory from "@/helpers/addToHistory";
 import useIsMobile from "@/Hooks/useIsMobile";
-import MobileCloseButton from "@/components/MediaDetails/Buttons/MobileCloseButton";
+import MobileCloseButton from "@/components/byRoute/MediaDetails/Buttons/MobileCloseButton";
 
 function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId: number }) {
   const { containerMargin } = useSelector((state: RootState) => state.ui);

@@ -7,8 +7,8 @@ import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
 import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
-import ConfirmDeleteModal from "../../common/ConfirmDeleteModal";
-import Notification from "../../common/Notification";
+import ConfirmDeleteModal from "@/components/common/ConfirmDeleteModal";
+import Notification from "@/components/common/Notification";
 import { setElementsToDelete } from "@/store/slices/historySlice";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
 

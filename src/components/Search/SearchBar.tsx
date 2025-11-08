@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { search } from "../../helpers/search";
-import Input from "../common/Input";
+import Input from "../common/Forms/Input";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setLoadingSearch, setRecentlySearched, setSearchQuery, setSearchResults, setSearchStarted } from "@/store/slices/searchSlice";

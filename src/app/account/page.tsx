@@ -1,12 +1,12 @@
 "use client";
-import Banner from "@/components/Banner/Banner";
+import Banner from "@/components/byRoute/Account/Banner/Banner";
 import useVerifyToken from "@/Hooks/useVerifyToken";
-import Settings from "@/components/settings/Settings";
+import Settings from "@/components/byRoute/Account/settings/Settings";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 import useIsMobile from "@/Hooks/useIsMobile";
-import MobileCloseButton from "@/components/MediaDetails/Buttons/MobileCloseButton";
+import MobileCloseButton from "@/components/byRoute/MediaDetails/Buttons/MobileCloseButton";
 
 export default function Profile() {
   const { profileData, userLogged } = useSelector((state: RootState) => state.auth);

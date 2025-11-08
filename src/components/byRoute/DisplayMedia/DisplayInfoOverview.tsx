@@ -1,5 +1,5 @@
 import React from "react";
-import CollapsibleElement from "../common/CollapsibleElement";
+import CollapsibleElement from "@/components/common/CollapsibleElement";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 

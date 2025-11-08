@@ -1,5 +1,5 @@
 import { RefObject, useRef, useState } from "react";
-import AddToListButton from "../common/AddToListButton/AddToListButton";
+import AddToListButton from "./AddToListButton";
 import { DBLists } from "@/firebase/firebase.config";
 import { handle_favs_watchlists } from "@/firebase/handle_favs_watchlists";
 import { MediaTypeApi } from "@/Types/mediaType";

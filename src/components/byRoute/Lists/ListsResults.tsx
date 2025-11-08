@@ -1,5 +1,5 @@
 import { IMediaData } from "@/Types/index";
-import MediaGrid from "./MediaGrid/MediaGrid";
+import MediaGrid from "@/components/MediaGrid/MediaGrid";
 
 export const ListsResults = ({ currentListData }: { currentListData: IMediaData[] }) => {
   return (

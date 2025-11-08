@@ -1,7 +1,7 @@
 "use client";
 import { useState, useContext } from "react";
 import ReactPlayer from "react-player";
-import { Context } from "../context/Context";
+import { Context } from "@/context/Context";
 
 const Trailer = () => {
   const { openTrailer, setOpenTrailer, trailerKey } = useContext(Context);
