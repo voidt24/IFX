@@ -9,8 +9,7 @@ import useIsMobile from "@/Hooks/useIsMobile";
 import MobileCloseButton from "@/components/MediaDetails/Buttons/MobileCloseButton";
 
 export default function Profile() {
-  const auth = useSelector((state: RootState) => state.auth);
-  const { profileData } = auth;
+  const { profileData, userLogged } = useSelector((state: RootState) => state.auth);
   const isMobile = useIsMobile(768);
   const { containerMargin } = useSelector((state: RootState) => state.ui);
 
@@ -27,7 +26,11 @@ export default function Profile() {
         </span>
 
         <div className="w-full z-[2] ">
-          <h2 className="text-center title-style border-none">{profileData?.displayName}</h2>
+          <h2 className="text-center title-style border-none">
+            {userLogged ? profileData?.displayName : "Hi test user"}
+
+            <p className="text-[45%] font-normal text-center text-content-third">*Remember to create an account to perform any of the following actions*</p>
+          </h2>
           <Settings />
         </div>
       </div>

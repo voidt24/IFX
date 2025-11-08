@@ -18,6 +18,7 @@ import { APP_NAME } from "@/helpers/api.config";
 
 export default function AuthForm() {
   const { noAccount } = useSelector((state: RootState) => state.ui);
+  const { testingInitialized } = useSelector((state: RootState) => state.auth);
 
   const [userData, setUserData] = useState({ username: "", email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState({ active: false, text: "" });
@@ -142,36 +143,40 @@ export default function AuthForm() {
         </button>
       </p>
 
-      <div className="relative flex flex-col items-center justify-center">
-        <span className="bg-white absolute  h-px px-24"></span>
-        <p className="bg-[#0c0e13] py-2 px-5 rounded-lg z-[2]">or</p>
-      </div>
+      {!testingInitialized && (
+        <>
+          <div className="relative flex flex-col items-center justify-center">
+            <span className="bg-white absolute  h-px px-24"></span>
+            <p className="bg-[#0c0e13] py-2 px-5 rounded-lg z-[2]">or</p>
+          </div>
 
-      <Tooltip
-        slotProps={{
-          popper: {
-            sx: { zIndex: 20000 },
-          },
-        }}
-        title="Save your favorites, watchlist, and viewing history without providing personal information. Data will be saved in the browser."
-      >
-        <button
-          className="btn-secondary text-[75%] sm:text-[85%] "
-          onClick={() => {
-            function syncTestingFeature() {
-              localStorage.setItem(`${APP_NAME}-testing-app`, "started");
-              const testingfeauture = localStorage.getItem(`${APP_NAME}-testing-app`);
+          <Tooltip
+            slotProps={{
+              popper: {
+                sx: { zIndex: 20000 },
+              },
+            }}
+            title="Save your favorites, watchlist, and viewing history without providing personal information. Data will be saved in the browser."
+          >
+            <button
+              className="btn-secondary text-[75%] sm:text-[85%] "
+              onClick={() => {
+                function syncTestingFeature() {
+                  localStorage.setItem(`${APP_NAME}-testing-app`, "started");
+                  const testingfeauture = localStorage.getItem(`${APP_NAME}-testing-app`);
 
-              dispatch(setTestingInitialized(testingfeauture === "started"));
-              document.cookie = `${APP_NAME}-testing-app=${APP_NAME}-testing-app; path=/; secure; samesite=strict`;
-            }
+                  dispatch(setTestingInitialized(testingfeauture === "started"));
+                  document.cookie = `${APP_NAME}-testing-app=${APP_NAME}-testing-app; path=/; secure; samesite=strict`;
+                }
 
-            syncTestingFeature();
-          }}
-        >
-          Test app without credentials
-        </button>
-      </Tooltip>
+                syncTestingFeature();
+              }}
+            >
+              Test app without credentials
+            </button>
+          </Tooltip>
+        </>
+      )}
     </>
   );
 }

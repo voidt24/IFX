@@ -18,7 +18,7 @@ function History() {
   useVerifyToken();
   useHideDrawers();
   const { historyMedia } = useSelector((state: RootState) => state.history);
-  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser, userLogged } = useSelector((state: RootState) => state.auth);
   const [error, setError] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [loadMore, setLoadMore] = useState(false);
@@ -34,75 +34,79 @@ function History() {
   }, []);
 
   async function getData() {
-    if (!database || !usersCollectionName || (firebaseActiveUser != null && !firebaseActiveUser.uid)) {
-      setError(true);
-      return;
-    }
-    //subscription to db to get real time changes
-    if (firebaseActiveUser != null && firebaseActiveUser.uid) {
-      //TS forces to check this conition again
-      const unsubscribers: (() => void)[] = [];
-
-      const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, "history");
-      const snapshot = await getDocs(activelistDocuments);
-      const totalDocs = snapshot.docs.length;
-
-      let q = query(activelistDocuments, orderBy("createdAt", "desc"), limit(PAGE_SIZE));
-
-      if (hasMore && lastDoc) {
-        q = query(activelistDocuments, orderBy("createdAt", "desc"), startAfter(lastDoc), limit(PAGE_SIZE));
+    if (userLogged) {
+      if (!database || !usersCollectionName || (firebaseActiveUser != null && !firebaseActiveUser.uid)) {
+        setError(true);
+        return;
       }
+      //subscription to db to get real time changes
+      if (firebaseActiveUser != null && firebaseActiveUser.uid) {
+        //TS forces to check this conition again
+        const unsubscribers: (() => void)[] = [];
 
-      const content: [string, IhistoryMedia[]][] = [];
+        const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, "history");
+        const snapshot = await getDocs(activelistDocuments);
+        const totalDocs = snapshot.docs.length;
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        if (snapshot.docs.length <= 0) {
-          dispatch(setHistoryMedia([]));
-          return;
+        let q = query(activelistDocuments, orderBy("createdAt", "desc"), limit(PAGE_SIZE));
+
+        if (hasMore && lastDoc) {
+          q = query(activelistDocuments, orderBy("createdAt", "desc"), startAfter(lastDoc), limit(PAGE_SIZE));
         }
 
-        snapshot.docs.forEach(async (doc) => {
-          const dateId = doc.id;
+        const content: [string, IhistoryMedia[]][] = [];
 
-          // Listener para la subcolección "content" de cada doc
-          const uid: string = firebaseActiveUser.uid || "";
-          const contentRef = collection(database, usersCollectionName, uid, "history", dateId, "content");
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          if (snapshot.docs.length <= 0) {
+            dispatch(setHistoryMedia([]));
+            return;
+          }
 
-          const contentUnsub = onSnapshot(contentRef, (contentSnapshot) => {
-            const mediaItems: IhistoryMedia[] = contentSnapshot.docs.map((contentDoc) => contentDoc.data() as IhistoryMedia);
+          snapshot.docs.forEach(async (doc) => {
+            const dateId = doc.id;
 
-            // Eliminamos cualquier entrada anterior para ese dateId para evitar duplicados en el UI
-            const existingIndex = content.findIndex(([existingDate]) => existingDate === dateId);
-            if (existingIndex !== -1) {
-              content.splice(existingIndex, 1);
-            }
+            // Listener para la subcolección "content" de cada doc
+            const uid: string = firebaseActiveUser.uid || "";
+            const contentRef = collection(database, usersCollectionName, uid, "history", dateId, "content");
 
-            content.push([dateId, mediaItems]);
+            const contentUnsub = onSnapshot(contentRef, (contentSnapshot) => {
+              const mediaItems: IhistoryMedia[] = contentSnapshot.docs.map((contentDoc) => contentDoc.data() as IhistoryMedia);
 
-            let data: [string, IhistoryMedia[]][] | null;
-            if (historyMedia && historyMedia?.length > 0) {
-              data = [...historyMedia, ...content];
-            } else {
-              data = [...content];
-            }
-            const safeContent: [string, IhistoryMedia[]][] = data.map(([dateId, items]): [string, IhistoryMedia[]] => [dateId, items.map((item) => ({ ...item }))]);
+              // Eliminamos cualquier entrada anterior para ese dateId para evitar duplicados en el UI
+              const existingIndex = content.findIndex(([existingDate]) => existingDate === dateId);
+              if (existingIndex !== -1) {
+                content.splice(existingIndex, 1);
+              }
 
-            dispatch(setHistoryMedia(safeContent));
+              content.push([dateId, mediaItems]);
+
+              let data: [string, IhistoryMedia[]][] | null;
+              if (historyMedia && historyMedia?.length > 0) {
+                data = [...historyMedia, ...content];
+              } else {
+                data = [...content];
+              }
+              const safeContent: [string, IhistoryMedia[]][] = data.map(([dateId, items]): [string, IhistoryMedia[]] => [dateId, items.map((item) => ({ ...item }))]);
+
+              dispatch(setHistoryMedia(safeContent));
+            });
+
+            unsubscribers.push(contentUnsub);
           });
 
-          unsubscribers.push(contentUnsub);
+          setTotalLoadedDocs((prev) => prev + PAGE_SIZE);
+
+          setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+
+          setHasMore(totalLoadedDocs < totalDocs);
         });
 
-        setTotalLoadedDocs((prev) => prev + PAGE_SIZE);
-
-        setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
-
-        setHasMore(totalLoadedDocs < totalDocs);
-      });
-
-      return () => {
-        unsubscribe();
-      };
+        return () => {
+          unsubscribe();
+        };
+      }
+    } else {
+      dispatch(setHistoryMedia([]));
     }
   }
 

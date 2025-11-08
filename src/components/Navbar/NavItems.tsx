@@ -16,7 +16,7 @@ function NavItems() {
   const [loadingAuth, setLoadingAuth] = useState({ state: "unknown" });
   const pathname = usePathname();
 
-  const { testingInitialized } = useSelector((state: RootState) => state.auth);
+  const { userLogged, testingInitialized } = useSelector((state: RootState) => state.auth);
 
   const dispatch = useDispatch();
   useEffect(() => {

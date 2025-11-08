@@ -21,6 +21,7 @@ import SavedListOptions from "@/features/contentFilter/savedListsSelection";
 import { Suspense } from "react";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 import DeletionToolbar from "@/components/Lists/DeletionToolbar";
+import { setUserLogged } from "@/store/slices/authSlice";
 
 export default function Lists() {
   useVerifyToken();
@@ -43,7 +44,7 @@ export default function Lists() {
   const list = searchParams.get("selected");
   const media = searchParams.get("media");
 
-  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
+  const { firebaseActiveUser, userLogged } = useSelector((state: RootState) => state.auth);
   const { listChanged } = useSelector((state: RootState) => state.listsManagement);
 
   useEffect(() => {
@@ -55,23 +56,28 @@ export default function Lists() {
 
   useEffect(() => {
     async function getData() {
-      //subscription to db to get real time changes
-      if (database && usersCollectionName && firebaseActiveUser?.uid && list) {
-        const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, list);
+      if (userLogged) {
+        if (database && usersCollectionName && firebaseActiveUser?.uid && list) {
+          //subscription to db to get real time changes
+          const activelistDocuments = collection(database, usersCollectionName, firebaseActiveUser.uid, list);
 
-        const unsub = onSnapshot(activelistDocuments, (document) => {
-          const data: IMediaData[] = [];
-          document.forEach((doc) => {
-            data.push(doc.data() as IMediaData);
+          const unsub = onSnapshot(activelistDocuments, (document) => {
+            const data: IMediaData[] = [];
+            document.forEach((doc) => {
+              data.push(doc.data() as IMediaData);
+            });
+            setCurrentListData(data);
+            setOriginalListData(data);
           });
-          setCurrentListData(data);
-          setOriginalListData(data);
-        });
 
-        // return 'unsub' on component unmount to avoid being "subscribe" while not on this page
-        return () => {
-          unsub();
-        };
+          // return 'unsub' on component unmount to avoid being "subscribe" while not on this page
+          return () => {
+            unsub();
+          };
+        }
+      } else {
+        setCurrentListData([]);
+        setOriginalListData([]);
       }
     }
 

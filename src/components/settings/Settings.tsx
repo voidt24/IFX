@@ -38,8 +38,7 @@ export default function Settings() {
   const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
   const [showAccountDeletedModal, setShowAccountDeletedModal] = useState(false);
 
-  const authState = useSelector((state: RootState) => state.auth);
-  const { profileData } = authState;
+  const { profileData, userLogged } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useVerifyToken(setLoader);
@@ -49,108 +48,116 @@ export default function Settings() {
   }, [auth.currentUser?.displayName]);
 
   const handleChangeDisplayName = async () => {
-    if (!name) {
-      setErrorMessage({ active: true, text: "Type your name" });
-      return;
-    }
-    if (name.length > 20) {
-      setErrorMessage({ active: true, text: "Please type 20 or less characters." });
-      return;
-    }
-    try {
-      await changeDisplayName(name);
-      setNameModalActive(false);
-      setMessage({ message: `Name changed!`, severity: "success", open: true });
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        setErrorMessage({ active: true, text: getAuthError(error) });
+    if (userLogged) {
+      if (!name) {
+        setErrorMessage({ active: true, text: "Type your name" });
+        return;
+      }
+      if (name.length > 20) {
+        setErrorMessage({ active: true, text: "Please type 20 or less characters." });
+        return;
+      }
+      try {
+        await changeDisplayName(name);
+        setNameModalActive(false);
+        setMessage({ message: `Name changed!`, severity: "success", open: true });
+      } catch (error) {
+        if (error instanceof FirebaseError) {
+          setErrorMessage({ active: true, text: getAuthError(error) });
+        }
       }
     }
   };
 
   const handleChangeEmail = async () => {
-    if (!email) {
-      setErrorMessage({ active: true, text: "Please enter a valid email address." });
-      return;
-    }
-
-    if (userData.email == email) {
-      setErrorMessage({ active: true, text: "New email should be different as the previous one..." });
-      return;
-    }
-    if (auth.currentUser?.email !== userData.email) {
-      setErrorMessage({ active: true, text: "Current email should be the same you used for this login session" });
-      return;
-    }
-    try {
-      const emailExists = await fetch(VERIFY_EMAIL_ROUTE, {
-        method: "POST",
-        body: JSON.stringify(email),
-      });
-      if (emailExists.ok) {
-        setErrorMessage({ active: true, text: "The new email is already associated with another account. " });
-      } else {
-        await changeEmail(userData, email);
-        setEmailModalActive(false);
-        setShowVerifyEmailModal(true);
+    if (userLogged) {
+      if (!email) {
+        setErrorMessage({ active: true, text: "Please enter a valid email address." });
+        return;
       }
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        setErrorMessage({ active: true, text: getAuthError(error) });
+
+      if (userData.email == email) {
+        setErrorMessage({ active: true, text: "New email should be different as the previous one..." });
+        return;
+      }
+      if (auth.currentUser?.email !== userData.email) {
+        setErrorMessage({ active: true, text: "Current email should be the same you used for this login session" });
+        return;
+      }
+      try {
+        const emailExists = await fetch(VERIFY_EMAIL_ROUTE, {
+          method: "POST",
+          body: JSON.stringify(email),
+        });
+        if (emailExists.ok) {
+          setErrorMessage({ active: true, text: "The new email is already associated with another account. " });
+        } else {
+          await changeEmail(userData, email);
+          setEmailModalActive(false);
+          setShowVerifyEmailModal(true);
+        }
+      } catch (error) {
+        if (error instanceof FirebaseError) {
+          setErrorMessage({ active: true, text: getAuthError(error) });
+        }
       }
     }
   };
 
   const handleChangePassword = async () => {
-    if (!userData.email) {
-      setErrorMessage({ active: true, text: "Please enter a valid email address." });
-      return;
-    }
-    if (!userData.password) {
-      setErrorMessage({ active: true, text: "Type your current password" });
-      return;
-    }
-    if (!password) {
-      setErrorMessage({ active: true, text: "Type a new password" });
-      return;
-    }
+    if (userLogged) {
+      if (!userData.email) {
+        setErrorMessage({ active: true, text: "Please enter a valid email address." });
+        return;
+      }
+      if (!userData.password) {
+        setErrorMessage({ active: true, text: "Type your current password" });
+        return;
+      }
+      if (!password) {
+        setErrorMessage({ active: true, text: "Type a new password" });
+        return;
+      }
 
-    if (userData.password == password) {
-      setErrorMessage({ active: true, text: "Passwords should be different..." });
-      return;
-    }
-    try {
-      await changePassword(userData, password);
-      setPwdModalActive(false);
-      setMessage({ message: `Password changed!`, severity: "success", open: true });
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        setErrorMessage({ active: true, text: getAuthError(error) });
+      if (userData.password == password) {
+        setErrorMessage({ active: true, text: "Passwords should be different..." });
+        return;
+      }
+      try {
+        await changePassword(userData, password);
+        setPwdModalActive(false);
+        setMessage({ message: `Password changed!`, severity: "success", open: true });
+      } catch (error) {
+        if (error instanceof FirebaseError) {
+          setErrorMessage({ active: true, text: getAuthError(error) });
+        }
       }
     }
   };
   const handleDeleteAccount = async () => {
-    if (!userData.email) {
-      setErrorMessage({ active: true, text: "Please enter a valid email address." });
-      return;
-    }
-    if (auth.currentUser?.email !== userData.email) {
-      setErrorMessage({ active: true, text: "Email should be the same you used for this login session" });
-      return;
-    }
-    if (!userData.password) {
-      setErrorMessage({ active: true, text: "Type your password" });
-      return;
-    }
-    try {
-      await DeleteAccount(userData);
-      dispatch(setFirebaseActiveUser({ email: "", uid: "" }));
-      setDeleteModalActive(false);
-      document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
-      setShowAccountDeletedModal(true);
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        setErrorMessage({ active: true, text: getAuthError(error) });
+    if (userLogged) {
+      if (!userData.email) {
+        setErrorMessage({ active: true, text: "Please enter a valid email address." });
+        return;
+      }
+      if (auth.currentUser?.email !== userData.email) {
+        setErrorMessage({ active: true, text: "Email should be the same you used for this login session" });
+        return;
+      }
+      if (!userData.password) {
+        setErrorMessage({ active: true, text: "Type your password" });
+        return;
+      }
+      try {
+        await DeleteAccount(userData);
+        dispatch(setFirebaseActiveUser({ email: "", uid: "" }));
+        setDeleteModalActive(false);
+        document.cookie = `${ID_TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+        setShowAccountDeletedModal(true);
+      } catch (error) {
+        if (error instanceof FirebaseError) {
+          setErrorMessage({ active: true, text: getAuthError(error) });
+        }
       }
     }
   };
@@ -199,7 +206,7 @@ export default function Settings() {
     {
       label: "Current password",
       type: "password",
-      placeholder: "new@example.com",
+      placeholder: "Your current password...",
       value: userData.password || "",
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => setUserData({ ...userData, password: e.target.value }),
     },
@@ -249,7 +256,7 @@ export default function Settings() {
                 }}
               >
                 <p className="settings-btn text-left">Name &gt;</p>
-                <p className="text-content-muted px-4 py-1">{profileData?.displayName}</p>
+                <p className="text-content-muted px-4 py-1">{userLogged ? profileData?.displayName : "test user"}</p>
               </button>
             </div>
             <div className="w-full">
