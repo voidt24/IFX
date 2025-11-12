@@ -31,7 +31,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
           {results &&
             results.slice(0, 5).map((sliderData, index) => {
               return (
-                <CarouselItem key={index}>
+                <CarouselItem key={index} className="max-lg:basis-[95%]">
                   <div
                     className="relative aspect-[16/9] lg:max-h-[87vh] snap-center h-full w-full object-cover object-center bg-cover bg-top"
                     style={{ backgroundImage: `url(${image}${sliderData.backdrop_path})` }}

@@ -70,64 +70,58 @@ function ListsButtonGroup({
       }
     } else {
       if (testingInitialized) {
-        const testingData = localStorage.getItem(`${APP_NAME}-testing-app-data`);
-        const testingDataParsed = JSON.parse(testingData || "{}");
-
-        const buttonToChange = list == DBLists.favs ? setAddedToFavs : list == DBLists.watchs ? setAddedToWatchList : setAddedToWatched;
-        const stateOfButtonToChange = buttonToChange == setAddedToFavs ? addedToFavs : buttonToChange == setAddedToWatchList ? addedToWatchList : addedToWatched;
-
-        dispatch(buttonToChange(Boolean(!stateOfButtonToChange)));
-
-        if (Object.entries(testingDataParsed).length < 1) {
-          saveElementInLSList(list, testingDataParsed);
-          return;
-        }
-
-        for (const key in testingDataParsed) {
-          if (!Object.hasOwn(testingDataParsed, key)) {
-            saveElementInLSList(list, testingDataParsed);
-            return;
-          }
-
-          if (list == key) {
-            const listContent = testingDataParsed[key];
-
-            if (listContent.some((el) => el.id == mediaId)) {
-              // si ya existe el elemento, lo eliminamos
-              const newData = listContent.filter((element) => element.id != mediaId);
-              const data = {
-                ...testingDataParsed,
-                [list]: newData,
-              };
-              localStorage.setItem(`${APP_NAME}-testing-app-data`, JSON.stringify(data));
-              return;
-            } else {
-              if (listContent.length > 9) {
-                // show sign up message to save more elements
-                return;
-              }
-              if (state) {
-                const { title, poster, vote, releaseDate } = state;
-                const data = {
-                  ...testingDataParsed,
-                  [list]: [
-                    ...testingDataParsed[list],
-                    {
-                      id: mediaId,
-                      media_type: mediaType,
-                      title,
-                      poster,
-                      releaseDate,
-                      vote,
-                    },
-                  ],
-                };
-                localStorage.setItem(`${APP_NAME}-testing-app-data`, JSON.stringify(data));
-                return;
-              }
-            }
-          }
-        }
+        // const testingData = localStorage.getItem(`${APP_NAME}-testing-app-data`);
+        // const testingDataParsed = JSON.parse(testingData || "{}");
+        // const buttonToChange = list == DBLists.favs ? setAddedToFavs : list == DBLists.watchs ? setAddedToWatchList : setAddedToWatched;
+        // const stateOfButtonToChange = buttonToChange == setAddedToFavs ? addedToFavs : buttonToChange == setAddedToWatchList ? addedToWatchList : addedToWatched;
+        // dispatch(buttonToChange(Boolean(!stateOfButtonToChange)));
+        // if (Object.entries(testingDataParsed).length < 1) {
+        //   saveElementInLSList(list, testingDataParsed);
+        //   return;
+        // }
+        // for (const key in testingDataParsed) {
+        //   if (!Object.hasOwn(testingDataParsed, key)) {
+        //     saveElementInLSList(list, testingDataParsed);
+        //     return;
+        //   }
+        //   if (list == key) {
+        //     const listContent = testingDataParsed[key];
+        //     if (listContent.some((el) => el.id == mediaId)) {
+        //       // si ya existe el elemento, lo eliminamos
+        //       const newData = listContent.filter((element) => element.id != mediaId);
+        //       const data = {
+        //         ...testingDataParsed,
+        //         [list]: newData,
+        //       };
+        //       localStorage.setItem(`${APP_NAME}-testing-app-data`, JSON.stringify(data));
+        //       return;
+        //     } else {
+        //       if (listContent.length > 9) {
+        //         // show sign up message to save more elements
+        //         return;
+        //       }
+        //       if (state) {
+        //         const { title, poster, vote, releaseDate } = state;
+        //         const data = {
+        //           ...testingDataParsed,
+        //           [list]: [
+        //             ...testingDataParsed[list],
+        //             {
+        //               id: mediaId,
+        //               media_type: mediaType,
+        //               title,
+        //               poster,
+        //               releaseDate,
+        //               vote,
+        //             },
+        //           ],
+        //         };
+        //         localStorage.setItem(`${APP_NAME}-testing-app-data`, JSON.stringify(data));
+        //         return;
+        //       }
+        //     }
+        //   }
+        // }
       }
 
       dispatch(setAuthModalActive(true));
