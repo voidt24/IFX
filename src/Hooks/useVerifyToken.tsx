@@ -3,12 +3,14 @@
  * does not trigger a new server request and therefore bypasses the middleware.
  */
 
-import { ID_TOKEN_COOKIE_NAME, VERIFY_TOKEN_ROUTE } from "@/firebase/firebase.config";
+import { ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import getCookie from "@/helpers/getCookie";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { API_ROUTES } from "@/config/routes";
+import { getBaseUrl } from "@/lib/env";
 
 function useVerifyToken(setLoader?: Dispatch<SetStateAction<boolean>>) {
   const router = useRouter();
@@ -23,7 +25,7 @@ function useVerifyToken(setLoader?: Dispatch<SetStateAction<boolean>>) {
         return;
       }
 
-      const verify = await fetch(VERIFY_TOKEN_ROUTE, {
+      const verify = await fetch(`${getBaseUrl()}${API_ROUTES.VERIFY_TOKEN_ROUTE}`, {
         method: "POST",
         body: JSON.stringify({ token: authCookie }),
       });

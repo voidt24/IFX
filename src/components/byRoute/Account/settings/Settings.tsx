@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import DeleteAccount from "@/firebase/importantActons/DeleteAccount";
-import { auth, ID_TOKEN_COOKIE_NAME, VERIFY_EMAIL_ROUTE } from "@/firebase/firebase.config";
+import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import changePassword from "@/firebase/importantActons/changePassword";
 import changeEmail from "@/firebase/importantActons/changeEmail";
 import changeDisplayName from "@/firebase/importantActons/changeDisplayName";
@@ -17,6 +17,8 @@ import { getAuthError } from "@/lib/firebase/getAuthError";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setFirebaseActiveUser, setProfileData } from "@/store/slices/authSlice";
+import { API_ROUTES } from "@/config/routes";
+import { getBaseUrl } from "@/lib/env";
 
 export default function Settings() {
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -85,7 +87,7 @@ export default function Settings() {
         return;
       }
       try {
-        const emailExists = await fetch(VERIFY_EMAIL_ROUTE, {
+        const emailExists = await fetch(`${getBaseUrl()}${API_ROUTES.VERIFY_EMAIL_ROUTE}`, {
           method: "POST",
           body: JSON.stringify(email),
         });

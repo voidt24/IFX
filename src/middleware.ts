@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ID_TOKEN_COOKIE_NAME, VERIFY_TOKEN_ROUTE } from "./firebase/firebase.config";
+import { ID_TOKEN_COOKIE_NAME } from "./firebase/firebase.config";
 import { APP_NAME } from "./helpers/api.config";
+import { getBaseUrl } from "./lib/env";
+import { API_ROUTES } from "./config/routes";
 
 export const middleware = async (req: NextRequest) => {
   const path = req.nextUrl.pathname;
@@ -19,7 +21,7 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
-      await fetch(VERIFY_TOKEN_ROUTE, {
+      await fetch(`${getBaseUrl()}${API_ROUTES.VERIFY_TOKEN_ROUTE}`, {
         method: "POST",
         body: JSON.stringify({ token: req.cookies.get(ID_TOKEN_COOKIE_NAME)?.value }),
       });
