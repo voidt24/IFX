@@ -1,12 +1,9 @@
-import { Context } from "@/context/Context";
 import { auth } from "@/firebase/firebase.config";
 import { RootState } from "@/store";
-import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setShowSearchBar, setUserMenuActive, setOpenUserDrawer } from "@/store/slices/UISlice";
+import { setShowSearchBar, setUserMenuActive } from "@/store/slices/UISlice";
 
 function UserMenuButton() {
-  const { isMobilePWA } = useContext(Context);
   const { showSearchBar, userMenuActive } = useSelector((state: RootState) => state.ui);
   const { firebaseActiveUser, userLogged, testingInitialized } = useSelector((state: RootState) => state.auth);
 
@@ -16,12 +13,8 @@ function UserMenuButton() {
     <button
       className={`flex items-center justify-center gap-2  ${userMenuActive ? "bg-white/20" : "hover:bg-white/20"} px-1 py-0.5 rounded-lg`}
       onClick={() => {
-        if (isMobilePWA) {
-          dispatch(setOpenUserDrawer(true));
-        } else {
-          if (showSearchBar) dispatch(setShowSearchBar(false));
-          dispatch(setUserMenuActive(!userMenuActive));
-        }
+        if (showSearchBar) dispatch(setShowSearchBar(false));
+        dispatch(setUserMenuActive(!userMenuActive));
       }}
       title="user-option"
     >

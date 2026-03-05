@@ -13,7 +13,7 @@ import { MediaTypeApi } from "@/Types";
 //to-do: add cast and reviews types to delete type never[]
 function TabsSection({ mediaType, mediaId, cast, reviews }: { mediaType: MediaTypeApi; mediaId: number; cast: never[]; reviews: never[] }) {
   const { mediaDetailsData, currentMediaType } = useSelector((state: RootState) => state.mediaDetails);
-  const { setOpenTrailer, setTrailerKey, isMobilePWA } = useContext(Context);
+  const { setOpenTrailer, setTrailerKey } = useContext(Context);
 
   return (
     <div className="w-full px-[0.8rem] lg:max-w-[85%] xxl:max-w-[70%] 4k:max-w-[60%] relative  mx-auto  mt-10">
@@ -30,7 +30,7 @@ function TabsSection({ mediaType, mediaId, cast, reviews }: { mediaType: MediaTy
               <button
                 className="px-3 py-2 bg-brand-primary/35 backdrop-blur-lg rounded-full hover:scale-125 transition-all duration-200"
                 onClick={async () => {
-                  const trailer = await handleTrailerClick(mediaId, isMobilePWA ? mediaType : getApiMediaType(currentMediaType));
+                  const trailer = await handleTrailerClick(mediaId, getApiMediaType(currentMediaType));
                   setTrailerKey(trailer);
                   setOpenTrailer(true);
                 }}

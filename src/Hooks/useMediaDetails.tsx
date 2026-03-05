@@ -3,10 +3,9 @@ import { fetchDetailsData } from "@/helpers/fetchDetailsData";
 import { getRunTime } from "@/helpers/getRunTime";
 import { RootState } from "@/store";
 import { ISeasonArray, MediaTypeApi } from "@/Types";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMediaDetailsData, setEpisodesArray } from "@/store/slices/mediaDetailsSlice";
-import { Context } from "@/context/Context";
 
 interface Props {
   mediaId: number;
@@ -29,12 +28,7 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
   const { mediaDetailsData } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
 
-  const { isMobilePWA } = useContext(Context);
-
   useEffect(() => {
-    if (isMobilePWA) {
-      if (!mediaTypeReady) return;
-    }
     if (!mediaId || mediaId == 0) return;
 
     async function setInitialData() {
@@ -43,7 +37,7 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
 
       dispatch(
         setMediaDetailsData({
-          heroBackground: !isMobilePWA ? (window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`) : `${image}${backdrop_path}`,
+          heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
           bigHeroBackground: `${image}${backdrop_path}`,
           title: title || name,
           poster: `${imageWithSize("500")}${poster_path}`,

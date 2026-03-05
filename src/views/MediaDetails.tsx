@@ -13,7 +13,6 @@ import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { RootState } from "@/store";
 import { setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import { Context } from "@/context/Context";
-import MediaInfoPWA from "@/components/PWA/MediaInfoPWA";
 import MediaInfo from "@/components/byRoute/MediaDetails/MediaInfo";
 import Notification from "@/components/common/Notification";
 import useHideDrawers from "@/Hooks/useHideDrawers";
@@ -22,7 +21,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import TabsSection from "@/components/byRoute/MediaDetails/TabsSection/TabsSection";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
-  const { setCastError, setReviewsError, setOpenTrailer, isMobilePWA } = useContext(Context);
+  const { setCastError, setReviewsError, setOpenTrailer } = useContext(Context);
 
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -46,13 +45,13 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   }, []);
 
   useEffect(() => {
-    if ((!isMobilePWA && mediaId != undefined) || (isMobilePWA && mediaId != undefined)) {
+    if (mediaId != undefined) {
       Promise.allSettled([fetchDetailsData("byId", mediaType, mediaId), fetchDetailsData("cast", mediaType, mediaId), fetchDetailsData("reviews", mediaType, mediaId)]).then((result) => {
         const [byIdPromise, castPromise, reviewsPromise] = result;
         if (byIdPromise.status == "fulfilled") {
           const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
           const mediaDetails: ImediaDetailsData = {
-            heroBackground: !isMobilePWA ? (window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`) : `${image}${backdrop_path}`,
+            heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
             bigHeroBackground: `${image}${backdrop_path}`,
             title: title || name,
             poster: `${image}${poster_path}` || "",
@@ -188,11 +187,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
         <MediaDetailsSkeleton />
       ) : (
         <>
-          {isMobilePWA ? (
-            <MediaInfoPWA mediaType={mediaType} mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
-          ) : (
-            <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
-          )}
+          <MediaInfo mediaId={mediaId} loadingFavs={loadingFavs} loadingWatchlist={loadingWatchlist} loadingWatched={loadingWatched} />
 
           <TabsSection mediaType={mediaType} mediaId={mediaId} cast={cast} reviews={reviews} />
 

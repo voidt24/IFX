@@ -1,5 +1,4 @@
 "use client";
-import { useContext } from "react";
 import { mediaProperties } from "@/helpers/mediaProperties.config";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -8,7 +7,6 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 import { getRunTime } from "@/helpers/getRunTime";
 import EpisodeNavigation from "./EpisodeNavigation";
 import useMediaDetails from "@/Hooks/useMediaDetails";
-import { Context } from "@/context/Context";
 import DisplayInfoTitle from "./DisplayInfoTitle";
 import DisplayInfoOverview from "./DisplayInfoOverview";
 import { image } from "@/helpers/api.config";
@@ -33,10 +31,8 @@ function DisplayInfo({
   const { mediaDetailsData, currentMediaType, episodesArray } = useSelector((state: RootState) => state.mediaDetails);
 
   const { seasonArray } = useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, path });
-  const { isMobilePWA } = useContext(Context);
 
   const isTV = mediaType == mediaProperties.tv.mediaType;
-  const seasonIndex = Number(season && season);
   const episodeIndex = Number(episode && episode);
   const episodeData = isTV ? episodesArray && episodesArray?.[0].episodes?.[episodeIndex - 1] : null;
 
@@ -90,9 +86,7 @@ function DisplayInfo({
         <DisplayInfoOverview variant={"mobile"} isTV={isTV} episode={episode} />
       </div>
 
-      {!isMobilePWA && searchParams && isTV && (
-        <EpisodeNavigation season={season} episode={episode} searchParams={searchParams} currentMediaType={currentMediaType} currentId={mediaId} seasonArray={seasonArray} />
-      )}
+      {searchParams && isTV && <EpisodeNavigation season={season} episode={episode} searchParams={searchParams} currentMediaType={currentMediaType} currentId={mediaId} seasonArray={seasonArray} />}
     </>
   );
 }

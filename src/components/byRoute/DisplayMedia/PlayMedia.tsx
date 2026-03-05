@@ -1,9 +1,8 @@
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { MEDIA_URL_RESOLVER, srcOptions } from "@/helpers/api.config";
 import { usePathname, useRouter } from "next/navigation";
 import { MediaTypeApi } from "@/Types";
 import { CircularProgress } from "@mui/material";
-import { Context } from "@/context/Context";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/Shadcn/carousel";
 
 const optionResolver = (option: string | null) => {
@@ -34,8 +33,6 @@ function PlayMedia({
   const router = useRouter();
   const path = usePathname();
 
-  const { isMobilePWA } = useContext(Context);
-
   useEffect(() => {
     setMediaURL(
       mediaType == "movie" ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType) : MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType, Number(season), Number(episode)),
@@ -62,21 +59,15 @@ function PlayMedia({
                     }`}
                     onClick={() => {
                       if (optionResolver(option) != index) {
-                        if (!isMobilePWA) {
-                          const params = new URLSearchParams();
+                        const params = new URLSearchParams();
 
-                          if (mediaType == "tv") {
-                            params.set("season", season || "");
-                            params.set("episode", episode || "");
-                          }
-                          params.set("option", String(index + 1) || "");
-
-                          router.replace(`?${params.toString()}`);
-                        } else {
-                          if (setOption) {
-                            setOption((index + 1).toString());
-                          }
+                        if (mediaType == "tv") {
+                          params.set("season", season || "");
+                          params.set("episode", episode || "");
                         }
+                        params.set("option", String(index + 1) || "");
+
+                        router.replace(`?${params.toString()}`);
 
                         setMediaURL("");
                         setMediaURL(

@@ -1,19 +1,15 @@
 "use client";
 import { IhistoryMedia } from "@/Types";
 import Link from "next/link";
-import { useContext, useState } from "react";
-import { Context } from "@/context/Context";
+import { useState } from "react";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
-import { setMediaIdPWA, setSheetMediaType } from "@/store/slices/mediaDetailsSlice";
 import ConfirmDeleteModal from "@/components/common/ConfirmDeleteModal";
 import Notification from "@/components/common/Notification";
 import { setElementsToDelete } from "@/store/slices/historySlice";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
 
 function HistoryCard({ result, data, index, childIndex }: { result: [string, IhistoryMedia[]]; data: IhistoryMedia; index: number; childIndex: number }) {
-  const { isMobilePWA } = useContext(Context);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({
     message: "",
@@ -36,21 +32,10 @@ function HistoryCard({ result, data, index, childIndex }: { result: [string, Ihi
           <span className="absolute left-2 bottom-2 text-[65%] xl:text-[75%] rounded-full px-3 lg:py-1 border bg-surface-modal border-zinc-700 text-zinc-300 ">{data.media_type}</span>
         </div>
         <div className="w-full p-4 text-center sm:w-[75%]  lg:w-[95%] xl:w-[80%] 2xl:w-[50%] 4k:w-[40%] m-auto flex-col-center gap-2">
-          {isMobilePWA ? (
-            <button
-              onClick={() => {
-                dispatch(setMediaIdPWA(data.id));
-                dispatch(setSheetMediaType(data.media_type == "movie" ? "movies" : "tvshows"));
-                dispatch(setOpenMediaDetailsSheet(true));
-              }}
-            >
-              {data.title}
-            </button>
-          ) : (
-            <Link href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`} className="text-xl font-semibold hover:underline">
-              {data.title}
-            </Link>
-          )}
+          <Link href={`/${data.media_type == "tv" ? "tvshows" : "movies"}/${data.id}/`} className="text-xl font-semibold hover:underline">
+            {data.title}
+          </Link>
+
           {data.media_type === "tv" && (
             <span className="text-[85%] text-content-secondary ">
               <span>Season: {data.season}</span>
