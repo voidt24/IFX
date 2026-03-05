@@ -1,4 +1,3 @@
-import { Context } from "@/context/Context";
 import { API_KEY, apiUrl, image } from "@/helpers/api.config";
 import { getRunTime } from "@/helpers/getRunTime";
 import { RootState } from "@/store";
@@ -6,14 +5,13 @@ import { MediaTypeApi } from "@/Types/index";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { Season } from "@/Types/season";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setMediaIdPWA, setSheetMediaType, setEpisodesArray, setActiveSeason, setActiveEpisode } from "@/store/slices/mediaDetailsSlice";
-import { setSeasonModal, setOpenDisplayMediaSheet } from "@/store/slices/UISlice";
+import { setEpisodesArray, setActiveSeason, setActiveEpisode } from "@/store/slices/mediaDetailsSlice";
+import { setSeasonModal } from "@/store/slices/UISlice";
 
 function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi; mediaId: number }) {
   const router = useRouter();
-  const { isMobilePWA } = useContext(Context);
   const { seasonModal } = useSelector((state: RootState) => state.ui);
 
   const seasonBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -86,15 +84,9 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                           className="bg-zinc-900 px-2 hover:bg-zinc-700 py-2 lg:py-3 rounded-lg w-full"
                           onClick={() => {
                             dispatch(setActiveEpisode(index + 1));
-                            if (isMobilePWA) {
-                              dispatch(setSheetMediaType(mediaType == "movie" ? "movies" : "tvshows"));
-                              dispatch(setMediaIdPWA(mediaId));
-                              dispatch(setOpenDisplayMediaSheet(true));
-                            } else {
-                              dispatch(setSeasonModal(false));
+                            dispatch(setSeasonModal(false));
 
-                              router.push(`${path}/watch?season=${season_number}&episode=${index + 1}&option=1`);
-                            }
+                            router.push(`${path}/watch?season=${season_number}&episode=${index + 1}&option=1`);
                           }}
                         >
                           <div className="flex items-center justify-center gap-2 w-full">

@@ -1,7 +1,6 @@
 "use client";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { imageWithSize } from "../../helpers/api.config";
-import { Context } from "@/context/Context";
 import Link from "next/link";
 import { MediaTypeApi, IMediaData } from "@/Types/index";
 import { useDispatch } from "react-redux";
@@ -19,7 +18,6 @@ interface MediaCardContainerProps {
 }
 
 const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked }: MediaCardContainerProps) => {
-  const { isMobilePWA } = useContext(Context);
   const dispatch = useDispatch();
 
   const { media_type, id, poster_path, vote_average } = result;
@@ -55,21 +53,15 @@ const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked 
       key={id}
       data-id={id}
     >
-      {isMobilePWA ? (
-        <button title="media-card-button" onClick={handleCardClickPWA}>
-          <MediaCard {...mediaCardProps} />
-        </button>
-      ) : (
-        <Link
-          className="block h-full"
-          href={`/${isMovieOrTV}/${id}`}
-          onClick={() => {
-            sessionStorage.setItem("navigatingFromApp", "1");
-          }}
-        >
-          <MediaCard {...mediaCardProps} />
-        </Link>
-      )}
+      <Link
+        className="block h-full"
+        href={`/${isMovieOrTV}/${id}`}
+        onClick={() => {
+          sessionStorage.setItem("navigatingFromApp", "1");
+        }}
+      >
+        <MediaCard {...mediaCardProps} />
+      </Link>
 
       {canBeEdited && <EditCheckbox id={id} />}
     </div>

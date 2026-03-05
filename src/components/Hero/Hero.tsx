@@ -1,17 +1,12 @@
 "use client";
-import { useContext } from "react";
 import { image } from "../../helpers/api.config";
-import { Context } from "@/context/Context";
 import formatReleaseDate from "@/helpers/formatReleaseDate";
 import { IMediaData, MediaTypeApi } from "@/Types";
-import PWADetailsButton from "./PWADetailsButton";
 import DetailsButton from "./DetailsButton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/Shadcn/carousel";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
-  const { isMobilePWA } = useContext(Context);
-
   return (
     <>
       {hasTitle && (
@@ -62,7 +57,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                           <span className=" text-content-secondary text-[75%]">Available on {formatReleaseDate(sliderData.release_date || sliderData.first_air_date || "")}</span>
                         ) : null}
                       </div>
-                      {isMobilePWA ? <PWADetailsButton sliderData={sliderData} mediaType={mediaType} /> : <DetailsButton variant="mobile" sliderData={sliderData} type={type} />}
+                      <DetailsButton variant="mobile" sliderData={sliderData} type={type} />
                     </div>
                   </div>
                 </CarouselItem>
