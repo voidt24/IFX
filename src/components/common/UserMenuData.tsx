@@ -1,7 +1,6 @@
 import { auth, ID_TOKEN_COOKIE_NAME } from "@/firebase/firebase.config";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { setFirebaseActiveUser, setUserLogged } from "@/store/slices/authSlice";
 import Link from "next/link";
 import { setLoadingScreen, setUserMenuActive, setOpenUserDrawer } from "@/store/slices/UISlice";
 import { RootState } from "@/store";
