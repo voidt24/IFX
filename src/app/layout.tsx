@@ -3,15 +3,13 @@ import "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
 import "../styles/styles.scss";
 import ContextWrapper from "../context/Context";
 import DefaultLayout from "@/components/layout/DefaultLayout";
-import DisplayMediaSheet from "@/components/Sheet/DisplayMediaSheet";
-import MediaDetailsSheet from "@/components/Sheet/MediaDetailsSheet";
 import StoreProvider from "@/store/StoreProvider";
 export const metadata: Metadata = {
   title: "IFX",
   description: "Watch and save your favorite films and series, discover new productions and save them into your watchlists!",
 };
 
-export default function RootLayout({ children, modal }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
@@ -48,12 +46,7 @@ export default function RootLayout({ children, modal }: Readonly<{ children: Rea
       <body>
         <StoreProvider>
           <ContextWrapper>
-            <DefaultLayout>
-              {children}
-              {modal}
-            </DefaultLayout>
-            <MediaDetailsSheet />
-            <DisplayMediaSheet />
+            <DefaultLayout>{children}</DefaultLayout>
           </ContextWrapper>
         </StoreProvider>
       </body>
