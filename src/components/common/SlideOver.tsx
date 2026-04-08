@@ -11,7 +11,7 @@ export default function SlideOver({ activeState, children }: { activeState: bool
   return (
     <RemoveScroll shards={[sheetsRef]}>
       <div
-        className={`overlay !fixed right-0 transition-all duration-400 z-[9999] overflow-hidden ${activeState ? "w-[100vw] opacity-100 pointer-events-auto" : "w-0 opacity-0 pointer-events-none"}`}
+        className={`overlay !fixed right-0 transition-all duration-400 z-[9999] overflow-hidden ${activeState ? "w-[100vw] opacity-100 pointer-events-auto" : "w-0 opacity-0 pointer-events-none"} bg-!none`}
         style={{ marginTop: containerMargin ? `${containerMargin}px` : undefined }}
       >
         {children}

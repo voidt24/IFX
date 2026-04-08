@@ -61,7 +61,7 @@ function UserMenuData() {
     email: auth.currentUser?.email,
   };
   return (
-    <div className={`wrapper`}>
+    <div className={` bg-black max-sm:h-full rounded-lg w-full sm:w-[50%] lg:w-[30%] border border-white/10 sm:right-3 absolute top-2 p-2`}>
       <div className={`flex flex-col items-start justify-start w-full sm:h-full gap-6`}>
         {profileData && (
           <div className="flex gap-2 items-start justify-center pb-4  border-b border-zinc-700 ">

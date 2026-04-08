@@ -3,8 +3,10 @@ import { useEffect, RefObject } from "react";
 import Headroom from "react-headroom";
 import NavItems from "./NavItems";
 import NavDrawers from "./NavDrawers";
-import { setContainerMargin } from "@/store/slices/UISlice";
-import { useDispatch } from "react-redux";
+import { setContainerMargin, setUserMenuActive } from "@/store/slices/UISlice";
+import { useDispatch, useSelector } from "react-redux";
+import MenuDropdown from "../common/MenuDropDown";
+import { RootState } from "@/store";
 
 export const menuActions = [
   {
@@ -28,6 +30,7 @@ export const menuActions = [
 ];
 export default function TopNavbar({ navRef }: { navRef: RefObject<HTMLDivElement> }) {
   const dispatch = useDispatch();
+  const { userMenuActive } = useSelector((state: RootState) => state.ui);
 
   useEffect(() => {
     if (!navRef) return;
@@ -43,6 +46,19 @@ export default function TopNavbar({ navRef }: { navRef: RefObject<HTMLDivElement
           <nav className="nav ">
             <NavItems />
           </nav>
+          <>
+            {userMenuActive && (
+              <div className="relative xs:top-[0.5px] max-xs:h-[100vh] w-full xs:w-[300px]  ms-auto mr-3">
+                <MenuDropdown
+                  activeState={userMenuActive}
+                  setActiveState={(val) => {
+                    dispatch(setUserMenuActive(val));
+                  }}
+                  XPosition=""
+                />
+              </div>
+            )}
+          </>
         </Headroom>
       </div>
       <NavDrawers />
