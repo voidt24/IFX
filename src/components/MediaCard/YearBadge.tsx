@@ -6,7 +6,7 @@ function YearBadge({ release_date, first_air_date }: { release_date: string | un
   const TVYear = first_air_date && new Date(first_air_date).getFullYear();
 
   return (
-    <div className="year absolute top-[13px] right-[5px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">
+    <div className="year absolute top-[8px] right-[5px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">
       {isMovie ? (isMovieNotReleasedYet ? MovieYear : release_date.slice(0, 4)) : isTVNotReleasedYet ? TVYear : first_air_date?.slice(0, 4)}
     </div>
   );
