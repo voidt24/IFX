@@ -5,10 +5,8 @@ import Link from "next/link";
 import { MediaTypeApi, IMediaData } from "@/Types/index";
 import { useDispatch } from "react-redux";
 import { setEdit } from "@/store/slices/listsManagementSlice";
-import { setMediaIdPWA, setSheetMediaType, setCurrentMediaType } from "@/store/slices/mediaDetailsSlice";
 import MediaCard from "./MediaCard";
 import EditCheckbox from "./EditCheckbox";
-import { setOpenMediaDetailsSheet } from "@/store/slices/UISlice";
 
 interface MediaCardContainerProps {
   result: IMediaData;
@@ -34,18 +32,6 @@ const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked 
       dispatch(setEdit(false));
     };
   }, []);
-
-  function handleCardClickPWA() {
-    dispatch(setSheetMediaType(isMovieOrTV));
-    dispatch(setMediaIdPWA(id));
-    dispatch(setOpenMediaDetailsSheet(true));
-
-    if (canBeEdited) {
-      dispatch(setCurrentMediaType(isMovieOrTV));
-    } else {
-      dispatch(setSheetMediaType(isMovieOrTV));
-    }
-  }
 
   return (
     <div
