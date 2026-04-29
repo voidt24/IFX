@@ -11,13 +11,10 @@ export const APP_NAME = "IFX";
 export const srcOptions = [
   { src: "https://ythd.org/embed" },
   { src: "https://vidlink.pro" },
-  { src: "https://embed.su/embed" },
-  { src: "https://multiembed.mov" },
   { src: "https://vidsrc.cc/v3/embed" },
   { src: "https://moviesapi.club" },
   { src: "https://2embed.cc" },
   { src: "https://nontongo.win" },
-  { src: "https://player.smashy.stream" },
 ];
 
 export const MEDIA_URL_RESOLVER = (index: number, mediaId: number, mediaType: "movie" | "tv", season: number | null = null, episode: number | null = null) => {
@@ -30,15 +27,7 @@ export const MEDIA_URL_RESOLVER = (index: number, mediaId: number, mediaType: "m
       movieSrc: `https://vidlink.pro/${mediaProperties.movie.mediaType}/${mediaId}`,
       tvSrc: `https://vidlink.pro/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
     },
-    {
-      movieSrc: `https://embed.su/embed/${mediaProperties.movie.mediaType}/${mediaId}`,
-      tvSrc: `https://embed.su/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
-    },
 
-    {
-      movieSrc: `https://multiembed.mov/directstream.php?video_id=${mediaId}&tmdb=1`,
-      tvSrc: `https://multiembed.mov/directstream.php?video_id=${mediaId}&tmdb=1&s=${season}&e=${episode}`,
-    },
     {
       movieSrc: `https://vidsrc.cc/v3/embed/${mediaProperties.movie.mediaType}/${mediaId}`,
       tvSrc: `https://vidsrc.cc/v3/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
@@ -55,11 +44,6 @@ export const MEDIA_URL_RESOLVER = (index: number, mediaId: number, mediaType: "m
     {
       movieSrc: `https://nontongo.win/embed/${mediaProperties.movie.mediaType}/${mediaId}`,
       tvSrc: `https://nontongo.win/embed/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
-    },
-
-    {
-      movieSrc: `https://player.smashy.stream/${mediaProperties.movie.mediaType}/${mediaId}`,
-      tvSrc: `https://player.smashy.stream/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`,
     },
   ];
 
