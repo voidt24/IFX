@@ -14,8 +14,18 @@ export default function SelectDropdown({ type, selected, selectDefaultName, sele
   const params = new URLSearchParams(searchParams.toString());
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative">
+      <div className="px-4 py-3 rounded-lg border border-zinc-800 bg-surface-modal text-content-primary flex items-center justify-between pointer-events-none">
+        <span>{selected || selectDefaultName}</span>
+
+        <svg className="ml-3 w-4 h-4 opacity-70" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </div>
+
       <select
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer bg-surface-modal"
+        id="select"
         title="select"
         value={selected || selectDefaultName}
         onChange={(e) => {
@@ -32,7 +42,6 @@ export default function SelectDropdown({ type, selected, selectDefaultName, sele
           }
           router.replace(`?${params.toString()}`);
         }}
-        className="px-4 rounded-lg py-1.5 border border-zinc-500 bg-surface-modal text-content-primary outline-none w-full"
       >
         <option value={selectDefaultName} disabled>
           {selectDefaultName}
