@@ -158,7 +158,11 @@ i {
   .year,
   .mediatype,
   .vote {
-    @apply text-[49%] md:text-[55%] 2xl:text-[65%];
+    @apply text-[60%] md:text-[75%];
+  }
+  .year,
+  .vote {
+    @apply text-white/60 font-semibold z-[2];
   }
 
   // fondo del check

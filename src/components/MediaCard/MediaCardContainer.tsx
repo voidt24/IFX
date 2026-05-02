@@ -35,7 +35,7 @@ const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked 
 
   return (
     <div
-      className={`relative rounded-md lg:hover:border lg:hover:border-brand-primary transition-all duration-200 ${isChecked ? "!border-[3px] !border-brand-primary hover:!border-[3px] rounded-md hover:!border-brand-primary" : "border-[3px] border-transparent"}`}
+      className={`relative rounded-md lg:hover:border lg:hover:border-brand-primary transition-all duration-200 ${isChecked ? "!border-[3px] !border-brand-primary hover:!border-[3px] rounded-md hover:!border-brand-primary" : "border border-white/10"}`}
       key={id}
       data-id={id}
     >

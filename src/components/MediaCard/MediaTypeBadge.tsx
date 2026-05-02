@@ -1,5 +1,5 @@
 function MediaTypeBadge({ mediaType }: { mediaType: string }) {
-  return <span className="mediatype absolute left-[5px] bottom-[8px] z-[2] rounded-full px-[0.3rem] bg-surface-modal">{mediaType}</span>;
+  return <span className={`mediatype z-[2] absolute top-[3px] right-[5px] rounded-sm px-1.5 ${mediaType == "tv" ? "bg-green-600/70" : "bg-blue-600/70"}`}>{mediaType.toUpperCase()}</span>;
 }
 
 export default MediaTypeBadge;
