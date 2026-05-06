@@ -49,10 +49,11 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
       Promise.allSettled([fetchDetailsData("byId", mediaType, mediaId), fetchDetailsData("cast", mediaType, mediaId), fetchDetailsData("reviews", mediaType, mediaId)]).then((result) => {
         const [byIdPromise, castPromise, reviewsPromise] = result;
         if (byIdPromise.status == "fulfilled") {
-          const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
+          const { imdb_id, title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
           const mediaDetails: ImediaDetailsData = {
             heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
             bigHeroBackground: `${image}${backdrop_path}`,
+            imdb_id,
             title: title || name,
             poster: `${image}${poster_path}` || "",
             overview,

@@ -4,6 +4,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { MediaTypeApi } from "@/Types";
 import { CircularProgress } from "@mui/material";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/Shadcn/carousel";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { ImediaDetailsData } from "@/Types/mediaDetails";
 
 const optionResolver = (option: string | null) => {
   if (Number(option) <= 0 || Number(option) > srcOptions.length || !option) return 0;
@@ -32,12 +35,17 @@ function PlayMedia({
 }) {
   const router = useRouter();
   const path = usePathname();
+  const { mediaDetailsData } = useSelector((state: RootState) => state.mediaDetails);
 
   useEffect(() => {
     setMediaURL(
       mediaType == "movie" ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType) : MEDIA_URL_RESOLVER(optionResolver(option), currentId, mediaType, Number(season), Number(episode)),
     );
   }, [mediaType, option, currentId, season, episode, path]);
+
+  useEffect(() => {
+    console.log(mediaDetailsData?.imdb_id, "here");
+  }, [mediaDetailsData]);
   return (
     <>
       <div className="src-options p-0 w-full max-sm:text-[80%] lg:w-[75%] 2xl:w-[55%]">
@@ -72,8 +80,8 @@ function PlayMedia({
                         setMediaURL("");
                         setMediaURL(
                           mediaType == "movie"
-                            ? MEDIA_URL_RESOLVER(optionResolver(option), currentId, "movie")
-                            : MEDIA_URL_RESOLVER(optionResolver(option), currentId, "tv", Number(season), Number(episode)),
+                            ? MEDIA_URL_RESOLVER(optionResolver(option), srcOption.IdSource === "IMDB" ? (mediaDetailsData?.imdb_id ?? 0) : currentId, "movie")
+                            : MEDIA_URL_RESOLVER(optionResolver(option), srcOption.IdSource === "IMDB" ? (mediaDetailsData?.imdb_id ?? 0) : currentId, "tv", Number(season), Number(episode)),
                         );
                       }
                     }}

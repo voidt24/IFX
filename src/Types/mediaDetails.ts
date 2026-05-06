@@ -1,4 +1,5 @@
 export interface ImediaDetailsData {
+  imdb_id: number;
   heroBackground: string | null;
   bigHeroBackground: string | null; //to get the backdrop even in smaller size devices
   title: string | null;

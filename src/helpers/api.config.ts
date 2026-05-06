@@ -10,6 +10,7 @@ export const APP_NAME = "IFX";
 
 export const srcOptions = [
   { src: "https://ythd.org/embed" },
+  { src: "https://vidfast.pro", IdSource: "IMDB" },
   { src: "https://vidlink.pro" },
   { src: "https://vidsrc.cc/v3/embed" },
   { src: "https://moviesapi.club" },
@@ -22,6 +23,10 @@ export const MEDIA_URL_RESOLVER = (index: number, mediaId: number, mediaType: "m
     {
       movieSrc: `https://ythd.org/embed/${mediaId}`,
       tvSrc: `https://ythd.org/embed/${mediaId}/${season}-${episode}`,
+    },
+    {
+      movieSrc: `https://vidfast.pro/${mediaProperties.movie.mediaType}/${mediaId}`, //only IMDB id
+      tvSrc: `https://vidfast.pro/${mediaProperties.tv.mediaType}/${mediaId}/${season}/${episode}`, //only IMDB id
     },
     {
       movieSrc: `https://vidlink.pro/${mediaProperties.movie.mediaType}/${mediaId}`,

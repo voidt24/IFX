@@ -33,10 +33,11 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
 
     async function setInitialData() {
       const inf = await getInfo(mediaType, mediaId);
-      const { title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = inf;
+      const { imdb_id, title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = inf;
 
       dispatch(
         setMediaDetailsData({
+          imdb_id,
           heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
           bigHeroBackground: `${image}${backdrop_path}`,
           title: title || name,
