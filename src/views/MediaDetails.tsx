@@ -58,11 +58,10 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
           let logo;
           if (imagesPromise.status == "fulfilled") {
             const { logos } = imagesPromise.value;
-            logo = logos.find(
+            logo = logos?.find(
               (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
-                logo.iso_3166_1 == "US" && (logo.file_path.includes(".svg") || logo.file_path.includes(".png")),
-            ).file_path;
-            console.log(logo);
+                (logo.iso_3166_1 == "US" && [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext))) || [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
+            )?.file_path;
           }
           const mediaDetails: ImediaDetailsData = {
             heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
