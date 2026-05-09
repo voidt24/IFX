@@ -46,10 +46,24 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
   useEffect(() => {
     if (mediaId != undefined) {
-      Promise.allSettled([fetchDetailsData("byId", mediaType, mediaId), fetchDetailsData("cast", mediaType, mediaId), fetchDetailsData("reviews", mediaType, mediaId)]).then((result) => {
-        const [byIdPromise, castPromise, reviewsPromise] = result;
+      Promise.allSettled([
+        fetchDetailsData("byId", mediaType, mediaId),
+        fetchDetailsData("images", mediaType, mediaId),
+        fetchDetailsData("cast", mediaType, mediaId),
+        fetchDetailsData("reviews", mediaType, mediaId),
+      ]).then((result) => {
+        const [byIdPromise, imagesPromise, castPromise, reviewsPromise] = result;
         if (byIdPromise.status == "fulfilled") {
           const { imdb_id, title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
+          let logo;
+          if (imagesPromise.status == "fulfilled") {
+            const { logos } = imagesPromise.value;
+            logo = logos.find(
+              (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+                logo.iso_3166_1 == "US" && (logo.file_path.includes(".svg") || logo.file_path.includes(".png")),
+            ).file_path;
+            console.log(logo);
+          }
           const mediaDetails: ImediaDetailsData = {
             heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
             bigHeroBackground: `${image}${backdrop_path}`,
@@ -63,9 +77,11 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             runtime: runtime ? getRunTime(runtime) : "",
             seasons: number_of_seasons ? (number_of_seasons === 1 ? "1 Season" : `${number_of_seasons} Seasons`) : "",
             seasonsArray: seasons,
+            logoBackdrop: logo || null,
           };
 
           dispatch(setMediaDetailsData(mediaDetails));
+
           castPromise.status == "fulfilled" ? setCast(castPromise.value.cast) : setCastError(true);
           reviewsPromise.status == "fulfilled" ? setReviews(reviewsPromise.value.results) : setReviewsError(true);
 

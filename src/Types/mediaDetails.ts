@@ -11,4 +11,5 @@ export interface ImediaDetailsData {
   runtime: string | null;
   seasons: string | null;
   seasonsArray: [] | null;
+  logoBackdrop: string | null;
 }
