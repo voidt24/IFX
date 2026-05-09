@@ -13,4 +13,5 @@ export interface IMediaData {
   release_date?: string | undefined;
   first_air_date?: string | undefined;
   vote_average: number | undefined;
+  logoBackdrop?: string | null;
 }

@@ -37,12 +37,15 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                     <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-t from-[#000000] via-[#0000007a] to-[#00000000] !bottom-0 !h-[20%]"></div>
 
                     <div className="px-4 max-w-[80%] max-lg:hidden absolute flex flex-col items-start justify-center gap-2 lg:gap-4 top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 w-full z-20 text-4xl">
-                      <h1 className="title max-w-[80%] font-semibold text-[125%]">{sliderData.title || sliderData.name}</h1>
+                      <img src={`${image}${sliderData.logoBackdrop}`} className="w-[65%] md:w-[55%] lg:w-[40%]" alt="" />
+
+                      {sliderData.logoBackdrop == null && <h1 className="title max-w-[80%] font-semibold text-[125%]">{sliderData.title || sliderData.name}</h1>}
+
                       {(sliderData.release_date && new Date(sliderData.release_date).getTime() > Date.now()) ||
                       (sliderData.first_air_date && new Date(sliderData.first_air_date).getTime() > Date.now()) ? (
                         <span className=" text-content-secondary text-[55%]">Available on {formatReleaseDate(sliderData.release_date || sliderData.first_air_date || "")}</span>
                       ) : null}
-                      <p className="text-content-secondary text-[40%] text-left leading-6 max-w-[55%] line-clamp-4 ">{sliderData.overview}</p>
+                      <p className="text-content-secondary text-[40%] text-left leading-6 max-w-[55%] line-clamp-2 ">{sliderData.overview}</p>
 
                       <DetailsButton variant="desktop" sliderData={sliderData} type={type} />
                     </div>

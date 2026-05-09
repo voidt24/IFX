@@ -18,7 +18,8 @@ interface Props {
 export async function getInfo(mediaType: MediaTypeApi, mediaId: number | undefined) {
   try {
     const data = await fetchDetailsData("byId", mediaType, mediaId);
-    return data;
+    const logo = await fetchDetailsData("images", mediaType, mediaId);
+    return { data, logo };
   } catch (error) {
     throw error;
   }
@@ -33,7 +34,12 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
 
     async function setInitialData() {
       const inf = await getInfo(mediaType, mediaId);
-      const { imdb_id, title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = inf;
+      const { imdb_id, title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = inf.data;
+      const { logos } = inf.logo;
+      const logo = logos.find(
+        (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+          logo.iso_3166_1 == "US" && (logo.file_path.includes(".svg") || logo.file_path.includes(".png")),
+      ).file_path;
 
       dispatch(
         setMediaDetailsData({
@@ -49,6 +55,7 @@ function useMediaDetails({ mediaId, season, episode, mediaTypeReady, mediaType, 
           runtime: runtime ? getRunTime(runtime) : "",
           seasons: number_of_seasons ? (number_of_seasons == 1 ? number_of_seasons + " Season" : number_of_seasons + " Seasons") : "",
           seasonsArray: seasons,
+          logoBackdrop: logo || null,
         }),
       );
     }

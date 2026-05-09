@@ -1,6 +1,7 @@
 import { IMediaData, MediaTypeApi } from "@/Types";
 import { apiUrl, API_KEY, CACHENAME } from "./api.config";
 import { movieGenresCode, tvGenresCode, INITIAL_DATA_EXPIRATION_TIME, providersNetworkCode, providersWatchCode } from "./constants";
+import { fetchDetailsData } from "./fetchDetailsData";
 const validTime = INITIAL_DATA_EXPIRATION_TIME; //2 days
 
 function getProviderNetworkId(providerName: string | null) {
@@ -115,25 +116,45 @@ const getFromApi = async (url: string, mediaType: MediaTypeApi): Promise<IMediaD
       //for movies, both list are fine so we save 4 trending for hero (limit[0] = 4) and 15 popular for slider (limit[1] = 15)
 
       const result: IMediaData[] = [];
+      const promises: Promise<void>[] = [];
 
-      jsonDataResults.forEach((element: IMediaData) => {
-        const resultObject: IMediaData = {
-          backdrop_path: element.backdrop_path || undefined,
-          id: element.id,
-          title: element.title || undefined,
-          original_title: element.original_title || undefined,
-          name: element.name || undefined,
-          original_name: element.original_name || undefined,
-          overview: element.overview || undefined,
-          poster_path: element.poster_path || undefined,
-          media_type: element.media_type || mediaType,
-          release_date: element.release_date || undefined,
-          first_air_date: element.first_air_date || undefined,
-          vote_average: element.vote_average || undefined,
+      jsonDataResults.map((element: IMediaData) => {
+        let logo;
+        const gett = async () => {
+          const data = await fetchDetailsData("images", mediaType, element.id);
+          const { logos } = data;
+
+          const logo =
+            logos?.find(
+              (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+                logo.iso_3166_1 == "US" && [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
+            )?.file_path ||
+            logos?.find(
+              (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+                [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
+            )?.file_path;
+          const resultObject: IMediaData = {
+            backdrop_path: element.backdrop_path || undefined,
+            id: element.id,
+            title: element.title || undefined,
+            original_title: element.original_title || undefined,
+            name: element.name || undefined,
+            original_name: element.original_name || undefined,
+            overview: element.overview || undefined,
+            poster_path: element.poster_path || undefined,
+            media_type: element.media_type || mediaType,
+            release_date: element.release_date || undefined,
+            first_air_date: element.first_air_date || undefined,
+            vote_average: element.vote_average || undefined,
+            logoBackdrop: logo || null,
+          };
+          result.push(resultObject);
         };
-        result.push(resultObject);
-      });
+        promises.push(gett());
 
+        // gett();
+      });
+      await Promise.all(promises);
       return [result, jsonDataRequest.total_pages];
     } else {
       return Promise.reject();
