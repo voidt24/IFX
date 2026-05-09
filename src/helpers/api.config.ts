@@ -1,6 +1,7 @@
 import { mediaProperties } from "./mediaProperties.config";
 
 export const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+export const VIEW_KEY = process.env.NEXT_PUBLIC_VIM_VIEW_KEY;
 
 export const apiUrl = `https://api.themoviedb.org/3/`;
 export const image = `https://image.tmdb.org/t/p/original`;
@@ -9,6 +10,7 @@ export const CACHENAME = "ifx-cache-v1.2";
 export const APP_NAME = "IFX";
 
 export const srcOptions = [
+  { src: "vim" },
   { src: "https://ythd.org/embed" },
   { src: "https://vidfast.pro", IdSource: "IMDB" },
   { src: "https://vidlink.pro" },
@@ -20,6 +22,10 @@ export const srcOptions = [
 
 export const MEDIA_URL_RESOLVER = (index: number, mediaId: number, mediaType: "movie" | "tv", season: number | null = null, episode: number | null = null) => {
   const srcOptions = [
+    {
+      movieSrc: `https://vimeus.com/e/${mediaProperties.movie.mediaType}?tmdb=${mediaId}&view_key=${VIEW_KEY}&title=iFX&theme=blue&font=v3&selector=v2&epanel=v2&splash=v3`,
+      tvSrc: `https://vimeus.com/e/serie?tmdb=${mediaId}&view_key=${VIEW_KEY}&se=${season}&ep=${episode}&title=iFX&theme=blue&font=v3&selector=v2&epanel=v2&splash=v3`,
+    },
     {
       movieSrc: `https://ythd.org/embed/${mediaId}`,
       tvSrc: `https://ythd.org/embed/${mediaId}/${season}-${episode}`,
