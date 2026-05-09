@@ -1,6 +1,6 @@
 import { API_KEY, apiUrl } from "./api.config";
 
-export function resolveFetchURL(typeOfSearch: "byId" | "similar" | "cast" | "reviews", mediaType: string, mediaId: number, page?: number) {
+export function resolveFetchURL(typeOfSearch: "byId" | "similar" | "cast" | "reviews" | "images", mediaType: string, mediaId: number, page?: number) {
   let url = "";
   switch (typeOfSearch) {
     case "byId":
@@ -14,6 +14,9 @@ export function resolveFetchURL(typeOfSearch: "byId" | "similar" | "cast" | "rev
       break;
     case "reviews":
       url = `${apiUrl}${mediaType}/${mediaId}/reviews?api_key=${API_KEY}`;
+      break;
+    case "images":
+      url = `${apiUrl}${mediaType}/${mediaId}/images?api_key=${API_KEY}`;
       break;
   }
 
