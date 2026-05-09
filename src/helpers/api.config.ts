@@ -6,7 +6,7 @@ export const VIEW_KEY = process.env.NEXT_PUBLIC_VIM_VIEW_KEY;
 export const apiUrl = `https://api.themoviedb.org/3/`;
 export const image = `https://image.tmdb.org/t/p/original`;
 export const imageWithSize = (size: string) => `https://image.tmdb.org/t/p/w${size}`;
-export const CACHENAME = "ifx-cache-v1.2";
+export const CACHENAME = "ifx-cache-v2.0";
 export const APP_NAME = "IFX";
 
 export const srcOptions = [
