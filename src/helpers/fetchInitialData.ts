@@ -121,18 +121,18 @@ const getFromApi = async (url: string, mediaType: MediaTypeApi): Promise<IMediaD
       jsonDataResults.map((element: IMediaData) => {
         let logo;
         const gett = async () => {
-          const data = await fetchDetailsData("images", mediaType, element.id);
-          const { logos } = data;
+          // const data = await fetchDetailsData("images", mediaType, element.id);
+          // const { logos } = data;
 
-          const logo =
-            logos?.find(
-              (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
-                logo.iso_3166_1 == "US" && [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
-            )?.file_path ||
-            logos?.find(
-              (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
-                [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
-            )?.file_path;
+          // const logo =
+          //   logos?.find(
+          //     (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+          //       logo.iso_3166_1 == "US" && [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
+          //   )?.file_path ||
+          //   logos?.find(
+          //     (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+          //       [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
+          //   )?.file_path;
           const resultObject: IMediaData = {
             backdrop_path: element.backdrop_path || undefined,
             id: element.id,
@@ -176,6 +176,7 @@ export const fetchGeneralData = async (obj: { mediaType: MediaTypeApi; searchCat
     return await getFromCache(validTime, () => getFromApi(url, mediaType), NAME_TO_SAVE_ON_CACHE);
   } catch (e) {
     const dataFromApi = await getFromApi(url, mediaType);
+    // console.log(dataFromApi);
     saveToCache(dataFromApi, validTime, NAME_TO_SAVE_ON_CACHE);
     return dataFromApi;
   }
