@@ -8,7 +8,7 @@ function LoginButton() {
 
   return (
     <button
-      className=" btn-primary px-2.5 py-1 shadow-none "
+      className=" btn-primary px-2.5 py-1 !shadow-none !bg-[#1d1d1d] !border-solid !border !border-white/20 !text-white"
       onClick={() => {
         dispatch(setNoAccount(false));
         dispatch(setAuthModalActive(!authModalActive));
