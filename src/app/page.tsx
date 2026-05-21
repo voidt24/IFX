@@ -14,11 +14,8 @@ import PageError from "@/components/common/Error/PageError";
 import { useEffect } from "react";
 import { APP_NAME } from "@/helpers/api.config";
 import { setRecentlyBrowsed } from "@/store/slices/mediaDetailsSlice";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/Shadcn/carousel";
-import { IMediaData } from "@/Types";
-import MediaCardContainer from "@/components/MediaCard/MediaCardContainer";
-import WheelGesturesPlugin from "embla-carousel-wheel-gestures";
 import { setTestingInitialized } from "@/store/slices/authSlice";
+import RecentlyBrowsed from "@/components/RecentlyBrowsed/RecentlyBrowsed";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
@@ -30,7 +27,6 @@ export default function Home() {
 
   const { containerMargin } = useSelector((state: RootState) => state.ui);
   const { firebaseActiveUser, testingInitialized, userLogged } = useSelector((state: RootState) => state.auth);
-  const { recentlyBrowsed } = useSelector((state: RootState) => state.mediaDetails);
 
   const isMobile = useIsMobile(640);
 
@@ -92,37 +88,7 @@ export default function Home() {
         <SectionWithSlider title="Popular TV Shows" link="/tvshows" data={tv} mediaType="tv" />
       </div>
 
-      {recentlyBrowsed && recentlyBrowsed.length > 0 && (
-        <>
-          <div className="mt-10 w-[95%] mx-auto bg-neutral-950/50 p-4 rounded-lg">
-            <span className="flex justify-between items-center w-full pb-2">
-              <h1 className="text-base lg:text-xl text-[95%] font-medium text-white/70">You recently Browsed</h1>
-            </span>
-            <Carousel
-              className=""
-              opts={{
-                loop: true,
-                align: "start",
-              }}
-              plugins={[WheelGesturesPlugin()]}
-            >
-              <CarouselContent className=" ">
-                {recentlyBrowsed &&
-                  [...recentlyBrowsed].reverse().map((recentlyBrowsedData: IMediaData) => {
-                    return (
-                      <CarouselItem key={recentlyBrowsedData.id} className="basis-[45%] md:basis-[23%] lg:basis-1/5 2xl:basis-[10%]">
-                        <MediaCardContainer key={recentlyBrowsedData.id} result={recentlyBrowsedData} mediaType={recentlyBrowsedData.media_type} canBeEdited={true} />
-                      </CarouselItem>
-                    );
-                  })}
-              </CarouselContent>
-              <CarouselPrevious className={`left-4 z-50 max-lg:hidden lg:${recentlyBrowsed.length < 7 ? "hidden" : "absolute"}`} />
-              <CarouselNext className={`right-4 z-50 max-lg:hidden lg:${recentlyBrowsed.length < 7 ? "hidden" : "absolute"}`} />
-            </Carousel>{" "}
-          </div>
-        </>
-      )}
-
+      <RecentlyBrowsed />
       <Footer />
     </div>
   );
