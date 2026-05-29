@@ -110,7 +110,6 @@ const getFromApi = async (url: string, mediaType: MediaTypeApi): Promise<IMediaD
       // const jsonDataResults = jsonDataRequest.results.slice(0, limit[1]); //12 results
       const jsonDataResults = jsonDataRequest.results; //12 results
       // const jsonDataResults = jsonDataRequest.results.slice(0, limit[1]); //ONLY USED IN MOVIES SECTION...
-
       //for tv, we show trending results for both hero and slider bc "popular" list is not the best (has a bunch of not popular tvshows)
       //that's why we save 20 trending results for tv (limit[2] = 20) so we show the first 4 in hero and the other 15 in slider :)
       //for movies, both list are fine so we save 4 trending for hero (limit[0] = 4) and 15 popular for slider (limit[1] = 15)
@@ -121,18 +120,17 @@ const getFromApi = async (url: string, mediaType: MediaTypeApi): Promise<IMediaD
       jsonDataResults.map((element: IMediaData) => {
         let logo;
         const gett = async () => {
-          // const data = await fetchDetailsData("images", mediaType, element.id);
-          // const { logos } = data;
-
-          // const logo =
-          //   logos?.find(
-          //     (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
-          //       logo.iso_3166_1 == "US" && [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
-          //   )?.file_path ||
-          //   logos?.find(
-          //     (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
-          //       [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
-          //   )?.file_path;
+          const data = await fetchDetailsData("images", mediaType, element.id);
+          const { logos } = data;
+          logo =
+            logos?.find(
+              (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+                logo.iso_3166_1 == "US" && [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
+            )?.file_path ||
+            logos?.find(
+              (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+                [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
+            )?.file_path;
           const resultObject: IMediaData = {
             backdrop_path: element.backdrop_path || undefined,
             id: element.id,
@@ -151,10 +149,8 @@ const getFromApi = async (url: string, mediaType: MediaTypeApi): Promise<IMediaD
           result.push(resultObject);
         };
         promises.push(gett());
-
-        // gett();
       });
-      await Promise.all(promises);
+      await Promise.allSettled(promises);
       return [result, jsonDataRequest.total_pages];
     } else {
       return Promise.reject();
@@ -176,7 +172,6 @@ export const fetchGeneralData = async (obj: { mediaType: MediaTypeApi; searchCat
     return await getFromCache(validTime, () => getFromApi(url, mediaType), NAME_TO_SAVE_ON_CACHE);
   } catch (e) {
     const dataFromApi = await getFromApi(url, mediaType);
-    // console.log(dataFromApi);
     saveToCache(dataFromApi, validTime, NAME_TO_SAVE_ON_CACHE);
     return dataFromApi;
   }
