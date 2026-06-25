@@ -118,7 +118,7 @@ const getFromApi = async (url: string, mediaType: MediaTypeApi): Promise<IMediaD
       const promises: Promise<void>[] = [];
 
       jsonDataResults.map((element: IMediaData) => {
-        let logo;
+        let logo: string | null | undefined;
         const gett = async () => {
           const data = await fetchDetailsData("images", mediaType, element.id);
           const { logos } = data;
