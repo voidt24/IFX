@@ -9,26 +9,19 @@ import useIsMobile from "@/Hooks/useIsMobile";
 import SectionWithSlider from "@/components/common/SectionWithSlider";
 import Footer from "@/components/common/Footer/Footer";
 import useHideDrawers from "@/Hooks/useHideDrawers";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { APP_NAME } from "@/helpers/api.config";
 import { setRecentlyBrowsed } from "@/store/slices/mediaDetailsSlice";
 import { setTestingInitialized } from "@/store/slices/authSlice";
 import RecentlyBrowsed from "@/components/RecentlyBrowsed/RecentlyBrowsed";
-import { IMediaData, MediaTypeApi } from "@/Types";
-import { fetchGeneralData } from "@/helpers/fetchInitialData";
-import { mediaProperties } from "@/helpers/mediaProperties.config";
+import useInitialMediaData from "@/Hooks/useInitialMediaData";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
 });
 
 export default function Home() {
-  const [data, setData] = useState<{ moviesHero: IMediaData[]; tv: IMediaData[]; movies: IMediaData[] }>({
-    moviesHero: [],
-    tv: [],
-    movies: [],
-  });
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, isLoading } = useInitialMediaData();
   const { containerMargin } = useSelector((state: RootState) => state.ui);
   const { testingInitialized, userLogged } = useSelector((state: RootState) => state.auth);
 
@@ -62,31 +55,10 @@ export default function Home() {
 
     window.addEventListener("storage", handleStorage);
 
-    async function fetchAll() {
-      const [moviesHero, errorMoviesHero] = await fetchAndSetData(mediaProperties.movie, mediaProperties.movie.searchCategory[0]);
-      const [movies, errorMovies] = await fetchAndSetData(mediaProperties.movie, mediaProperties.movie.searchCategory[0]);
-      const [tv, errortv] = await fetchAndSetData(mediaProperties.tv);
-      setData({ moviesHero, movies, tv });
-      setIsLoading(false);
-    }
-
-    fetchAll();
-
     return () => {
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
-  const fetchAndSetData = async (mediaTypeObj: { mediaType: MediaTypeApi; searchCategory: string[]; limit: number[]; route: string }, categoryForMovie?: string) => {
-    const { mediaType, searchCategory, limit, route } = mediaTypeObj;
-    let error = false;
-    let results = [];
-    try {
-      results = await fetchGeneralData({ mediaType: mediaType, searchCategory: searchCategory, limit: limit, route: route }, categoryForMovie);
-    } catch (errors) {
-      error = true;
-    }
-    return [results[0], error];
-  };
 
   if (isLoading) {
     return <HomeSkeleton />;
