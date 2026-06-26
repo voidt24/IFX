@@ -21,6 +21,7 @@ function useInitialMediaData() {
       return results[0];
     } catch (error) {
       setError(true);
+      return [];
     }
   };
 
