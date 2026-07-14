@@ -2,16 +2,19 @@ import { IhistoryMedia } from "@/Types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface historyState {
-  activeIndex: number | undefined;
-  parentActiveIndex: number | undefined;
+  // Identifies which single card's options dropdown is open, by a stable
+  // "date-itemId" key (e.g. "2026-07-11-98765") rather than array position.
+  // Positions shift on every delete (Firestore's realtime listener rebuilds
+  // the array), so index-based tracking was matching the wrong card after
+  // any deletion — this is what caused menus/selection to jump between items.
+  activeOptionsKey: string | null;
   activeHistoryEntry: string | null;
   elementsToDelete: (number | string)[];
   historyMedia: [string, IhistoryMedia[]][] | null;
 }
 
 const initialState: historyState = {
-  activeIndex: undefined,
-  parentActiveIndex: undefined,
+  activeOptionsKey: null,
   activeHistoryEntry: null,
   elementsToDelete: [],
   historyMedia: null,
@@ -21,11 +24,8 @@ export const historySlice = createSlice({
   name: "history",
   initialState,
   reducers: {
-    setActiveIndex: (state, action: PayloadAction<number | undefined>) => {
-      state.activeIndex = action.payload;
-    },
-    setParentActiveIndex: (state, action: PayloadAction<number | undefined>) => {
-      state.parentActiveIndex = action.payload;
+    setActiveOptionsKey: (state, action: PayloadAction<string | null>) => {
+      state.activeOptionsKey = action.payload;
     },
     setActiveHistoryEntry: (state, action: PayloadAction<string | null>) => {
       state.activeHistoryEntry = action.payload;
@@ -39,5 +39,5 @@ export const historySlice = createSlice({
   },
 });
 
-export const { setActiveIndex, setParentActiveIndex, setActiveHistoryEntry, setElementsToDelete, setHistoryMedia } = historySlice.actions;
+export const { setActiveOptionsKey, setActiveHistoryEntry, setElementsToDelete, setHistoryMedia } = historySlice.actions;
 export default historySlice.reducer;
