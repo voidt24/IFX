@@ -56,8 +56,10 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
         if (byIdPromise.status == "fulfilled") {
           const { imdb_id, title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
           let logo;
+          let noTextMobilePoster = null;
+
           if (imagesPromise.status == "fulfilled") {
-            const { logos } = imagesPromise.value;
+            const { logos, posters } = imagesPromise.value;
             logo =
               logos?.find(
                 (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
@@ -67,13 +69,22 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
                 (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
                   [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext)),
               )?.file_path;
+
+            const textlessPoster = posters?.find(
+              (img: { aspect_ratio: number; height: number; iso_3166_1: string; iso_639_1: string; file_path: string; vote_average: number; vote_count: number; width: number }) =>
+                img.iso_639_1 === null,
+            );
+            if (textlessPoster) {
+              noTextMobilePoster = textlessPoster.file_path;
+            }
           }
+          const mobileBackgroundPath = noTextMobilePoster || poster_path;
           const mediaDetails: ImediaDetailsData = {
-            heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${poster_path}`,
+            heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${mobileBackgroundPath}`,
             bigHeroBackground: `${image}${backdrop_path}`,
             imdb_id,
             title: title || name,
-            poster: `${image}${poster_path}` || "",
+            poster: `${image}${mobileBackgroundPath}` || "",
             overview,
             releaseDate: release_date ? formatReleaseDate(release_date) : formatReleaseDate(first_air_date),
             vote: String(vote_average).slice(0, 3),
@@ -203,7 +214,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   }, [mediaId]);
 
   return (
-    <div className="media-details bg-[#000005] max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-4 w-full relative">
+    <div className="media-details bg-[#000005] max-lg:z-[999] z-[99] max-lg:pb-[155px] pb-20 lg:pb-28 w-full relative">
+      {" "}
       {mediaDetailsData === null ? (
         <MediaDetailsSkeleton />
       ) : (
