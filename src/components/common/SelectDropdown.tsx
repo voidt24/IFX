@@ -39,6 +39,9 @@ export default function SelectDropdown({ type, selected, selectDefaultName, sele
             case "listMediaType":
               params.set("media", e.target.value);
               break;
+            case "year":
+              params.set("year", e.target.value);
+              break;
           }
           router.replace(`?${params.toString()}`);
         }}
