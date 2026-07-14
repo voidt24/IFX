@@ -11,6 +11,22 @@ export const middleware = async (req: NextRequest) => {
     return getTvURLParamsMiddleware(req);
   }
 
+  if (path.startsWith("/admin")) {
+    if (!req.cookies.has(ID_TOKEN_COOKIE_NAME)) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    try {
+      const res = await fetch(`${getBaseUrl()}${API_ROUTES.VERIFY_TOKEN_ROUTE}`, {
+        method: "POST",
+        body: JSON.stringify({ token: req.cookies.get(ID_TOKEN_COOKIE_NAME)?.value }),
+      });
+      if (!res.ok) return NextResponse.redirect(new URL("/", req.url));
+    } catch {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
+
   if (["/account", "/lists", "/history"].includes(path)) {
     if (req.cookies.has(`${APP_NAME}-testing-app`) && !req.cookies.has(ID_TOKEN_COOKIE_NAME)) {
       return NextResponse.next();
