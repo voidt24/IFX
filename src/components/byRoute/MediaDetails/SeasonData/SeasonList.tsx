@@ -5,20 +5,24 @@ import { MediaTypeApi } from "@/Types/index";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { Season } from "@/Types/season";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setEpisodesArray, setActiveSeason, setActiveEpisode } from "@/store/slices/mediaDetailsSlice";
 import { setSeasonModal } from "@/store/slices/UISlice";
+import { auth } from "@/firebase/firebase.config";
+import { getWatchedEpisodeIds } from "@/firebase/getWatchedEpisodes";
 
 function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi; mediaId: number }) {
   const router = useRouter();
   const { seasonModal } = useSelector((state: RootState) => state.ui);
+  const { firebaseActiveUser } = useSelector((state: RootState) => state.auth);
 
   const seasonBtnRef = useRef<HTMLButtonElement | null>(null);
   const path = usePathname();
 
   const { episodesArray, activeSeason } = useSelector((state: RootState) => state.mediaDetails);
   const dispatch = useDispatch();
+  const [watchedIds, setWatchedIds] = useState<Set<number>>(new Set());
 
   async function getSeasonData(season: number) {
     try {
@@ -40,6 +44,22 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
       getSeasonData(activeSeason);
     }
   }, []);
+
+  // Same "watched" tracking as the Episodes tab, so this modal shows it too.
+  useEffect(() => {
+    const uid = firebaseActiveUser?.uid || auth.currentUser?.uid;
+    if (!uid) {
+      setWatchedIds(new Set());
+      return;
+    }
+    let cancelled = false;
+    getWatchedEpisodeIds(uid, mediaId).then((ids) => {
+      if (!cancelled) setWatchedIds(ids);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [mediaId, firebaseActiveUser?.uid]);
 
   if (!data) return null;
 
@@ -78,33 +98,48 @@ function SeasonList({ data, mediaType, mediaId }: { data: ImediaDetailsData | nu
                   {Array.from({ length: episode_count ?? 0 }).map(
                     (_, index) =>
                       episodesArray?.[0].episodes?.[index] &&
-                      new Date(episodesArray?.[0].episodes?.[index].air_date).getTime() <= Date.now() && (
-                        <button
-                          key={index}
-                          className="bg-zinc-900 px-2 hover:bg-zinc-700 py-2 lg:py-3 rounded-lg w-full"
-                          onClick={() => {
-                            dispatch(setActiveEpisode(index + 1));
-                            dispatch(setSeasonModal(false));
+                      new Date(episodesArray?.[0].episodes?.[index].air_date).getTime() <= Date.now() &&
+                      (() => {
+                        const ep = episodesArray[0].episodes[index];
+                        const isWatched = watchedIds.has(ep.id);
+                        return (
+                          <button
+                            key={index}
+                            className="bg-zinc-900 px-2 hover:bg-zinc-700 py-2 lg:py-3 rounded-lg w-full"
+                            onClick={() => {
+                              dispatch(setActiveEpisode(index + 1));
+                              dispatch(setSeasonModal(false));
 
-                            router.push(`${path}/watch?season=${season_number}&episode=${index + 1}&option=1`);
-                          }}
-                        >
-                          <div className="flex items-center justify-center gap-2 w-full">
-                            <p>{index + 1}.</p>
+                              router.push(`${path}/watch?season=${season_number}&episode=${index + 1}&option=1`);
+                            }}
+                          >
+                            <div className="flex items-center justify-center gap-2 w-full">
+                              <p>{index + 1}.</p>
 
-                            <>
-                              <img src={`${image}${episodesArray?.[0].episodes[index].still_path}`} className="rounded-md object-cover w-[40%] md:w-[25%] xl:w-[20%] h-full" alt="" />
-                              <div className="flex flex-col gap-2 w-full">
-                                <div className="min-md:font-bold max-md:text-sm w-full flex items-center justify-center">
-                                  <p className="w-full h-full">{episodesArray?.[0].episodes[index].name}</p>
-                                  <p className="text-right text-zinc-500 !text-[75%] h-full">{episodesArray?.[0].episodes[index].runtime && getRunTime(episodesArray?.[0].episodes[index].runtime)}</p>
+                              <>
+                                <div className="relative w-[40%] md:w-[25%] xl:w-[20%] h-full flex-shrink-0">
+                                  <img src={`${image}${ep.still_path}`} className={`rounded-md object-cover w-full h-full ${isWatched ? "opacity-50" : ""}`} alt="" />
+                                  {isWatched && (
+                                    <>
+                                      <span className="absolute top-1 right-1 flex items-center gap-1 bg-black/75 text-white text-[9px] px-1 py-0.5 rounded-full">
+                                        <i className="bi bi-check-circle-fill text-brand-primary" />
+                                      </span>
+                                      <div className="absolute inset-x-0 bottom-0 h-1 bg-brand-primary rounded-b-md" />
+                                    </>
+                                  )}
                                 </div>
-                                <p className="max-lg:hidden text-zinc-400 xl:w-[75%] m-auto">{episodesArray?.[0].episodes[index].overview}</p>
-                              </div>
-                            </>
-                          </div>
-                        </button>
-                      ),
+                                <div className="flex flex-col gap-2 w-full">
+                                  <div className="min-md:font-bold max-md:text-sm w-full flex items-center justify-center">
+                                    <p className={`w-full h-full ${isWatched ? "text-zinc-500" : ""}`}>{ep.name}</p>
+                                    <p className="text-right text-zinc-500 !text-[75%] h-full">{ep.runtime && getRunTime(ep.runtime)}</p>
+                                  </div>
+                                  <p className="max-lg:hidden text-zinc-400 xl:w-[75%] m-auto">{ep.overview}</p>
+                                </div>
+                              </>
+                            </div>
+                          </button>
+                        );
+                      })(),
                   )}
                 </div>
               </div>

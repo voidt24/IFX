@@ -9,6 +9,7 @@ import { Context } from "@/context/Context";
 import { handleTrailerClick } from "@/helpers/getTrailer";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { MediaTypeApi } from "@/Types";
+import EpisodesTab from "../Episodes/EpisodesTab";
 
 //to-do: add cast and reviews types to delete type never[]
 function TabsSection({ mediaType, mediaId, cast, reviews }: { mediaType: MediaTypeApi; mediaId: number; cast: never[]; reviews: never[] }) {
@@ -18,6 +19,11 @@ function TabsSection({ mediaType, mediaId, cast, reviews }: { mediaType: MediaTy
   return (
     <div className="w-full px-[0.8rem] lg:max-w-[85%] xxl:max-w-[70%] 4k:max-w-[60%] relative  mx-auto  mt-10">
       <Tabs>
+        {mediaType === "tv" && (
+          <Tab title="Episodes">
+            <EpisodesTab mediaId={mediaId} mediaType={mediaType} />
+          </Tab>
+        )}
         <Tab title="Cast">
           <Cast cast={cast} />
         </Tab>
