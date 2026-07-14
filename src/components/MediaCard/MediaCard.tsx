@@ -6,7 +6,7 @@ import YearBadge from "./YearBadge";
 import MediaTypeBadge from "./MediaTypeBadge";
 import useIsMobile from "@/Hooks/useIsMobile";
 
-function MediaCard({ result, poster, vote, canBeEdited }: { result: IMediaData; poster: string; vote: string | undefined; canBeEdited: boolean }) {
+function MediaCard({ result, poster, vote, canBeEdited, showBadge }: { result: IMediaData; poster: string; vote: string | undefined; canBeEdited: boolean; showBadge?: boolean }) {
   const { release_date, first_air_date, title, name } = result;
   const notReleasedYet = (release_date && new Date(release_date).getTime() > Date.now()) || (first_air_date && new Date(first_air_date).getTime() > Date.now());
   const [isHovered, setIsHovered] = useState(false);
@@ -36,7 +36,7 @@ function MediaCard({ result, poster, vote, canBeEdited }: { result: IMediaData; 
             </div>
           </div>
         </div>
-        {canBeEdited ? <MediaTypeBadge mediaType={result.media_type} /> : null}
+        {canBeEdited || showBadge ? <MediaTypeBadge mediaType={result.media_type} /> : null}
       </div>
 
       {isMobile && (

@@ -15,6 +15,8 @@ import { setRecentlyBrowsed } from "@/store/slices/mediaDetailsSlice";
 import { setTestingInitialized } from "@/store/slices/authSlice";
 import RecentlyBrowsed from "@/components/RecentlyBrowsed/RecentlyBrowsed";
 import useInitialMediaData from "@/Hooks/useInitialMediaData";
+import WatchNextSection from "@/components/Home/WatchNextSection";
+import WatchlistPreviewSection from "@/components/Home/WatchlistPreviewSection";
 
 const Hero = dynamic(() => import("@/components/Hero/Hero"), {
   loading: () => <HeroSkeleton />,
@@ -67,6 +69,12 @@ export default function Home() {
   return (
     <div className="relative" style={{ marginTop: containerMargin ? `${containerMargin}px` : undefined }}>
       <Hero results={data.moviesHero} type="Movies" hasTitle={isMobile} mediaType="movie" />
+      {userLogged && (
+        <div className="mt-6 flex flex-col-center gap-8 lg:gap-10">
+          <WatchNextSection />
+          <WatchlistPreviewSection />
+        </div>
+      )}
       <div className=" mt-6 pb-0">
         <div className=" flex-col-center gap-4 lg:gap-6 ">
           <SectionWithSlider title="Popular Movies" link="/movies" data={data.movies} mediaType="movie" />

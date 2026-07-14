@@ -13,17 +13,19 @@ interface MediaCardContainerProps {
   canBeEdited?: boolean;
   mediaType: MediaTypeApi;
   isChecked?: boolean;
+  showBadge?: boolean; // <-- NUEVO
 }
 
-const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked }: MediaCardContainerProps) => {
+const MediaCardContainer = ({ result, canBeEdited = false, mediaType, isChecked, showBadge = false }: MediaCardContainerProps) => {
+  // ... (tus imports y hooks quedan igual)
   const dispatch = useDispatch();
 
   const { media_type, id, poster_path, vote_average } = result;
-
   const poster = poster_path ? `${imageWithSize("780")}${poster_path}` : "";
   const vote = vote_average ? vote_average.toString().slice(0, 3) : "";
 
-  const mediaCardProps = { result, vote, poster, canBeEdited };
+  // Agregamos showBadge a las props que viajan al MediaCard
+  const mediaCardProps = { result, vote, poster, canBeEdited, showBadge };
 
   const isMovieOrTV = media_type == "movie" ? "movies" : "tvshows";
 
