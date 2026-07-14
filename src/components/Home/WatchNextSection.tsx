@@ -9,11 +9,13 @@ function WatchNextSection() {
   if (isLoading || items.length === 0) return null;
 
   return (
-    <HomeCarouselSection title="Watch Next" link="/history">
-      {items.map((item) => (
-        <WatchNextCard key={item.mediaId} item={item} />
-      ))}
-    </HomeCarouselSection>
+    <div className="md:px-1 md:w-[98%] mx-auto">
+      <HomeCarouselSection title="Watch Next" link="/history">
+        {items.map((item) => (
+          <WatchNextCard key={item.mediaId} item={item} />
+        ))}
+      </HomeCarouselSection>
+    </div>
   );
 }
 

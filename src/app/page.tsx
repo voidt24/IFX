@@ -70,9 +70,8 @@ export default function Home() {
     <div className="relative" style={{ marginTop: containerMargin ? `${containerMargin}px` : undefined }}>
       <Hero results={data.moviesHero} type="Movies" hasTitle={isMobile} mediaType="movie" />
       {userLogged && (
-        <div className="mt-6 flex flex-col-center gap-8 lg:gap-10">
+        <div className="mt-6 ">
           <WatchNextSection />
-          <WatchlistPreviewSection />
         </div>
       )}
       <div className=" mt-6 pb-0">
@@ -87,6 +86,7 @@ export default function Home() {
       <div className=" mt-6">
         <SectionWithSlider title="Popular TV Shows" link="/tvshows" data={data.tv} mediaType="tv" />
       </div>
+      <WatchlistPreviewSection />
       <RecentlyBrowsed />
       <Footer />
     </div>

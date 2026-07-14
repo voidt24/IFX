@@ -10,7 +10,7 @@ function WatchNextCard({ item }: { item: WatchNextItem }) {
         sessionStorage.setItem("navigatingFromApp", "1");
       }}
     >
-      <div className="relative aspect-video rounded-md overflow-hidden bg-zinc-900 border border-white/10 group-hover:border-brand-primary transition-colors">
+      <div className="relative aspect-video rounded-md overflow-hidden bg-zinc-900 border-2 border-white/10 group-hover:border-brand-primary transition-colors">
         {item.imageUrl ? (
           <img src={item.imageUrl} alt={item.episodeName} className="w-full h-full object-cover" />
         ) : (

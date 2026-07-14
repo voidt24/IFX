@@ -20,7 +20,7 @@ function HomeCarouselSection({ title, link, children }: { title: string; link?: 
       <Carousel className="w-full" opts={{ loop: true, align: "start" }} plugins={[WheelGesturesPlugin()]}>
         <CarouselContent>
           {children.map((child, index) => (
-            <CarouselItem key={index} className="basis-[47%] md:basis-[23%] lg:basis-1/5 2xl:basis-[13%] 4k:basis-[10%]">
+            <CarouselItem key={index} className="basis-[47%] md:basis-[35%] lg:basis-[30%] 2xl:basis-[20%] 4k:basis-[16%]">
               {child}
             </CarouselItem>
           ))}
