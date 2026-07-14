@@ -33,7 +33,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                   <CarouselItem key={index} className="max-lg:basis-[95%]">
                     <div
                       className="relative aspect-[16/9] max-lg:h-[70vh] max-h-[87vh] snap-center h-full w-full object-cover object-center bg-cover bg-top"
-                      style={{ backgroundImage: `url(${image}${isMobile ? sliderData.poster_path : sliderData.backdrop_path})` }}
+                      style={{ backgroundImage: `url(${image}${isMobile ? sliderData.noTextPoster_path : sliderData.backdrop_path})` }}
                       key={index}
                     >
                       <div className="max-lg:hidden side-hero-overlay"></div>
@@ -57,8 +57,8 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                             <p className="max-lg:hidden text-content-secondary text-[40%] text-left leading-6 max-w-[55%] line-clamp-2 ">{sliderData.overview}</p>
 
                             <div className="flex justify-center items-center lg:justify-start gap-4 ">
-                              <PlayButton sliderData={sliderData} type={type} />
-                              <DetailsButton sliderData={sliderData} type={type} />
+                              {mediaType == "movie" && <PlayButton sliderData={sliderData} type={type} />}
+                              <DetailsButton sliderData={sliderData} type={type} mediaType={mediaType} />
                             </div>
                           </div>
                         </div>
