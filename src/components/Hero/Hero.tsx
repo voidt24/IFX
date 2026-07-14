@@ -29,6 +29,9 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
           <CarouselContent>
             {results &&
               results.slice(0, 5).map((sliderData, index) => {
+                const released =
+                  (sliderData.release_date && new Date(sliderData.release_date).getTime() <= Date.now()) || (sliderData.first_air_date && new Date(sliderData.first_air_date).getTime() <= Date.now());
+
                 return (
                   <CarouselItem key={index} className="max-lg:basis-[95%]">
                     <div
@@ -50,15 +53,14 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                               <img src={`${image}${sliderData.logoBackdrop}`} className="w-[65%] md:w-[55%] lg:w-[40%]" alt="" />
                             )}
 
-                            {(sliderData.release_date && new Date(sliderData.release_date).getTime() > Date.now()) ||
-                            (sliderData.first_air_date && new Date(sliderData.first_air_date).getTime() > Date.now()) ? (
+                            {!released ? (
                               <span className=" text-content-secondary text-[40%] lg:text-[55%]">Available on {formatReleaseDate(sliderData.release_date || sliderData.first_air_date || "")}</span>
                             ) : null}
                             <p className="max-lg:hidden text-content-secondary text-[40%] text-left leading-6 max-w-[55%] line-clamp-2 ">{sliderData.overview}</p>
 
                             <div className="flex justify-center items-center lg:justify-start gap-4 ">
-                              {mediaType == "movie" && <PlayButton sliderData={sliderData} type={type} />}
-                              <DetailsButton sliderData={sliderData} type={type} mediaType={mediaType} />
+                              {mediaType == "movie" && released && <PlayButton sliderData={sliderData} type={type} />}
+                              <DetailsButton sliderData={sliderData} type={type} mediaType={mediaType} released={released} />
                             </div>
                           </div>
                         </div>
