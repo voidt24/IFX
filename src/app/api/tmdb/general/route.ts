@@ -13,19 +13,24 @@ function buildGeneralSearchURL(mediaType: MediaTypeApi, TRENDING_CATEGORY: strin
     : `${apiUrl}${categoryForMovie === "trending" ? `trending/${mediaType}/day` : `${mediaType}/${categoryForMovie}`}?api_key=${API_KEY}&page=${pageNumber || 1}`;
 }
 
-async function fetchLogo(mediaType: MediaTypeApi, id: number): Promise<string | null> {
+async function fetchCleanAssets(mediaType: MediaTypeApi, id: number): Promise<{ logo: string | null; noTextPoster: string | null }> {
   try {
     const res = await fetch(resolveFetchURL("images", mediaType, id));
     const data = await res.json();
     const logos = data?.logos as
       | { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }[]
       | undefined;
+    const posters = data?.posters as { aspect_ratio: number; height: number; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }[] | undefined;
 
     const isUsableFormat = (logo: { file_path: string }) => [".svg", ".png", ".jpg"].some((ext) => logo.file_path.includes(ext));
 
-    return logos?.find((logo) => logo.iso_3166_1 == "US" && isUsableFormat(logo))?.file_path || logos?.find(isUsableFormat)?.file_path || null;
+    const logo = logos?.find((logo) => logo.iso_3166_1 == "US" && isUsableFormat(logo))?.file_path || logos?.find(isUsableFormat)?.file_path || null;
+
+    const noTextPoster = posters?.find((poster) => poster.iso_639_1 === null)?.file_path || null;
+
+    return { logo, noTextPoster };
   } catch {
-    return null;
+    return { logo: null, noTextPoster: null };
   }
 }
 
@@ -38,7 +43,8 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
 
   const enriched = await Promise.all(
     results.map(async (element) => {
-      const logoBackdrop = await fetchLogo(mediaType, element.id);
+      const { logo, noTextPoster } = await fetchCleanAssets(mediaType, element.id);
+      const logoBackdrop = logo;
       const result: IMediaData = {
         backdrop_path: element.backdrop_path || undefined,
         id: element.id,
@@ -48,6 +54,7 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
         original_name: element.original_name || undefined,
         overview: element.overview || undefined,
         poster_path: element.poster_path || undefined,
+        noTextPoster_path: noTextPoster || undefined,
         media_type: element.media_type || mediaType,
         release_date: element.release_date || undefined,
         first_air_date: element.first_air_date || undefined,
