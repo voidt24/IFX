@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MediaTypeUrl } from "@/Types/mediaType";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import PlayMedia from "@/components/byRoute/DisplayMedia/PlayMedia";
+import MediaPlayer from "@/components/byRoute/DisplayMedia/MediaPlayer";
 import DisplayInfo from "@/components/byRoute/DisplayMedia/DisplayInfo";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import isValidMediatype, { setMedia } from "@/helpers/isvalidMediatype";
@@ -78,7 +78,7 @@ function DisplayMedia({ mediaId, mediaType }: { mediaType: MediaTypeUrl; mediaId
         <div className="h-full w-full m-auto flex flex-col items-center justify-center">
           <div className="bg-black/35 backdrop-blur-lg flex flex-col items-center justify-center gap-2 xl:gap-4 h-auto w-full px-2 md:px-4 max-sm:py-12 py-4 rounded-xl xl:px-10">
             {mediaTypeReady && mediaId != 0 && (
-              <PlayMedia option={option} season={season} episode={episode} mediaType={getApiMediaType(mediaType)} currentId={mediaId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
+              <MediaPlayer option={option} season={season} episode={episode} mediaType={getApiMediaType(mediaType)} currentId={mediaId} mediaURL={mediaURL} setMediaURL={setMediaURL} />
             )}
             <DisplayInfo mediaId={mediaId} mediaType={getApiMediaType(mediaType)} mediaTypeReady={mediaTypeReady} season={season} episode={episode} searchParams={searchParams} />
           </div>
