@@ -4,6 +4,7 @@ import "../styles/styles.scss";
 import ContextWrapper from "../context/Context";
 import DefaultLayout from "@/components/layout/DefaultLayout";
 import StoreProvider from "@/store/StoreProvider";
+import { Analytics } from "@vercel/analytics/next";
 export const metadata: Metadata = {
   title: "IFX",
   description: "Watch and save your favorite films and series, discover new productions and save them into your watchlists!",
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <DefaultLayout>{children}</DefaultLayout>
           </ContextWrapper>
         </StoreProvider>
+        <Analytics />
       </body>
     </html>
   );
