@@ -14,7 +14,7 @@ function useInitialMediaData() {
     movies: [],
   });
 
-  const fetchAndSetData = async (mediaTypeObj: { mediaType: MediaTypeApi; searchCategory: string[]; limit: number[]; route: string }, categoryForMovie?: string) => {
+  const fetchAndSetData = async (mediaTypeObj: { mediaType: MediaTypeApi; searchCategory: string[]; limit: number[]; route: string }, categoryForMovie?: string): Promise<IMediaData[]> => {
     const { mediaType, searchCategory, limit, route } = mediaTypeObj;
     try {
       const results = await fetchGeneralData({ mediaType: mediaType, searchCategory: searchCategory, limit: limit, route: route }, categoryForMovie);
