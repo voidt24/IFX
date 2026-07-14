@@ -29,6 +29,7 @@ export const search = async (query: string, page: number) => {
             id: result.id,
             name: result.name ?? result.title,
             poster_path: result.poster_path,
+            noTextPoster_path: undefined,
             media_type: result.media_type,
             vote_average: result.vote_average,
             release_date: result.release_date || result.first_air_date,

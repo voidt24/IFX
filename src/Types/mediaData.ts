@@ -9,6 +9,7 @@ export interface IMediaData {
   original_name?: string | undefined;
   overview?: string | undefined;
   poster_path: string | undefined;
+  noTextPoster_path: string | undefined;
   media_type: MediaTypeApi;
   release_date?: string | undefined;
   first_air_date?: string | undefined;

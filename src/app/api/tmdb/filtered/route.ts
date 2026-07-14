@@ -71,6 +71,7 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
         original_name: element.original_name || undefined,
         overview: element.overview || undefined,
         poster_path: element.poster_path || undefined,
+        noTextPoster_path: undefined,
         media_type: element.media_type || mediaType,
         release_date: element.release_date || undefined,
         first_air_date: element.first_air_date || undefined,

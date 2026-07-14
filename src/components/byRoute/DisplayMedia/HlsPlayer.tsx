@@ -74,7 +74,7 @@ function HlsPlayer({ src, className, onFatalError, mediaType, season, episode }:
 
     async function setup() {
       const { default: Hls } = await import("hls.js");
-      if (cancelled) return;
+      if (cancelled || !video) return;
 
       if (!Hls.isSupported()) {
         onFatalError?.();
