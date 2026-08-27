@@ -19,6 +19,39 @@ export const providersNetworkCode: Record<string, number> = {
   History: 65,
 };
 
+// Movies under-match by design (TMDB has no "original" field for movies, only
+// production_companies — see themoviedb.org/talk/5c45b71ac3a368478c830950). Expanded
+// below per your call: association-level matches are fine, priority is that real
+// originals actually show up.
+export const providersProductionCompanyCode: Record<string, number[]> = {
+  Netflix: [
+    19382, // Netflix Content Services
+    19491, // Netflix Studios
+    178464, // Netflix US
+    171251, // Netflix Animation
+    13240, // Netflix International Pictures
+    201128, // Netflix Productions
+    142278,
+  ],
+  "Amazon Prime Video": [
+    20580, // Amazon Studios
+    125110, // Amazon Prime Video
+    107386, // Amazon MGM Studios
+  ],
+  "Apple TV+": [
+    194232, // Apple Studios
+    124317, // Apple Original Films
+  ],
+  "HBO Max": [
+    3268, // HBO Films
+    11073, // HBO Max / Max Originals
+  ],
+  "Paramount+": [
+    4, // Paramount Pictures
+    10038, // Paramount Players
+  ],
+};
+
 export const providersWatchCode: Record<string, number> = {
   Netflix: 8,
   "Disney+": 337,

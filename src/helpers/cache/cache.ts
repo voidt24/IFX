@@ -1,6 +1,7 @@
 import { IMediaData } from "@/Types";
 import { CACHENAME } from "../api.config";
 import { IdataResults } from "../search";
+import { IPersonDetails } from "@/Types/person";
 
 export const getFromCache = async (url: string, getFromApi: () => Promise<unknown>) => {
   try {
@@ -26,7 +27,7 @@ export const getFromCache = async (url: string, getFromApi: () => Promise<unknow
   }
 };
 
-export const saveToCache = async (json: IMediaData[] | IdataResults, url: string, validTime: number) => {
+export const saveToCache = async (json: IMediaData[] | IdataResults | IPersonDetails, url: string, validTime: number) => {
   try {
     const responseClone = new Response(JSON.stringify(json), {
       headers: { "Content-Type": "application/json" },

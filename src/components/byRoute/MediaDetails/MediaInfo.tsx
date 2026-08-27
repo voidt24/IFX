@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PlayOrTrailerButton from "./PlayOrTrailerButton";
 import MobileCloseButton from "./Buttons/MobileCloseButton";
+import OriginalBadge from "@/components/common/OriginalBadge";
 import { setSeasonModal } from "@/store/slices/UISlice";
 
 export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatched }: { mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean; loadingWatched: boolean }) => {
@@ -58,7 +59,12 @@ export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatch
         }}
       >
         <MobileCloseButton variant="details" />
-
+        {/* <OriginalBadge provider={mediaDetailsData.originalProvider} className="top-4 left-4 z-20 sm:top-6 sm:left-6" /> */}
+        <OriginalBadge
+          provider={mediaDetailsData.originalProvider}
+          parentClassName="top-7 left-3 z-30 lg:top-8 lg:left-10 lg:text-sm max-sm:text-xs"
+          imgClassName="h-6 w-6 md:h-7 md:w-7 lg:w-10 lg:h-10 "
+        />
         {/* overlay for desk */}
         <div className="max-lg:hidden side-hero-overlay"></div>
         <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-b from-[#000005] to-[#0c0e1300] !top-0 !h-[25%]"></div>

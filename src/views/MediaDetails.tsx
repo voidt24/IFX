@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { RootState } from "@/store";
 import { setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
+import { resolveOriginalProvider } from "@/helpers/getOriginalProvider";
 import { Context } from "@/context/Context";
 import MediaInfo from "@/components/byRoute/MediaDetails/MediaInfo";
 import Notification from "@/components/common/Notification";
@@ -79,6 +80,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             }
           }
           const mobileBackgroundPath = noTextMobilePoster || poster_path;
+          const originalProvider = resolveOriginalProvider(mediaType, byIdPromise.value);
           const mediaDetails: ImediaDetailsData = {
             heroBackground: window.innerWidth >= 640 ? `${image}${backdrop_path}` : `${image}${mobileBackgroundPath}`,
             bigHeroBackground: `${image}${backdrop_path}`,
@@ -93,6 +95,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             seasons: number_of_seasons ? (number_of_seasons === 1 ? "1 Season" : `${number_of_seasons} Seasons`) : "",
             seasonsArray: seasons,
             logoBackdrop: logo || null,
+            originalProvider,
           };
 
           dispatch(setMediaDetailsData(mediaDetails));

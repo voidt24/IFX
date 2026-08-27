@@ -1,4 +1,5 @@
 import { IMediaData, MediaTypeApi } from "@/Types";
+import { ProviderLogos } from "@/app/api/tmdb/providers/route";
 import { getBaseUrl } from "@/lib/env";
 
 /**
@@ -44,4 +45,26 @@ export const fetchFilteredData = async (
 
   const { results, total_pages } = await res.json();
   return [results, total_pages];
+};
+
+// Module-level cache: many components (ProviderCarouselSelect, every OriginalBadge
+// on a page) can call this independently — they should all share one request instead
+// of each firing its own fetch to /api/tmdb/providers.
+let providerLogosPromise: Promise<Record<string, ProviderLogos | null>> | null = null;
+
+export const fetchProviderLogos = async (): Promise<Record<string, ProviderLogos | null>> => {
+  if (!providerLogosPromise) {
+    providerLogosPromise = fetch(`${getBaseUrl()}/api/tmdb/providers`)
+      .then(async (res) => {
+        if (!res.ok) return {};
+        const { logos } = await res.json();
+        return logos || {};
+      })
+      .catch((e) => {
+        providerLogosPromise = null; // let the next call retry instead of caching a failure
+        return Promise.reject(e);
+      });
+  }
+
+  return providerLogosPromise;
 };

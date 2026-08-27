@@ -4,6 +4,7 @@ import ComingSoonBadge from "./ComingSoonBadge";
 import VoteBadge from "./VoteBadge";
 import YearBadge from "./YearBadge";
 import MediaTypeBadge from "./MediaTypeBadge";
+import OriginalBadge from "@/components/common/OriginalBadge";
 import useIsMobile from "@/Hooks/useIsMobile";
 
 function MediaCard({ result, poster, vote, canBeEdited, showBadge }: { result: IMediaData; poster: string; vote: string | undefined; canBeEdited: boolean; showBadge?: boolean }) {
@@ -23,6 +24,7 @@ function MediaCard({ result, poster, vote, canBeEdited, showBadge }: { result: I
           </div>
         )}
         {notReleasedYet ? <ComingSoonBadge release_date={release_date} first_air_date={first_air_date} /> : null}
+        <OriginalBadge provider={result.originalProvider} originalTextClassName="text-[70%] sm:text-[90%]" />
 
         {/* todo: refact */}
         <div

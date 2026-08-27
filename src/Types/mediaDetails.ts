@@ -12,4 +12,5 @@ export interface ImediaDetailsData {
   seasons: string | null;
   seasonsArray: [] | null;
   logoBackdrop?: string | null;
+  originalProvider?: string | null; // e.g. "Netflix" — set when this title is that platform's Original content
 }

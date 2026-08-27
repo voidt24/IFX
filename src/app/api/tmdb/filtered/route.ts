@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getOrSetCache } from "@/lib/cache";
 import { apiUrl, API_KEY } from "@/helpers/api.config";
 import { resolveFetchURL } from "@/helpers/resolveFetchURL";
+import { resolveOriginalProvider } from "@/helpers/getOriginalProvider";
 import { movieGenresCode, tvGenresCode, providersNetworkCode, providersWatchCode } from "@/helpers/constants";
 import { IMediaData, MediaTypeApi } from "@/Types";
 
@@ -52,7 +53,20 @@ async function fetchLogo(mediaType: MediaTypeApi, id: number): Promise<string | 
   }
 }
 
-async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMediaData[], number]> {
+// Same one-extra-call pattern as fetchLogo. Skipped entirely when the row is already
+// network-filtered for TV (see isNetworkFilteredRow in GET) — in that case every item
+// is guaranteed to be that provider's Original by construction, no need to ask TMDB again.
+async function fetchOriginalProvider(mediaType: MediaTypeApi, id: number): Promise<string | null> {
+  try {
+    const res = await fetch(resolveFetchURL("byId", mediaType, id));
+    const data = await res.json();
+    return resolveOriginalProvider(mediaType, data);
+  } catch {
+    return null;
+  }
+}
+
+async function fetchFromTMDB(url: string, mediaType: MediaTypeApi, knownOriginalProvider: string | null): Promise<[IMediaData[], number]> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`TMDB request failed with status ${res.status}`);
 
@@ -61,7 +75,10 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
 
   const enriched = await Promise.all(
     results.map(async (element) => {
-      const logoBackdrop = await fetchLogo(mediaType, element.id);
+      const [logoBackdrop, originalProvider] = await Promise.all([
+        fetchLogo(mediaType, element.id),
+        knownOriginalProvider ? Promise.resolve(knownOriginalProvider) : fetchOriginalProvider(mediaType, element.id),
+      ]);
       const result: IMediaData = {
         backdrop_path: element.backdrop_path || undefined,
         id: element.id,
@@ -77,6 +94,7 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
         first_air_date: element.first_air_date || undefined,
         vote_average: element.vote_average || undefined,
         logoBackdrop,
+        originalProvider,
       };
       return result;
     }),
@@ -100,11 +118,18 @@ export async function GET(req: NextRequest) {
   const validProvider = provider !== null && provider !== "Platform" && provider !== "All";
   const validGenre = genreCode !== null && genreCode !== "All";
 
+  // Mirrors the branch in buildFilteredSearchURL: when this row was built with
+  // &with_networks=<id> for TV, every result in it is that provider's Original by
+  // construction — no need to look it up again per item.
+  const isNetworkFilteredRow = validProvider && mediaType === "tv" && provider !== "Crunchyroll";
+  const knownOriginalProvider = isNetworkFilteredRow ? provider : null;
+
   const url = buildFilteredSearchURL(mediaType, validProvider, validGenre, genreCode, provider, pageNumber);
-  const cacheKey = buildFilteredCacheKey(mediaType, validProvider, validGenre, genreCode, provider, pageNumber);
+  // v4: cascade fallback added (keywords -> production_companies -> watch/providers)
+  const cacheKey = `v4:${buildFilteredCacheKey(mediaType, validProvider, validGenre, genreCode, provider, pageNumber)}`;
 
   try {
-    const [results, total_pages] = await getOrSetCache(cacheKey, TTL_SECONDS, () => fetchFromTMDB(url, mediaType));
+    const [results, total_pages] = await getOrSetCache(cacheKey, TTL_SECONDS, () => fetchFromTMDB(url, mediaType, knownOriginalProvider));
     return NextResponse.json({ results, total_pages });
   } catch (e) {
     console.error("[/api/tmdb/filtered] failed", e);

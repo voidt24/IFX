@@ -15,4 +15,5 @@ export interface IMediaData {
   first_air_date?: string | undefined;
   vote_average: number | undefined;
   logoBackdrop?: string | null;
+  originalProvider?: string | null; // e.g. "Netflix" — set when this title is that platform's Original content
 }

@@ -6,6 +6,7 @@ import DetailsButton from "./DetailsButton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/Shadcn/carousel";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import PlayButton from "./PlayButton";
+import OriginalBadge from "@/components/common/OriginalBadge";
 import useIsMobile from "@/Hooks/useIsMobile";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
@@ -42,6 +43,11 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
                       <div className="max-lg:hidden side-hero-overlay"></div>
                       <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-b from-[#000000] to-[#00000000] !top-0 !h-[20%]"></div>
                       <div className="max-lg:hidden to-top-gradient-bg-desktop bg-gradient-to-t from-[#000000] via-[#0000007a] to-[#00000000] !bottom-0 !h-[20%]"></div>
+                      <OriginalBadge
+                        provider={sliderData.originalProvider}
+                        parentClassName="top-3 left-3 z-30 lg:top-8 lg:left-10 lg:text-sm max-sm:text-xs"
+                        imgClassName="h-6 w-6 md:h-10 md:w-10 lg:w-11 lg:h-11 "
+                      />
 
                       <div className="info-container  max-lg:h-full px-1 lg:px-4 w-full lg:max-w-[80%] absolute flex flex-col items-center lg:items-start max-lg:justify-end max-lg:pb-6 justify-center gap-2 lg:gap-4 top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2 z-20 text-4xl">
                         <div className="py-5 max-lg:flex max-lg:flex-col max-lg:items-center max-lg:gap-4 w-full">

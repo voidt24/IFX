@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getOrSetCache } from "@/lib/cache";
 import { apiUrl, API_KEY } from "@/helpers/api.config";
 import { resolveFetchURL } from "@/helpers/resolveFetchURL";
+import { resolveOriginalProvider } from "@/helpers/getOriginalProvider";
 import { IMediaData, MediaTypeApi } from "@/Types";
 
 // Same window the old browser cache used (2 days), now shared by every visitor.
@@ -34,6 +35,19 @@ async function fetchCleanAssets(mediaType: MediaTypeApi, id: number): Promise<{ 
   }
 }
 
+// One extra per-item call (same pattern/cost as fetchCleanAssets above) to get the
+// `networks` (tv) / `production_companies` (movie) fields needed for the Original badge —
+// list/discover/search endpoints don't include them, only the byId detail endpoint does.
+async function fetchOriginalProvider(mediaType: MediaTypeApi, id: number): Promise<string | null> {
+  try {
+    const res = await fetch(resolveFetchURL("byId", mediaType, id));
+    const data = await res.json();
+    return resolveOriginalProvider(mediaType, data);
+  } catch {
+    return null;
+  }
+}
+
 async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMediaData[], number]> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`TMDB request failed with status ${res.status}`);
@@ -43,7 +57,7 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
 
   const enriched = await Promise.all(
     results.map(async (element) => {
-      const { logo, noTextPoster } = await fetchCleanAssets(mediaType, element.id);
+      const [{ logo, noTextPoster }, originalProvider] = await Promise.all([fetchCleanAssets(mediaType, element.id), fetchOriginalProvider(mediaType, element.id)]);
       const logoBackdrop = logo;
       const result: IMediaData = {
         backdrop_path: element.backdrop_path || undefined,
@@ -60,6 +74,7 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
         first_air_date: element.first_air_date || undefined,
         vote_average: element.vote_average || undefined,
         logoBackdrop,
+        originalProvider,
       };
       return result;
     }),
@@ -81,7 +96,8 @@ export async function GET(req: NextRequest) {
   }
 
   const url = buildGeneralSearchURL(mediaType, trendingCategory, categoryForMovie, pageNumber);
-  const cacheKey = `tmdb:general:${mediaType}-${mediaType == "tv" ? trendingCategory : categoryForMovie}-page-${pageNumber || 1}`;
+  // v4: cascade fallback added (keywords -> production_companies -> watch/providers)
+  const cacheKey = `tmdb:general:v4:${mediaType}-${mediaType == "tv" ? trendingCategory : categoryForMovie}-page-${pageNumber || 1}`;
 
   try {
     const [results, total_pages] = await getOrSetCache(cacheKey, TTL_SECONDS, () => fetchFromTMDB(url, mediaType));
