@@ -1,34 +1,33 @@
-import { getFromCache, saveToCache } from "./cache/cache";
-import { ONE_MONTH, THREE_DAYS } from "./constants";
-import { resolveFetchURL } from "./resolveFetchURL";
+import { getBaseUrl } from "@/lib/env";
 
+/**
+ * Movie/TV details (byId, images, cast/credits, reviews) now live behind
+ * /api/tmdb/details, which reads/writes a shared Redis cache on the server —
+ * mirrors the fetchGeneralData/fetchFilteredData pattern in fetchInitialData.ts.
+ *
+ * When the browser reports no connection, the request is flagged as cache-only:
+ * the server skips TMDB entirely and returns whatever is already in Redis (or
+ * signals nothing is cached), instead of attempting a call that would just fail.
+ */
 export const fetchDetailsData = async (typeOfSearch, mediaType, id) => {
   if (!id) throw new Error("id undefined");
 
-  // byId now carries append_to_response=keywords,watch/providers (needed for the
-  // Original-content cascade) — versioned so previously-cached entries (missing
-  // those fields) get bypassed instead of served stale for up to a month.
-  const CACHEURL = typeOfSearch === "byId" ? `${mediaType}-${typeOfSearch}-v2-${id}` : `${mediaType}-${typeOfSearch}-${id}`;
-  let url = resolveFetchURL(typeOfSearch, mediaType, id);
-  let validTime = typeOfSearch === "reviews" ? THREE_DAYS : ONE_MONTH;
+  const isOffline = typeof navigator !== "undefined" && "onLine" in navigator && navigator.onLine === false;
 
-  const getFromApi = async () => {
-    try {
-      const data = await fetch(url);
-      const json = await data.json();
+  const params = new URLSearchParams({ mediaType, id: String(id), type: typeOfSearch });
+  if (isOffline) params.set("cacheOnly", "true");
 
-      return json;
-    } catch (e) {
-      return Promise.reject(e);
-    }
-  };
+  const res = await fetch(`${getBaseUrl()}/api/tmdb/details?${params.toString()}`);
+  if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
 
-  try {
-    return await getFromCache(CACHEURL, getFromApi);
-  } catch (e) {
-    const dataFromApi = await getFromApi();
-    await saveToCache(dataFromApi, CACHEURL, validTime);
+  const { data, cached } = await res.json();
 
-    return dataFromApi;
+  if (isOffline && !cached) {
+    // Nothing shared in Redis for this title — surface a clear rejection instead
+    // of an empty payload, so callers (Promise.allSettled, try/catch) treat it
+    // the same way they treat any other failed fetch.
+    throw new Error("offline-no-cache");
   }
+
+  return data;
 };

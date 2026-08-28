@@ -18,6 +18,7 @@ import PlayOrTrailerButton from "./PlayOrTrailerButton";
 import MobileCloseButton from "./Buttons/MobileCloseButton";
 import OriginalBadge from "@/components/common/OriginalBadge";
 import { setSeasonModal } from "@/store/slices/UISlice";
+import WatchProviders from "./WatchProviders";
 
 export const MediaInfo = ({ mediaId, loadingFavs, loadingWatchlist, loadingWatched }: { mediaId: number; loadingFavs: boolean; loadingWatchlist: boolean; loadingWatched: boolean }) => {
   const { seasonModal, containerMargin } = useSelector((state: RootState) => state.ui);

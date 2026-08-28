@@ -10,6 +10,8 @@ import { handleTrailerClick } from "@/helpers/getTrailer";
 import { getApiMediaType } from "@/helpers/getApiMediaType";
 import { MediaTypeApi } from "@/Types";
 import EpisodesTab from "../Episodes/EpisodesTab";
+import Gallery from "../Gallery";
+import { image } from "@/helpers/api.config";
 
 //to-do: add cast and reviews types to delete type never[]
 function TabsSection({ mediaType, mediaId, cast, reviews }: { mediaType: MediaTypeApi; mediaId: number; cast: never[]; reviews: never[] }) {
@@ -27,10 +29,13 @@ function TabsSection({ mediaType, mediaId, cast, reviews }: { mediaType: MediaTy
         <Tab title="Cast">
           <Cast cast={cast} />
         </Tab>
+        <Tab title="Images">
+          <Gallery backdrops={mediaDetailsData?.backdrops} />
+        </Tab>
         <Tab title="Trailer">
           <div
             className="trailer-preview border border-content-third rounded-lg overflow-hidden bg-cover bg-center aspect-video bg-no-repeat w-full md:w-[40%] mx-auto relative"
-            style={{ backgroundImage: `url(${mediaDetailsData?.bigHeroBackground})` }}
+            style={{ backgroundImage: `url(${image}${mediaDetailsData?.backdrops?.[2]})` }}
           >
             <div className="overlay-base bg-black/70 flex-col-center ">
               <button

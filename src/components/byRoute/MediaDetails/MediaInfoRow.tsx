@@ -8,12 +8,11 @@ function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; med
 
   return (
     <div className="info flex-row-center flex-wrap max-md:text-[85%] lg:text-[90%] lg:justify-start gap-2 text-content-secondary">
-      <div className="w-full flex max-lg:justify-center items-center pointer-events-none py-3">
+      <div className="w-full flex flex-col md:flex-row gap-3 max-lg:justify-center items-center pointer-events-none py-3">
         <img src={`${image}${data.logoBackdrop}`} className="w-[65%] md:w-[55%] xl:w-[40%]" alt="" />
       </div>
 
       {data.logoBackdrop == null && <h1 className="title font-semibold text-4xl line-clamp-3 w-full lg:max-w-[80%] lg:text-left text-content-primary">{data.title}</h1>}
-
       <div className="flex-row-center gap-2.5 md:gap-2">
         <span className="">{!isReleased(data.releaseDate) ? `Available on ${data.releaseDate}` : data.releaseDate}</span>
 
@@ -48,6 +47,18 @@ function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; med
           </>
         )}
       </div>
+
+      {(data.director || (data.productionCompanies && data.productionCompanies.length > 0)) && (
+        <div className="flex-row-center flex-wrap gap-2 md:gap-2 text-content-secondary">
+          {data.director && (
+            <span>
+              {data.directorLabel || "Directed by"}: <span className="text-content-primary">{data.director}</span>
+            </span>
+          )}
+          {data.director && data.productionCompanies && data.productionCompanies.length > 0 && <span>•</span>}
+          {data.productionCompanies && data.productionCompanies.length > 0 && <span>{data.productionCompanies.slice(0, 1)}</span>}
+        </div>
+      )}
     </div>
   );
 }

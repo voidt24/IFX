@@ -20,6 +20,9 @@ import useHideDrawers from "@/Hooks/useHideDrawers";
 import MediaDetailsSkeleton from "@/components/common/Skeletons/MediaDetailsSkeleton";
 import { onAuthStateChanged } from "firebase/auth";
 import TabsSection from "@/components/byRoute/MediaDetails/TabsSection/TabsSection";
+import useOnlineStatus from "@/Hooks/useOnlineStatus";
+import Gallery from "@/components/byRoute/MediaDetails/Gallery";
+import WatchProviders from "@/components/byRoute/MediaDetails/WatchProviders";
 
 export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; mediaId: number }) => {
   const { setCastError, setReviewsError, setOpenTrailer } = useContext(Context);
@@ -35,6 +38,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   const { mediaDetailsData } = useSelector((state: RootState) => state.mediaDetails);
   const { testingInitialized } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
+  const isOnline = useOnlineStatus();
 
   useHideDrawers(true);
 
@@ -46,6 +50,12 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
   }, []);
 
   useEffect(() => {
+    if (!isOnline) {
+      setMessage({ message: "You're offline — showing cached results.", severity: "warning", open: true });
+    }
+  }, [isOnline]);
+
+  useEffect(() => {
     if (mediaId != undefined) {
       Promise.allSettled([
         fetchDetailsData("byId", mediaType, mediaId),
@@ -55,12 +65,30 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
       ]).then((result) => {
         const [byIdPromise, imagesPromise, castPromise, reviewsPromise] = result;
         if (byIdPromise.status == "fulfilled") {
-          const { imdb_id, title, name, overview, release_date, first_air_date, genres, vote_average, backdrop_path, poster_path, runtime, number_of_seasons, seasons } = byIdPromise.value;
+          const {
+            imdb_id,
+            title,
+            name,
+            overview,
+            release_date,
+            first_air_date,
+            genres,
+            vote_average,
+            backdrop_path,
+            poster_path,
+            runtime,
+            number_of_seasons,
+            seasons,
+            production_companies,
+            created_by,
+          } = byIdPromise.value;
           let logo;
           let noTextMobilePoster = null;
+          let backdrops: string[] = [];
+          let posterGallery: string[] = [];
 
           if (imagesPromise.status == "fulfilled") {
-            const { logos, posters } = imagesPromise.value;
+            const { logos, posters, backdrops: backdropsRaw, stills } = imagesPromise.value;
             logo =
               logos?.find(
                 (logo: { aspect_ratio: number; height: number; iso_3166_1: string | null; iso_639_1: string | null; file_path: string; vote_average: number; vote_count: number; width: number }) =>
@@ -78,7 +106,36 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             if (textlessPoster) {
               noTextMobilePoster = textlessPoster.file_path;
             }
+
+            const rawImagesSource = mediaType === "tv" && stills?.length > 0 ? stills : backdropsRaw || [];
+
+            backdrops = rawImagesSource
+              .filter((img: { iso_639_1: string | null; aspect_ratio?: number }) => img.iso_639_1 === null && (!img.aspect_ratio || img.aspect_ratio > 1.5))
+              .slice(0, 15)
+              .map((img: { file_path: string }) => img.file_path);
+            posterGallery = (posters || []).slice(0, 15).map((img: { file_path: string }) => img.file_path);
           }
+
+          // Director (movies) comes from the credits/crew list; TV shows carry their
+          // creators directly on the byId response as `created_by`.
+          let director: string | null = null;
+          let directorLabel: string | null = null;
+          if (mediaType === "movie" && castPromise.status == "fulfilled") {
+            const directors = (castPromise.value.crew || [])
+              .filter((member: { job?: string; name?: string }) => member.job === "Director")
+              .map((member: { name?: string }) => member.name)
+              .filter(Boolean);
+            if (directors.length > 0) {
+              director = directors.join(", ");
+              directorLabel = "Directed by";
+            }
+          } else if (mediaType === "tv" && created_by?.length > 0) {
+            director = created_by.map((creator: { name: string }) => creator.name).join(", ");
+            directorLabel = "Created by";
+          }
+
+          const productionCompanies: string[] = (production_companies || []).map((company: { name: string }) => company.name).slice(0, 3);
+
           const mobileBackgroundPath = noTextMobilePoster || poster_path;
           const originalProvider = resolveOriginalProvider(mediaType, byIdPromise.value);
           const mediaDetails: ImediaDetailsData = {
@@ -96,6 +153,12 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             seasonsArray: seasons,
             logoBackdrop: logo || null,
             originalProvider,
+            director,
+            directorLabel,
+            productionCompanies,
+            backdrops,
+            posters: posterGallery,
+            watchProvidersByRegion: mediaType === "tv" ? byIdPromise.value["watch/providers"]?.results || null : null,
           };
 
           dispatch(setMediaDetailsData(mediaDetails));
@@ -148,6 +211,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             },
           ];
           localStorage.setItem(`${APP_NAME}-recent`, JSON.stringify(data));
+        } else if (!isOnline) {
+          setMessage({ message: "This title isn't available offline yet — connect to the internet to load it.", severity: "error", open: true });
         }
       });
     }
