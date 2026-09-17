@@ -16,6 +16,13 @@ function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; med
       <div className="flex-row-center gap-2.5 md:gap-2">
         <span className="">{!isReleased(data.releaseDate) ? `Available on ${data.releaseDate}` : data.releaseDate}</span>
 
+        {data.inTheaters && (
+          <>
+            <span>•</span>
+            <span className="uppercase font-bold text-green-500">In Theaters</span>
+          </>
+        )}
+
         {mediaType === "movie" && data.runtime && (
           <>
             <span>•</span>

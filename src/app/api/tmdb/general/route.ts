@@ -3,6 +3,7 @@ import { getOrSetCache } from "@/lib/cache";
 import { apiUrl, API_KEY } from "@/helpers/api.config";
 import { resolveFetchURL } from "@/helpers/resolveFetchURL";
 import { resolveOriginalProvider } from "@/helpers/getOriginalProvider";
+import { isInTheaters } from "@/helpers/isInTheaters";
 import { IMediaData, MediaTypeApi } from "@/Types";
 
 // Same window the old browser cache used (2 days), now shared by every visitor.
@@ -38,13 +39,15 @@ async function fetchCleanAssets(mediaType: MediaTypeApi, id: number): Promise<{ 
 // One extra per-item call (same pattern/cost as fetchCleanAssets above) to get the
 // `networks` (tv) / `production_companies` (movie) fields needed for the Original badge —
 // list/discover/search endpoints don't include them, only the byId detail endpoint does.
-async function fetchOriginalProvider(mediaType: MediaTypeApi, id: number): Promise<string | null> {
+// That same byId call also carries release_dates (see resolveFetchURL), so it's reused
+// here to derive the "still in theaters" flag for movies at zero extra cost.
+async function fetchOriginalProviderAndTheaters(mediaType: MediaTypeApi, id: number): Promise<{ originalProvider: string | null; inTheaters: boolean }> {
   try {
     const res = await fetch(resolveFetchURL("byId", mediaType, id));
     const data = await res.json();
-    return resolveOriginalProvider(mediaType, data);
+    return { originalProvider: resolveOriginalProvider(mediaType, data), inTheaters: isInTheaters(mediaType, data.release_dates) };
   } catch {
-    return null;
+    return { originalProvider: null, inTheaters: false };
   }
 }
 
@@ -57,7 +60,7 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
 
   const enriched = await Promise.all(
     results.map(async (element) => {
-      const [{ logo, noTextPoster }, originalProvider] = await Promise.all([fetchCleanAssets(mediaType, element.id), fetchOriginalProvider(mediaType, element.id)]);
+      const [{ logo, noTextPoster }, { originalProvider, inTheaters }] = await Promise.all([fetchCleanAssets(mediaType, element.id), fetchOriginalProviderAndTheaters(mediaType, element.id)]);
       const logoBackdrop = logo;
       const result: IMediaData = {
         backdrop_path: element.backdrop_path || undefined,
@@ -75,6 +78,7 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi): Promise<[IMe
         vote_average: element.vote_average || undefined,
         logoBackdrop,
         originalProvider,
+        inTheaters,
       };
       return result;
     }),
@@ -96,8 +100,8 @@ export async function GET(req: NextRequest) {
   }
 
   const url = buildGeneralSearchURL(mediaType, trendingCategory, categoryForMovie, pageNumber);
-  // v4: cascade fallback added (keywords -> production_companies -> watch/providers)
-  const cacheKey = `tmdb:general:v4:${mediaType}-${mediaType == "tv" ? trendingCategory : categoryForMovie}-page-${pageNumber || 1}`;
+  // v5: added inTheaters (derived from release_dates on the same byId call)
+  const cacheKey = `tmdb:general:v5:${mediaType}-${mediaType == "tv" ? trendingCategory : categoryForMovie}-page-${pageNumber || 1}`;
 
   try {
     const [results, total_pages] = await getOrSetCache(cacheKey, TTL_SECONDS, () => fetchFromTMDB(url, mediaType));

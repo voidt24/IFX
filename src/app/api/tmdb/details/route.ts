@@ -15,11 +15,11 @@ const TTL_SECONDS: Record<DetailsType, number> = {
 
 const VALID_TYPES: DetailsType[] = ["byId", "images", "cast", "reviews"];
 
-// v2: byId now carries append_to_response=keywords,watch/providers — bump this prefix
-// whenever resolveFetchURL's query params for a given type change, so previously
-// cached shapes get bypassed instead of served stale.
+// v3: byId now carries append_to_response=keywords,watch/providers,release_dates —
+// bump this prefix whenever resolveFetchURL's query params for a given type change,
+// so previously cached shapes get bypassed instead of served stale.
 function buildCacheKey(mediaType: MediaTypeApi, type: DetailsType, id: string) {
-  return `tmdb:details:v2:${mediaType}:${type}:${id}`;
+  return `tmdb:details:v3:${mediaType}:${type}:${id}`;
 }
 
 export async function GET(req: NextRequest) {

@@ -32,6 +32,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
               results.slice(0, 5).map((sliderData, index) => {
                 const released =
                   (sliderData.release_date && new Date(sliderData.release_date).getTime() <= Date.now()) || (sliderData.first_air_date && new Date(sliderData.first_air_date).getTime() <= Date.now());
+                const inTheaters = released && sliderData.inTheaters;
 
                 return (
                   <CarouselItem key={index} className="max-lg:basis-[95%]">
@@ -61,6 +62,8 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
 
                             {!released ? (
                               <span className=" text-content-secondary text-[40%] lg:text-[55%]">Available on {formatReleaseDate(sliderData.release_date || sliderData.first_air_date || "")}</span>
+                            ) : inTheaters ? (
+                              <span className="uppercase font-bold text-green-500 text-[40%] lg:text-[55%]">In Theaters</span>
                             ) : null}
                             <p className="max-lg:hidden text-content-secondary text-[40%] text-left leading-6 max-w-[55%] line-clamp-2 ">{sliderData.overview}</p>
 

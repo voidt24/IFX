@@ -13,6 +13,7 @@ import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { RootState } from "@/store";
 import { setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import { resolveOriginalProvider } from "@/helpers/getOriginalProvider";
+import { isInTheaters } from "@/helpers/isInTheaters";
 import { Context } from "@/context/Context";
 import MediaInfo from "@/components/byRoute/MediaDetails/MediaInfo";
 import Notification from "@/components/common/Notification";
@@ -81,6 +82,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             seasons,
             production_companies,
             created_by,
+            release_dates,
           } = byIdPromise.value;
           let logo;
           let noTextMobilePoster = null;
@@ -144,6 +146,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             imdb_id,
             title: title || name,
             poster: `${image}${mobileBackgroundPath}` || "",
+            poster_path,
             overview,
             releaseDate: release_date ? formatReleaseDate(release_date) : formatReleaseDate(first_air_date),
             vote: String(vote_average).slice(0, 3),
@@ -159,6 +162,7 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             backdrops,
             posters: posterGallery,
             watchProvidersByRegion: mediaType === "tv" ? byIdPromise.value["watch/providers"]?.results || null : null,
+            inTheaters: isInTheaters(mediaType, release_dates),
           };
 
           dispatch(setMediaDetailsData(mediaDetails));

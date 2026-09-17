@@ -19,7 +19,7 @@ function WatchlistPreviewSection() {
   return (
     <div className="mt-6 w-[98%] mx-auto  rounded-lg">
       <span className="flex justify-between items-center w-full pb-2">
-        <h1 className="text-base lg:text-xl text-[95%] font-medium text-white/70">From your favorites</h1>
+        <h1 className="text-base lg:text-xl text-[95%] font-medium text-white/70">From your watchlist</h1>
         <Link className="hover:underline text-[85%] lg:text-[90%] text-content-secondary" href={`/lists`}>
           See all &gt;
         </Link>

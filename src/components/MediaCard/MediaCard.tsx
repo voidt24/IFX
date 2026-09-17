@@ -1,6 +1,7 @@
 import { IMediaData } from "@/Types";
 import { useState } from "react";
 import ComingSoonBadge from "./ComingSoonBadge";
+import InTheatersBadge from "./InTheatersBadge";
 import VoteBadge from "./VoteBadge";
 import YearBadge from "./YearBadge";
 import MediaTypeBadge from "./MediaTypeBadge";
@@ -10,6 +11,7 @@ import useIsMobile from "@/Hooks/useIsMobile";
 function MediaCard({ result, poster, vote, canBeEdited, showBadge }: { result: IMediaData; poster: string; vote: string | undefined; canBeEdited: boolean; showBadge?: boolean }) {
   const { release_date, first_air_date, title, name } = result;
   const notReleasedYet = (release_date && new Date(release_date).getTime() > Date.now()) || (first_air_date && new Date(first_air_date).getTime() > Date.now());
+  const inTheaters = !notReleasedYet && !!result.inTheaters;
   const [isHovered, setIsHovered] = useState(false);
   const isMobile = useIsMobile();
   return (
@@ -23,7 +25,7 @@ function MediaCard({ result, poster, vote, canBeEdited, showBadge }: { result: I
             <p className="max-md:text-[90%] xl:text-[110%] h-full left-0 w-full content-center absolute top-0 text-center bg-black/75 py-2">{result.title || result.name}</p>
           </div>
         )}
-        {notReleasedYet ? <ComingSoonBadge release_date={release_date} first_air_date={first_air_date} /> : null}
+        {notReleasedYet ? <ComingSoonBadge release_date={release_date} first_air_date={first_air_date} /> : inTheaters ? <InTheatersBadge /> : null}
         <OriginalBadge provider={result.originalProvider} originalTextClassName="text-[70%] sm:text-[90%]" />
 
         {/* todo: refact */}

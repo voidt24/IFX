@@ -15,19 +15,19 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       const mediaDetails = await fetchDetailsData("byId", mediaType == "movies" ? "movie" : "tv", id);
 
       if (mediaType == "movies") {
-        if ((mediaDetails && mediaDetails.title) || mediaDetails.original_title) {
+        if (mediaDetails && (mediaDetails.title || mediaDetails.original_title)) {
           mediaTitle = mediaDetails.title || mediaDetails.original_title;
         }
       } else {
-        if ((mediaDetails && mediaDetails.name) || mediaDetails.original_name) {
+        if (mediaDetails && (mediaDetails.name || mediaDetails.original_name)) {
           mediaTitle = mediaDetails.name || mediaDetails.original_name;
         }
       }
-
-      return mediaTitle;
     } catch (error) {
       console.error("Error fetching title:", error);
     }
+
+    return mediaTitle;
   }
   const title = await getData(mediaType, id);
 

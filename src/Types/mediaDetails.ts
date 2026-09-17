@@ -17,6 +17,7 @@ export interface ImediaDetailsData {
   bigHeroBackground: string | null; //to get the backdrop even in smaller size devices
   title: string | null;
   poster: string | null;
+  poster_path?: string | undefined; // el poster_path crudo de TMDB (con título), igual al que usan las cards de Home/Search
   overview: string | null;
   releaseDate: string | null;
   vote: string | null;
@@ -25,11 +26,12 @@ export interface ImediaDetailsData {
   seasons: string | null;
   seasonsArray: [] | null;
   logoBackdrop?: string | null;
-  originalProvider?: string | null; // e.g. "Netflix" — set when this title is that platform's Original content
-  director?: string | null; // movie director(s), or TV creator(s)
-  directorLabel?: string | null; // "Directed by" for movies, "Created by" for TV
-  productionCompanies?: string[]; // e.g. ["Marvel Studios", "Warner Bros. Pictures"]
-  backdrops?: string[]; // extra gallery images (file_path only, append the image base URL to render)
-  posters?: string[]; // extra gallery images (file_path only, append the image base URL to render)
-  watchProvidersByRegion?: Record<string, IWatchProviderRegion> | null; // TV only — raw watch/providers.results, keyed by ISO country code
+  originalProvider?: string | null;
+  director?: string | null;
+  directorLabel?: string | null;
+  productionCompanies?: string[];
+  backdrops?: string[];
+  posters?: string[];
+  watchProvidersByRegion?: Record<string, IWatchProviderRegion> | null;
+  inTheaters?: boolean;
 }
