@@ -33,5 +33,10 @@ export interface ImediaDetailsData {
   backdrops?: string[];
   posters?: string[];
   watchProvidersByRegion?: Record<string, IWatchProviderRegion> | null;
-  inTheaters?: boolean;
+  rawReleaseDate?: string | null; // unformatted ISO date, needed to recompute isInTheaters() at render time
+  // Permanent facts from TMDB's release_dates — safe to cache/store. The actual
+  // "is it in theaters right now" verdict is derived from these at render time via
+  // isInTheaters(), never stored, so it can't go stale. See helpers/isInTheaters.ts.
+  hadTheatricalRelease?: boolean;
+  digitalReleaseDate?: string | null;
 }

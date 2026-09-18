@@ -6,6 +6,8 @@ export function resolveFetchURL(typeOfSearch: "byId" | "similar" | "cast" | "rev
     case "byId":
       // append_to_response bundles keywords + watch/providers into this same call —
       // needed for the Original-content fallback cascade, zero extra requests.
+      // release_dates is bundled too, so the "still in theaters" check (movies only)
+      // never needs its own request either.
       url = `${apiUrl}${mediaType}/${mediaId}?api_key=${API_KEY}&append_to_response=keywords,watch/providers,release_dates`;
       break;
     case "similar":

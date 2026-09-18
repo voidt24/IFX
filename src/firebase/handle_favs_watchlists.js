@@ -10,6 +10,10 @@ export const handle_favs_watchlists = async (documentName, referenceOfClickedEle
     poster_path: state.poster_path,
     release_date: state.releaseDate,
     originalProvider: state.originalProvider || null,
+    // Permanent facts only — never a precomputed "in theaters now" boolean, since this
+    // document can sit in a user's list indefinitely and that verdict would go stale.
+    hadTheatricalRelease: state.hadTheatricalRelease || false,
+    digitalReleaseDate: state.digitalReleaseDate || null,
   };
 
   try {

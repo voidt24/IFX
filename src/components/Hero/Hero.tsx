@@ -8,6 +8,7 @@ import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import PlayButton from "./PlayButton";
 import OriginalBadge from "@/components/common/OriginalBadge";
 import useIsMobile from "@/Hooks/useIsMobile";
+import { isInTheaters } from "@/helpers/isInTheaters";
 
 export default function Hero({ results, type, hasTitle, mediaType }: { results: IMediaData[]; type: string; hasTitle?: boolean; mediaType: MediaTypeApi }) {
   const isMobile = useIsMobile();
@@ -32,7 +33,7 @@ export default function Hero({ results, type, hasTitle, mediaType }: { results: 
               results.slice(0, 5).map((sliderData, index) => {
                 const released =
                   (sliderData.release_date && new Date(sliderData.release_date).getTime() <= Date.now()) || (sliderData.first_air_date && new Date(sliderData.first_air_date).getTime() <= Date.now());
-                const inTheaters = released && sliderData.inTheaters;
+                const inTheaters = released && isInTheaters(mediaType, sliderData.release_date, sliderData.hadTheatricalRelease, sliderData.digitalReleaseDate);
 
                 return (
                   <CarouselItem key={index} className="max-lg:basis-[95%]">

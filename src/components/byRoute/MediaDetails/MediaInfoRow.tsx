@@ -1,10 +1,15 @@
 import { image } from "@/helpers/api.config";
 import { isReleased } from "@/helpers/isReleased";
+import { isInTheaters } from "@/helpers/isInTheaters";
 import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { MediaTypeApi } from "@/Types/mediaType";
 
 function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; mediaType: MediaTypeApi }) {
   if (!data) return null;
+
+  // Recomputed against the current time on every render — never trusts a stored
+  // verdict — so this stays accurate no matter how long ago the details data was cached.
+  const inTheaters = isInTheaters(mediaType, data.rawReleaseDate, data.hadTheatricalRelease, data.digitalReleaseDate);
 
   return (
     <div className="info flex-row-center flex-wrap max-md:text-[85%] lg:text-[90%] lg:justify-start gap-2 text-content-secondary">
@@ -16,7 +21,7 @@ function MediaInfoRow({ data, mediaType }: { data: ImediaDetailsData | null; med
       <div className="flex-row-center gap-2.5 md:gap-2">
         <span className="">{!isReleased(data.releaseDate) ? `Available on ${data.releaseDate}` : data.releaseDate}</span>
 
-        {data.inTheaters && (
+        {inTheaters && (
           <>
             <span>•</span>
             <span className="uppercase font-bold text-green-500">In Theaters</span>

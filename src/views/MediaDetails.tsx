@@ -13,7 +13,7 @@ import { ImediaDetailsData } from "@/Types/mediaDetails";
 import { RootState } from "@/store";
 import { setMediaDetailsData } from "@/store/slices/mediaDetailsSlice";
 import { resolveOriginalProvider } from "@/helpers/getOriginalProvider";
-import { isInTheaters } from "@/helpers/isInTheaters";
+import { extractTheatricalInfo } from "@/helpers/isInTheaters";
 import { Context } from "@/context/Context";
 import MediaInfo from "@/components/byRoute/MediaDetails/MediaInfo";
 import Notification from "@/components/common/Notification";
@@ -138,6 +138,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
 
           const productionCompanies: string[] = (production_companies || []).map((company: { name: string }) => company.name).slice(0, 3);
 
+          const theatricalInfo = extractTheatricalInfo(mediaType, release_dates);
+
           const mobileBackgroundPath = noTextMobilePoster || poster_path;
           const originalProvider = resolveOriginalProvider(mediaType, byIdPromise.value);
           const mediaDetails: ImediaDetailsData = {
@@ -162,7 +164,9 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
             backdrops,
             posters: posterGallery,
             watchProvidersByRegion: mediaType === "tv" ? byIdPromise.value["watch/providers"]?.results || null : null,
-            inTheaters: isInTheaters(mediaType, release_dates),
+            rawReleaseDate: release_date || null,
+            hadTheatricalRelease: theatricalInfo.hadTheatricalRelease,
+            digitalReleaseDate: theatricalInfo.digitalReleaseDate,
           };
 
           dispatch(setMediaDetailsData(mediaDetails));
@@ -193,6 +197,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
                   release_date,
                   first_air_date,
                   vote_average,
+                  hadTheatricalRelease: theatricalInfo.hadTheatricalRelease,
+                  digitalReleaseDate: theatricalInfo.digitalReleaseDate,
                 },
               ]),
             );
@@ -212,6 +218,8 @@ export const MediaDetails = ({ mediaType, mediaId }: { mediaType: MediaTypeApi; 
               release_date,
               first_air_date,
               vote_average,
+              hadTheatricalRelease: theatricalInfo.hadTheatricalRelease,
+              digitalReleaseDate: theatricalInfo.digitalReleaseDate,
             },
           ];
           localStorage.setItem(`${APP_NAME}-recent`, JSON.stringify(data));

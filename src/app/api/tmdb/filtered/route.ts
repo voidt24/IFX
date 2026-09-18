@@ -3,7 +3,7 @@ import { getOrSetCache } from "@/lib/cache";
 import { apiUrl, API_KEY } from "@/helpers/api.config";
 import { resolveFetchURL } from "@/helpers/resolveFetchURL";
 import { resolveOriginalProvider } from "@/helpers/getOriginalProvider";
-import { isInTheaters } from "@/helpers/isInTheaters";
+import { extractTheatricalInfo } from "@/helpers/isInTheaters";
 import { movieGenresCode, tvGenresCode, providersNetworkCode, providersWatchCode } from "@/helpers/constants";
 import { IMediaData, MediaTypeApi } from "@/Types";
 
@@ -59,13 +59,24 @@ async function fetchLogo(mediaType: MediaTypeApi, id: number): Promise<string | 
 // is guaranteed to be that provider's Original by construction, no need to ask TMDB again.
 // That same byId call also carries release_dates (see resolveFetchURL), so it's reused
 // here to derive the "still in theaters" flag for movies at zero extra cost.
-async function fetchOriginalProviderAndTheaters(mediaType: MediaTypeApi, id: number): Promise<{ originalProvider: string | null; inTheaters: boolean }> {
+// Same one-extra-call pattern as fetchLogo. Skipped entirely when the row is already
+// network-filtered for TV (see isNetworkFilteredRow in GET) — in that case every item
+// is guaranteed to be that provider's Original by construction, no need to ask TMDB again.
+// That same byId call also carries release_dates (see resolveFetchURL). We only extract
+// and return the permanent facts (hadTheatricalRelease / digitalReleaseDate) here — never
+// a computed "is it in theaters right now" boolean, since that depends on the current time
+// and would go stale the moment this response gets cached or persisted client-side.
+async function fetchOriginalProviderAndTheatricalInfo(
+  mediaType: MediaTypeApi,
+  id: number,
+): Promise<{ originalProvider: string | null; hadTheatricalRelease: boolean; digitalReleaseDate: string | null }> {
   try {
     const res = await fetch(resolveFetchURL("byId", mediaType, id));
     const data = await res.json();
-    return { originalProvider: resolveOriginalProvider(mediaType, data), inTheaters: isInTheaters(mediaType, data.release_dates) };
+    const { hadTheatricalRelease, digitalReleaseDate } = extractTheatricalInfo(mediaType, data.release_dates);
+    return { originalProvider: resolveOriginalProvider(mediaType, data), hadTheatricalRelease, digitalReleaseDate };
   } catch {
-    return { originalProvider: null, inTheaters: false };
+    return { originalProvider: null, hadTheatricalRelease: false, digitalReleaseDate: null };
   }
 }
 
@@ -78,9 +89,11 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi, knownOriginal
 
   const enriched = await Promise.all(
     results.map(async (element) => {
-      const [logoBackdrop, { originalProvider, inTheaters }] = await Promise.all([
+      const [logoBackdrop, { originalProvider, hadTheatricalRelease, digitalReleaseDate }] = await Promise.all([
         fetchLogo(mediaType, element.id),
-        knownOriginalProvider ? Promise.resolve({ originalProvider: knownOriginalProvider, inTheaters: false }) : fetchOriginalProviderAndTheaters(mediaType, element.id),
+        knownOriginalProvider
+          ? Promise.resolve({ originalProvider: knownOriginalProvider, hadTheatricalRelease: false, digitalReleaseDate: null })
+          : fetchOriginalProviderAndTheatricalInfo(mediaType, element.id),
       ]);
       const result: IMediaData = {
         backdrop_path: element.backdrop_path || undefined,
@@ -98,7 +111,8 @@ async function fetchFromTMDB(url: string, mediaType: MediaTypeApi, knownOriginal
         vote_average: element.vote_average || undefined,
         logoBackdrop,
         originalProvider,
-        inTheaters,
+        hadTheatricalRelease,
+        digitalReleaseDate,
       };
       return result;
     }),
@@ -129,8 +143,9 @@ export async function GET(req: NextRequest) {
   const knownOriginalProvider = isNetworkFilteredRow ? provider : null;
 
   const url = buildFilteredSearchURL(mediaType, validProvider, validGenre, genreCode, provider, pageNumber);
-  // v5: added inTheaters (derived from release_dates on the same byId call)
-  const cacheKey = `v5:${buildFilteredCacheKey(mediaType, validProvider, validGenre, genreCode, provider, pageNumber)}`;
+  // v6: replaced the stale inTheaters boolean with permanent facts (hadTheatricalRelease,
+  // digitalReleaseDate) — the actual verdict is now derived at render time, never cached
+  const cacheKey = `v6:${buildFilteredCacheKey(mediaType, validProvider, validGenre, genreCode, provider, pageNumber)}`;
 
   try {
     const [results, total_pages] = await getOrSetCache(cacheKey, TTL_SECONDS, () => fetchFromTMDB(url, mediaType, knownOriginalProvider));

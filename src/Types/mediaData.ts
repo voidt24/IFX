@@ -16,5 +16,9 @@ export interface IMediaData {
   vote_average: number | undefined;
   logoBackdrop?: string | null;
   originalProvider?: string | null; // e.g. "Netflix" — set when this title is that platform's Original content
-  inTheaters?: boolean; // movies only — derived server-side from TMDB's release_dates
+  // Permanent facts from TMDB's release_dates — safe to cache/store. The actual
+  // "is it in theaters right now" verdict is derived from these at render time via
+  // isInTheaters(), never stored, so it can't go stale. See helpers/isInTheaters.ts.
+  hadTheatricalRelease?: boolean;
+  digitalReleaseDate?: string | null;
 }
