@@ -14,6 +14,8 @@ import GenreSelect from "@/features/contentFilter/GenreSelect";
 import SliderCardSkeleton from "@/components/common/Skeletons/SliderCardSkeleton";
 import useHideDrawers from "@/Hooks/useHideDrawers";
 import MediaGrid from "@/components/MediaGrid/MediaGrid";
+import useIsAdmin from "@/Hooks/useIsAdmin";
+import Link from "next/link";
 
 export default function AllMediaData({
   mediaTypeObj,
@@ -37,6 +39,7 @@ export default function AllMediaData({
 
   const auth = useSelector((state: RootState) => state.auth);
   const { firebaseActiveUser } = auth;
+  const isAdmin = useIsAdmin();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -121,7 +124,17 @@ export default function AllMediaData({
       <div className="flex-col-center lists w-full gap-8 ">
         <div className=" flex flex-col gap-4 w-full">
           <div className=" w-full z-20 bg-none  ">
-            <h1 className="title-style">{title}</h1>
+            <div className="flex items-center gap-3 flex-wrap">
+              <h1 className="title-style">{title}</h1>
+              {mediaTypeObj.mediaType === "movie" && isAdmin && (
+                <Link
+                  href="/admin/upcoming-movies"
+                  className="text-xs md:text-sm mb-6 pb-2 rounded-full border border-brand-primary px-3 py-1 text-brand-primary hover:bg-brand-primary hover:text-content-primary transition-colors whitespace-nowrap"
+                >
+                  &gt; Go to Upcoming (Admin)
+                </Link>
+              )}
+            </div>
             <div className="flex gap-6  flex-col">
               <div className="flex gap-4">
                 <PlatformSelect selected={platform} />
